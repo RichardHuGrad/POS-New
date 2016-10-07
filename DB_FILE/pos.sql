@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
 INSERT INTO `admins` (`id`, `created_by_id`, `firstname`, `lastname`, `email`, `password`, `is_super_admin`, `created`, `modified`, `status`, `mobile_no`, `address`, `restaurant_name`, `tax`, `no_of_tables`, `table_size`, `table_order`, `takeout_table_size`, `waiting_table_size`, `is_verified`) VALUES
 	(1, 0, 'POS', 'Admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'Y', '0000-00-00 00:00:00', '2016-07-13 19:24:51', 'A', NULL, NULL, '', 0, 0, '0', NULL, NULL, NULL, 'Y'),
-	(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-09-20 14:49:35', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 12, 10, '12,5,4,6,5,2,4,5,4,5', '["position: absolute; left: 14.8776%; top: 43.1429%;","position: absolute; left: 41.5223%; top: 76.4286%;","position: absolute; left: 83.0508%; top: 76.4286%;","position: absolute; left: 83.0508%; top: 13.4286%;","position: absolute; left: 26.1739%; top: 0%;","position: absolute; left: 0%; top: 74.2857%;","position: absolute; left: 66.0075%; top: 44.1429%;","position: absolute; left: 0%; top: 14%;","position: absolute; left: 52.6836%; top: 0%;","position: absolute; left: 40.113%; top: 34.281%;"]', '1,2,5,7,8,9,5,4,5,7', '8,5,6,8,2', 'Y');
+	(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-10-07 10:20:15', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 10, '12,5,4,6,5,2,4,5,4,5', '["position: absolute; left: 83.0508%; top: 37.4238%;","position: absolute; left: 26.8942%; top: 76.4286%;","position: absolute; left: 0%; top: 0%;","position: absolute; left: 55.1224%; top: 76.4286%;","position: absolute; left: 29.9498%; top: 34.7143%;","position: absolute; left: 0%; top: 35.4238%;","position: absolute; left: 83.0508%; top: 0%;","position: absolute; left: 53.38719040247678%; top: 0%;","position: absolute; left: 83.0508%; top: 76.4286%;","position: absolute; left: 0%; top: 76.4286%;"]', '1,2,5,7,8,9,5,4,5,7', '8,5,6,8,2', 'Y');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `admin_privilages` (
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `admin_privilages` (
   PRIMARY KEY (`id`),
   KEY `FK1` (`admin_id`),
   CONSTRAINT `FK1` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `admin_privilages` DISABLE KEYS */;
 /*!40000 ALTER TABLE `admin_privilages` ENABLE KEYS */;
@@ -166,13 +166,13 @@ CREATE TABLE IF NOT EXISTS `cousines` (
 
 /*!40000 ALTER TABLE `cousines` DISABLE KEYS */;
 INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_id`, `image`, `status`, `created`, `popular`, `is_tax`, `modified`) VALUES
-	(10, 5, 3, 5.77, 5, '1467777127_cousine.png', 'A', 1467364439, 20, 'Y', 1467789399),
+	(10, 5, 3, 5.77, 5, '1467777127_cousine.png', 'A', 1467364439, 21, 'Y', 1467789399),
 	(11, 5, 3, 5, 5, '1467370839_cousine.jpg', 'A', 1467364487, 38, 'Y', 1468439835),
 	(12, 5, 3, 7, 5, '1467370844_cousine.jpg', 'A', 1467364534, 17, 'N', 1467370844),
 	(13, 5, 3, 2.76, 5, '1467370850_cousine.jpg', 'A', 1467364578, 8, 'N', 1467789389),
 	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 8, 'N', 1467370863),
-	(15, 5, 3, 5, 5, '1467370868_cousine.jpg', 'A', 1467364665, 32, 'N', 1467370868),
-	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 12, 'N', 1467370873),
+	(15, 5, 3, 5, 5, '1467370868_cousine.jpg', 'A', 1467364665, 33, 'N', 1467370868),
+	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 13, 'N', 1467370873),
 	(17, 5, 3, 2, 6, '1467452671_cousine.jpg', 'A', 1467452671, 24, 'N', 1467453150),
 	(18, 5, 3, 1.5, 6, NULL, 'A', 1467452729, 14, 'N', 1467453136),
 	(19, 5, 0, 4, 6, '1468422744_cousine.jpg', 'A', 1468422744, 4, 'Y', 1468422744),
@@ -180,7 +180,7 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(21, 5, 0, 9.8, 9, NULL, 'A', 1468436158, 0, 'N', 1468436816),
 	(22, 5, 0, 99999, 9, NULL, 'A', 1468436565, 0, 'Y', 1468436788),
 	(23, 5, 0, 99, 5, NULL, 'A', 1468436915, 0, 'N', 1468436915),
-	(24, 5, 0, 10, 7, NULL, 'A', 1468436986, 0, 'Y', 1468436986),
+	(24, 5, 0, 10, 7, NULL, 'A', 1468436986, 1, 'Y', 1468436986),
 	(25, 5, 0, 5, 9, NULL, 'A', 1468437080, 0, 'Y', 1468437080),
 	(26, 5, 0, 10, 7, NULL, 'A', 1468438109, 0, 'Y', 1468438109),
 	(27, 5, 0, 10, 9, NULL, 'A', 1468438246, 1, 'Y', 1468438246),
@@ -194,7 +194,7 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(35, 5, 0, 36, 6, NULL, 'A', 1468443537, 0, 'Y', 1468443537),
 	(36, 5, 0, 40, 7, NULL, 'A', 1468443568, 0, 'Y', 1468443568),
 	(37, 5, 0, 8, 5, NULL, 'A', 1468443619, 1, 'Y', 1468443619),
-	(38, 5, 0, 5, 7, NULL, 'A', 1468443674, 0, 'Y', 1468443674),
+	(38, 5, 0, 5, 7, NULL, 'A', 1468443674, 1, 'Y', 1468443674),
 	(39, 5, 0, 50, 9, NULL, 'A', 1468443709, 0, 'Y', 1468443709);
 /*!40000 ALTER TABLE `cousines` ENABLE KEYS */;
 
@@ -359,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `is_completed` enum('Y','N') DEFAULT 'N',
   `paid_by` enum('CARD','CASH','MIXED') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
 INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `counter_id`, `table_no`, `table_status`, `tax`, `tax_amount`, `subtotal`, `total`, `card_val`, `cash_val`, `tip`, `paid`, `change`, `message`, `reason`, `order_type`, `is_kitchen`, `cooking_status`, `is_hide`, `created`, `is_completed`, `paid_by`) VALUES
@@ -426,7 +426,10 @@ INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `
 	(90, '98690', '0', 0, 5, 3, 4, 'P', 12, 1.8, 20, 21.8, NULL, NULL, NULL, NULL, NULL, 'AAA', '', 'T', 'Y', 'COOKED', 'P', '2016-09-17 04:48:36', 'N', NULL),
 	(91, '91391', '0', 0, 5, 3, 10, 'P', 12, 0.6, 12, 12.6, 10, 2.6, 10, 12.6, 0, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:40:11', 'N', 'MIXED'),
 	(92, '88592', '0', 0, 5, 3, 9, 'N', 12, 12.6, 109, 121.6, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:42:12', 'N', NULL),
-	(93, '92693', '0', 0, 5, NULL, 3, 'N', 12, 3.6924, 41.77, 45.45, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-09-20 05:45:17', 'N', NULL);
+	(93, '92693', '0', 0, 5, NULL, 3, 'P', 12, 2.5848, 32.54, 35.1, 0.1, 35, 1, 35.1, 0, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:45:17', 'N', 'MIXED'),
+	(94, '95194', '0', 0, 5, 3, 2, 'N', 12, 1.56, 13, 14.55, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-06 09:03:32', 'N', NULL),
+	(95, '88895', '0', 0, 5, 3, 8, 'P', 13, 0.65, 5, 5.65, NULL, 5.65, NULL, 5.65, 0, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:10:47', 'N', 'CASH'),
+	(96, '98296', '0', 0, 5, 3, 7, 'N', 13, 1.3, 19.8, 21.1, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:37:44', 'N', NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `order_items` (
@@ -448,7 +451,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `FK_orders_items_orders` (`order_id`),
   CONSTRAINT `FK_orders_items_orders` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=583 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=593 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
 INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `category_id`, `price`, `qty`, `tax`, `tax_amount`, `selected_extras`, `all_extras`, `extras_amount`, `is_done`, `created`) VALUES
@@ -810,12 +813,17 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `c
 	(574, 93, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:45:17'),
 	(575, 93, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:45:19'),
 	(576, 93, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 12, 0.6924, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'Y', '2016-09-20 05:45:25'),
-	(577, 93, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'Y', '2016-09-20 05:45:26'),
 	(578, 93, 24, 'D5', 'èœ5', 7, 10, 1, 12, 1.2, NULL, '', NULL, 'N', '2016-09-20 05:45:29'),
-	(579, 93, 26, 'D7', 'èœ7', 7, 10, 1, 12, 1.2, NULL, '', NULL, 'N', '2016-09-20 05:45:31'),
-	(580, 92, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'N', '2016-09-20 07:01:50'),
-	(581, 92, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'N', '2016-09-20 08:06:04'),
-	(582, 92, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'N', '2016-09-20 08:06:10');
+	(580, 92, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'Y', '2016-09-20 07:01:50'),
+	(581, 92, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 08:06:04'),
+	(582, 92, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 08:06:10'),
+	(586, 93, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 12, 0.6924, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'Y', '2016-09-23 02:50:40'),
+	(587, 94, 37, 'D17', 'èœ17', 5, 8, 1, 12, 0.96, NULL, '', NULL, 'N', '2016-10-06 09:03:32'),
+	(588, 94, 38, '18', 'èœ18', 7, 5, 1, 12, 0.6, NULL, '', NULL, 'N', '2016-10-06 09:03:34'),
+	(589, 95, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'N', '2016-10-06 09:10:47'),
+	(590, 96, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'N', '2016-10-06 09:37:45'),
+	(591, 96, 25, 'D6', 'èœ6', 9, 5, 1, 13, 0.65, NULL, '', NULL, 'Y', '2016-10-06 09:37:46'),
+	(592, 96, 21, 'dish2', 'èœ2', 9, 9.8, 1, 13, 0, NULL, '', NULL, 'Y', '2016-10-06 09:37:49');
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `pages` (
