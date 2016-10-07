@@ -5338,3 +5338,366 @@ Request URL: /pos/manager/js/html5.js
 Stack Trace:
 #0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-07 01:00:32 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 01:00:32 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 01:00:32 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 01:00:33 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 01:00:33 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 02:19:14 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 02:19:15 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 02:19:15 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 02:26:34 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 02:26:58 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'no_of_tables' cannot be null
+Request URL: /pos/manager/admin/admins/updatetable/5?table=
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`a...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`a...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1821): Mysql->update(Object(Admin), Array, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\AdminsController.php(303): Model->save(Array, false)
+#5 [internal function]: AdminsController->admin_updatetable('5')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(AdminsController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-07 02:37:40 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 02:57:14 Error: [MissingTableException] Table promocodes for model Promocode was not found in datasource default.
+Exception Attributes: array (
+  'table' => 'promocodes',
+  'class' => 'Promocode',
+  'ds' => 'default',
+)
+Request URL: /pos/manager/admin/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(3498): Model->setSource('promocodes')
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): Model->getDataSource()
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Controller\Component\PaginatorComponent.php(173): Model->find('all', Array)
+#4 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#5 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(94): Controller->paginate()
+#6 [internal function]: PromocodesController->admin_index()
+#7 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#10 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2016-10-07 03:04:04 Error: [MissingActionException] Action PromocodesController::admin_index() could not be found.
+Exception Attributes: array (
+  'controller' => 'PromocodesController',
+  'action' => 'admin_index',
+)
+Request URL: /pos/manager/admin/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-07 03:04:19 Error: [MissingActionException] Action PromocodesController::admin_index() could not be found.
+Exception Attributes: array (
+  'controller' => 'PromocodesController',
+  'action' => 'admin_index',
+)
+Request URL: /pos/manager/admin/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-07 03:04:26 Error: [PDOException] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'pos.country_locales' doesn't exist
+Request URL: /pos/manager/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('SELECT `Promoco...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(665): DboSource->execute('SELECT `Promoco...', Array, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1077): DboSource->fetchAll('SELECT `Promoco...', false)
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): DboSource->read(Object(AppModel), Array)
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Component\PaginatorComponent.php(173): Model->find('all', Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#8 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(33): Controller->paginate()
+#9 [internal function]: PromocodesController->index()
+#10 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#11 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#12 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#13 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#14 {main}
+2016-10-07 03:09:01 Error: [MissingTableException] Table country_locales for model CountryLocale was not found in datasource default.
+Exception Attributes: array (
+  'table' => 'country_locales',
+  'class' => 'CountryLocale',
+  'ds' => 'default',
+)
+Request URL: /pos/manager/promocodes/add
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(3498): Model->setSource('country_locales')
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): Model->getDataSource()
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('list', Array)
+#3 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(250): Model->find('list', Array)
+#4 [internal function]: PromocodesController->add()
+#5 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#6 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-10-07 03:15:57 Error: [MissingActionException] Action PromocodesController::index() could not be found.
+Exception Attributes: array (
+  'controller' => 'PromocodesController',
+  'action' => 'index',
+)
+Request URL: /pos/manager/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-07 03:16:57 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Admin.restaurant_name' in 'field list'
+Request URL: /pos/manager/admin/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('SELECT `Admin`....', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(665): DboSource->execute('SELECT `Admin`....', Array, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1077): DboSource->fetchAll('SELECT `Admin`....', false)
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): DboSource->read(Object(AppModel), Array)
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Component\PaginatorComponent.php(173): Model->find('all', Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#8 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(94): Controller->paginate()
+#9 [internal function]: PromocodesController->admin_index()
+#10 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#11 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#12 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#13 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#14 {main}
+2016-10-07 03:17:39 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Admin.restaurant_name' in 'field list'
+Request URL: /pos/manager/admin/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('SELECT `Admin`....', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(665): DboSource->execute('SELECT `Admin`....', Array, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1077): DboSource->fetchAll('SELECT `Admin`....', false)
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): DboSource->read(Object(AppModel), Array)
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Component\PaginatorComponent.php(173): Model->find('all', Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#8 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(94): Controller->paginate()
+#9 [internal function]: PromocodesController->admin_index()
+#10 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#11 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#12 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#13 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#14 {main}
+2016-10-07 04:13:22 Error: [PDOException] SQLSTATE[HY000]: General error: 1366 Incorrect integer value: 'A' for column 'status' at row 1
+Request URL: /pos/manager/admin/promocodes/add_edit
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1832): DboSource->create(Object(Promocode), Array, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(146): Model->save(Array, false)
+#5 [internal function]: PromocodesController->admin_add_edit()
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-07 04:27:32 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Promocode.firstname' in 'field list'
+Request URL: /pos/manager/admin/promocodes/status/Nw%3D%3D/A
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('SELECT `Promoco...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(665): DboSource->execute('SELECT `Promoco...', Array, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1077): DboSource->fetchAll('SELECT `Promoco...', false)
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): DboSource->read(Object(Promocode), Array)
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('first', Array)
+#6 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(195): Model->find('first', Array)
+#7 [internal function]: PromocodesController->admin_status('Nw==', 'A')
+#8 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#9 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#11 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2016-10-07 04:31:25 Error: [PDOException] SQLSTATE[HY000]: General error: 1366 Incorrect integer value: 'A' for column 'status' at row 1
+Request URL: /pos/manager/admin/promocodes/status/Nw%3D%3D/A
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`p...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`p...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2541): Mysql->update(Object(Promocode), Array, NULL, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(203): Model->updateAll(Array, Array)
+#5 [internal function]: PromocodesController->admin_status('Nw==', 'A')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-07 04:35:59 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Promocode.firstname' in 'where clause'
+Request URL: /pos/manager/admin/promocodes
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('SELECT `Admin`....', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(665): DboSource->execute('SELECT `Admin`....', Array, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1077): DboSource->fetchAll('SELECT `Admin`....', false)
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): DboSource->read(Object(Promocode), Array)
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Component\PaginatorComponent.php(173): Model->find('all', Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#8 C:\xampp\htdocs\pos\manager\Controller\PromocodesController.php(94): Controller->paginate()
+#9 [internal function]: PromocodesController->admin_index()
+#10 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(PromocodesController), Array)
+#11 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#12 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(PromocodesController), Object(CakeRequest), Object(CakeResponse))
+#13 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#14 {main}
+2016-10-07 04:52:14 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 04:52:14 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 04:52:14 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 04:52:14 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 05:34:53 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 07:20:20 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 07:20:28 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 07:20:28 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

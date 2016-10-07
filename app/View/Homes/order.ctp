@@ -308,5 +308,33 @@ echo $this->fetch('script');
                 $(".products-panel").addClass('load1 csspinner');
              }
         })
+    });
+
+    $(document).on("keyup", ".discount_section", function() {
+      if($(this).val()) {
+        $(".discount_section").attr("disabled", "disabled");
+        $(this).removeAttr("disabled");
+      } else {
+        $(".discount_section").removeAttr("disabled");
+      }
     })
+
+    $(document).on("click", "#apply-discount", function() {
+
+      var fix_discount = $("#fix_discount").val();
+      var discount_percent = $("#discount_percent").val();
+      var promocode = $("#promocode").val(); 
+
+      if(fix_discount || discount_percent || promocode) {
+        // $(".discount_section").attr("disabled", "disabled");
+        // $(this).removeAttr("disabled");
+      } else {
+        alert("Please add discount first.");
+        return false;
+      }
+    })
+
+
+
+    
 </script>

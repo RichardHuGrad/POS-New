@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
 INSERT INTO `admins` (`id`, `created_by_id`, `firstname`, `lastname`, `email`, `password`, `is_super_admin`, `created`, `modified`, `status`, `mobile_no`, `address`, `restaurant_name`, `tax`, `no_of_tables`, `table_size`, `table_order`, `takeout_table_size`, `waiting_table_size`, `is_verified`) VALUES
 	(1, 0, 'POS', 'Admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'Y', '0000-00-00 00:00:00', '2016-07-13 19:24:51', 'A', NULL, NULL, '', 0, 0, '0', NULL, NULL, NULL, 'Y'),
-	(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-10-07 10:20:15', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 10, '12,5,4,6,5,2,4,5,4,5', '["position: absolute; left: 83.0508%; top: 37.4238%;","position: absolute; left: 26.8942%; top: 76.4286%;","position: absolute; left: 0%; top: 0%;","position: absolute; left: 55.1224%; top: 76.4286%;","position: absolute; left: 29.9498%; top: 34.7143%;","position: absolute; left: 0%; top: 35.4238%;","position: absolute; left: 83.0508%; top: 0%;","position: absolute; left: 53.38719040247678%; top: 0%;","position: absolute; left: 83.0508%; top: 76.4286%;","position: absolute; left: 0%; top: 76.4286%;"]', '1,2,5,7,8,9,5,4,5,7', '8,5,6,8,2', 'Y');
+	(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-10-07 12:01:52', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 12, '12,5,4,6,5,2,4,5,4,5,2,3,3,4,5', '["position: absolute; left: 87.0057%; top: 41.9222%;","position: absolute; left: 74.76%; top: 69.6%;","position: absolute; left: 55.9643%; top: 6.16667%;","position: absolute; left: 1.22526%; top: 62.725%;","position: absolute; left: 8.3515%; top: 0.822917%;","position: absolute; left: 15.4571%; top: 57%;","position: absolute; left: 87.0057%; top: 0%;","position: absolute; left: 51.1693%; top: 32.5656%;","position: absolute; left: 58.6563%; top: 68.6%;","position: absolute; left: 33.3809%; top: 65.8%;","position: absolute; left: 14.6089%; top: 26.8333%;","position: absolute; left: 37.7003%; top: 3.5%;"]', '1,2,5,7,8,9,5,4,5,7', '8,5,6,8,2', 'Y');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `admin_privilages` (
@@ -169,13 +169,13 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(10, 5, 3, 5.77, 5, '1467777127_cousine.png', 'A', 1467364439, 21, 'Y', 1467789399),
 	(11, 5, 3, 5, 5, '1467370839_cousine.jpg', 'A', 1467364487, 38, 'Y', 1468439835),
 	(12, 5, 3, 7, 5, '1467370844_cousine.jpg', 'A', 1467364534, 17, 'N', 1467370844),
-	(13, 5, 3, 2.76, 5, '1467370850_cousine.jpg', 'A', 1467364578, 8, 'N', 1467789389),
-	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 8, 'N', 1467370863),
+	(13, 5, 3, 2.76, 5, '1467370850_cousine.jpg', 'A', 1467364578, 9, 'N', 1467789389),
+	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 9, 'N', 1467370863),
 	(15, 5, 3, 5, 5, '1467370868_cousine.jpg', 'A', 1467364665, 33, 'N', 1467370868),
-	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 13, 'N', 1467370873),
+	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 14, 'N', 1467370873),
 	(17, 5, 3, 2, 6, '1467452671_cousine.jpg', 'A', 1467452671, 24, 'N', 1467453150),
 	(18, 5, 3, 1.5, 6, NULL, 'A', 1467452729, 14, 'N', 1467453136),
-	(19, 5, 0, 4, 6, '1468422744_cousine.jpg', 'A', 1468422744, 4, 'Y', 1468422744),
+	(19, 5, 0, 4, 6, '1468422744_cousine.jpg', 'A', 1468422744, 5, 'Y', 1468422744),
 	(20, 5, 0, -5, 8, NULL, 'A', 1468435866, 1, 'Y', 1468436093),
 	(21, 5, 0, 9.8, 9, NULL, 'A', 1468436158, 0, 'N', 1468436816),
 	(22, 5, 0, 99999, 9, NULL, 'A', 1468436565, 0, 'Y', 1468436788),
@@ -425,11 +425,11 @@ INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `
 	(89, '93789', '0', 0, 5, 3, 6, 'P', 12, 0.6, 5, 5.6, 5.6, NULL, NULL, 5.6, 0, '', '', 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:27:14', 'N', 'CARD'),
 	(90, '98690', '0', 0, 5, 3, 4, 'P', 12, 1.8, 20, 21.8, NULL, NULL, NULL, NULL, NULL, 'AAA', '', 'T', 'Y', 'COOKED', 'P', '2016-09-17 04:48:36', 'N', NULL),
 	(91, '91391', '0', 0, 5, 3, 10, 'P', 12, 0.6, 12, 12.6, 10, 2.6, 10, 12.6, 0, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:40:11', 'N', 'MIXED'),
-	(92, '88592', '0', 0, 5, 3, 9, 'N', 12, 12.6, 109, 121.6, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:42:12', 'N', NULL),
+	(92, '88592', '0', 0, 5, 3, 9, 'N', 13, 12.6, 111.76, 124.35, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:42:12', 'N', NULL),
 	(93, '92693', '0', 0, 5, NULL, 3, 'P', 12, 2.5848, 32.54, 35.1, 0.1, 35, 1, 35.1, 0, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:45:17', 'N', 'MIXED'),
 	(94, '95194', '0', 0, 5, 3, 2, 'N', 12, 1.56, 13, 14.55, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-06 09:03:32', 'N', NULL),
 	(95, '88895', '0', 0, 5, 3, 8, 'P', 13, 0.65, 5, 5.65, NULL, 5.65, NULL, 5.65, 0, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:10:47', 'N', 'CASH'),
-	(96, '98296', '0', 0, 5, 3, 7, 'N', 13, 1.3, 19.8, 21.1, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:37:44', 'N', NULL);
+	(96, '98296', '0', 0, 5, 3, 7, 'P', 13, 0.52, 15.76, 16.25, NULL, 16.25, NULL, 16.25, 0, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:37:44', 'Y', 'CASH');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `order_items` (
@@ -451,7 +451,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `FK_orders_items_orders` (`order_id`),
   CONSTRAINT `FK_orders_items_orders` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=593 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=599 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
 INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `category_id`, `price`, `qty`, `tax`, `tax_amount`, `selected_extras`, `all_extras`, `extras_amount`, `is_done`, `created`) VALUES
@@ -821,9 +821,11 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `c
 	(587, 94, 37, 'D17', 'èœ17', 5, 8, 1, 12, 0.96, NULL, '', NULL, 'N', '2016-10-06 09:03:32'),
 	(588, 94, 38, '18', 'èœ18', 7, 5, 1, 12, 0.6, NULL, '', NULL, 'N', '2016-10-06 09:03:34'),
 	(589, 95, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'N', '2016-10-06 09:10:47'),
-	(590, 96, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'N', '2016-10-06 09:37:45'),
-	(591, 96, 25, 'D6', 'èœ6', 9, 5, 1, 13, 0.65, NULL, '', NULL, 'Y', '2016-10-06 09:37:46'),
-	(592, 96, 21, 'dish2', 'èœ2', 9, 9.8, 1, 13, 0, NULL, '', NULL, 'Y', '2016-10-06 09:37:49');
+	(593, 96, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 05:01:23'),
+	(595, 96, 19, 'Rice', 'é¥­', 6, 4, 1, 13, 0.52, NULL, '[{"id":"26","cousine_id":"19","name":"fan with egg","name_zh":"\\u86cb\\u7092\\u996d","price":"6","status":"A","created":"2016-07-13 11:22:12"},{"id":"27","cousine_id":"19","name":"mixed rice","name_zh":"\\u626c\\u5dde\\u7092\\u996d","price":"10","status":"A","created":"2016-07-13 11:23:14"}]', NULL, 'N', '2016-10-07 05:15:44'),
+	(596, 96, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 05:15:58'),
+	(597, 96, 13, 'Cup Noodles', 'æ¯é¢', 5, 2.76, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 05:16:02'),
+	(598, 92, 13, 'Cup Noodles', 'æ¯é¢', 5, 2.76, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 08:27:40');
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `pages` (
@@ -842,6 +844,26 @@ INSERT INTO `pages` (`id`, `name`, `body`, `slug`, `status`, `created`, `modifie
 	(1, 'About Us', '<span style="color:#800080"><span style="font-size:24px"><u><strong>uterm</strong></u></span></span><br />\r\n<br />\r\nThis page is all about uterm.<br />\r\nUterm is the mobile application for customer and vendor.<br />\r\n<br />\r\nOnline order for wine made by customer to nearest wine dealer.<br />\r\n<br />\r\n<strong>User finds the nearest dealer using application.</strong><br />\r\n<br />\r\n<br />\r\nand many more....<br />\r\n<br />\r\n&nbsp;', 'about-us', 'A', '2016-04-30 10:18:25', '2016-04-30 10:27:45'),
 	(2, 'Support', '<span style="color:#FF0000"><span style="font-size:16px">This section is under construction !</span></span>', 'support', 'I', '2016-04-30 10:36:46', '2016-04-30 10:36:46');
 /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
+
+CREATE TABLE IF NOT EXISTS `promocodes` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `restaurant_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `code` varchar(255) NOT NULL DEFAULT '0',
+  `valid_from` varchar(255) NOT NULL DEFAULT '0',
+  `valid_to` varchar(255) NOT NULL DEFAULT '0',
+  `discount_type` tinyint(8) NOT NULL DEFAULT '0',
+  `discount_value` varchar(50) NOT NULL DEFAULT '0',
+  `is_multiple` tinyint(8) NOT NULL DEFAULT '0',
+  `status` tinyint(8) NOT NULL DEFAULT '1',
+  `created` int(11) NOT NULL,
+  `modified` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+/*!40000 ALTER TABLE `promocodes` DISABLE KEYS */;
+INSERT INTO `promocodes` (`id`, `restaurant_id`, `code`, `valid_from`, `valid_to`, `discount_type`, `discount_value`, `is_multiple`, `status`, `created`, `modified`) VALUES
+	(7, 5, 'NEW', '2016-10-01', '2016-10-26', 0, '10', 1, 0, 1475828058, 1475828058);
+/*!40000 ALTER TABLE `promocodes` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

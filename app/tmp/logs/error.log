@@ -24987,3 +24987,21 @@ Request URL: /pos/css/ajax-loader.gif
 Stack Trace:
 #0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-07 01:23:09 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/bootstrap.css.map
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-07 01:51:47 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/bootstrap.css.map
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

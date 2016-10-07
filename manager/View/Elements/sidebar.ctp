@@ -100,6 +100,19 @@
                     </a>
                 </li>
 
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'promocodes') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'promocodes','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-ticket"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Promocode Management</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>  
+
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'orders') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'orders','action' => 'index', 'admin' => 'true')); ?>">
                         <div class="item-content">

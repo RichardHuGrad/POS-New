@@ -137,12 +137,18 @@ header { background: #c30e23; height: 100px; }
 .dine-box { margin-bottom: 20px; }
 .dine-box .dinebtn { -webkit-border-radius: 15px; -moz-border-radius: 15px; border-radius: 15px; background-color: #c30e23; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.26); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.26); box-shadow: -2px 5px 5px rgba(0,0,0,.26); background-image: -webkit-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -moz-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -o-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -ms-linear-gradient(bottom, #c30e23, #df7f8a); background-image: linear-gradient(to top, #c30e23, #df7f8a); border: 0px; color: #fff; font-size: 26px; font-weight: 600; padding: 10px 20px 13px; }
 .dine-box .dinebtn img { vertical-align: -7px; margin-right: 10px; }
-.dine-wrap li { float: left; margin-bottom: 20px; margin-right: 2%; position: relative; width: 15%; }
+.dine-wrap li { float: left; margin-bottom: 20px; margin-right: 3%; position: relative; width: 11%; }
 .dine-wrap li:nth-child(6n) { margin-right: 0; }
-.dine-wrap li .notpaidwrap { height: 145px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; }
-.dine-wrap li .availablebwrap { height: 145px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; }
-.dine-wrap li .greenwrap { height: 145px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; }
-.dine-wrap li .number-txt { font-size: 30px; font-weight: bold; color: #fff; line-height: 30px; margin-bottom: 55px; }
+.dine-wrap li .notpaidwrap { height: 112px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; }
+.dine-wrap li .availablebwrap { height: 112px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; }
+.dine-wrap li .greenwrap { height: 112px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; }
+.dine-wrap li .number-txt {  color: #fff;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 12px;
+    margin-bottom: 55px;}
+
+
 .dine-wrap li .dropdown-menu { top: -10%; background: #c30e23; width: 310px; box-shadow: none; border-radius: 10px; padding: 5px; border: 0px; }
 .dine-wrap li .dropdown-menu li { border-bottom: 1px solid #cb4555; border-right: 1px solid #cb4555; margin: 0; width: 50%; }
 .dine-wrap li .dropdown-menu li:nth-child(3) { border-right: 0 none; }
@@ -224,7 +230,10 @@ background:#c30e23;
 .number-txt.for-dine { margin-bottom: 15px !important }
 .home-link { padding-top: 15px; }
 .home-link a { border: 0px; background: #c30e23; padding: 5px 25px; font-size: 18px; color: #fff; margin-right: 10px; border-radius: 8px; line-height: 22px; font-weight: 600; }
-.order_no_box { font-size: 40px; font-weight: 300; text-align: center; line-height: 35px; }
+.order_no_box { font-size: 40px;
+    font-weight: 300;
+    line-height: 20px;
+    text-align: center;}
 .product-header .slick-slider { width: 70%; margin: 0 auto; }
 /* Other Page Css */
 .otherwrap { padding: 50px 0 0; width: 80%; margin: 0 auto; }

@@ -99,13 +99,13 @@
 
             <div class="clearfix marginB30">                
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                        <ul class="dine_ul" style="height:auto; overflow:auto; min-height:700px; padding:0">
+                        <ul class="dine_ul" style="height:auto; overflow:auto; min-height:<?php echo 50*$tables['Admin']['no_of_tables']; ?>px; padding:0">
                         	<?php
                             $dine_table = @explode(",", $tables['Admin']['table_size']);
                             $dine_table_order = @$tables['Admin']['table_order']?@json_decode($tables['Admin']['table_order'], true):array();
                         	for($i = 1; $i <= $tables['Admin']['no_of_tables']; $i++) {
                         	?>
-	                        <li class="clearfix dine_li" style="<?php echo $dine_table_order[$i-1] ?>">
+	                        <li class="clearfix dine_li" style="<?php echo @$dine_table_order[$i-1] ?>">
 	                        	 <ul class="dropdown-menu">
                                     <div class="arrow"></div>
                                     <li <?php if(@$dinein_tables_status[$i] == 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'order', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)"; ?>">Order <br/>点餐</a></li>

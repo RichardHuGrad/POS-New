@@ -559,11 +559,12 @@ class HomesController extends AppController {
         $data['Order']['change'] = $change;
         $data['Order']['is_kitchen'] = 'Y';
 
+        $data['Order']['is_completed'] = 'Y';
+
         $data['Order']['card_val'] = $this->data['card_val'];
         $data['Order']['cash_val'] = $this->data['cash_val'];
         $data['Order']['tip'] = $this->data['tip_val'];
 
-// pr($data); die;
         $this->loadModel('Order');
         $this->Order->save($data, false);
 

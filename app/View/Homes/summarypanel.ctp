@@ -105,6 +105,38 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
 
     <div class="subtotalwrap">
         <div class="row">
+            
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
+                        <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">                                                    
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="discount_percent" style="font-size:11px;">Discount in %</label>
+                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">                                                    
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="promocode" style="font-size:11px;">Promo Code</label>
+                        <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">                                                    
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="AdminTableSize">&nbsp;</label>
+                            <a class="btn btn-primary btn-wide pull-right" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="subtotalwrap">
+        <div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8">Subtotal 小计</div>
             <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?></strong></div>
         </div>
