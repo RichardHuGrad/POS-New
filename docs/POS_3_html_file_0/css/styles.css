@@ -1,0 +1,109 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800);
+@charset "utf-8";
+/* CSS Document */
+html { font-size: 100% }
+article, aside, details, figcaption, figure, footer, header, main, nav, section, summary, title { display: block }
+body { font-family: 'Open Sans', sans-serif; font-weight: normal; font-style: normal; font-size: 14px; line-height: 15px; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, legend, input, textarea, p, blockquote, th, td { margin: 0; padding: 0 }
+table { border-collapse: collapse; border-spacing: 0 }
+fieldset, img { border: 0 }
+ol, ul { list-style: none }
+sub, sup { position: relative; font-size: 75%; line-height: 0; vertical-align: baseline }
+sup { top: -0.5em }
+sub { bottom: -0.25em }
+a img { border: 0; display: block }
+a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type="button"]:focus, :focus { outline: 0; text-decoration: none; }
+.clearfix { *zoom:1}
+.clearfix:before, .clearfix:after { display: block; content: ""; line-height: 0 }
+.clearfix:after { clear: both }
+.clear { clear: both }
+.btn { outline: 0px; }
+.lists { list-style: none; margin: 0px; padding: 0px;}
+/* common css */
+.bgwhite{ background:#fff;}
+.padding { padding: 0px !important; }
+.margin { margin: 0px !important }
+.marginR5 { margin-right: 5px !important; }
+.marginL5 { margin-left: 5px !important; }
+.marginB5 { margin-bottom: 5px !important; }
+.marginB10 { margin-bottom: 10px !important; }
+.marginB15 { margin-bottom: 15px !important; }
+.marginB30 { margin-bottom: 30px !important; }
+.paddinT10{ padding-top:10px !important;}
+.paddinB10{ padding-bottom:10px !important;}
+.padding15{ padding:15px !important;} 
+.padding10{ padding:10px !important;} 
+/* Fonts */
+.txt12 { font-size: 12px !important; }
+.txt13 { font-size: 13px !important; }
+.txt15 { font-size: 15px !important; }
+.txt16 { font-size: 16px !important; line-height: normal;}
+.whitecolor{ color:#fff;}
+/* Login Page Css */
+.loginpage{ padding:20% 0; width:45%; margin:0 auto;}
+.loginpage .login-logo{ width:100%; margin-bottom:40px;}
+.loginpage .form-control{ height:70px; font-size:24px; padding-left:65px; font-weight:400;}
+.loginpage .form-group{ position:relative;}
+.loginpage .form-round{ position:absolute; width:40px; height:40px; background:#c4c4c4; border-radius:50%; color:#fff; text-align:center; top:15px; left:13px; padding-top:6px; font-size:22px;}
+.loginpage .btn{ background:#c30e23; color:#fff; padding:8px 50px; font-size:30px; margin-top:30px;}
+.loginpage .forget-txt a{ padding-top:15px; font-size:24px; color:#666; font-weight:300; display:inline-block;}
+/* Calculator page Css */
+header{ background:#c30e23; height:100px;}
+.calculator{ width:50%; margin:5% auto 0; -webkit-border-radius: 12px 13px 13px 12px/13px; -moz-border-radius: 12px 13px 13px 12px/13px; border-radius: 12px 13px 13px 12px/13px; background-color: #fff; -webkit-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); -moz-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9);} 
+.calculator .calc-top{ width:100%; text-align:center; color:#696969; font-size:26px; padding:15px 30px; line-height:30px; font-weight:600;}
+.calculator .calc-top .fa{ font-size:30px; cursor:pointer;}
+.calculator .calc-total{ background:#e7e7e7; padding:10px 15px;}
+.calculator .calc-total li input{ border:0px; width:20%; background:#fff; padding:0 10px; color:#d0d0d0; border-left:1px solid #eeeded; float:left; text-align:center; height:80px; line-height:80px; font-size:40px; font-weight:600;}
+.calculator .calc-total li:first-child input{ border-left:0px; border-radius:5px 0 0 5px;}
+.calculator .calc-total li:last-child input{border-radius:0 5px 5px 0;;}
+.calculator .calc-indent li{ width:33.33%; border-left:1px solid #eeeded; float:left; text-align:center; height:110px; border-top:1px solid #eeeded; color:#696969; font-size:36px; font-weight:600; line-height:100px;}
+.calculator .calc-indent li.clear-txt{ font-size:26px;}
+.calculator .calc-indent li.enter-txt{ font-size:26px; color:#c30e23;}
+/* Product Page Css */
+.product-header{ background:#c30e23; padding:42px 0 0;}
+.product-header .nav-tabs{ border-bottom:0px;}
+.product-header .nav-tabs > li { float:inherit; display:inline-block;}
+.product-header .nav-tabs > li > a{ color:#fff; font-size:20px; border:0px; padding:15px 20px; font-weight:600;}
+.product-header .nav > li > a:hover, .product-header .nav > li > a:focus{ background:none;}
+.product-header .nav-tabs > li.active > a, .product-header .nav-tabs > li.active > a:hover, .product-header .nav-tabs > li.active > a:focus { color:#020202; background:#fff; border:0px;}
+.product-wrap{ width:95%; margin:0 auto; padding:7% 0; }
+.product-wrap .product-indent{ border-radius:10px; border:2px solid #c30e23; min-height:550px;}
+.product-indent .product-top{ background:#f7e0e3; padding:20px 15px; font-size:26px; font-weight:600; color:#c30e23; border-radius:9px 9px 0 0;}
+.product-indent li { border-bottom:1px solid #d4d4d4; padding-top:20px; padding-bottom:20px; font-size:22px; color:#282325;}
+.product-indent li:last-child{ border-bottom:0px;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

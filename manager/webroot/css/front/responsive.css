@@ -1,0 +1,33 @@
+@media screen and (max-width:1023px) {
+.calculator{ width:70%;} 
+.product-wrap{ width:100%;}
+}
+@media screen and (max-width:767px) {
+.loginpage{ width:100%; padding-top:27%;}
+.loginpage .login-logo{ width:65%; margin:0 auto 30px;}
+.loginpage .form-control{ height:60px; font-size:20px; padding-left:60px;}
+.loginpage .form-group{ position:relative;}
+.loginpage .form-round{ width:35px; height:35px; top:13px; padding-top:6px; font-size:20px;}
+.loginpage .btn{ padding:8px 20px; font-size:24px; font-weight:300; text-transform:uppercase; margin-top:10px; width:100%;}
+.loginpage .forget-txt a{ font-size:20px; padding-top:20px;}
+.loginpage .forget-txt a{ padding-top:15px; font-size:24px; color:#666; font-weight:300; display:inline-block;}
+/* Calculator page Css */
+.calculator{ width:100%; margin-top:8%;} 
+.calculator .calc-top{ font-size:24px; padding:15px 20px; line-height:20px;}
+.calculator .calc-total li input{  height:55px; line-height:55px; font-size:26px; font-weight:600;}
+.calculator .calc-indent li{ height:80px; font-size:30px; font-weight:600; line-height:80px;}
+.calculator .calc-indent li.clear-txt{ font-size:20px;}
+.calculator .calc-indent li.enter-txt{ font-size:20px; color:#c30e23;}
+/* Product Page Css */
+.product-header{ padding:60px 0 0;}
+.product-wrap .product-indent{  min-height:auto; margin-bottom:20px;}
+.product-header .nav-tabs > li > a{ color:#fff; font-size:14px; border:0px; padding:10px 8px; font-weight:600;}
+.product-header .nav > li > a:hover, .product-header .nav > li > a:focus{ background:none;}
+.product-header .nav-tabs > li.active > a, .product-header .nav-tabs > li.active > a:hover, .product-header .nav-tabs > li.active > a:focus { color:#020202; background:#fff; border:0px;}
+}
+@media screen and (max-width:320px) {
+/* Calculator page Css */
+.calculator .calc-indent li{ height:60px; font-size:26px;line-height:60px;}
+.calculator .calc-indent li.clear-txt{ font-size:18px;}
+.calculator .calc-indent li.enter-txt{ font-size:18px;}
+}

@@ -1,0 +1,9 @@
+2016-07-13 08:55:15 Notice: Notice (8): Undefined index: Cook in [/home/manoj/public_html/pos/cook/Controller/HomesController.php, line 147]
+Trace:
+HomesController::cookings() - APP/Controller/HomesController.php, line 147
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE/Cake/Controller/Controller.php, line 490
+Dispatcher::_invoke() - CORE/Cake/Routing/Dispatcher.php, line 185
+Dispatcher::dispatch() - CORE/Cake/Routing/Dispatcher.php, line 160
+[main] - APP/webroot/index.php, line 108
+
