@@ -52,7 +52,7 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Select Restaurant</label>
-                                        <?php echo $this->Form->input('restaurant_id', array('options' => $restaurants, 'class' => 'form-control', 'empty' => 'Select Restaurant', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                        <?php echo $this->Form->input('restaurant_id', array('options' => $restaurants, 'class' => 'form-control', 'empty' => 'Select Restaurant', 'label' => false, 'div' => false, 'required' => true)); ?>
                                     </div>
                                 </div>
                                 <?php } else {
@@ -60,7 +60,7 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
                                 }?>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <?php echo $this->Form->input('code', array('value' => '', 'type' => 'text', 'maxlength' => '255', 'label' => 'Promo code<span class="mandatory">*</span>', 'div' => false, 'required' => false, 'class' => 'form-control validate[required]')); ?>
+                                        <?php echo $this->Form->input('code', array( 'type' => 'text', 'maxlength' => '255', 'label' => 'Promo code<span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required]')); ?>
                                     </div>
                                 </div>
 
@@ -69,25 +69,25 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <?php echo $this->Form->input('valid_from', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid From<span class="mandatory">*</span>', 'div' => false, 'required' => false, 'class' => 'form-control validate[required] datepicker')); ?>
+                                        <?php echo $this->Form->input('valid_from', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid From<span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required] datepicker')); ?>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                      <div class="form-group">
-                                        <?php echo $this->Form->input('valid_to', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid To<span class="mandatory">*</span>', 'div' => false, 'required' => false, 'class' => 'form-control validate[required] datepicker')); ?>
+                                        <?php echo $this->Form->input('valid_to', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid To<span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required] datepicker')); ?>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <?php echo $this->Form->input('discount_type', array('options' => array(0 => 'Fixed', 1 => 'Percentage'), 'type' => 'select', 'maxlength' => '255', 'label' => 'Discount Type<span class="mandatory">*</span>', 'div' => false, 'required' => false, 'class' => 'form-control validate[required]', 'empty' => 'Select')); ?>
+                                        <?php echo $this->Form->input('discount_type', array('options' => array(0 => 'Fixed', 1 => 'Percentage'), 'type' => 'select', 'maxlength' => '255', 'label' => 'Discount Type<span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required]', 'empty' => 'Select')); ?>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <?php echo $this->Form->input('discount_value', array('type' => 'text', 'maxlength' => '25', 'label' => 'Discount Value <span class="mandatory">*</span>', 'div' => false, 'required' => false, 'class' => 'form-control validate[required]')); ?>
+                                        <?php echo $this->Form->input('discount_value', array('type' => 'text', 'maxlength' => '25', 'label' => 'Discount Value <span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required]')); ?>
                                     </div> 
                                 </div>
                                 <!-- <div class="col-md-6">
@@ -100,7 +100,7 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Status</label>
-                                        <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <?php echo $this->Form->input('status', array('options' => $option_status, 'required' => true, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                                     </div>
                                 </div>
 

@@ -25005,3 +25005,157 @@ Request URL: /pos/css/bootstrap.css.map
 Stack Trace:
 #0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-08 02:58:07 Error: [MissingActionException] Action HomesController::add_discount() could not be found.
+Exception Attributes: array (
+  'controller' => 'HomesController',
+  'action' => 'add_discount',
+)
+Request URL: /pos/homes/add_discount
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(HomesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-08 02:58:23 Error: [MissingActionException] Action HomesController::add_discount() could not be found.
+Exception Attributes: array (
+  'controller' => 'HomesController',
+  'action' => 'add_discount',
+)
+Request URL: /pos/homes/add_discount
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(HomesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-08 02:58:23 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 02:58:23 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/cake.generic.css
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 02:58:23 Error: [MissingControllerException] Controller class Favicon.icoController could not be found.
+Exception Attributes: array (
+  'class' => 'Favicon.icoController',
+  'plugin' => NULL,
+)
+Request URL: /pos/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 02:58:23 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 04:10:15 Error: Fatal Error (4): syntax error, unexpected ';', expecting ')' in [C:\xampp\htdocs\pos\app\Controller\HomesController.php, line 1030]
+2016-10-08 04:10:15 Error: [FatalErrorException] syntax error, unexpected ';', expecting ')'
+Request URL: /pos/homes/add_discount
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Error\ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 1030)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 1030, Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', 'C:\xampp\htdocs...', 1030, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-10-08 04:10:15 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/cake.generic.css
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 04:10:15 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 04:44:02 Error: Fatal Error (4): syntax error, unexpected 'if' (T_IF), expecting ',' or ';' in [C:\xampp\htdocs\pos\app\View\Homes\summarypanel.ctp, line 144]
+2016-10-08 04:44:02 Error: [FatalErrorException] syntax error, unexpected 'if' (T_IF), expecting ',' or ';'
+Request URL: /pos/homes/summarypanel/9/D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Error\ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 144)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 144, Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', 'C:\xampp\htdocs...', 144, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-10-08 04:44:35 Error: Fatal Error (4): syntax error, unexpected 'if' (T_IF), expecting ',' or ';' in [C:\xampp\htdocs\pos\app\View\Homes\summarypanel.ctp, line 144]
+2016-10-08 04:44:35 Error: [FatalErrorException] syntax error, unexpected 'if' (T_IF), expecting ',' or ';'
+Request URL: /pos/homes/summarypanel/9/D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Error\ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 144)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 144, Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', 'C:\xampp\htdocs...', 144, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-10-08 06:53:04 Error: Fatal Error (4): syntax error, unexpected '=>' (T_DOUBLE_ARROW) in [C:\xampp\htdocs\pos\app\Controller\HomesController.php, line 1196]
+2016-10-08 06:53:04 Error: [FatalErrorException] syntax error, unexpected '=>' (T_DOUBLE_ARROW)
+Request URL: /pos/homes/removeitem
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Error\ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 1196)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 1196, Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', 'C:\xampp\htdocs...', 1196, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-10-08 06:54:14 Error: Fatal Error (4): syntax error, unexpected ')' in [C:\xampp\htdocs\pos\app\Controller\HomesController.php, line 1197]
+2016-10-08 06:54:14 Error: [FatalErrorException] syntax error, unexpected ')'
+Request URL: /pos/homes/order/table:9/type:D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Error\ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 1197)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', 'C:\xampp\htdocs...', 1197, Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', 'C:\xampp\htdocs...', 1197, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-10-08 06:54:14 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/cake.generic.css
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 06:54:14 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-08 06:55:21 Error: Fatal Error (1): Call to a member function find() on a non-object in [C:\xampp\htdocs\pos\app\Controller\HomesController.php, line 1189]
+2016-10-08 06:55:21 Error: [FatalErrorException] Call to a member function find() on a non-object
+Request URL: /pos/homes/remove_discount
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Error\ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to a membe...', 'C:\xampp\htdocs...', 1189)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', 'C:\xampp\htdocs...', 1189, Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', 'C:\xampp\htdocs...', 1189, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Core\App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}

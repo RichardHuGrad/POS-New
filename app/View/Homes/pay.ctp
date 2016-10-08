@@ -11,12 +11,7 @@
                         <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
 					</div>
 					
-            </div>
-	  
-	  
-	  
-	  
-	  
+            </div>	  
       <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
   
 </header>
@@ -120,7 +115,7 @@
                         
                     </div>
                 </div>
-                <div class="col-md-8 col-sm-8 col-xs-12">
+                <div class="col-md-8 col-sm-8 col-xs-12 RIGHT-SECTION">
                     <div class="clearfix total-payment">
                         <ul>
                             <li class="clearfix">
@@ -129,12 +124,45 @@
                                     <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?></div>
 
                                   <?php 
-                                  if($Order_detail['Order']['table_status'] <> 'P') {
+                                  if($Order_detail['Order']['table_status'] <> 'P' and !$Order_detail['Order']['discount_value']) {
                                   ?>
-                                    <div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Discount 加入折扣</button></div>
+                                    <div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Discount 加入折扣</button></div>
                                     <?php }?>
                                 </div>
                             </li>
+
+                            <?php if(!$Order_detail['Order']['discount_value']) { ?>
+                              <li class="clearfix discount_view" style="display:none;">
+                                  <div class="row">
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                  <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
+                                                  <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">                                                    
+                                              </div>
+                                          </div>
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                  <label for="discount_percent" style="font-size:11px;">Discount in %</label>
+                                                  <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">                                                    
+                                              </div>
+                                          </div>
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                  <label for="promocode" style="font-size:11px;">Promo Code</label>
+                                                  <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">                                                    
+                                              </div>
+                                          </div>
+
+                                          <div class="col-md-3">
+                                              <div class="form-group">
+                                                  <label for="AdminTableSize" style="width:100%">&nbsp;</label>
+                                                      <a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
+                                              </div>
+                                          </div>
+                                          
+                                  </div>
+                              </li>
+                              <?php } ?>
 
                             <li class="clearfix">
                                 <div class="row">
@@ -142,6 +170,32 @@
                                     <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></div>
                                 </div>
                             </li>
+
+
+                        <?php if($Order_detail['Order']['discount_value'])  {
+                          ?>
+                          <li class="clearfix">
+                              <div class="row">
+                                  <?php
+                                  // show discount code here
+                                  ?>
+                                  <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div>
+                                  <div class="col-md-3 col-sm-4 col-xs-4 sub-price">
+                                      $<?php echo number_format($Order_detail['Order']['discount_value'], 2) ;
+                                              if($Order_detail['Order']['percent_discount']) {
+                                                  echo "<span class='txt12'> ".$Order_detail['Order']['promocode']." (".$Order_detail['Order']['percent_discount']."%)</span>";
+                                              }
+                                      ?> 
+                                      <a aria-hidden="true" class="fa fa-times remove_discount" order_id="<?php echo $Order_detail['Order']['id']; ?>" href="javascript:void(0)"></a>                       
+                                  </div>
+                                          
+                              </div>
+                          </li>
+                      <?php
+                      }
+                      ?>
+
+
 
                             <li class="clearfix">
                                 <div class="row">
@@ -612,4 +666,67 @@ $("#Clear").click(function() {
       }
   });
 })
+
+    $(document).on("keyup", ".discount_section", function() {
+      if($(this).val()) {
+        $(".discount_section").attr("disabled", "disabled");
+        $(this).removeAttr("disabled");
+      } else {
+        $(".discount_section").removeAttr("disabled");
+      }
+    })
+
+    $(document).on("click", "#apply-discount", function() {
+
+      var fix_discount = $("#fix_discount").val();
+      var discount_percent = $("#discount_percent").val();
+      var promocode = $("#promocode").val(); 
+
+      if(fix_discount || discount_percent || promocode) {
+        // apply promocode here
+        $.ajax({
+             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'add_discount')); ?>",
+             method:"post",
+             dataType:"json",
+             data:{fix_discount:fix_discount, discount_percent:discount_percent, promocode:promocode, order_id:"<?php echo $Order_detail['Order']['id'] ?>"},
+             success:function(html) {
+              if(html.error) {
+                alert(html.message);
+                $(".discount_section").val("").removeAttr("disabled");
+                $(".RIGHT-SECTION").removeClass('load1 csspinner');
+                return false;
+              } else {
+                window.location.reload();
+              }
+             },
+             beforeSend:function() {
+                $(".RIGHT-SECTION").addClass('load1 csspinner');
+             }
+        })
+
+
+      } else {
+        alert("Please add discount first.");
+        return false;
+      }
+    })
+
+    $(document).on('click', ".remove_discount", function() {
+        var order_id = "<?php echo $Order_detail['Order']['id'] ?>";
+        var message = $("#Message").val();
+        $.ajax({
+             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'remove_discount')); ?>",
+             method:"post",
+             data:{order_id:order_id},
+             success:function(html) {
+                window.location.reload();
+             },
+             beforeSend:function() {
+                $(".RIGHT-SECTION").addClass('load1 csspinner');
+             }
+        })
+    })
+    $(document).on('click', ".add-discount", function() {
+      $(".discount_view").toggle();
+    });
 </script>

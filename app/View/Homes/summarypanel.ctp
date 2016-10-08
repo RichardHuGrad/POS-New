@@ -99,14 +99,15 @@
 if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
     ?>
 <div class="bgwhite clearfix">
-    <div class="padding10 adddoscount">
-        Add Discount 加入折扣 <i class="fa fa-plus-circle pull-right" aria-hidden="true"></i>
-    </div>
+    <?php if(!$Order_detail['Order']['discount_value']) { ?>
+        <div class="padding10 adddoscount">
+            Add Discount 加入折扣  <i class="fa fa-plus-circle pull-right add-discount" aria-hidden="true"></i>
+        </div>
+    <?php }?>
 
-    <div class="subtotalwrap">
+    <?php if(!$Order_detail['Order']['discount_value']) { ?>
+    <div class="subtotalwrap discount_view" style="display:none;">
         <div class="row">
-            
-
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
@@ -132,9 +133,10 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
                             <a class="btn btn-primary btn-wide pull-right" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
+                
         </div>
     </div>
-
+    <?php } ?>
     <div class="subtotalwrap">
         <div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8">Subtotal 小计</div>
@@ -148,6 +150,30 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
             <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></strong></div>
         </div>
     </div>
+
+    <?php if($Order_detail['Order']['discount_value'])  {
+            ?>
+            <div class="subtotalwrap">
+                <div class="row">
+                    <?php
+                    // show discount code here
+                    ?>
+                    <div class="col-xs-8 col-sm-8 col-md-8">Discount 折扣</div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 text-right">
+                    <strong>
+                        $<?php echo number_format($Order_detail['Order']['discount_value'], 2) ;
+                                if($Order_detail['Order']['percent_discount']) {
+                                    echo "<br/><span class='txt12'> ".$Order_detail['Order']['promocode']." (".$Order_detail['Order']['percent_discount']."%)</span>";
+                                }
+                        ?> 
+                        <a aria-hidden="true" class="fa fa-times pull-right remove_discount" order_id="<?php echo $Order_detail['Order']['id']; ?>" href="javascript:void(0)"></a>                       
+                    </strong></div>
+                            
+                </div>
+            </div>
+        <?php
+        }
+        ?>
 
     <div class="subtotalwrap">
         <div class="row">

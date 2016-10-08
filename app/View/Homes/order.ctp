@@ -326,15 +326,63 @@ echo $this->fetch('script');
       var promocode = $("#promocode").val(); 
 
       if(fix_discount || discount_percent || promocode) {
-        // $(".discount_section").attr("disabled", "disabled");
-        // $(this).removeAttr("disabled");
+        // apply promocode here
+        $.ajax({
+             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'add_discount')); ?>",
+             method:"post",
+             dataType:"json",
+             data:{fix_discount:fix_discount, discount_percent:discount_percent, promocode:promocode, order_id:$("#pay").attr("alt")},
+             success:function(html) {
+              if(html.error) {
+                alert(html.message);
+                $(".discount_section").val("").removeAttr("disabled");                
+                $(".products-panel").removeClass('load1 csspinner');
+                $(".summary_box").removeClass('load1 csspinner');
+                return false;
+              } else {
+                $.ajax({
+                     url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'summarypanel', $table, $type)); ?>",
+                     method:"post",
+                     success:function(html) {
+                        $(".summary_box").html(html);                        
+                        $(".products-panel").removeClass('load1 csspinner');
+                        $(".summary_box").removeClass('load1 csspinner');
+                     }
+                })
+              }
+             },
+             beforeSend:function() {
+                $(".products-panel").addClass('load1 csspinner');
+                $(".summary_box").addClass('load1 csspinner');
+             }
+        })
+
+
       } else {
         alert("Please add discount first.");
         return false;
       }
     })
 
-
+    $(document).on('click', ".remove_discount", function() {
+        var order_id = $(this).attr("order_id");
+        var message = $("#Message").val();
+        $.ajax({
+             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'remove_discount')); ?>",
+             method:"post",
+             data:{order_id:order_id},
+             success:function(html) {
+                $(".summary_box").html(html);
+                $(".summary_box").removeClass('load1 csspinner');
+             },
+             beforeSend:function() {
+                $(".summary_box").addClass('load1 csspinner');
+             }
+        })
+    })
+    $(document).on('click', ".add-discount", function() {
+      $(".discount_view").toggle();
+    });
 
     
 </script>

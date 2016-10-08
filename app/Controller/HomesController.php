@@ -502,7 +502,7 @@ class HomesController extends AppController {
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message'),
+                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=> $conditions                    
                 )
             );  
@@ -653,7 +653,7 @@ class HomesController extends AppController {
         $this->loadModel('OrderItem');
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount'),
+                'fields'=>array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$tax_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -722,14 +722,31 @@ class HomesController extends AppController {
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + $item_detail['Cousine']['price'];
         $data['Order']['tax'] = $tax_detail['Admin']['tax'];
         $data['Order']['tax_amount'] = (@$Order_detail['Order']['tax_amount'] + $insert_data['tax_amount']);
-        $data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+
+        // calculate discount if exists
+        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
+        if($Order_detail['Order']['percent_discount']) {
+            $data['Order']['discount_value'] = $data['Order']['total']*$Order_detail['Order']['percent_discount']/100;
+        } else if($Order_detail['Order']['fix_discount']) {
+            if($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
+                $data['Order']['discount_value'] = $data['Order']['total'];
+            } else {
+                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
+            }
+        }
+        $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+
+
+
+
         $this->Order->save($data, false);
 
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message'),
+                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$tax_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -818,7 +835,7 @@ class HomesController extends AppController {
         $this->loadModel('Order');
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount'),
+                'fields'=>array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -832,14 +849,29 @@ class HomesController extends AppController {
         $data['Order']['id'] = $order_id;
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['price'] - $item_detail['OrderItem']['extras_amount'] ;
         $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail['OrderItem']['tax_amount']);
-        $data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+
+        // calculate discount if exists
+        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
+        if($Order_detail['Order']['percent_discount']) {
+            $data['Order']['discount_value'] = $data['Order']['total']*$Order_detail['Order']['percent_discount']/100;
+        } else if($Order_detail['Order']['fix_discount']) {
+            if($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
+                $data['Order']['discount_value'] = $data['Order']['total'];
+            } else {
+                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
+            }
+        }
+        $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+
+
         $this->Order->save($data, false);
 
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message'),
+                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -908,7 +940,7 @@ class HomesController extends AppController {
         $this->loadModel('Order');
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount'),
+                'fields'=>array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -922,14 +954,27 @@ class HomesController extends AppController {
         $data['Order']['id'] = $Order_detail['Order']['id'];
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['extras_amount'] + $extras_amount;
         // $data['Order']['tax_amount'] = ($data['Order']['subtotal']*$Order_detail['Order']['tax']/100);
-        $data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $Order_detail['Order']['tax_amount']);
+        $data['Order']['total'] = ($data['Order']['subtotal'] + $Order_detail['Order']['tax_amount']);
+
+        // calculate discount if exists
+        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
+        if($Order_detail['Order']['percent_discount']) {
+            $data['Order']['discount_value'] = $data['Order']['total']*$Order_detail['Order']['percent_discount']/100;
+        } else if($Order_detail['Order']['fix_discount']) {
+            if($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
+                $data['Order']['discount_value'] = $data['Order']['total'];
+            } else {
+                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
+            }
+        }
+        $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
         $this->Order->save($data, false);
 
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message'),
+                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -981,7 +1026,7 @@ class HomesController extends AppController {
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", 
             array(
-                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message'),
+                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
                 'conditions'=>array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
                     'Order.table_no'=>$table,
                     'Order.is_completed'=>'N',
@@ -992,6 +1037,194 @@ class HomesController extends AppController {
 
 
         $this->set(compact('Order_detail', 'cashier_detail'));
+    }
+
+    // add discount function
+    public function add_discount() {
+
+        $this->layout = false;
+        $this->autoRender = NULL;
+        
+        // pr($this->data); die;
+
+        // get all params
+        $order_id = $this->data['order_id'];
+        $fix_discount = $this->data['fix_discount'];
+        $percent_discount = $this->data['discount_percent'];
+        $promocode = $this->data['promocode'];
+
+        // get order details        
+        $this->loadModel('Order');
+        $Order_detail = $this->Order->find("first", 
+            array(
+                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
+                'conditions'=>array(
+                    'Order.id'=>$order_id,
+                    )
+                )
+            );
+
+        $data = array();
+        $data['Order']['id'] = $order_id;
+
+        // check discount is applicable or not
+        if($fix_discount) {
+            if($Order_detail['Order']['total'] < $fix_discount) {
+                $response  = array(
+                    'error'=>true,
+                    'message'=>'Please add valid discount'
+                    );
+            } else {
+
+                $data['Order']['discount_value'] = $fix_discount;
+                $data['Order']['fix_discount'] = $fix_discount;
+                $data['Order']['percent_discount'] = 0;
+                $data['Order']['promocode'] = "";
+                $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+
+                $this->Order->save($data, false);
+                $response  = array(
+                    'error'=>false,
+                    'message'=>'Discount successfully applied'
+                    );
+            }
+        } else if($percent_discount) {
+            if($percent_discount > 100) {
+                $response  = array(
+                    'error'=>true,
+                    'message'=>'Please add valid discount'
+                    );
+            } else {
+
+                $data['Order']['discount_value'] = $Order_detail['Order']['total']*$percent_discount/100;
+                $data['Order']['percent_discount'] = $percent_discount;
+                $data['Order']['fix_discount'] = 0;
+                $data['Order']['promocode'] = "";
+                $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+
+                $this->Order->save($data, false);
+                $response  = array(
+                    'error'=>false,
+                    'message'=>'Discount successfully applied'
+                    );
+            }
+
+        } else if($promocode) {
+            // check promocode valid or not here
+            $this->loadModel('Promocode');
+            $promo_detail = $this->Promocode->find("first", 
+                array(
+                    'conditions'=>array(
+                        'Promocode.code'=>$promocode,
+                    )
+                )
+            );
+
+
+            if(empty($promo_detail)) {
+                $response  = array(
+                    'error'=>true,
+                    'message'=>'Promocode does not exist.'
+                    );
+            } else {
+                // check promocode dates
+                 if(!(time() >= strtotime($promo_detail['Promocode']['valid_from']) and time() <= strtotime($promo_detail['Promocode']['valid_to']))) {
+                        $response = array(
+                            'error'=>true,
+                            'message'=>'Sorry, promo code is expired'
+                        );
+                    }  else {
+                        // get promocode discount and validate here
+                        if($promo_detail['Promocode']['discount_type'] == 1) {
+                            // calculate percentage here
+                            $data['Order']['discount_value'] = $Order_detail['Order']['total']*$promo_detail['Promocode']['discount_value']/100;
+                            $data['Order']['percent_discount'] = $promo_detail['Promocode']['discount_value'];
+                            $data['Order']['fix_discount'] = 0;
+                            $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                        } else {
+                            // calculate fix discount here
+                            $discount_val = $promo_detail['Promocode']['discount_value'];
+                            if($Order_detail['Order']['total'] < $discount_val) {
+                                $data['Order']['discount_value'] = $Order_detail['Order']['total'];
+                                $data['Order']['fix_discount'] = $Order_detail['Order']['total'];
+                            } else {
+                                $data['Order']['discount_value'] = $discount_val;
+                                $data['Order']['fix_discount'] = $discount_val;
+                            }
+                            $data['Order']['percent_discount'] = 0;
+                            $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+
+                        }
+                        $data['Order']['promocode'] = $promocode;
+
+                        $this->Order->save($data, false);
+                        $response  = array(
+                            'error'=>false,
+                            'message'=>'Discount successfully applied'
+                        );
+
+                    }
+                
+            }
+
+        }
+
+        echo json_encode($response);
+
+    }
+
+
+    // remove items discount
+    public function remove_discount() {
+
+        // get cashier details        
+        $this->loadModel('Cashier');
+        $cashier_detail = $this->Cashier->find("first", 
+            array(
+                'fields'=>array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+                'conditions'=>array('Cashier.id'=>$this->Session->read('Front.id'))
+                )
+            );
+
+        // get all params
+        $order_id = $this->data['order_id'];
+
+        $this->loadModel('Order');
+        $Order_detail = $this->Order->find("first", 
+            array(
+                'fields'=>array('Order.total', 'Order.discount_value'),
+                'conditions'=>array(
+                    'Order.id'=>$order_id,
+                    ),
+                'recursive'=>-1
+                )
+            );
+
+        $this->layout = false;
+        
+        $this->loadModel('OrderItem');
+
+        //update order details        
+        $data['Order']['id'] = $order_id;
+        $data['Order']['discount_value'] = 0;
+        $data['Order']['promocode'] = "";
+        $data['Order']['fix_discount'] = 0;
+        $data['Order']['percent_discount'] = 0;
+        $data['Order']['total'] = $Order_detail['Order']['total'] + $Order_detail['Order']['discount_value'];
+        $this->Order->save($data, false);
+
+        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
+        $Order_detail = $this->Order->find("first", 
+            array(
+                'fields'=>array('Order.order_no','Order.tax','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount'),
+                'conditions'=>array(
+                    'Order.id'=>$order_id,
+                    )
+                )
+            );
+
+        $this->set(compact('Order_detail', 'cashier_detail'));
+        $this->render('summarypanel');
     }
 
 }

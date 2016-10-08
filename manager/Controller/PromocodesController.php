@@ -112,33 +112,6 @@ class PromocodesController extends AppController {
             $this->Promocode->set($this->request->data);
             if ($this->Promocode->validates()) {
 
-                 $is_error_image = 0;
-                if (isset($this->request->data['Promocode']['image']['name']) && $this->request->data['Promocode']['image']['name'] != "") {
-
-                    @unlink(CASHIER_UPLOAD_PATH.'thumbnail/' . @$result_data['Promocode']['image']);
-                    $is_image_uploaded = 1;
-                    $allowed_extension = array('jpg', 'jpeg', 'png', 'gif');
-                    $extension = pathinfo($this->request->data['Promocode']['image']['name'], PATHINFO_EXTENSION);
-                    $extension = strtolower($extension);
-                    if (!in_array($extension, $allowed_extension)) {
-                        $is_error_image = 1;
-                        $this->Session->setFlash(__("Uploaded Signature Image should be of " . implode(", ", $allowed_extension) . " type only"), 'error');
-                    } else {
-                        $is_error_image = 0;
-                        $product_pic = time() . "_Cashier." . $extension;
-                        if (move_uploaded_file($this->request->data['Promocode']['image']['tmp_name'], CASHIER_UPLOAD_PATH . $product_pic)) {
-                            $this->resize($product_pic, 60, CASHIER_UPLOAD_PATH);
-                            $this->request->data['Promocode']['image'] = $product_pic;
-                            unlink(CASHIER_UPLOAD_PATH . $product_pic);
-                        }
-                    }
-                } else {
-                    $this->request->data['Promocode']['image'] = @$result_data['Promocode']['image'];
-                }
-
-                if(isset($this->request->data['Promocode']['password'])) {
-                    $this->request->data['Promocode']['password'] = Security::hash($this->request->data['Promocode']['password'], 'md5');
-                }
                 if ($this->Promocode->save($this->request->data, $validate = false)) {
 
                     if('' == $id){
