@@ -40,10 +40,10 @@ $registered_till = @$search['registered_till'];
     margin-left: 22px;
 }
 .checkbox label{
-      background-color: #7E7E7E;
+  background-color: #7E7E7E;
   border-color: #7E7E7E;
   color: #ffffff;
-    transition: all 0.3s ease 0s !important;
+  transition: all 0.3s ease 0s !important;
   background-image: none !important;
   box-shadow: none !important;
   outline: none !important;

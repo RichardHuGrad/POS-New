@@ -5746,3 +5746,121 @@ Request URL: /pos/manager/js/html5.js
 Stack Trace:
 #0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-10 00:41:34 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 00:41:34 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 00:41:34 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 00:41:34 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 00:41:34 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 04:23:13 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Array' in 'field list'
+Request URL: /pos/manager/admin/cuisines/edit/MjA=
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`c...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`c...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1821): Mysql->update(Object(Cousine), Array, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\CousinesController.php(178): Model->save(Array, false)
+#5 [internal function]: CousinesController->admin_add_edit('MjA=')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CousinesController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(CousinesController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-10 08:36:12 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 08:36:12 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 08:36:13 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 08:36:13 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 08:36:14 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-10 08:37:42 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Array' in 'field list'
+Request URL: /pos/manager/admin/cuisines/edit/Mzg=
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`c...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`c...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1821): Mysql->update(Object(Cousine), Array, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\CousinesController.php(178): Model->save(Array, false)
+#5 [internal function]: CousinesController->admin_add_edit('Mzg=')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CousinesController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(CousinesController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}

@@ -333,12 +333,14 @@ class HomesController extends AppController {
 
         // check item if already done or not
         $this->loadModel('OrderItem');
+        $this->loadModel('Order');
         $item_detail = $this->OrderItem->find("first", 
             array(
-                'fields'=>array('OrderItem.is_done'),
+                'fields'=>array('OrderItem.is_done', 'OrderItem.order_id'),
                 'conditions'=>array('OrderItem.id'=>$item_id),
             )
         );
+
         if($item_detail['OrderItem']['is_done'] == 'Y') {
             $data['OrderItem']['is_done'] = 'N';
         } else{
@@ -347,6 +349,27 @@ class HomesController extends AppController {
         // save order to database        
         $data['OrderItem']['id'] = $item_id;
         $this->OrderItem->save($data, false);
+
+        // check all order items is finished or not
+        $order_status = $this->OrderItem->find("first", 
+            array(
+                'fields'=>array('count(OrderItem.id) as counter'),
+                'conditions'=>array('OrderItem.order_id'=>$item_detail['OrderItem']['order_id'], 'OrderItem.is_done'=>'N'),
+            )
+        );
+        if(!$order_status[0]['counter']) {
+
+            $data_order['Order']['id'] = $item_detail['OrderItem']['order_id'];
+            $data_order['Order']['cooking_status'] = 'COOKED';
+            $this->Order->save($data_order, false);
+        } else {
+
+            $data_order['Order']['id'] = $item_detail['OrderItem']['order_id'];
+            $data_order['Order']['cooking_status'] = 'UNCOOKED';
+            $this->Order->save($data_order, false);  
+        }
+
+
         if( $data['OrderItem']['is_done'] == 'N') 
             echo json_encode(array('done'=>false));
         else            
@@ -362,13 +385,44 @@ class HomesController extends AppController {
         $item_ids = explode(",", $this->data['item_id']);
 
         // save order to database    
+        $this->loadModel('OrderItem');
         foreach ($item_ids as $key => $value) {
                 # code...
             $data['OrderItem']['id'] = $value;
             $data['OrderItem']['is_done'] = 'Y';
-            $this->loadModel('OrderItem');
             $this->OrderItem->save($data, false);
-        }    
+        }   
+
+
+        $this->loadModel('Order');
+        $item_detail = $this->OrderItem->find("first", 
+            array(
+                'fields'=>array('OrderItem.is_done', 'OrderItem.order_id'),
+                'conditions'=>array('OrderItem.id'=>$item_ids[0]),
+            )
+        );
+
+        // check all order items is finished or not
+        $order_status = $this->OrderItem->find("first", 
+            array(
+                'fields'=>array('count(OrderItem.id) as counter'),
+                'conditions'=>array('OrderItem.order_id'=>$item_detail['OrderItem']['order_id'], 'OrderItem.is_done'=>'N'),
+            )
+        );
+        if(!$order_status[0]['counter']) {
+
+            $data_order['Order']['id'] = $item_detail['OrderItem']['order_id'];
+            $data_order['Order']['cooking_status'] = 'COOKED';
+            $this->Order->save($data_order, false);
+        } else {
+
+            $data_order['Order']['id'] = $item_detail['OrderItem']['order_id'];
+            $data_order['Order']['cooking_status'] = 'UNCOOKED';
+            $this->Order->save($data_order, false);  
+        }
+
+
+
         
         echo true;
     }
@@ -381,14 +435,25 @@ class HomesController extends AppController {
         $item_ids = explode(",", $this->data['item_id']);
 
         // save order to database    
+        $this->loadModel('OrderItem');
         foreach ($item_ids as $key => $value) {
                 # code...
             $data['OrderItem']['id'] = $value;
             $data['OrderItem']['is_done'] = 'N';
-            $this->loadModel('OrderItem');
             $this->OrderItem->save($data, false);
         }    
-        
+
+        $this->loadModel('Order');
+        $item_detail = $this->OrderItem->find("first", 
+            array(
+                'fields'=>array('OrderItem.is_done', 'OrderItem.order_id'),
+                'conditions'=>array('OrderItem.id'=>$item_ids[0]),
+            )
+        );
+
+        $data_order['Order']['id'] = $item_detail['OrderItem']['order_id'];
+        $data_order['Order']['cooking_status'] = 'UNCOOKED';
+        $this->Order->save($data_order, false);  
         echo true;
     }
 
@@ -725,18 +790,21 @@ class HomesController extends AppController {
         $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
 
         // calculate discount if exists
-        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
-        if($Order_detail['Order']['percent_discount']) {
-            $data['Order']['discount_value'] = $data['Order']['total']*$Order_detail['Order']['percent_discount']/100;
-        } else if($Order_detail['Order']['fix_discount']) {
-            if($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
-                $data['Order']['discount_value'] = $data['Order']['total'];
-            } else {
-                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
+        if(!empty($Order_detail)) {
+            $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
+            if($Order_detail['Order']['percent_discount']) {
+                $data['Order']['discount_value'] = $data['Order']['total']*$Order_detail['Order']['percent_discount']/100;
+            } else if($Order_detail['Order']['fix_discount']) {
+                if($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
+                    $data['Order']['discount_value'] = $data['Order']['total'];
+                } else {
+                    $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
+                }
             }
+            $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+        } else {
+           $data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']); 
         }
-        $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-
 
 
 

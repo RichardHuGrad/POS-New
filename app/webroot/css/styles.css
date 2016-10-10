@@ -122,7 +122,7 @@ header { background: #c30e23; height: 100px; }
 .card-indent li.clear-txt { font-size: 26px; }
 .card-indent li.enter-txt { font-size: 26px; color: #c30e23; }
 .card-bot { padding: 20px 0 30px; }
-.card-bot .btn { font-size: 24px; vertical-align: middle; margin: 0 10px; padding: 10px 15px; opacity: 0.2; }
+.card-bot .btn { font-size: 19px; vertical-align: middle; margin: 0 10px; padding: 10px 15px; opacity: 0.2; }
 .card-bot .btn.active { opacity: 1 !important; }
 .card-ok { opacity: 1 !important; }
 /* Index Page Css */
@@ -189,7 +189,7 @@ background:#c30e23;
 .subtotalwrap { color: #323634; font-size: 16px; padding: 20px 15px; border-top: 1px solid #e0e0e0; }
 .commentwrap { padding: 20px 15px 10px; }
 .commentwrap textarea { border-radius: 20px; border-color: #d2d2d2; box-shadow: none; height: 120px; }
-.submitbtn { border: 0px; background: #c30e23; padding: 15px 25px; font-size: 18px; color: #fff; border-radius: 8px; margin-right: 10px; font-weight: 600; }
+.submitbtn { border: 0px; background: #c30e23; padding: 15px 25px; font-size: 13px; color: #fff; border-radius: 8px; margin-right: 10px; font-weight: 600; }
 .paybtn { border: 0px; background: #292929; padding: 15px 30px; font-size: 18px; color: #fff; border-radius: 8px; margin-right: 10px; font-weight: 600; }
 .close-link { 
 	color: rgb(195, 14, 35);
@@ -236,7 +236,7 @@ background:#c30e23;
     text-align: center;}
 .product-header .slick-slider { width: 70%; margin: 0 auto; }
 /* Other Page Css */
-.otherwrap { padding: 50px 0 0; width: 80%; margin: 0 auto; }
+.otherwrap { padding: 13px 0 0; width: 80%; margin: 0 auto; }
 .otherwrap ul { margin: 0px; padding: 0px; list-style: none; }
 .otherwrap ul li { padding: 12px 35px; background: #fff; border-radius: 4px 4px 0 0; display: inline-block; margin: 0 5px; }
 .otherwrap ul li .checkbox-btn label { color: #000; padding: 2px 0 0 20px; }

@@ -187,7 +187,7 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
     </div>
 
     <div class="clearfix padding15">
-        <button type="submit" class="submitbtn" id="submit" alt="<?php echo $Order_detail['Order']['id'] ?>">Submit 提交</button>
+        <button type="submit" class="submitbtn" id="submit" alt="<?php echo $Order_detail['Order']['id'] ?>">Send to kitchen 发送到厨房</button>
         <button type="submit" class="paybtn" id="pay" alt="<?php echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
     </div>
 </div>

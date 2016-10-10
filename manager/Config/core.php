@@ -391,7 +391,7 @@ $directory = $_SERVER['DOCUMENT_ROOT'] . '/';
 $url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
 
 
-$project_directory = '/';
+$project_directory = '/pos/';
 
 $db_host = 'localhost';
 $db_username = 'root';

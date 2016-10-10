@@ -292,7 +292,7 @@
 
                         <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
 
-                        <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Ok 好</button>
+                        <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
                         <input type="hidden" id="selected_card" value="" />
                         <input type="hidden" id="card_val" name="card_val" value="" />
                         <input type="hidden" id="cash_val" name="cash_val" value="" />
@@ -549,6 +549,7 @@ $(".select_tip"). click(function() {
                 window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
              },
              beforeSend:function() {
+                $(".RIGHT-SECTION").addClass('load1 csspinner');
                 $(".alert-warning").show();
              }
         })

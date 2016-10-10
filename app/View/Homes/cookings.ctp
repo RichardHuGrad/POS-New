@@ -1,30 +1,6 @@
--<?php
+<?php
 echo $this->Html->css(array('slick.css'));
 ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>
-var printingstatus = 0;
-    $( document ).ready(function() {
-        window.setInterval(function(){
-
-	if (printingstatus == 0) {
-		printingstatus = 5;
-        	$(".slick-current .submitbtn").click();//print
-	} else if (printingstatus == 2) {
-		printingstatus = 3;
-        	$(".slick-current .finishbtn").click();//finish
-	} else if (printingstatus >= 4) {
-                window.location.reload(1);
-	}
-        }, 5000);
-
-    });
-</script>
-<script type="text/javascript">
-$( document ).ready(function() {
-window.onfocus=function(){ window.close();}
-});
-</script>
 <body>
     <header class="product-header">
         
@@ -46,7 +22,7 @@ window.onfocus=function(){ window.close();}
                 <?php
                 if (!empty($items_array)) {
                     ?>
-                    <ul>
+                    <ul class="multiple-items-cooking">
                         <?php
                         $count = 0;
                         foreach ($items_array as $key => $value) {
@@ -55,7 +31,7 @@ window.onfocus=function(){ window.close();}
                             ?>
                             <li>
                                 <div class="checkbox-btn">
-                                    <input type="checkbox" <?php if ($category[2] != 7) echo 'checked="checked"'; ?> value="<?php echo $category[2]; ?>" class="category_name" id="rc<?php echo $category[2]; ?>" name="rc<?php echo $category[2]; ?>"/>
+                                    <input type="checkbox" <?php if ($count == 1) echo 'checked="checked"'; ?> value="<?php echo $category[2]; ?>" class="category_name" id="rc<?php echo $category[2]; ?>" name="rc<?php echo $category[2]; ?>"/>
                                     <label for="rc<?php echo $category[2]; ?>" onclick><?php echo $category[0] . "<br/>" . $category[1] ?></label>
                                 </div>
                             </li>
@@ -64,16 +40,17 @@ window.onfocus=function(){ window.close();}
                 <?php } ?>
             </div>
                
-    </header><div class="container otherpage">
+    </header>
+    <div class="container otherpage">
         <div class="clearfix othertopwrap">
             <div class="row">
-                <div class="col-md-10 col-sm-6 col-xs-12 marginB15">
+                <div class="col-md-10 col-sm-9 col-xs-12 marginB15">
                 </div>
 
-                <div class="col-md-2 col-sm-6 col-xs-12">
+                <div class="col-md-2 col-sm-3 col-xs-12">
                     <div class="checkbox-btn change_orders" alt="active_orders">
                         <input type="checkbox" <?php if (!$type) echo 'checked'; ?>  value="value-1" id="rc" name="rc"/>
-                        <label for="rc">Active Order<br/>当前订单</label>
+                        <label for="rc">Active Orders<br/>当前订单</label>
                     </div>
                     <div class="checkbox-btn change_orders"  alt="finished_orders">
                         <input type="checkbox"  <?php if ($type) echo 'checked'; ?>  value="value-1" id="rcm" name="rcm"/>
@@ -95,7 +72,7 @@ window.onfocus=function(){ window.close();}
                                 $count++;
                                 $category = explode("|||", $key);
                                 foreach ($records as $order_id => $value) {
-                                    if ($category[2] != 7) {
+                                    if ($count == 1) {
                                         ?>
                                         <div class="marginB30 rc<?php echo $category[2]; ?> column<?php echo $order_id . $category[2]; ?>" >
                                             <div class="avoid-this text-center reprint" alt="column<?php echo $order_id . $category[2]; ?>"><button type="button" class="submitbtn">Reprint 重印</button></div>
@@ -103,14 +80,14 @@ window.onfocus=function(){ window.close();}
                                                 <ul class="get_height">
                                                     <li class="clearfix padding smallcontent">
                                                         <div class="col-md-2 col-sm-3 text-center padding10 redbdr">
-                                                            <?php echo (($value[0]['order_type']=='D') ? '堂食' : (($value[0]['order_type']=='T') ? '外卖' : (($value[0]['order_type']=='W') ? '等候' : ''))) . " #" . str_pad($value[0]['table_no'], 2, 0, STR_PAD_LEFT) ?>
+                                                            Table 桌 <?php echo $value[0]['order_type'] . str_pad($value[0]['table_no'], 2, 0, STR_PAD_LEFT) ?>
                                                         </div>
-                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr"><?php echo $value[0]['category_name_zh'] ?>  </div>
+                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr"><?php echo $value[0]['category_name_en'] . "<br/>" . $value[0]['category_name_zh'] ?>  </div>
                                                         <div class="col-md-3 col-sm-3 text-center padding10 redbdr">
-                                                            订单号 #<?php echo $value[0]['order_no']; ?>
+                                                            Order 订单号 #<?php echo $value[0]['order_no']; ?>
                                                         </div>
-                                                        <div class="col-md-4 col-sm-3 text-center padding10 padP50">
-                                                            <?php// echo  date('h:ia m/d/Y', strtotime($value[0]['order_created']))?>  
+                                                        <div class="col-md-4 col-sm-3 text-center padding10">
+                                                            <?php echo  "Order Time 点餐 时 " . date('h:ia<br/> m/d/Y', strtotime($value[0]['order_created']))?>  
                                                         </div>
                                                     </li>
                                                     <?php
@@ -124,9 +101,7 @@ window.onfocus=function(){ window.close();}
                                                             // prepare extras string
                                                             if(!empty($selected_extras)) {
                                                                 foreach($selected_extras as $k=>$v){
-							$enameArr = explode(" ", $v['name']);
-                                                        $selected_extras_name[] = array_pop($enameArr);
-//                                                                    $selected_extras_name[] = $v['name'];
+                                                                    $selected_extras_name[] = $v['name'];
                                                                 }
                                                             }
                                                         }
@@ -134,7 +109,7 @@ window.onfocus=function(){ window.close();}
                                                         <li alt="<?php echo $item['id']; ?>"  class="sub_teams sub_item_row<?php echo $item['id']; ?> clearfix <?php if ($item['is_done'] == 'Y') echo "already_done"; ?>">
                                                             <div class="col-md-12 text-center">
                                                                 <!-- <span class='pull-left'> -->
-                                                                    <?php echo  $item['name_xh'] ?>
+                                                                    <?php echo $item['name_en'] . "M<br/>" . $item['name_xh'] ?>
                                                                 <!-- </span> -->
                                                                 
                                                                     <!-- <span class='pull-right span<?php echo $item['id']; ?>'>
@@ -210,12 +185,11 @@ window.onfocus=function(){ window.close();}
         <script type="text/javascript">
 
             $(document).on('click', '.reprint', function () {
-printingstatus = 1;
                 var id = $(this).attr("alt");
                 //Print ele4 with custom options
-                $(".pr" + id).print({
+                $("." + id).print({
                     //Use Global styles
-                    //globalStyles: false,
+                    globalStyles: false,
                     //Add link with attrbute media=print
                     mediaPrint: true,
                     //Custom stylesheet
@@ -229,7 +203,6 @@ printingstatus = 1;
                     //Add this on bottom
                     // append : "<br/>Buh Bye!"
                 });
-printingstatus = 2;
             });
 
             $(document).on("click", ".change_orders", function (e) {
@@ -286,8 +259,8 @@ printingstatus = 2;
                         // reset slider again
                         $('.multiple-items').slick({
                             infinite: false,
-                            slidesToShow: 3,
-                            slidesToScroll: 3
+                            slidesToShow: 2,
+                            slidesToScroll: 2
                         })
 
                         $(".tab-content").removeClass('load1 csspinner');
@@ -326,12 +299,11 @@ printingstatus = 2;
                         // reset slider again
                         $('.multiple-items').slick({
                             infinite: false,
-                            slidesToShow: 3,
-                            slidesToScroll: 3
+                            slidesToShow: 2,
+                            slidesToScroll: 2
                         })
 
                         $(".tab-content").removeClass('load1 csspinner');
-printingstatus = 4;
                     },
                     beforeSend: function () {
                         $(".tab-content").addClass('load1 csspinner');
@@ -340,6 +312,11 @@ printingstatus = 4;
             })
 
             $(document).ready(function () {
+                $('.multiple-items-cooking').slick({
+                  infinite: false,
+                  slidesToShow: 2,
+                  slidesToScroll: 2
+                });
                 var height = new Array();
                 $(".get_height").map(function() {
                     height.push($(this).height());
@@ -370,15 +347,15 @@ printingstatus = 4;
 
                     $('.multiple-items').slick({
                         infinite: false,
-                        slidesToShow: 3,
-                        slidesToScroll: 3
+                        slidesToShow: 2,
+                        slidesToScroll: 2
                     })
                 })
 <?php if (!empty($items_array)) { ?>
                     $('.multiple-items').slick({
                         infinite: false,
-                        slidesToShow: 3,
-                        slidesToScroll: 3
+                        slidesToShow: 2,
+                        slidesToScroll: 2
                     });
 <?php } ?>
             })
@@ -392,28 +369,23 @@ printingstatus = 4;
                 foreach ($items_array as $key => $records) {
                     $count++;
                     $category = explode("|||", $key);
-                    foreach ($records as $value) {
+                    foreach ($records as $order_id=>    $value) {
                         ?>
-                         <div class="marginB30 rc<?php echo $category[2]; ?> prcolumn<?php echo $order_id . $category[2]; ?>" >
+                         <div class="marginB30 rc<?php echo $category[2]; ?> column<?php echo $order_id . $category[2]; ?>" >
                                             <div class="avoid-this text-center reprint" alt="column<?php echo $order_id . $category[2]; ?>"><button type="button" class="submitbtn">Reprint 重印</button></div>
                                             <div class="product-indent clearfix">
-                                                <!--ul class="get_height"-->
-                                                <ul style="height:500px">
+                                                <ul class="get_height">
                                                     <li class="clearfix padding smallcontent">
                                                         <div class="col-md-2 col-sm-3 text-center padding10 redbdr">
-                                                            <?php echo (($value[0]['order_type']=='D') ? '堂食' : (($value[0]['order_type']=='T') ? '外卖' : (($value[0]['order_type']=='W') ? '等候' : ''))) . " #" . str_pad($value[0]['table_no'], 2, 0, STR_PAD_LEFT) ?>
+                                                            Table 桌 <?php echo $value[0]['order_type'] . str_pad($value[0]['table_no'], 2, 0, STR_PAD_LEFT) ?>
                                                         </div>
-                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr">&nbsp;</div>
-                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr"><?php echo $value[0]['category_name_zh'] ?>  </div>
-                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr">&nbsp;</div>
+                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr"><?php echo $value[0]['category_name_en'] . "<br/>" . $value[0]['category_name_zh'] ?>  </div>
                                                         <div class="col-md-3 col-sm-3 text-center padding10 redbdr">
-                                                            订单号 #<?php echo $value[0]['order_no']; ?>
+                                                            Order 订单号 #<?php echo $value[0]['order_no']; ?>
                                                         </div>
-                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr">&nbsp;</div>
                                                         <div class="col-md-4 col-sm-3 text-center padding10">
-                                                            <?php echo  date('h:ia', strtotime($value[0]['order_created']))?>  
+                                                            <?php echo  "Order Time 点餐 时 " . date('h:ia<br/> m/d/Y', strtotime($value[0]['order_created']))?>  
                                                         </div>
-                                                        <div class="col-md-3 col-sm-3 text-center padding10 redbdr">&nbsp;</div>
                                                     </li>
                                                     <?php
                                                     $ids = [];
@@ -426,18 +398,15 @@ printingstatus = 4;
                                                             // prepare extras string
                                                             if(!empty($selected_extras)) {
                                                                 foreach($selected_extras as $k=>$v){
-							$enameArr = explode(" ", $v['name']);
-                                                        $selected_extras_name[] = array_pop($enameArr);
-//                                                                    $selected_extras_name[] = $v['name'];
+                                                                    $selected_extras_name[] = $v['name'];
                                                                 }
                                                             }
                                                         }
-if ($item['is_done'] != 'Y') {
                                                         ?>
                                                         <li alt="<?php echo $item['id']; ?>"  class="sub_teams sub_item_row<?php echo $item['id']; ?> clearfix <?php if ($item['is_done'] == 'Y') echo "already_done"; ?>">
                                                             <div class="col-md-12 text-center">
                                                                 <!-- <span class='pull-left'> -->
-                                                                    <?php echo $item['name_xh'] ?>
+                                                                    <?php echo $item['name_en'] . "M<br/>" . $item['name_xh'] ?>
                                                                 <!-- </span> -->
                                                                 
                                                                     <!-- <span class='pull-right span<?php echo $item['id']; ?>'>
@@ -455,7 +424,6 @@ if ($item['is_done'] != 'Y') {
                                                             }
                                                             ?>
                                                         </li>
-                                                    <?php } ?>
                                                     <?php } ?>
                                                 </ul>
                                                 <?php

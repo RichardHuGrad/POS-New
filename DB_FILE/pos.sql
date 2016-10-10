@@ -142,11 +142,12 @@ CREATE TABLE IF NOT EXISTS `cooks` (
   `created` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `cooks` DISABLE KEYS */;
 INSERT INTO `cooks` (`id`, `cashier_id`, `firstname`, `lastname`, `mobile_no`, `email`, `password`, `is_verified`, `status`, `created`, `modified`) VALUES
-	(4, 3, 'Danial', 'pos_v1', '1245512454', 'cook@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-07-09 11:38:20', '2016-07-09 11:38:20');
+	(4, 3, 'Danial', 'pos_v1', '1245512454', 'cook@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-07-09 11:38:20', '2016-07-09 11:38:20'),
+	(5, 3, 'my', 'cook', '321123213', 'bhawani_cook@pos.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-10-10 03:10:28', '2016-10-10 03:10:28');
 /*!40000 ALTER TABLE `cooks` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `cousines` (
@@ -170,13 +171,13 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(11, 5, 3, 5, 5, '1467370839_cousine.jpg', 'A', 1467364487, 39, 'Y', 1468439835),
 	(12, 5, 3, 7, 5, '1467370844_cousine.jpg', 'A', 1467364534, 17, 'N', 1467370844),
 	(13, 5, 3, 2.76, 5, '1467370850_cousine.jpg', 'A', 1467364578, 10, 'N', 1467789389),
-	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 9, 'N', 1467370863),
+	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 10, 'N', 1467370863),
 	(15, 5, 3, 5, 5, '1467370868_cousine.jpg', 'A', 1467364665, 33, 'N', 1467370868),
-	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 14, 'N', 1467370873),
+	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 15, 'N', 1467370873),
 	(17, 5, 3, 2, 6, '1467452671_cousine.jpg', 'A', 1467452671, 25, 'N', 1467453150),
 	(18, 5, 3, 1.5, 6, NULL, 'A', 1467452729, 14, 'N', 1467453136),
 	(19, 5, 0, 4, 6, '1468422744_cousine.jpg', 'A', 1468422744, 5, 'Y', 1468422744),
-	(20, 5, 0, -5, 8, NULL, 'A', 1468435866, 1, 'Y', 1468436093),
+	(20, 5, 0, 5, 8, NULL, 'A', 1468435866, 1, 'Y', 1476077162),
 	(21, 5, 0, 9.8, 9, NULL, 'A', 1468436158, 0, 'N', 1468436816),
 	(22, 5, 0, 99999, 9, NULL, 'A', 1468436565, 0, 'Y', 1468436788),
 	(23, 5, 0, 99, 5, NULL, 'A', 1468436915, 0, 'N', 1468436915),
@@ -194,8 +195,8 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(35, 5, 0, 36, 6, NULL, 'A', 1468443537, 0, 'Y', 1468443537),
 	(36, 5, 0, 40, 7, NULL, 'A', 1468443568, 0, 'Y', 1468443568),
 	(37, 5, 0, 8, 5, NULL, 'A', 1468443619, 1, 'Y', 1468443619),
-	(38, 5, 0, 5, 7, NULL, 'A', 1468443674, 1, 'Y', 1468443674),
-	(39, 5, 0, 50, 9, NULL, 'A', 1468443709, 1, 'Y', 1468443709);
+	(38, 5, 0, 5, 7, '1476103101_cousine.png', 'A', 1468443674, 1, 'Y', 1476103101),
+	(39, 5, 0, 50, 9, NULL, 'A', 1468443709, 5, 'Y', 1468443709);
 /*!40000 ALTER TABLE `cousines` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `cousine_locals` (
@@ -230,8 +231,8 @@ INSERT INTO `cousine_locals` (`id`, `parent_id`, `name`, `lang_code`, `created`,
 	(32, 18, 'è”¬èœèŽ«èŽ«', 'zh', 1467452729, 1467453136),
 	(33, 19, 'Rice', 'en', 1468422744, 1468422744),
 	(34, 19, 'é¥­', 'zh', 1468422744, 1468422744),
-	(35, 20, 'dish1', 'en', 1468435866, 1468436093),
-	(36, 20, 'èœ1', 'zh', 1468435866, 1468436093),
+	(35, 20, 'dish1', 'en', 1468435866, 1476077162),
+	(36, 20, 'èœ1', 'zh', 1468435866, 1476077162),
 	(37, 21, 'dish2', 'en', 1468436158, 1468436816),
 	(38, 21, 'èœ2', 'zh', 1468436158, 1468436816),
 	(39, 22, 'dish3', 'en', 1468436565, 1468436788),
@@ -266,8 +267,8 @@ INSERT INTO `cousine_locals` (`id`, `parent_id`, `name`, `lang_code`, `created`,
 	(68, 36, 'èœ16', 'zh', 1468443568, 1468443568),
 	(69, 37, 'D17', 'en', 1468443619, 1468443619),
 	(70, 37, 'èœ17', 'zh', 1468443619, 1468443619),
-	(71, 38, '18', 'en', 1468443674, 1468443674),
-	(72, 38, 'èœ18', 'zh', 1468443674, 1468443674),
+	(71, 38, '18', 'en', 1468443674, 1476103101),
+	(72, 38, 'èœ18', 'zh', 1468443674, 1476103101),
 	(73, 39, 'D19', 'en', 1468443709, 1468443709),
 	(74, 39, 'èœ19', 'zh', 1468443709, 1468443709);
 /*!40000 ALTER TABLE `cousine_locals` ENABLE KEYS */;
@@ -363,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `percent_discount` float DEFAULT NULL,
   `discount_value` float DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
 INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `counter_id`, `table_no`, `table_status`, `tax`, `tax_amount`, `subtotal`, `total`, `card_val`, `cash_val`, `tip`, `paid`, `change`, `promocode`, `message`, `reason`, `order_type`, `is_kitchen`, `cooking_status`, `is_hide`, `created`, `is_completed`, `paid_by`, `fix_discount`, `percent_discount`, `discount_value`) VALUES
@@ -423,21 +424,26 @@ INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `
 	(83, '93383', '0', 0, 3, 3, 10, 'N', 12, 11.8524, 118.53, 130.382, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'P', '2016-07-13 17:03:32', 'N', NULL, NULL, NULL, NULL),
 	(84, '90184', '0', 0, 5, 3, 1, 'P', 12, 0.6, 10, 10.6, 10, 0.6, 1, 10.6, 0, NULL, 'test check', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-09-16 05:37:28', 'N', 'MIXED', NULL, NULL, NULL),
 	(85, '94585', '0', 0, 5, 3, 2, 'P', 12, 2.16, 33, 35.15, 35.15, NULL, NULL, 35.15, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 06:12:48', 'Y', 'CARD', NULL, NULL, NULL),
-	(86, '98686', '0', 0, 5, 3, 3, 'P', 12, 0, 11, 11, 11, NULL, 50, 11, 0, NULL, NULL, NULL, 'T', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:14:20', 'N', 'CARD', NULL, NULL, NULL),
+	(86, '98686', '0', 0, 5, 3, 3, 'P', 12, 0, 11, 11, 11, NULL, 50, 11, 0, NULL, NULL, NULL, 'T', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:14:20', 'Y', 'CARD', NULL, NULL, NULL),
 	(87, '91887', '0', 0, 5, 3, 4, 'P', 12, 0.6, 10, 10.6, 10.6, NULL, NULL, 10.6, 0, NULL, 'assadsa', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:14:51', 'N', 'CARD', NULL, NULL, NULL),
 	(88, '98488', '0', 0, 5, 3, 5, 'P', 12, 0, 1.5, 1.5, NULL, 1.5, NULL, 1.5, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:25:55', 'N', 'CASH', NULL, NULL, NULL),
 	(89, '93789', '0', 0, 5, 3, 6, 'P', 12, 0.6, 5, 5.6, 5.6, NULL, NULL, 5.6, 0, NULL, '', '', 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:27:14', 'N', 'CARD', NULL, NULL, NULL),
-	(90, '98690', '0', 0, 5, 3, 4, 'P', 12, 1.8, 20, 21.8, NULL, NULL, NULL, NULL, NULL, NULL, 'AAA', '', 'T', 'Y', 'COOKED', 'P', '2016-09-17 04:48:36', 'N', NULL, NULL, NULL, NULL),
+	(90, '98690', '0', 0, 5, 3, 1, 'P', 12, 1.8, 20, 21.8, NULL, NULL, NULL, NULL, NULL, NULL, 'AAA', '', 'W', 'Y', 'COOKED', 'P', '2016-09-17 04:48:36', 'Y', NULL, NULL, NULL, NULL),
 	(91, '91391', '0', 0, 5, 3, 10, 'P', 12, 0.6, 12, 12.6, 10, 2.6, 10, 12.6, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:40:11', 'N', 'MIXED', NULL, NULL, NULL),
 	(92, '88592', '0', 0, 5, 3, 9, 'P', 13, 12.6, 111.76, 124.35, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:42:12', 'Y', NULL, NULL, NULL, 12.435),
-	(93, '92693', '0', 0, 5, NULL, 3, 'P', 12, 2.5848, 32.54, 35.1, 0.1, 35, 1, 35.1, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:45:17', 'N', 'MIXED', NULL, NULL, NULL),
-	(94, '95194', '0', 0, 5, 3, 2, 'N', 12, 1.56, 13, 14.55, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-06 09:03:32', 'N', NULL, NULL, NULL, NULL),
+	(93, '92693', '0', 0, 5, 3, 3, 'P', 12, 2.5848, 32.54, 35.1, 0.1, 35, 1, 35.1, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:45:17', 'N', 'MIXED', NULL, NULL, NULL),
+	(94, '95194', '0', 0, 5, 3, 2, 'N', 12, 1.56, 13, 14.55, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:03:32', 'N', NULL, NULL, NULL, NULL),
 	(95, '88895', '0', 0, 5, 3, 8, 'P', 13, 0.65, 5, 5.65, NULL, 5.65, NULL, 5.65, 0, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:10:47', 'N', 'CASH', NULL, NULL, NULL),
 	(96, '98296', '0', 0, 5, 3, 7, 'P', 13, 0.52, 15.76, 16.25, NULL, 16.25, NULL, 16.25, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:37:44', 'Y', 'CASH', NULL, NULL, NULL),
 	(97, '89997', '0', 0, 5, 3, 9, 'P', 13, 1.3, 10, 10.95, NULL, 10.95, NULL, 10.95, 0, '', '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-08 04:12:14', 'Y', 'CASH', 0, 0, 0),
-	(98, '88098', '0', 0, 5, 3, 9, 'N', 13, 6.5, 50, 56.5, NULL, NULL, NULL, NULL, NULL, '', '', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-08 05:44:41', 'N', NULL, 0, 0, 0),
-	(99, '0', '0', 0, NULL, NULL, NULL, 'N', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, 'N', 'UNCOOKED', 'P', '2016-10-08 07:13:26', 'N', NULL, 0, 10, 0),
-	(100, '0', '0', 0, NULL, NULL, NULL, 'N', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, 'N', 'UNCOOKED', 'P', '2016-10-08 07:13:45', 'N', NULL, 0, 10, 0);
+	(98, '88098', '0', 0, 5, 3, 9, 'P', 13, 6.5, 50, 56.5, NULL, 56.5, NULL, 56.5, 0, '', '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-08 05:44:41', 'Y', 'CASH', 0, 0, 0),
+	(103, '92103', '0', 0, 5, 3, 7, 'P', 13, 0, 3, 3, NULL, 3, NULL, 3, 0, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 01:24:40', 'Y', 'CASH', NULL, NULL, NULL),
+	(104, '87104', '0', 0, 5, 3, 12, 'N', 13, 0, 3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-10 01:26:22', 'N', NULL, NULL, NULL, NULL),
+	(105, '92105', '0', 0, 5, 3, 11, 'P', 13, 6.5, 56, 62.5, NULL, 62.5, NULL, 62.5, 0, NULL, 'this is test', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:03:33', 'Y', 'CASH', NULL, NULL, NULL),
+	(106, '98106', '0', 0, 5, 3, 11, 'P', 13, 6.5, 50, 56.5, 56.5, 0, NULL, 56.5, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:05:34', 'Y', 'CARD', NULL, NULL, NULL),
+	(107, '91107', '0', 0, 5, 3, 11, 'P', 13, 6.5, 50, 56.5, 0.5, 56, NULL, 56.5, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:06:23', 'Y', 'MIXED', NULL, NULL, NULL),
+	(108, '93108', '0', 0, 5, 3, 9, 'N', 13, 6.11, 50, 56.1, NULL, NULL, NULL, NULL, NULL, NULL, 'please prepare fast', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:48:00', 'N', NULL, NULL, NULL, NULL),
+	(109, '96109', '0', 0, 5, 3, 11, 'N', 13, 0.7501, 13.77, 14.5, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'COOKED', 'P', '2016-10-10 03:18:15', 'N', NULL, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `order_items` (
@@ -459,7 +465,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `FK_orders_items_orders` (`order_id`),
   CONSTRAINT `FK_orders_items_orders` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=623 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=643 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
 INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `category_id`, `price`, `qty`, `tax`, `tax_amount`, `selected_extras`, `all_extras`, `extras_amount`, `is_done`, `created`) VALUES
@@ -821,21 +827,34 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `c
 	(574, 93, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:45:17'),
 	(575, 93, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:45:19'),
 	(576, 93, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 12, 0.6924, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'Y', '2016-09-20 05:45:25'),
-	(578, 93, 24, 'D5', 'èœ5', 7, 10, 1, 12, 1.2, NULL, '', NULL, 'N', '2016-09-20 05:45:29'),
+	(578, 93, 24, 'D5', 'èœ5', 7, 10, 1, 12, 1.2, NULL, '', NULL, 'Y', '2016-09-20 05:45:29'),
 	(580, 92, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'Y', '2016-09-20 07:01:50'),
 	(581, 92, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 08:06:04'),
 	(582, 92, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 08:06:10'),
 	(586, 93, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 12, 0.6924, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'Y', '2016-09-23 02:50:40'),
-	(587, 94, 37, 'D17', 'èœ17', 5, 8, 1, 12, 0.96, NULL, '', NULL, 'N', '2016-10-06 09:03:32'),
-	(588, 94, 38, '18', 'èœ18', 7, 5, 1, 12, 0.6, NULL, '', NULL, 'N', '2016-10-06 09:03:34'),
-	(589, 95, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'N', '2016-10-06 09:10:47'),
+	(587, 94, 37, 'D17', 'èœ17', 5, 8, 1, 12, 0.96, NULL, '', NULL, 'Y', '2016-10-06 09:03:32'),
+	(588, 94, 38, '18', 'èœ18', 7, 5, 1, 12, 0.6, NULL, '', NULL, 'Y', '2016-10-06 09:03:34'),
+	(589, 95, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'Y', '2016-10-06 09:10:47'),
 	(593, 96, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 05:01:23'),
 	(595, 96, 19, 'Rice', 'é¥­', 6, 4, 1, 13, 0.52, NULL, '[{"id":"26","cousine_id":"19","name":"fan with egg","name_zh":"\\u86cb\\u7092\\u996d","price":"6","status":"A","created":"2016-07-13 11:22:12"},{"id":"27","cousine_id":"19","name":"mixed rice","name_zh":"\\u626c\\u5dde\\u7092\\u996d","price":"10","status":"A","created":"2016-07-13 11:23:14"}]', NULL, 'N', '2016-10-07 05:15:44'),
 	(596, 96, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 05:15:58'),
 	(597, 96, 13, 'Cup Noodles', 'æ¯é¢', 5, 2.76, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 05:16:02'),
 	(598, 92, 13, 'Cup Noodles', 'æ¯é¢', 5, 2.76, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-07 08:27:40'),
 	(603, 97, 24, 'D5', 'èœ5', 7, 10, 1, 13, 1.3, NULL, '', NULL, 'N', '2016-10-08 04:13:43'),
-	(620, 98, 39, 'D19', 'èœ19', 9, 50, 1, 13, 6.5, NULL, '', NULL, 'N', '2016-10-08 06:55:02');
+	(620, 98, 39, 'D19', 'èœ19', 9, 50, 1, 13, 6.5, NULL, '', NULL, 'N', '2016-10-08 06:55:02'),
+	(630, 103, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-10 01:26:11'),
+	(631, 104, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-10 01:26:22'),
+	(632, 105, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-10 02:03:33'),
+	(633, 105, 39, 'D19', 'èœ19', 9, 50, 1, 13, 6.5, NULL, '', NULL, 'N', '2016-10-10 02:03:35'),
+	(634, 106, 39, 'D19', 'èœ19', 9, 50, 1, 13, 6.5, NULL, '', NULL, 'N', '2016-10-10 02:05:34'),
+	(635, 107, 39, 'D19', 'èœ19', 9, 50, 1, 13, 6.5, NULL, '', NULL, 'N', '2016-10-10 02:06:23'),
+	(636, 108, 19, 'Rice', 'é¥­', 6, 4, 1, 13, 0.52, NULL, '[{"id":"26","cousine_id":"19","name":"fan with egg","name_zh":"\\u86cb\\u7092\\u996d","price":"6","status":"A","created":"2016-07-13 11:22:12"},{"id":"27","cousine_id":"19","name":"mixed rice","name_zh":"\\u626c\\u5dde\\u7092\\u996d","price":"10","status":"A","created":"2016-07-13 11:23:14"}]', NULL, 'Y', '2016-10-10 02:48:00'),
+	(637, 108, 27, 'D8', 'èœ8', 9, 10, 1, 13, 1.3, NULL, '', NULL, 'Y', '2016-10-10 02:48:02'),
+	(638, 108, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'Y', '2016-10-10 02:56:37'),
+	(639, 108, 33, '99', 'abc', 7, 33, 1, 13, 4.29, NULL, '', NULL, 'N', '2016-10-10 02:56:51'),
+	(640, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, NULL, NULL, 'Y', '2016-10-10 03:17:57'),
+	(641, 109, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'Y', '2016-10-10 03:18:15'),
+	(642, 109, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, '[{"id":"16","price":"1","name":"Extra1 "},{"id":"18","price":"1","name":"Extra 5 \\u996d"}]', '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', 2, 'Y', '2016-10-10 03:18:20');
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `pages` (
