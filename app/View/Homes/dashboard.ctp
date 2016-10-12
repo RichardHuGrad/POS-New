@@ -122,12 +122,12 @@
 	                                               <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'D', 'order_no'=>@$orders_no[$i]['D']));?>"><?php echo $t; ?></a></div>
                                                 <?php }}?>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖 </div>
-                                                <?php for($t = 1; $t <= TAKEOUT_TABLE; $t++) {
+                                                <?php for($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                 if(!@$orders_no[$t]['T']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$orders_no[$i]['D']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
-                                                <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
+                                                <?php for($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                 if(!@$orders_no[$t]['W']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['D']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
@@ -175,7 +175,7 @@
                         <ul>
                         	<?php
                         	$takeout_tables = @explode(",", $tables['Admin']['takeout_table_size']);
-                        	for($i = 1; $i <= TAKEOUT_TABLE; $i++) {
+                        	for($i = 1; $i <= $tables['Admin']['no_of_takeout_tables']; $i++) {
                         	?>
 	                            <li class="clearfix">
 	                            	<ul class="dropdown-menu">
@@ -193,12 +193,12 @@
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'D', 'order_no'=>@$orders_no[$i]['T']));?>"><?php echo $t; ?></a></div>
                                                 <?php }}?>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖</div>
-                                                <?php for($t = 1; $t <= TAKEOUT_TABLE; $t++) {
+                                                <?php for($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                 if(!@$orders_no[$t]['T'] and $t <> $i){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$orders_no[$i]['T']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
-                                                <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
+                                                <?php for($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                 if(!@$orders_no[$t]['W']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['T']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
@@ -244,7 +244,7 @@
                         <ul>
                         	<?php
                         	$wait_table = @explode(",", $tables['Admin']['waiting_table_size']);
-                        	for($i = 1; $i <= WAITING_TABLE; $i++) {
+                        	for($i = 1; $i <= $tables['Admin']['no_of_waiting_tables']; $i++) {
                         	?>
 	                            <li class="clearfix">
 	                        	 <ul class="dropdown-menu">
@@ -263,12 +263,12 @@
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'D', 'order_no'=>@$orders_no[$i]['W']));?>"><?php echo $t; ?></a></div>
                                                 <?php }}?>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖</div>
-                                                <?php for($t = 1; $t <= TAKEOUT_TABLE; $t++) {
+                                                <?php for($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                 if(!@$orders_no[$t]['T']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$orders_no[$i]['W']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
-                                                <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
+                                                <?php for($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                 if(!@$orders_no[$t]['W'] and $t <> $i){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['W']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>

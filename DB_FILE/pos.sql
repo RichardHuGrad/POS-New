@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `admins` (
   `restaurant_name` varchar(100) NOT NULL,
   `tax` int(10) NOT NULL,
   `no_of_tables` int(10) NOT NULL DEFAULT '0',
+  `no_of_takeout_tables` int(10) DEFAULT NULL,
+  `no_of_waiting_tables` int(10) DEFAULT NULL,
   `table_size` text COMMENT 'table per size',
   `table_order` text,
   `takeout_table_size` text,
@@ -33,9 +35,9 @@ CREATE TABLE IF NOT EXISTS `admins` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` (`id`, `created_by_id`, `firstname`, `lastname`, `email`, `password`, `is_super_admin`, `created`, `modified`, `status`, `mobile_no`, `address`, `restaurant_name`, `tax`, `no_of_tables`, `table_size`, `table_order`, `takeout_table_size`, `waiting_table_size`, `is_verified`) VALUES
-	(1, 0, 'POS', 'Admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'Y', '0000-00-00 00:00:00', '2016-07-13 19:24:51', 'A', NULL, NULL, '', 0, 0, '0', NULL, NULL, NULL, 'Y'),
-	(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-10-08 12:32:02', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 12, '12,5,4,6,5,2,4,5,4,5,2,3,3,4,5', '["position: absolute; left: 34.3691%; top: 32.0833%;","position: absolute; left: 57.0527%; top: 31.7639%;","position: absolute; left: 46.4517%; top: 0%;","position: absolute; left: 87.0057%; top: 70.7222%;","position: absolute; left: 0%; top: 0%;","position: absolute; left: 26.3763%; top: 0%;","position: absolute; left: 87.0057%; top: 0%;","position: absolute; left: 0%; top: 72.2305%;","position: absolute; left: 11.9507%; top: 0%;","position: absolute; left: 45.7156%; top: 31.9639%;","position: absolute; left: 0%; top: 26.8306%;","position: absolute; left: 15.6654%; top: 78%;"]', '1,2,5,7,8,9,5,4,5,7', '8,5,6,8,2', 'Y');
+INSERT INTO `admins` (`id`, `created_by_id`, `firstname`, `lastname`, `email`, `password`, `is_super_admin`, `created`, `modified`, `status`, `mobile_no`, `address`, `restaurant_name`, `tax`, `no_of_tables`, `no_of_takeout_tables`, `no_of_waiting_tables`, `table_size`, `table_order`, `takeout_table_size`, `waiting_table_size`, `is_verified`) VALUES
+	(1, 0, 'POS', 'Admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'Y', '0000-00-00 00:00:00', '2016-07-13 19:24:51', 'A', NULL, NULL, '', 0, 0, NULL, NULL, '0', NULL, NULL, NULL, 'Y'),
+	(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-10-12 02:16:47', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 15, 9, 9, '12,5,4,6,5,2,4,5,4,5,2,3,2,3,8', '["position: absolute; left: 34.3691%; top: 32.0833%;","position: absolute; left: 57.0527%; top: 31.7639%;","position: absolute; left: 46.4517%; top: 0%;","position: absolute; left: 87.0057%; top: 70.7222%;","position: absolute; left: 0%; top: 0%;","position: absolute; left: 26.3763%; top: 0%;","position: absolute; left: 87.0057%; top: 0%;","position: absolute; left: 0%; top: 72.2305%;","position: absolute; left: 11.9507%; top: 0%;","position: absolute; left: 45.7156%; top: 31.9639%;","position: absolute; left: 0%; top: 26.8306%;","position: absolute; left: 15.6654%; top: 78%;"]', '1,2,5,7,8,9,5,4,2', '8,5,6,8,2,2,2,3,2', 'Y');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `admin_privilages` (
@@ -131,7 +133,7 @@ INSERT INTO `category_locales` (`id`, `category_id`, `name`, `lang_code`, `creat
 
 CREATE TABLE IF NOT EXISTS `cooks` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `cashier_id` int(10) NOT NULL DEFAULT '0',
+  `restaurant_id` int(10) NOT NULL DEFAULT '0',
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(100) DEFAULT NULL,
   `mobile_no` varchar(20) DEFAULT NULL,
@@ -145,9 +147,9 @@ CREATE TABLE IF NOT EXISTS `cooks` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `cooks` DISABLE KEYS */;
-INSERT INTO `cooks` (`id`, `cashier_id`, `firstname`, `lastname`, `mobile_no`, `email`, `password`, `is_verified`, `status`, `created`, `modified`) VALUES
-	(4, 3, 'Danial', 'pos_v1', '1245512454', 'cook@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-07-09 11:38:20', '2016-07-09 11:38:20'),
-	(5, 3, 'my', 'cook', '321123213', 'bhawani_cook@pos.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-10-10 03:10:28', '2016-10-10 03:10:28');
+INSERT INTO `cooks` (`id`, `restaurant_id`, `firstname`, `lastname`, `mobile_no`, `email`, `password`, `is_verified`, `status`, `created`, `modified`) VALUES
+	(4, 5, 'Danial', 'pos_v1', '1245512454', 'cook@pos.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-07-09 11:38:20', '2016-10-12 02:25:37'),
+	(5, 5, 'my', 'cook', '321123213', 'bhawani_cook@pos.com', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'A', '2016-10-10 03:10:28', '2016-10-12 02:22:59');
 /*!40000 ALTER TABLE `cooks` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `cousines` (
@@ -171,12 +173,12 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(11, 5, 3, 5, 5, '1467370839_cousine.jpg', 'A', 1467364487, 39, 'Y', 1468439835),
 	(12, 5, 3, 7, 5, '1467370844_cousine.jpg', 'A', 1467364534, 17, 'N', 1467370844),
 	(13, 5, 3, 2.76, 5, '1467370850_cousine.jpg', 'A', 1467364578, 10, 'N', 1467789389),
-	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 10, 'N', 1467370863),
+	(14, 5, 3, 3, 5, '1467370863_cousine.jpg', 'A', 1467364621, 11, 'N', 1467370863),
 	(15, 5, 3, 5, 5, '1467370868_cousine.jpg', 'A', 1467364665, 33, 'N', 1467370868),
 	(16, 5, 3, 6, 5, '1467370873_cousine.jpg', 'A', 1467364733, 15, 'N', 1467370873),
 	(17, 5, 3, 2, 6, '1467452671_cousine.jpg', 'A', 1467452671, 25, 'N', 1467453150),
 	(18, 5, 3, 1.5, 6, NULL, 'A', 1467452729, 14, 'N', 1467453136),
-	(19, 5, 0, 4, 6, '1468422744_cousine.jpg', 'A', 1468422744, 5, 'Y', 1468422744),
+	(19, 5, 0, 4, 6, '1468422744_cousine.jpg', 'A', 1468422744, 6, 'Y', 1468422744),
 	(20, 5, 0, 5, 8, NULL, 'A', 1468435866, 1, 'Y', 1476077162),
 	(21, 5, 0, 9.8, 9, NULL, 'A', 1468436158, 0, 'N', 1468436816),
 	(22, 5, 0, 99999, 9, NULL, 'A', 1468436565, 0, 'Y', 1468436788),
@@ -195,7 +197,7 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 	(35, 5, 0, 36, 6, NULL, 'A', 1468443537, 0, 'Y', 1468443537),
 	(36, 5, 0, 40, 7, NULL, 'A', 1468443568, 0, 'Y', 1468443568),
 	(37, 5, 0, 8, 5, NULL, 'A', 1468443619, 1, 'Y', 1468443619),
-	(38, 5, 0, 5, 7, '1476103101_cousine.png', 'A', 1468443674, 1, 'Y', 1476103101),
+	(38, 5, 0, 5, 7, '1476103101_cousine.png', 'A', 1468443674, 2, 'Y', 1476103101),
 	(39, 5, 0, 50, 9, NULL, 'A', 1468443709, 5, 'Y', 1468443709);
 /*!40000 ALTER TABLE `cousines` ENABLE KEYS */;
 
@@ -288,10 +290,10 @@ CREATE TABLE IF NOT EXISTS `extras` (
 
 /*!40000 ALTER TABLE `extras` DISABLE KEYS */;
 INSERT INTO `extras` (`id`, `cousine_id`, `name`, `name_zh`, `price`, `status`, `created`) VALUES
-	(16, 10, 'Extra1', NULL, 1, 'A', '2016-07-01 11:21:31'),
-	(17, 10, 'Extra2', NULL, 2, 'A', '2016-07-01 11:21:42'),
+	(16, 10, 'Extra1', 'é¥­1', 1, 'A', '2016-07-01 11:21:31'),
+	(17, 10, 'Extra2', 'é¥­2', 2, 'A', '2016-07-01 11:21:42'),
 	(18, 10, 'Extra 5', 'é¥­', 1, 'A', '2016-07-01 11:21:56'),
-	(19, 10, 'Extra 4', NULL, 0, 'A', '2016-07-01 11:22:11'),
+	(19, 10, 'Extra 4', 'é¥­4', 0, 'A', '2016-07-01 11:22:11'),
 	(20, 11, 'Mild', NULL, 0, 'A', '2016-07-01 11:22:48'),
 	(21, 11, 'Extra Spicy ', NULL, 0.99, 'A', '2016-07-01 11:23:07'),
 	(22, 11, 'Non-Garlic ', NULL, 0.5, 'A', '2016-07-01 11:23:22'),
@@ -364,86 +366,89 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `percent_discount` float DEFAULT NULL,
   `discount_value` float DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=latin1;
 
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
 INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `counter_id`, `table_no`, `table_status`, `tax`, `tax_amount`, `subtotal`, `total`, `card_val`, `cash_val`, `tip`, `paid`, `change`, `promocode`, `message`, `reason`, `order_type`, `is_kitchen`, `cooking_status`, `is_hide`, `created`, `is_completed`, `paid_by`, `fix_discount`, `percent_discount`, `discount_value`) VALUES
-	(21, '92921', '0', 0, 3, 3, 1, 'P', 12, 2.94, 24.5, 27.44, NULL, NULL, NULL, NULL, 22.56, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-04 09:28:56', 'Y', 'CASH', NULL, NULL, NULL),
-	(22, '90422', '0', 0, 3, 3, 1, 'P', 12, 3.18, 26.5, 29.68, NULL, NULL, NULL, NULL, 40.32, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'N', '2016-07-04 10:39:09', 'Y', 'CASH', NULL, NULL, NULL),
-	(23, '92923', '0', 0, 3, 3, 1, 'P', 12, 2.5788, 21.49, 24.0688, NULL, NULL, NULL, NULL, 25.9312, NULL, NULL, NULL, 'W', 'N', 'UNCOOKED', 'N', '2016-07-05 07:56:06', 'Y', 'CARD', NULL, NULL, NULL),
-	(24, '94124', '0', 0, 3, 3, 2, 'P', 12, 0.6, 5, 5.6, NULL, NULL, NULL, NULL, 94.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 08:00:03', 'Y', 'CASH', NULL, NULL, NULL),
-	(25, '95225', '0', 0, 3, 3, 3, 'P', 12, 2.5428, 21.19, 23.7328, NULL, NULL, NULL, NULL, 56.2672, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 09:25:01', 'Y', 'CARD', NULL, NULL, NULL),
-	(26, '94726', '0', 0, 3, 3, 2, 'P', 12, 1.38, 11.5, 12.88, NULL, NULL, NULL, 50, 37.12, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'N', '2016-07-05 11:20:13', 'Y', 'CASH', NULL, NULL, NULL),
-	(35, '97035', '0', 0, 3, 3, 10, 'P', 12, 0.6, 17.5, 18.1, NULL, NULL, NULL, 50, 31.9, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 12:59:20', 'Y', 'CASH', NULL, NULL, NULL),
-	(36, '87636', '0', 0, 3, 3, 3, 'P', 12, 0.6, 7, 7.6, NULL, NULL, NULL, 12, 4.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 13:45:42', 'Y', 'CARD', NULL, NULL, NULL),
-	(37, '91537', '0', 0, 3, 3, 2, 'P', 12, 0.6, 7, 7.6, NULL, NULL, NULL, 54.6, 47, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'N', '2016-07-05 13:52:29', 'Y', 'CASH', NULL, NULL, NULL),
-	(38, '95738', '0', 0, 3, 3, 4, 'P', 12, 0.6, 12, 12.6, NULL, NULL, NULL, 58, 45.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 13:27:26', 'Y', 'CASH', NULL, NULL, NULL),
-	(39, '91939', '0', 0, 3, 3, 1, 'P', 12, 0.6, 27.99, 27.99, NULL, NULL, NULL, 50, 22.01, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 14:37:16', 'Y', 'CASH', NULL, NULL, NULL),
-	(40, '93040', '0', 0, 3, 3, 6, 'N', 12, 0, 39, 39, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'N', '2016-07-05 14:39:33', 'N', NULL, NULL, NULL, NULL),
-	(41, '92741', '0', 0, 3, 3, 8, 'P', 12, 1.2, 41.68, 42.88, NULL, NULL, NULL, 43.33, 0.45, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'N', '2016-07-06 03:31:54', 'Y', 'CASH', NULL, NULL, NULL),
-	(42, '93942', '0', 0, 3, 3, 5, 'P', 12, 0.6, 15.99, 15.99, NULL, NULL, NULL, 78, 62.01, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-06 04:14:22', 'Y', 'CASH', NULL, NULL, NULL),
-	(43, '98643', '0', 0, 3, 3, 5, 'P', 12, 0.6, 12, 12.6, NULL, NULL, NULL, 50, 37.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-06 04:21:56', 'Y', 'CASH', NULL, NULL, NULL),
-	(44, '95444', '0', 0, 3, 3, 5, 'N', 12, 1.08, 53.02, 54.1, NULL, NULL, NULL, NULL, NULL, NULL, 'sample message', NULL, 'T', 'Y', 'UNCOOKED', 'N', '2016-07-06 05:31:37', 'N', NULL, NULL, NULL, NULL),
-	(45, '93045', '0', 0, 3, 3, 9, 'N', 12, 2.1324, 55.78, 57.9124, NULL, NULL, NULL, NULL, NULL, NULL, 'wfgvbgvfgbb', NULL, 'T', 'Y', 'UNCOOKED', 'N', '2016-07-06 06:22:14', 'N', NULL, NULL, NULL, NULL),
-	(46, '96846', '0', 21, 3, 3, 6, 'P', 12, 0, 27.76, 27.76, NULL, NULL, NULL, 30, 2.24, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-06 19:23:25', 'Y', 'CASH', NULL, NULL, NULL),
-	(47, '98547', '0', 20, 3, 3, 3, 'P', 12, 0, 31.45, 31.45, NULL, NULL, NULL, 45555, 45523.6, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'Y', '2016-07-06 20:19:45', 'Y', 'CASH', NULL, NULL, NULL),
-	(48, '96848', '0', 19, 3, 3, 7, 'N', 12, 0, 15.26, 15.26, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'Y', '2016-07-06 20:41:26', 'N', NULL, NULL, NULL, NULL),
-	(49, '97249', '0', 18, 3, 3, 7, 'P', 12, 0, 17, 17, NULL, NULL, NULL, 170, 153, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-06 21:22:54', 'Y', 'CASH', NULL, NULL, NULL),
-	(50, '95350', '0', 17, 3, 3, 10, 'P', 12, 0, 14.5, 14.5, NULL, NULL, NULL, 120, 105.5, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-06 21:23:24', 'Y', 'CASH', NULL, NULL, NULL),
-	(51, '95351', '0', 16, 3, 3, 6, 'N', 12, 0, 15, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'Y', '2016-07-06 21:25:47', 'N', NULL, NULL, NULL, NULL),
-	(52, '96252', '0', 15, 3, 3, 3, 'P', 12, 0, 18.26, 18.26, NULL, NULL, NULL, 250.02, 231.76, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 17:31:36', 'Y', 'CASH', NULL, NULL, NULL),
-	(53, '96153', '0', 14, 3, 3, 2, 'P', 12, 0, 31, 31, NULL, NULL, NULL, 50, 19, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:42:23', 'Y', 'CASH', NULL, NULL, NULL),
-	(54, '91854', '0', 13, 3, 3, 4, 'N', 12, 0.48, 38.02, 38.5, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:43:02', 'N', NULL, NULL, NULL, NULL),
-	(55, '89955', '0', 12, 3, 3, 9, 'P', 12, 0, 30.5, 30.5, NULL, NULL, NULL, 30.51, 0.01, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:43:25', 'Y', 'CASH', NULL, NULL, NULL),
-	(56, '89656', '0', 11, 3, 3, 5, 'P', 12, 0, 12, 12, NULL, NULL, NULL, 120, 108, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:43:34', 'Y', 'CASH', NULL, NULL, NULL),
-	(57, '90657', '0', 10, 3, 3, 1, 'P', 12, 0, 27.5, 27.5, NULL, NULL, NULL, 125.55, 98.05, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 21:48:33', 'Y', 'CASH', NULL, NULL, NULL),
-	(58, '96158', '0', 9, 3, 3, 8, 'P', 12, 0, 7, 7, NULL, NULL, NULL, 8, 1, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:05:39', 'N', 'CASH', NULL, NULL, NULL),
-	(59, '87659', '0', 8, 3, 3, 1, 'P', 12, 0, 5, 5, NULL, NULL, NULL, 5.01, 0.01, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:05:53', 'Y', 'CASH', NULL, NULL, NULL),
-	(60, '95760', '0', 7, 3, 3, 4, 'P', 12, 0, 39.5, 39.5, NULL, NULL, NULL, 39.51, 0.01, NULL, 'test444', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:21:35', 'Y', 'CARD', NULL, NULL, NULL),
-	(61, '91361', '0', 6, 3, 3, 3, 'P', 12, 0, 9, 9, NULL, NULL, NULL, 20, 11, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:24:17', 'Y', 'CASH', NULL, NULL, NULL),
-	(62, '90662', '0', 5, 3, 3, 2, 'N', 12, 0, 27.5, 27.5, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:32:21', 'N', NULL, NULL, NULL, NULL),
-	(63, '97363', '0', 4, 3, 3, 3, 'P', 12, 0, 14.39, 14.39, NULL, NULL, NULL, 15, 0.61, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:36:18', 'Y', 'CASH', NULL, NULL, NULL),
-	(64, '89264', '0', 3, 3, 3, 10, 'N', 12, 0, 23, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'Y', '2016-07-08 22:39:11', 'N', NULL, NULL, NULL, NULL),
-	(65, '89465', '0', 2, 3, 3, 2, 'P', 12, 0, 7, 7, NULL, NULL, NULL, 70, 63, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-09 11:48:55', 'Y', 'CASH', NULL, NULL, NULL),
-	(66, '93366', '0', 1, 3, 3, 1, 'P', 12, 0, 15.5, 15.5, NULL, NULL, NULL, 16, 0.5, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-11 11:34:47', 'Y', 'CASH', NULL, NULL, NULL),
-	(67, '90367', '0', 27, 3, 3, 3, 'P', 12, 0, 25.52, 25.52, NULL, NULL, NULL, NULL, NULL, NULL, '', '', 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:05:37', 'Y', 'CASH', NULL, NULL, NULL),
-	(68, '93068', '0', 26, 3, 3, 3, 'P', 12, 0.6924, 34.29, 34.9824, NULL, NULL, NULL, 34.99, 0.01, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:10:40', 'Y', 'CASH', NULL, NULL, NULL),
-	(69, '92069', '0', 25, 3, 3, 1, 'P', 12, 0, 19, 19, NULL, NULL, NULL, 19.01, 0.01, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:42:20', 'Y', 'CASH', NULL, NULL, NULL),
-	(71, '88371', '0', 23, 3, 3, 3, 'P', 12, 0, 15.5, 15.5, NULL, NULL, NULL, 15.51, 0.01, NULL, 'table 3 message testing', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:52:11', 'Y', 'CASH', NULL, NULL, NULL),
-	(72, '96472', '0', 22, 3, 3, 2, 'P', 12, 0.48, 16, 16.48, NULL, NULL, NULL, 58, 41.52, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 12:08:07', 'Y', 'CASH', NULL, NULL, NULL),
-	(73, '96073', '0', 0, 3, 3, 1, 'P', 12, 0.96, 62.52, 63.48, NULL, NULL, NULL, 64, 0.52, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 12:19:01', 'Y', 'CASH', NULL, NULL, NULL),
-	(74, '89474', '0', 0, 3, 3, 4, 'P', 12, 0.48, 33.76, 34.24, NULL, NULL, NULL, 34.25, 0.01, NULL, '', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 12:40:35', 'N', 'CARD', NULL, NULL, NULL),
-	(75, '94775', '0', 0, 3, 3, 2, 'N', 12, 0, 35.52, 35.52, NULL, NULL, NULL, NULL, NULL, NULL, 'Testing Overlap', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 12:42:43', 'N', NULL, NULL, NULL, NULL),
-	(76, '89376', '0', 0, 3, 3, 1, 'N', 12, 0.48, 29, 29.48, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 13:40:24', 'N', NULL, NULL, NULL, NULL),
-	(77, '90077', '0', 0, 3, 3, 5, 'N', 12, 0, 12, 12, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 14:16:30', 'N', NULL, NULL, NULL, NULL),
-	(78, '87778', '0', 0, 3, 3, 1, 'P', 12, 0, 15.52, 15.52, NULL, NULL, NULL, 16, 0.48, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 14:19:48', 'Y', 'CASH', NULL, NULL, NULL),
-	(79, '89479', '0', 0, 3, 3, 3, 'N', 12, 0.48, 54.28, 54.76, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'T', 'N', 'UNCOOKED', 'P', '2016-07-13 15:02:41', 'N', NULL, NULL, NULL, NULL),
-	(80, '92780', '0', 0, 3, 3, 1, 'N', 12, 12001, 100050, 112051, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-07-13 15:20:17', 'N', NULL, NULL, NULL, NULL),
-	(81, '89581', '0', 0, 3, 3, 5, 'P', 12, -0.12, -1, -1.12, NULL, NULL, NULL, 0.01, 1.13, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 15:57:46', 'N', 'CASH', NULL, NULL, NULL),
-	(82, '90082', '0', 0, 3, 3, 2, 'N', 12, 12012, 100133, 112145, NULL, NULL, NULL, NULL, NULL, NULL, 'Testing msg on each category', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 16:39:39', 'N', NULL, NULL, NULL, NULL),
-	(83, '93383', '0', 0, 3, 3, 10, 'N', 12, 11.8524, 118.53, 130.382, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'P', '2016-07-13 17:03:32', 'N', NULL, NULL, NULL, NULL),
+	(21, '92921', '0', 0, 3, 3, 1, 'P', 12, 2.94, 24.5, 27.44, NULL, 27.44, NULL, NULL, 22.56, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-04 09:28:56', 'Y', 'CASH', NULL, NULL, NULL),
+	(22, '90422', '0', 0, 3, 3, 1, 'P', 12, 3.18, 26.5, 29.68, NULL, 29.68, NULL, NULL, 40.32, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'N', '2016-07-04 10:39:09', 'Y', 'CASH', NULL, NULL, NULL),
+	(23, '92923', '0', 0, 3, 3, 1, 'P', 12, 2.5788, 21.49, 24.0688, NULL, 24.0688, NULL, NULL, 25.9312, NULL, NULL, NULL, 'W', 'N', 'UNCOOKED', 'N', '2016-07-05 07:56:06', 'Y', 'CARD', NULL, NULL, NULL),
+	(24, '94124', '0', 0, 3, 3, 2, 'P', 12, 0.6, 5, 5.6, NULL, 5.6, NULL, NULL, 94.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 08:00:03', 'Y', 'CASH', NULL, NULL, NULL),
+	(25, '95225', '0', 0, 3, 3, 3, 'P', 12, 2.5428, 21.19, 23.7328, NULL, 23.7328, NULL, NULL, 56.2672, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 09:25:01', 'Y', 'CARD', NULL, NULL, NULL),
+	(26, '94726', '0', 0, 3, 3, 2, 'P', 12, 1.38, 11.5, 12.88, NULL, 12.88, NULL, 50, 37.12, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'N', '2016-07-05 11:20:13', 'Y', 'CASH', NULL, NULL, NULL),
+	(35, '97035', '0', 0, 3, 3, 10, 'P', 12, 0.6, 17.5, 18.1, NULL, 18.1, NULL, 50, 31.9, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 12:59:20', 'Y', 'CASH', NULL, NULL, NULL),
+	(36, '87636', '0', 0, 3, 3, 3, 'P', 12, 0.6, 7, 7.6, NULL, 7.6, NULL, 12, 4.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 13:45:42', 'Y', 'CARD', NULL, NULL, NULL),
+	(37, '91537', '0', 0, 3, 3, 2, 'P', 12, 0.6, 7, 7.6, NULL, 7.6, NULL, 54.6, 47, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'N', '2016-07-05 13:52:29', 'Y', 'CASH', NULL, NULL, NULL),
+	(38, '95738', '0', 0, 3, 3, 4, 'P', 12, 0.6, 12, 12.6, NULL, 12.6, NULL, 58, 45.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 13:27:26', 'Y', 'CASH', NULL, NULL, NULL),
+	(39, '91939', '0', 0, 3, 3, 1, 'P', 12, 0.6, 27.99, 27.99, NULL, 27.99, NULL, 50, 22.01, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-05 14:37:16', 'Y', 'CASH', NULL, NULL, NULL),
+	(40, '93040', '0', 0, 3, 3, 6, 'N', 12, 0, 39, 39, NULL, 39, NULL, NULL, NULL, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'N', '2016-07-05 14:39:33', 'N', NULL, NULL, NULL, NULL),
+	(41, '92741', '0', 0, 3, 3, 8, 'P', 12, 1.2, 41.68, 42.88, NULL, 42.88, NULL, 43.33, 0.45, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'N', '2016-07-06 03:31:54', 'Y', 'CASH', NULL, NULL, NULL),
+	(42, '93942', '0', 0, 3, 3, 5, 'P', 12, 0.6, 15.99, 15.99, NULL, 15.99, NULL, 78, 62.01, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-06 04:14:22', 'Y', 'CASH', NULL, NULL, NULL),
+	(43, '98643', '0', 0, 3, 3, 5, 'P', 12, 0.6, 12, 12.6, NULL, 12.6, NULL, 50, 37.4, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'N', '2016-07-06 04:21:56', 'Y', 'CASH', NULL, NULL, NULL),
+	(44, '95444', '0', 0, 3, 3, 5, 'N', 12, 1.08, 53.02, 54.1, NULL, 54.1, NULL, NULL, NULL, NULL, 'sample message', NULL, 'T', 'Y', 'UNCOOKED', 'N', '2016-07-06 05:31:37', 'N', NULL, NULL, NULL, NULL),
+	(45, '93045', '0', 0, 3, 3, 9, 'N', 12, 2.1324, 55.78, 57.9124, NULL, 57.9124, NULL, NULL, NULL, NULL, 'wfgvbgvfgbb', NULL, 'T', 'Y', 'UNCOOKED', 'N', '2016-07-06 06:22:14', 'N', NULL, NULL, NULL, NULL),
+	(46, '96846', '0', 21, 3, 3, 6, 'P', 12, 0, 27.76, 27.76, NULL, 27.76, NULL, 30, 2.24, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-06 19:23:25', 'Y', 'CASH', NULL, NULL, NULL),
+	(47, '98547', '0', 20, 3, 3, 3, 'P', 12, 0, 31.45, 31.45, NULL, 31.45, NULL, 45555, 45523.6, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'Y', '2016-07-06 20:19:45', 'Y', 'CASH', NULL, NULL, NULL),
+	(48, '96848', '0', 19, 3, 3, 7, 'N', 12, 0, 15.26, 15.26, NULL, 15.26, NULL, NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'Y', '2016-07-06 20:41:26', 'N', NULL, NULL, NULL, NULL),
+	(49, '97249', '0', 18, 3, 3, 7, 'P', 12, 0, 17, 17, NULL, 17, NULL, 170, 153, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-06 21:22:54', 'Y', 'CASH', NULL, NULL, NULL),
+	(50, '95350', '0', 17, 3, 3, 10, 'P', 12, 0, 14.5, 14.5, NULL, 14.5, NULL, 120, 105.5, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-06 21:23:24', 'Y', 'CASH', NULL, NULL, NULL),
+	(51, '95351', '0', 16, 3, 3, 6, 'N', 12, 0, 15, 15, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'Y', '2016-07-06 21:25:47', 'N', NULL, NULL, NULL, NULL),
+	(52, '96252', '0', 15, 3, 3, 3, 'P', 12, 0, 18.26, 18.26, NULL, 18.26, NULL, 250.02, 231.76, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 17:31:36', 'Y', 'CASH', NULL, NULL, NULL),
+	(53, '96153', '0', 14, 3, 3, 2, 'P', 12, 0, 31, 31, NULL, 31, NULL, 50, 19, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:42:23', 'Y', 'CASH', NULL, NULL, NULL),
+	(54, '91854', '0', 13, 3, 3, 4, 'N', 12, 0.48, 38.02, 38.5, NULL, 38.5, NULL, NULL, NULL, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:43:02', 'N', NULL, NULL, NULL, NULL),
+	(55, '89955', '0', 12, 3, 3, 9, 'P', 12, 0, 30.5, 30.5, NULL, 30.5, NULL, 30.51, 0.01, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:43:25', 'Y', 'CASH', NULL, NULL, NULL),
+	(56, '89656', '0', 11, 3, 3, 5, 'P', 12, 0, 12, 12, NULL, 12, NULL, 120, 108, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 18:43:34', 'Y', 'CASH', NULL, NULL, NULL),
+	(57, '90657', '0', 10, 3, 3, 1, 'P', 12, 0, 27.5, 27.5, NULL, 27.5, NULL, 125.55, 98.05, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 21:48:33', 'Y', 'CASH', NULL, NULL, NULL),
+	(58, '96158', '0', 9, 3, 3, 8, 'P', 12, 0, 7, 7, NULL, 7, NULL, 8, 1, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:05:39', 'N', 'CASH', NULL, NULL, NULL),
+	(59, '87659', '0', 8, 3, 3, 1, 'P', 12, 0, 5, 5, NULL, 5, NULL, 5.01, 0.01, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:05:53', 'Y', 'CASH', NULL, NULL, NULL),
+	(60, '95760', '0', 7, 3, 3, 4, 'P', 12, 0, 39.5, 39.5, NULL, 39.5, NULL, 39.51, 0.01, NULL, 'test444', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:21:35', 'Y', 'CARD', NULL, NULL, NULL),
+	(61, '91361', '0', 6, 3, 3, 3, 'P', 12, 0, 9, 9, NULL, 9, NULL, 20, 11, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:24:17', 'Y', 'CASH', NULL, NULL, NULL),
+	(62, '90662', '0', 5, 3, 3, 2, 'N', 12, 0, 27.5, 27.5, NULL, 27.5, NULL, NULL, NULL, NULL, '', NULL, 'T', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:32:21', 'N', NULL, NULL, NULL, NULL),
+	(63, '97363', '0', 4, 3, 3, 3, 'P', 12, 0, 14.39, 14.39, NULL, 14.39, NULL, 15, 0.61, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-08 22:36:18', 'Y', 'CASH', NULL, NULL, NULL),
+	(64, '89264', '0', 3, 3, 3, 10, 'N', 12, 0, 23, 23, NULL, 23, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'Y', '2016-07-08 22:39:11', 'N', NULL, NULL, NULL, NULL),
+	(65, '89465', '0', 2, 3, 3, 2, 'P', 12, 0, 7, 7, NULL, 7, NULL, 70, 63, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-09 11:48:55', 'Y', 'CASH', NULL, NULL, NULL),
+	(66, '93366', '0', 1, 3, 3, 1, 'P', 12, 0, 15.5, 15.5, NULL, 15.5, NULL, 16, 0.5, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-11 11:34:47', 'Y', 'CASH', NULL, NULL, NULL),
+	(67, '90367', '0', 27, 3, 3, 3, 'P', 12, 0, 25.52, 25.52, NULL, 25.52, NULL, NULL, NULL, NULL, '', '', 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:05:37', 'Y', 'CASH', NULL, NULL, NULL),
+	(68, '93068', '0', 26, 3, 3, 3, 'P', 12, 0.6924, 34.29, 34.9824, NULL, 34.9824, NULL, 34.99, 0.01, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:10:40', 'Y', 'CASH', NULL, NULL, NULL),
+	(69, '92069', '0', 25, 3, 3, 1, 'P', 12, 0, 19, 19, NULL, 19, NULL, 19.01, 0.01, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:42:20', 'Y', 'CASH', NULL, NULL, NULL),
+	(71, '88371', '0', 23, 3, 3, 3, 'P', 12, 0, 15.5, 15.5, NULL, 15.5, NULL, 15.51, 0.01, NULL, 'table 3 message testing', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 11:52:11', 'Y', 'CASH', NULL, NULL, NULL),
+	(72, '96472', '0', 22, 3, 3, 2, 'P', 12, 0.48, 16, 16.48, NULL, 16.48, NULL, 58, 41.52, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'Y', '2016-07-13 12:08:07', 'Y', 'CASH', NULL, NULL, NULL),
+	(73, '96073', '0', 0, 3, 3, 1, 'P', 12, 0.96, 62.52, 63.48, NULL, 63.48, NULL, 64, 0.52, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 12:19:01', 'Y', 'CASH', NULL, NULL, NULL),
+	(74, '89474', '0', 0, 3, 3, 4, 'P', 12, 0.48, 33.76, 34.24, NULL, 34.24, NULL, 34.25, 0.01, NULL, '', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 12:40:35', 'N', 'CARD', NULL, NULL, NULL),
+	(75, '94775', '0', 0, 3, 3, 2, 'N', 12, 0, 35.52, 35.52, NULL, 35.52, NULL, NULL, NULL, NULL, 'Testing Overlap', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 12:42:43', 'N', NULL, NULL, NULL, NULL),
+	(76, '89376', '0', 0, 3, 3, 1, 'N', 12, 0.48, 29, 29.48, NULL, 29.48, NULL, NULL, NULL, NULL, '', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 13:40:24', 'N', NULL, NULL, NULL, NULL),
+	(77, '90077', '0', 0, 3, 3, 5, 'N', 12, 0, 12, 12, NULL, 12, NULL, NULL, NULL, NULL, '', NULL, 'W', 'Y', 'UNCOOKED', 'P', '2016-07-13 14:16:30', 'N', NULL, NULL, NULL, NULL),
+	(78, '87778', '0', 0, 3, 3, 1, 'P', 12, 0, 15.52, 15.52, NULL, 15.52, NULL, 16, 0.48, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 14:19:48', 'Y', 'CASH', NULL, NULL, NULL),
+	(79, '89479', '0', 0, 3, 3, 3, 'N', 12, 0.48, 54.28, 54.76, NULL, 54.76, NULL, NULL, NULL, NULL, '', NULL, 'T', 'N', 'UNCOOKED', 'P', '2016-07-13 15:02:41', 'N', NULL, NULL, NULL, NULL),
+	(80, '92780', '0', 0, 3, 3, 1, 'N', 12, 12001, 100050, 112051, NULL, 112051, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-07-13 15:20:17', 'N', NULL, NULL, NULL, NULL),
+	(81, '89581', '0', 0, 3, 3, 5, 'P', 12, -0.12, -1, -1.12, NULL, -1.12, NULL, 0.01, 1.13, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 15:57:46', 'N', 'CASH', NULL, NULL, NULL),
+	(82, '90082', '0', 0, 3, 3, 2, 'N', 12, 12012, 100133, 112145, NULL, 112145, NULL, NULL, NULL, NULL, 'Testing msg on each category', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-07-13 16:39:39', 'N', NULL, NULL, NULL, NULL),
+	(83, '93383', '0', 0, 3, 3, 10, 'N', 12, 11.8524, 118.53, 130.382, NULL, 130.382, NULL, NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'P', '2016-07-13 17:03:32', 'N', NULL, NULL, NULL, NULL),
 	(84, '90184', '0', 0, 5, 3, 1, 'P', 12, 0.6, 10, 10.6, 10, 0.6, 1, 10.6, 0, NULL, 'test check', NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-09-16 05:37:28', 'N', 'MIXED', NULL, NULL, NULL),
 	(85, '94585', '0', 0, 5, 3, 2, 'P', 12, 2.16, 33, 35.15, 35.15, NULL, NULL, 35.15, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 06:12:48', 'Y', 'CARD', NULL, NULL, NULL),
 	(86, '98686', '0', 0, 5, 3, 3, 'P', 12, 0, 11, 11, 11, NULL, 50, 11, 0, NULL, NULL, NULL, 'T', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:14:20', 'Y', 'CARD', NULL, NULL, NULL),
 	(87, '91887', '0', 0, 5, 3, 4, 'P', 12, 0.6, 10, 10.6, 10.6, NULL, NULL, 10.6, 0, NULL, 'assadsa', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:14:51', 'N', 'CARD', NULL, NULL, NULL),
 	(88, '98488', '0', 0, 5, 3, 5, 'P', 12, 0, 1.5, 1.5, NULL, 1.5, NULL, 1.5, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:25:55', 'N', 'CASH', NULL, NULL, NULL),
 	(89, '93789', '0', 0, 5, 3, 6, 'P', 12, 0.6, 5, 5.6, 5.6, NULL, NULL, 5.6, 0, NULL, '', '', 'D', 'Y', 'UNCOOKED', 'P', '2016-09-16 08:27:14', 'N', 'CARD', NULL, NULL, NULL),
-	(90, '98690', '0', 0, 5, 3, 1, 'P', 12, 1.8, 20, 21.8, NULL, NULL, NULL, NULL, NULL, NULL, 'AAA', '', 'W', 'Y', 'COOKED', 'P', '2016-09-17 04:48:36', 'Y', NULL, NULL, NULL, NULL),
+	(90, '98690', '0', 0, 5, 3, 1, 'P', 12, 1.8, 20, 21.8, NULL, 21.8, NULL, NULL, NULL, NULL, 'AAA', '', 'W', 'Y', 'COOKED', 'P', '2016-09-17 04:48:36', 'Y', NULL, NULL, NULL, NULL),
 	(91, '91391', '0', 0, 5, 3, 10, 'P', 12, 0.6, 12, 12.6, 10, 2.6, 10, 12.6, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:40:11', 'N', 'MIXED', NULL, NULL, NULL),
-	(92, '88592', '0', 0, 5, 3, 9, 'P', 13, 12.6, 111.76, 124.35, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:42:12', 'Y', NULL, NULL, NULL, 12.435),
+	(92, '88592', '0', 0, 5, 3, 9, 'P', 13, 12.6, 111.76, 124.35, NULL, 124.35, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:42:12', 'Y', NULL, NULL, NULL, 12.435),
 	(93, '92693', '0', 0, 5, 3, 3, 'P', 12, 2.5848, 32.54, 35.1, 0.1, 35, 1, 35.1, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-09-20 05:45:17', 'N', 'MIXED', NULL, NULL, NULL),
-	(94, '95194', '0', 0, 5, 3, 2, 'N', 12, 1.56, 13, 14.55, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:03:32', 'N', NULL, NULL, NULL, NULL),
+	(94, '95194', '0', 0, 5, 3, 2, 'N', 13, 2.3101, 48.77, 51.05, NULL, 14.55, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:03:32', 'N', NULL, NULL, NULL, NULL),
 	(95, '88895', '0', 0, 5, 3, 8, 'P', 13, 0.65, 5, 5.65, NULL, 5.65, NULL, 5.65, 0, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:10:47', 'N', 'CASH', NULL, NULL, NULL),
 	(96, '98296', '0', 0, 5, 3, 7, 'P', 13, 0.52, 15.76, 16.25, NULL, 16.25, NULL, 16.25, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-06 09:37:44', 'Y', 'CASH', NULL, NULL, NULL),
 	(97, '89997', '0', 0, 5, 3, 9, 'P', 13, 1.3, 10, 10.95, NULL, 10.95, NULL, 10.95, 0, '', '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-08 04:12:14', 'Y', 'CASH', 0, 0, 0),
 	(98, '88098', '0', 0, 5, 3, 9, 'P', 13, 6.5, 50, 56.5, NULL, 56.5, NULL, 56.5, 0, '', '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-08 05:44:41', 'Y', 'CASH', 0, 0, 0),
 	(103, '92103', '0', 0, 5, 3, 7, 'P', 13, 0, 3, 3, NULL, 3, NULL, 3, 0, NULL, NULL, NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 01:24:40', 'Y', 'CASH', NULL, NULL, NULL),
-	(104, '87104', '0', 0, 5, 3, 12, 'N', 13, 0, 3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-10 01:26:22', 'N', NULL, NULL, NULL, NULL),
+	(104, '87104', '0', 0, 5, 3, 12, 'N', 13, 0.65, 8, 8.65, NULL, 3, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 01:26:22', 'N', NULL, NULL, NULL, NULL),
 	(105, '92105', '0', 0, 5, 3, 11, 'P', 13, 6.5, 56, 62.5, NULL, 62.5, NULL, 62.5, 0, NULL, 'this is test', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:03:33', 'Y', 'CASH', NULL, NULL, NULL),
 	(106, '98106', '0', 0, 5, 3, 11, 'P', 13, 6.5, 50, 56.5, 56.5, 0, NULL, 56.5, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:05:34', 'Y', 'CARD', NULL, NULL, NULL),
 	(107, '91107', '0', 0, 5, 3, 11, 'P', 13, 6.5, 50, 56.5, 0.5, 56, NULL, 56.5, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:06:23', 'Y', 'MIXED', NULL, NULL, NULL),
-	(108, '93108', '0', 0, 5, 3, 9, 'N', 13, 6.11, 50, 56.1, NULL, NULL, NULL, NULL, NULL, NULL, 'please prepare fast', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:48:00', 'N', NULL, NULL, NULL, NULL),
-	(109, '96109', '0', 0, 5, 3, 11, 'N', 13, 0.7501, 13.77, 14.5, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'COOKED', 'P', '2016-10-10 03:18:15', 'N', NULL, NULL, NULL, NULL);
+	(108, '93108', '0', 0, 5, 3, 9, 'N', 13, 6.11, 50, 56.1, NULL, 56.1, NULL, NULL, NULL, NULL, 'please prepare fast', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-10 02:48:00', 'N', NULL, NULL, NULL, NULL),
+	(109, '96109', '0', 0, 5, 3, 11, 'N', 13, 0.7501, 13.77, 14.5, NULL, 14.5, NULL, NULL, NULL, NULL, '', NULL, 'D', 'Y', 'COOKED', 'P', '2016-10-10 03:18:15', 'N', NULL, NULL, NULL, NULL),
+	(110, '87110', '0', 0, 5, 3, 7, 'P', 13, 1.17, 12, 13.15, NULL, 13.15, 10, 13.15, 0, NULL, '', NULL, 'D', 'Y', 'UNCOOKED', 'P', '2016-10-12 00:45:37', 'Y', 'CASH', NULL, NULL, NULL),
+	(111, '92111', '0', 0, 5, 3, 7, 'N', 13, 8.7503, 90.31, 99.05, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, 'D', 'N', 'UNCOOKED', 'P', '2016-10-12 01:57:37', 'N', NULL, 0, 0, 0),
+	(112, '98112', '0', 0, 5, NULL, 3, 'N', 13, 1.82, 41.76, 43.55, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'T', 'N', 'UNCOOKED', 'P', '2016-10-12 01:59:14', 'N', NULL, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `order_items` (
@@ -465,7 +470,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `FK_orders_items_orders` (`order_id`),
   CONSTRAINT `FK_orders_items_orders` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=643 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=678 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
 INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `category_id`, `price`, `qty`, `tax`, `tax_amount`, `selected_extras`, `all_extras`, `extras_amount`, `is_done`, `created`) VALUES
@@ -819,13 +824,13 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `c
 	(566, 90, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'Y', '2016-09-17 04:48:36'),
 	(567, 90, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-17 04:48:39'),
 	(568, 90, 24, 'D5', 'èœ5', 7, 10, 1, 12, 1.2, NULL, '', NULL, 'Y', '2016-09-17 04:50:16'),
-	(569, 91, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'Y', '2016-09-20 05:40:11'),
-	(570, 91, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:40:13'),
+	(569, 91, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'N', '2016-09-20 05:40:11'),
+	(570, 91, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'N', '2016-09-20 05:40:13'),
 	(571, 91, 17, 'Samosa', 'å’–å–±è§’', 6, 2, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:40:31'),
 	(572, 92, 39, 'D19', 'èœ19', 9, 50, 1, 12, 6, NULL, '', NULL, 'Y', '2016-09-20 05:42:12'),
 	(573, 92, 39, 'D19', 'èœ19', 9, 50, 1, 12, 6, NULL, '', NULL, 'Y', '2016-09-20 05:42:15'),
 	(574, 93, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:45:17'),
-	(575, 93, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'Y', '2016-09-20 05:45:19'),
+	(575, 93, 15, 'Fried noodles', 'ç‚’é¢', 5, 5, 1, 12, 0, NULL, '', NULL, 'N', '2016-09-20 05:45:19'),
 	(576, 93, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 12, 0.6924, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'Y', '2016-09-20 05:45:25'),
 	(578, 93, 24, 'D5', 'èœ5', 7, 10, 1, 12, 1.2, NULL, '', NULL, 'Y', '2016-09-20 05:45:29'),
 	(580, 92, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 12, 0.6, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'Y', '2016-09-20 07:01:50'),
@@ -854,7 +859,29 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `c
 	(639, 108, 33, '99', 'abc', 7, 33, 1, 13, 4.29, NULL, '', NULL, 'N', '2016-10-10 02:56:51'),
 	(640, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, NULL, NULL, 'Y', '2016-10-10 03:17:57'),
 	(641, 109, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'Y', '2016-10-10 03:18:15'),
-	(642, 109, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, '[{"id":"16","price":"1","name":"Extra1 "},{"id":"18","price":"1","name":"Extra 5 \\u996d"}]', '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', 2, 'Y', '2016-10-10 03:18:20');
+	(642, 109, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, '[{"id":"16","price":"1","name":"Extra1 "},{"id":"18","price":"1","name":"Extra 5 \\u996d"}]', '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', 2, 'Y', '2016-10-10 03:18:20'),
+	(643, 110, 19, 'Rice', 'é¥­', 6, 4, 1, 13, 0.52, NULL, '[{"id":"26","cousine_id":"19","name":"fan with egg","name_zh":"\\u86cb\\u7092\\u996d","price":"6","status":"A","created":"2016-07-13 11:22:12"},{"id":"27","cousine_id":"19","name":"mixed rice","name_zh":"\\u626c\\u5dde\\u7092\\u996d","price":"10","status":"A","created":"2016-07-13 11:23:14"}]', NULL, 'N', '2016-10-12 00:45:37'),
+	(644, 110, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 00:45:39'),
+	(645, 110, 38, '18', 'èœ18', 7, 5, 1, 13, 0.65, NULL, '', NULL, 'N', '2016-10-12 00:45:43'),
+	(656, 112, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 13, 0.65, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'N', '2016-10-12 01:59:14'),
+	(657, 112, 11, 'Cart noodle', 'è½¦ä»”é¢', 5, 5, 1, 13, 0.65, NULL, '[{"id":"20","cousine_id":"11","name":"Mild","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:48"},{"id":"21","cousine_id":"11","name":"Extra Spicy ","name_zh":null,"price":"0.99","status":"A","created":"2016-07-01 11:23:07"},{"id":"22","cousine_id":"11","name":"Non-Garlic ","name_zh":null,"price":"0.5","status":"A","created":"2016-07-01 11:23:22"},{"id":"23","cousine_id":"11","name":"Duck Blood","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:23:35"},{"id":"24","cousine_id":"11","name":"Toufu _duck","name_zh":null,"price":"0.7","status":"A","created":"2016-07-01 11:23:53"},{"id":"25","cousine_id":"11","name":"Extra Soup","name_zh":null,"price":"0.9","status":"A","created":"2016-07-01 11:24:07"}]', NULL, 'N', '2016-10-12 02:00:37'),
+	(658, 112, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 02:00:39'),
+	(659, 112, 14, 'Fideo', 'Fideo', 5, 3, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 02:00:41'),
+	(660, 112, 13, 'Cup Noodles', 'æ¯é¢', 5, 2.76, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 02:00:42'),
+	(661, 112, 19, 'Rice', 'é¥­', 6, 4, 1, 13, 0.52, '[{"id":"26","price":"6","name":"fan with egg \\u86cb\\u7092\\u996d"},{"id":"27","price":"10","name":"mixed rice \\u626c\\u5dde\\u7092\\u996d"}]', '[{"id":"26","cousine_id":"19","name":"fan with egg","name_zh":"\\u86cb\\u7092\\u996d","price":"6","status":"A","created":"2016-07-13 11:22:12"},{"id":"27","cousine_id":"19","name":"mixed rice","name_zh":"\\u626c\\u5dde\\u7092\\u996d","price":"10","status":"A","created":"2016-07-13 11:23:14"}]', 16, 'N', '2016-10-12 02:00:44'),
+	(662, 104, 20, 'dish1', 'èœ1', 8, 5, 1, 13, 0.65, NULL, '', NULL, 'Y', '2016-10-12 03:13:44'),
+	(663, 94, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 04:36:08'),
+	(664, 94, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 04:36:10'),
+	(665, 94, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 04:36:12'),
+	(666, 94, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 04:36:13'),
+	(667, 94, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 04:36:16'),
+	(668, 94, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":null,"price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":null,"price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":null,"price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'N', '2016-10-12 04:36:22'),
+	(671, 111, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 05:37:58'),
+	(672, 111, 39, 'D19', 'èœ19', 9, 50, 1, 13, 6.5, NULL, '', NULL, 'N', '2016-10-12 05:44:34'),
+	(673, 111, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, '[{"id":"18","price":"1","name":"\\u996d"},{"id":"18","price":"1","name":"\\u996d"},{"id":"19","price":"0","name":"\\u996d4"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"16","price":"1","name":"\\u996d1"},{"id":"17","price":"2","name":"\\u996d2"},{"id":"19","price":"0","name":"\\u996d4"}]', '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":"\\u996d1","price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":"\\u996d2","price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":"\\u996d4","price":"0","status":"A","created":"2016-07-01 11:22:11"}]', 11, 'N', '2016-10-12 05:44:43'),
+	(674, 111, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":"\\u996d1","price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":"\\u996d2","price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":"\\u996d4","price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'N', '2016-10-12 08:37:28'),
+	(675, 111, 10, 'Black noodles', 'é»‘é¢', 5, 5.77, 1, 13, 0.7501, NULL, '[{"id":"16","cousine_id":"10","name":"Extra1","name_zh":"\\u996d1","price":"1","status":"A","created":"2016-07-01 11:21:31"},{"id":"17","cousine_id":"10","name":"Extra2","name_zh":"\\u996d2","price":"2","status":"A","created":"2016-07-01 11:21:42"},{"id":"18","cousine_id":"10","name":"Extra 5","name_zh":"\\u996d","price":"1","status":"A","created":"2016-07-01 11:21:56"},{"id":"19","cousine_id":"10","name":"Extra 4","name_zh":"\\u996d4","price":"0","status":"A","created":"2016-07-01 11:22:11"}]', NULL, 'N', '2016-10-12 08:37:34'),
+	(676, 111, 16, 'Frozen noodles', 'å†·å†»é¢æ¡', 5, 6, 1, 13, 0, NULL, '', NULL, 'N', '2016-10-12 08:39:28');
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 
 CREATE TABLE IF NOT EXISTS `pages` (

@@ -6,9 +6,9 @@ class Cook extends AppModel {
 
 
     public $belongsTo = array(
-        'Cashier' => array(
-            'className' => 'Cashier',
-            'foreignKey' => 'cashier_id'
+        'Admin' => array(
+            'className' => 'Admin',
+            'foreignKey' => 'restaurant_id'
         )
     );
 

@@ -13,7 +13,7 @@ echo $this->Html->css(array('slick.css'));
                 <?php
                 if (!empty($items_array)) {
                     ?>
-                    <ul>
+                    <ul class="multiple-items-cooking">
                         <?php
                         $count = 0;
                         foreach ($items_array as $key => $value) {
@@ -305,6 +305,11 @@ echo $this->Html->css(array('slick.css'));
             })
 
             $(document).ready(function () {
+                 $('.multiple-items-cooking').slick({
+                  infinite: false,
+                  slidesToShow: 3,
+                  slidesToScroll: 3
+                });
                 var height = new Array();
                 $(".get_height").map(function() {
                     height.push($(this).height());

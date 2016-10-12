@@ -81,7 +81,7 @@ class ReportsController extends AppController {
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-                'Order.counter_id', 'Cashier.firstname', 'Cashier.lastname', 'count(Order.id) as counter', 'sum(Order.total) as total', 'sum(Order.tip) as total_tip'
+                'Order.counter_id', 'Cashier.firstname', 'Cashier.lastname', 'count(Order.id) as counter', 'sum(Order.total) as total', 'sum(Order.tip) as total_tip', 'sum(Order.tax_amount) as total_tax_amount', 'sum(Order.card_val) as total_card_val', 'sum(Order.cash_val) as total_cash_val'
             ),
             'order' => $order,
             'group'=>"Order.counter_id",

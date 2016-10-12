@@ -148,7 +148,7 @@ if($this->Session->check('cashier_search')){
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                     <tr>
-                                        <th>Cashier Name</th>
+                                        <th>Restaurant Name</th>
                                         <th>Cook Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
@@ -162,7 +162,7 @@ if($this->Session->check('cashier_search')){
                                     <?php if (!empty($customer_list)) { ?>
                                         <?php foreach ($customer_list as $customer) { ?>
                                             <tr>
-                                                <td><?php echo ucfirst($customer['Cashier']['firstname']." ".$customer['Cashier']['lastname'] ); ?></td>
+                                                <td><?php echo ucfirst($customer['Admin']['restaurant_name']); ?></td>
                                                 <td><?php echo ucfirst($customer['Cook']['firstname']) . ' ' . ucfirst($customer['Cook']['lastname']); ?></td>
                                                 <td><?php echo $customer['Cook']['email']; ?></td>
                                                 <td><?php echo $customer['Cook']['mobile_no']; ?></td>

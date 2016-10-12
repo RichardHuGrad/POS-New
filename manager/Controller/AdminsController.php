@@ -266,6 +266,12 @@ class AdminsController extends AppController {
                             $this->Session->setFlash('Admin user has been added successfully', 'success');
                         }else{
                             $this->Session->setFlash('Admin user has been updated successfully', 'success');
+                            if($this->Session->read("is_order") == 1) {
+                                $this->Session->write("is_order", 0);
+                                $this->Session->setFlash('Admin user has been updated successfully, please update tables order.', 'success');
+                                $this->redirect(array('plugin' => false, 'controller' => 'admins', 'action' => 'reorder_table', base64_encode($id), 'admin' => true));
+                            }
+
                         }
                         $this->redirect(array('plugin' => false, 'controller' => 'admins', 'action' => 'users', 'admin' => true));
                     }
@@ -297,8 +303,13 @@ class AdminsController extends AppController {
 
     function admin_updatetable($id = '') {
         $tables = $this->params->query['table'];
-        $data['no_of_tables'] = $tables;
+        $name = $this->params->query['name'];
+        $data[$name] = $tables;
         $data['id'] = $id;
+        if($name == 'no_of_tables') {
+            $this->Session->write("is_order", 1);
+        }
+
 
         $this->Admin->save($data, $validate = false);
         $this->redirect(array('plugin' => false, 'controller' => 'admins', 'action' => 'add_edit', 'admin' => true, base64_encode($id)));

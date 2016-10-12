@@ -20,11 +20,12 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
 
 <?php $option_status = array('A' => 'Active', 'I' => 'Inactive');
 
-$search_txt = $status =  $search_lang = '';
+$search_txt = $status =  $search_lang =  $search_category = '';
 if($this->Session->check('cousine_search')){
     $search = $this->Session->read('cousine_search');
     $search_txt = $search['search'];
     $status = $search['status'];
+    $search_category = $search['category_id'];
 }
 ?>
 
@@ -66,6 +67,14 @@ if($this->Session->check('cousine_search')){
 
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label class="control-label">Category</label>                                
+                                <?php echo $this->Form->input('category_id', array('type' => 'select', 'options' => $categories, 'class' =>'form-control reset-field', 'div' => false, 'value'=>$search_category, 'empty'=>'Select Category',  'label' => false, 'required' => false));
+                                        ?>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
                                 <label class="control-label">Search</label>
                                 <?php echo $this->Form->input('search', array('type' => 'text', 'value' => $search_txt, 'placeholder' => 'Search...', 'class' =>'form-control reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
                             </div>
@@ -102,6 +111,7 @@ if($this->Session->check('cousine_search')){
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                 <tr>
+                                    <th><?php echo $this->Paginator->sort('category_en_name', 'Category') ?></th>
                                     <th><?php echo $this->Paginator->sort('eng_name', 'Cuisines Name(EN)') ?></th>
                                     <th><?php echo $this->Paginator->sort('zh_name', 'Cuisines Name(ZH)') ?></th>
                                     <th><?php echo $this->Paginator->sort('Cousine.status', 'Status') ?></th>
@@ -113,6 +123,7 @@ if($this->Session->check('cousine_search')){
                                 <?php if (!empty($cousines)) { ?>
                                     <?php foreach ($cousines as $cat) { ?>
                                         <tr>
+                                            <td><?php echo ucfirst($cat['Cousine']['category_en_name']) ."<br>".$cat['Cousine']['category_zh_name']; ?></td>
                                             <td><?php echo ucfirst($cat['Cousine']['eng_name']); ?></td>
                                             <td><?php echo $cat['Cousine']['zh_name']; ?></td>
                                             <td> <?php

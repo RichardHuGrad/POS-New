@@ -157,7 +157,10 @@ $registered_till = @$search['registered_till'];
                                         <th>Name</th>
                                         <th>Total number of orders</th>
                                         <th>Total Money</th>
+                                        <th>Total Tax</th>
                                         <th>Total Tips </th>
+                                        <th>Card Total </th>
+                                        <th>Cash Total </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,7 +176,10 @@ $registered_till = @$search['registered_till'];
                                                 <td><?php echo $customer['Cashier']['firstname']." ".$customer['Cashier']['lastname']; ?></td>
                                                 <td><?php echo $customer[0]['counter']; ?></td>
                                                 <td>$<?php echo number_format($customer[0]['total'], 2); ?></td>
+                                                <td>$<?php echo number_format($customer[0]['total_tax_amount'], 2); ?></td>
                                                 <td>$<?php echo number_format($customer[0]['total_tip'], 2); ?></td>
+                                                <td>$<?php echo number_format($customer[0]['total_card_val'], 2); ?></td>
+                                                <td>$<?php echo number_format($customer[0]['total_cash_val'], 2); ?></td>
                                             </tr>
                                             <?php
                                         }

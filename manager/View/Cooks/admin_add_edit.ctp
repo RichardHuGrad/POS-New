@@ -46,8 +46,8 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Select Cashier</label>
-                                        <?php echo $this->Form->input('cashier_id', array('options' => $restaurants, 'class' => 'form-control', 'empty' => 'Select Cashier', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                        <label class="control-label">Select Restaurant</label>
+                                        <?php echo $this->Form->input('restaurant_id', array('options' => $restaurants, 'class' => 'form-control', 'empty' => 'Select Restaurant', 'label' => false, 'div' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

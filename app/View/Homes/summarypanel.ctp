@@ -40,7 +40,7 @@
                     }
                   ?>
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
-                        <div class="row  dropdown-toggle" data-toggle="dropdown">
+                        <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
                             <div class="col-md-8 col-sm-8 col-xs-7">
                                 <div class="pull-left">
                                     <?php 
@@ -71,7 +71,7 @@
                                 foreach($extras as $ex) {
                                     ?>
                                     <li>
-                                        <a class="clearfix add_extras <?php if(in_array($ex['id'], $selected_extras_id)) echo "active"; ?>"  item_id="<?php echo $value['id']; ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
+                                        <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price'] ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
                                             <?php 
                                                 echo "<span class='pull-left'><!-- ".$ex['name']."<br/ -->".$ex['name_zh']."</span>";
                                                 if($ex['price']){
@@ -83,6 +83,26 @@
                                     <?php
                                 }
                                 ?>
+                                <div class="show_extras" alt="<?php echo $value['id'] ?>" id="block<?php echo $value['id'] ?>">
+                                    <?php
+                                    // pr($selected_extras);
+                                        if(!empty($selected_extras)) {
+                                            foreach($selected_extras as $selected) {
+                                                ?>
+                                                <div class="extras_inner"  alt="<?php echo $selected['id'] ?>">
+                                                    <?php 
+                                                        echo "<span>".$selected['name']."</span>";
+                                                        if($selected['price']){
+                                                            echo "<span>".$selected['price']."</span>";
+                                                        }
+                                                        echo "<a href='javascript:void(0)' class='fa fa-times remove_extra'> </a>";
+                                                     ?>
+                                                </div>
+                                                <?php
+                                            }
+                                        }
+                                     ?>
+                                </div>
                                 <button type="button" class="savebtn"  alt="<?php echo $value['id'] ?>">Save 保存</button>
                             </ul>
                         <?php }?>
@@ -139,18 +159,13 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
     <?php } ?>
     <div class="subtotalwrap">
         <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8">Subtotal 小计</div>
-            <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?></strong></div>
+            <div class="col-xs-6 col-sm-6 col-md-6">Subtotal 小计: <strong>$<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?></strong></div>
+
+
+            <div class="col-xs-6 col-sm-6 col-md-6">Taxes 税 (<?php echo $Order_detail['Order']['tax'] ?>%): <strong>$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></strong> </div>
+
         </div>
     </div>
-
-    <div class="subtotalwrap">
-        <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8">Taxes 税 (<?php echo $Order_detail['Order']['tax'] ?>%) </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></strong></div>
-        </div>
-    </div>
-
     <?php if($Order_detail['Order']['discount_value'])  {
             ?>
             <div class="subtotalwrap">
@@ -177,13 +192,12 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
 
     <div class="subtotalwrap">
         <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8">Total 总额</div>
-            <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php echo number_format($Order_detail['Order']['total'], 2) ?></strong></div>
-        </div>
-    </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">Total 总额: <strong>$<?php echo number_format($Order_detail['Order']['total'], 2) ?></strong></div>
 
-    <div class="commentwrap">
-        <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php echo $Order_detail['Order']['message'] ?></textarea>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php echo $Order_detail['Order']['message'] ?></textarea>
+            </div>
+        </div>
     </div>
 
     <div class="clearfix padding15">

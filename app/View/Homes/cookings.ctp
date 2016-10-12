@@ -314,8 +314,8 @@ echo $this->Html->css(array('slick.css'));
             $(document).ready(function () {
                 $('.multiple-items-cooking').slick({
                   infinite: false,
-                  slidesToShow: 2,
-                  slidesToScroll: 2
+                  slidesToShow: 3,
+                  slidesToScroll: 3
                 });
                 var height = new Array();
                 $(".get_height").map(function() {

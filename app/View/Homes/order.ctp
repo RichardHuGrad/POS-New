@@ -177,6 +177,7 @@ echo $this->fetch('script');
              data:{item_id:item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
              success:function(html) {
                 $(".summary_box").html(html);
+                $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $(".products-panel").removeClass('load1 csspinner');
              },
              beforeSend:function() {
@@ -204,8 +205,25 @@ echo $this->fetch('script');
     })
 
     $(document).on('click', ".add_extras", function() {
-        $(this).toggleClass("active");
+      var item_id = $(this).attr("item_id");
+      var price = $(this).attr("price");
+      var name = $(this).attr("name");
+      var extra_id = $(this).attr("alt");
+
+      var html = '<div class="extras_inner" alt="'+extra_id+'"><span>'+name+'</span><span>'+(price!=0?price:"")+'</span><a class="fa fa-times remove_extra" href="javascript:void(0)"> </a></div>';
+
+      $("#block"+item_id).append(html);
+
     })
+
+
+
+    $(document).on('click', ".remove_extra", function() {
+      $(this).parent(".extras_inner").remove();
+
+    })
+
+
 
     $(document).on("click", '.sub-items', function(e) {
         e.stopPropagation();
@@ -250,10 +268,11 @@ echo $this->fetch('script');
         var array = new Array();
 
         // get all selected extras items of menu
-        $("#sub_"+id+" li a.active").each(function(){
+        $("#block"+id+" div.extras_inner").each(function(){
           array.push($(this).attr('alt')); 
         });
         var input_value = array.toString();
+        var element = $(this).parent("ul.dropdown-menu");
 
         $.ajax({
              url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'add_extras')); ?>",
@@ -262,9 +281,11 @@ echo $this->fetch('script');
              success:function(html) {
                 $(".summary_box").html(html);
                 $(".products-panel").removeClass('load1 csspinner');
+                $(".clearfix.cart-wrap").removeClass("csspinner");
              },
              beforeSend:function() {
-                $(".products-panel").addClass('load1 csspinner');
+                // $(".products-panel").addClass('load1 csspinner');
+                element.addClass('load1 csspinner');
              }
         })
     })
@@ -383,6 +404,60 @@ echo $this->fetch('script');
     $(document).on('click', ".add-discount", function() {
       $(".discount_view").toggle();
     });
+    $(document).on("click", '.dropdown-toggle', function (){
+      if($(this).attr("aria-expanded") == 'true'){
+        $(".clearfix.cart-wrap").addClass("csspinner");
+      } else {
+        $(".clearfix.cart-wrap").removeClass("csspinner");
+      }
+      dropDownFixPosition($(this),$(".dropdown-menu"));
+    }); 
+    function dropDownFixPosition(button,dropdown){
+      var dropDownTop = button.position().top; //alert(dropDownTop);
+      var left = $(document).width() - dropdown.width(); 
+      var top = $(document).height() - dropdown.height(); 
+      dropdown.css('left', left/2+"px");
+      dropdown.css('top', "30%");
+    }
 
+
+  $(document).on('click', "body", function() {
+   $(".clearfix.cart-wrap").removeClass("csspinner");
+  });
+
+  $(document).on('click', ".dropdown-menu", function(event) {
+   event.stopPropagation();
+  });
     
 </script>
+
+<style type="text/css">
+.dropdown-menu{
+  position:fixed;
+}
+.show_extras {
+    display: block;
+    float: left;
+    margin-bottom: 15px;
+    margin-top: 14px;
+    width: 100%;
+}
+.extras_inner{
+    border: 1px solid #eee;
+    border-radius: 14px;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px;
+    padding: 8px;
+}
+.extras_inner > span {
+    margin-right: 10px;
+}
+.fa.fa-times.remove_extra {
+    color: rgb(195, 14, 35);
+    font-size: 19px;
+}.fa.fa-times.remove_extra:hover {
+    color: #23527c;
+    font-size: 19px;
+}
+</style>
