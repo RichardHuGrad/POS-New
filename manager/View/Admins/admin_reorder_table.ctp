@@ -13,6 +13,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
         preventCollision: true,
         start: function(event,ui) {
             // $(this).removeClass('butNotHere');
+
         },
         stop: function( event, ui ) {
              var l = ( 100 * parseFloat($(this).position().left) / parseFloat($(this).parent().width()) )+ "%" ;
@@ -31,6 +32,8 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
          $(this).css("left" , l);
          $(this).css("top" , t);
 
+        var class_name = $(this).attr("id");
+        $("."+class_name).val($(this).attr("style"));
     })
      $("ul#containment-wrapper li").css("position", 'absolute');
   });

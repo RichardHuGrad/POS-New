@@ -128,7 +128,7 @@ class HomesController extends AppController {
         $this->loadModel('Cook');   
         $user = $this->Cook->find('first', array(
             'fields'=>array(
-            'Cook.cashier_id'),
+            'Cook.restaurant_id'),
             'conditions' => array('Cook.id'=>$this->Session->read('Front.id'))
         ));
 
@@ -144,7 +144,7 @@ class HomesController extends AppController {
             array(
                 'fields'=>array('Order.message','Order.table_no', 'Order.table_status', 'Order.order_type', 'Order.order_no', 'Order.created as order_created', 'OrderItem.*'),
                 'conditions'=>array(
-                    'Order.cashier_id'=>$user['Cook']['cashier_id'], 'Order.is_completed'=>'N', 'Order.is_kitchen'=>'Y'
+                    'Order.cashier_id'=>$user['Cook']['restaurant_id'], 'Order.is_completed'=>'N', 'Order.is_kitchen'=>'Y'
                     ),
                 )
             );

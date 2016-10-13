@@ -254,7 +254,7 @@ header{ background:#c30e23; height:100px;}
 
 
 /* Other Page Css */
-.otherwrap{ padding:50px 0 0; width:80%; margin:0 auto;}
+.otherwrap{ padding:13px 0 0; width:80%; margin:0 auto;}
 .otherwrap ul{ margin:0px; padding:0px; list-style:none;}
 .otherwrap ul li{ padding:12px 35px; background:#fff; border-radius:4px 4px 0 0; display:inline-block; margin:0 5px;}
 .otherwrap ul li .checkbox-btn label{ color:#000; padding:2px 0 0 20px;}

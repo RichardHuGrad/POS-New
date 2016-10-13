@@ -132,7 +132,7 @@ class HomesController extends AppController {
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", 
             array(
-                'fields'=>array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.id'),
+                'fields'=>array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.id'),
                 'conditions'=>array('Cashier.id'=>$this->Session->read('Front.id'))
                 )
             );
@@ -955,8 +955,6 @@ class HomesController extends AppController {
 
     public function add_extras() {
 
-
-
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", 
@@ -990,12 +988,17 @@ class HomesController extends AppController {
         if($extras) {
             $extras = explode(",", $extras);
             $all_extras = json_decode($item_detail['OrderItem']['all_extras'], true);
+
+            $new_all_extras = array();
             foreach ($all_extras as $key => $value) {
+                $new_all_extras[$value['id']] = array('id'=>$value['id'], 'price'=>$value['price'], 'name'=>$value['name_zh']);
+            }
+
+            foreach ($extras as $value) {
                 # code...
-                if(in_array($value['id'], $extras)) {
-                    $extras_amount += $value['price'];
-                    $selected_extras[] = array('id'=>$value['id'], 'price'=>$value['price'], 'name'=>$value['name']." ".$value['name_zh']);
-                }
+                $extras_amount += $new_all_extras[$value]['price'];
+                $selected_extras[] = $new_all_extras[$value];
+                
             }
         }
         // save data to items table        

@@ -57,6 +57,9 @@ class CousinesController extends AppController {
             if(!empty($search['status'])){
                 $conditions['Cousine.status'] = $search['status'];
             }
+            if(!empty($search['category_id'])){
+                $conditions['Cousine.category_id'] = $search['category_id'];
+            }
 
         }
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
@@ -70,6 +73,8 @@ class CousinesController extends AppController {
         );
         $this->Cousine->virtualFields['eng_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'en'";
         $this->Cousine->virtualFields['zh_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'zh'";
+        $this->Cousine->virtualFields['category_en_name'] = "Select name from category_locales where category_locales.category_id = Cousine.category_id and lang_code = 'en'";
+        $this->Cousine->virtualFields['category_zh_name'] = "Select name from category_locales where category_locales.category_id = Cousine.category_id and lang_code = 'zh'";
 
         if('all' == $limit){
             $cousines = $this->Cousine->find('all', $query);
@@ -79,7 +84,17 @@ class CousinesController extends AppController {
             $cousines = $this->paginate('Cousine');
         }
         $languages = $this->Language->find('list', array('fields' => array('lang_code', 'language')));
-        $this->set(compact('cousines', 'limit', 'order', 'languages'));
+
+
+        $this->loadModel('CategoryLocale');
+        $categories = $this->CategoryLocale->find('list',
+            array(
+                'fields' => array('CategoryLocale.category_id', 'CategoryLocale.name'),
+                'conditions' => array('CategoryLocale.lang_code' => 'en'),
+                'order' => array('CategoryLocale.name' => 'ASC')
+            )
+        );
+        $this->set(compact('cousines', 'limit', 'order', 'languages', 'categories'));
     }
 
     /**

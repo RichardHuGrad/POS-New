@@ -23,7 +23,7 @@
                             <div class="panel panel-white no-radius text-center">
                                 <div class="panel-body">
                                     <span class="fa-stack fa-3x"> <i class="fa fa-cart-plus text-primary"></i></span>
-                                    <h2 class="StepTitle">Manage Orders</h2>
+                                    <h2 class="StepTitle">Order<br/> Management</h2>
                                     <p class="text-small">
                                         To view detail of Orders.
                                     </p>
@@ -42,8 +42,8 @@
                             <div class="col-sm-4">
                                 <div class="panel panel-white no-radius text-center">
                                     <div class="panel-body">
-                                        <span class="fa-stack fa-3x"> <i class="fa fa-users text-primary"></i></span>
-                                        <h2 class="StepTitle">Manage Restaurants</h2>
+                                        <span class="fa-stack fa-3x"> <i class="fa fa-graduation-cap text-primary"></i></span>
+                                        <h2 class="StepTitle">Restaurant Owners Management</h2>
                                         <p class="text-small">
                                             To view detail of Restaurants.
                                         </p>
@@ -62,7 +62,7 @@
                                 <div class="panel panel-white no-radius text-center">
                                     <div class="panel-body">
                                         <span class="fa-stack fa-3x"> <i class="fa fa-money text-primary"></i></span>
-                                        <h2 class="StepTitle">Manage Cashiers</h2>
+                                        <h2 class="StepTitle">Cashiers Management</h2>
                                         <p class="text-small">
                                             To view detail of Cashiers.
                                         </p>
@@ -79,7 +79,7 @@
                                 <div class="panel panel-white no-radius text-center">
                                     <div class="panel-body">
                                         <span class="fa-stack fa-3x"> <i class="fa fa-cutlery text-primary"></i></span>
-                                        <h2 class="StepTitle">Manage Cuisines</h2>
+                                        <h2 class="StepTitle">Cuisines Management</h2>
                                         <p class="text-small">
                                             To view detail of Cuisines.
                                         </p>

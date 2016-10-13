@@ -232,6 +232,8 @@ $registered_till = @$search['registered_till'];
                                         <th>Time</th>
                                         <th>Price</th>
                                         <th>Tip</th>
+                                        <th>Card </th>
+                                        <th>Cash </th>
                                         <th>Status</th>
                                         <th>Payment Type</th>
                                     </tr>
@@ -283,7 +285,9 @@ $registered_till = @$search['registered_till'];
                                                     <?php echo date('Y/m/d h:i a', strtotime($customer['Order']['created'])); ?>
                                                 </td>
                                                 <td>$<?php echo number_format($customer['Order']['total'], 2); ?></td>
-                                                <td><?php echo $order_tips; ?></td>
+                                                <td>$<?php echo number_format($customer['Order']['tip'], 2); ?></td>
+                                                <td>$<?php echo number_format($customer['Order']['card_val'], 2); ?></td>
+                                                <td>$<?php echo number_format($customer['Order']['cash_val'], 2); ?></td>
                                                 <td><?php echo @$table_status[$customer['Order']['table_status']]; ?></td>
                                                 <td><?php echo $customer['Order']['paid_by']?$customer['Order']['paid_by']:"N/A"; ?></td>
                                             </tr>

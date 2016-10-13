@@ -105,7 +105,7 @@ header { background: #c30e23; height: 100px; }
 .order-left .checkbox-btn label { font-size: 20px; font-weight: 600; color: #292929; line-height: 22px; }
 .order-left .order-summary { margin-bottom: 15px; -webkit-border-radius: 10px/11px; -moz-border-radius: 10px/11px; border-radius: 10px/11px; background-color: #fff; -webkit-box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); -moz-box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9); padding: 10px; }
 .order-summary h3 { text-align: center; margin-bottom: 10px; padding-bottom: 10px; text-align: center; font-size: 22px; font-weight: 600; }
-.order-summary-indent { position: relative; /*overflow-y: scroll; overflow-x: hidden; height: 300px;*/ }
+.order-summary-indent { position: relative; overflow-y: scroll; overflow-x: hidden; max-height: 300px; }
 .order-summary-indent li { border-top: 1px solid #ccc; padding: 15px 0; }
 .order-summary-indent .less-title { font-size: 16px; font-weight: 600; color: #292929; line-height: 21px; padding-left: 10px; padding-bottom: 5px; }
 .order-summary-indent .less-txt { font-size: 11px; color: #6d6d6d; padding-left: 10px; }
@@ -138,7 +138,7 @@ header { background: #c30e23; height: 100px; }
 .dine-box .dinebtn { -webkit-border-radius: 15px; -moz-border-radius: 15px; border-radius: 15px; background-color: #c30e23; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.26); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.26); box-shadow: -2px 5px 5px rgba(0,0,0,.26); background-image: -webkit-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -moz-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -o-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -ms-linear-gradient(bottom, #c30e23, #df7f8a); background-image: linear-gradient(to top, #c30e23, #df7f8a); border: 0px; color: #fff; font-size: 26px; font-weight: 600; padding: 10px 20px 13px; }
 .dine-box .dinebtn img { vertical-align: -7px; margin-right: 10px; }
 .dine-wrap li { float: left; margin-bottom: 20px; margin-right: 3%; position: relative; width: 11%; }
-.dine-wrap li:nth-child(6n) { margin-right: 0; }
+.dine-wrap li:nth-child(7n) { margin-right: 0; }
 .dine-wrap li .notpaidwrap { height: 112px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; }
 .dine-wrap li .availablebwrap { height: 112px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; }
 .dine-wrap li .greenwrap { height: 112px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; }
@@ -171,7 +171,7 @@ header { background: #c30e23; height: 100px; }
 .cart-wrap { padding: 15px 0; position: relative; background: #f1f1f1; overflow:hidden; }
 .cashierbox { background-color: #fff; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.12); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.12); box-shadow: -2px 5px 5px rgba(0,0,0,.12); padding: 10px 15px; }
 .cashierbox .dropdown-toggle { cursor: pointer; }
-.cashierbox .dropdown-menu { left: 105%; top: 0; border: 2px solid #c30e23; background: #fff; width: 850px; padding: 10px; border-radius: 15px; }
+.cashierbox .dropdown-menu { left: 105%; top: 0; border: 2px solid #c30e23; background: #fff; width: 800px; padding: 10px; border-radius: 15px; }
 .cashierbox .dropdown-menu > li > a { padding: 3px 10px 4px; }
 .cashierbox .dropdown-menu li { padding: 2px 10px; border: 0px; float:left; width:20%; border-bottom:1px solid #eee; border-right:1px solid #eee;}
 .cashierbox .dropdown-menu li:nth-child(6) { border-right:0px;}
@@ -182,8 +182,8 @@ header { background: #c30e23; height: 100px; }
 background:#c30e23;
 }
 .cashierbox .dropdown-menu > li > a:hover/*, .cashierbox .dropdown-menu > li > a:focus*/, .cashierbox .dropdown-menu > li > a.active { background: #c30e23; color: #fff; }
-.cashierbox .menu-arrow { position: absolute; top: 5%; left: -10px; background: url(../img/left-arrow.png) left top no-repeat; width: 10px; height: 21px; }
-.cashierbox .dropdown-menu .savebtn { padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 30px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+.cashierbox .menu-arrow { position: absolute; top: 5%; left: -10px; /*background: url(../img/left-arrow.png) left top no-repeat; */width: 10px; height: 21px; }
+.cashierbox .dropdown-menu .savebtn { padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
 .adddoscount { font-size: 20px; font-weight: 600; padding: 15px; line-height: 28px; }
 .adddoscount .fa { font-size: 28px; color: #c30e23; cursor: pointer; }
 .subtotalwrap { color: #323634; font-size: 16px; padding: 20px 15px; border-top: 1px solid #e0e0e0; }
@@ -196,14 +196,14 @@ background:#c30e23;
     position: absolute;
     right: 10px;
     top: 14px;
-    background: #ddd;
+    background: #ddd;font-size: 20px !important;
     border-radius: 5px;
     text-align: center;
     vertical-align: super;
     padding: 6px;
 }
 #product li { border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding-top: 15x; }
-.productbox { height: 500px; position: relative; }
+.productbox { height: 700px; position: relative; overflow-y: auto; }
 .name-title { /*overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;*/ padding:0 0 0 5px; }
 .productbox li { cursor: pointer; float:inherit; display:inline-block; vertical-align:top; }
 .productbox li:hover { background: #f9f9f9; }
@@ -405,6 +405,7 @@ header{ background:#c30e23; height:100px;}
 .product-indent .product-top{ background:#f7e0e3; padding:20px 15px; font-size:26px; font-weight:600; color:#c30e23; border-radius:9px 9px 0 0;}
 .product-indent li { border-bottom:none; padding-top:2px; padding-bottom:2px; font-size:22px; color:#282325;}
 .product-indent li:last-child{ border-bottom:0px;}
+
 /* Order Page Css */
 .order-wrap { padding:2% 0; position:relative;}
 .order-wrap .order-left h2{ font-size:22px; color:#292929; margin-bottom:10px;}
@@ -413,7 +414,7 @@ header{ background:#c30e23; height:100px;}
 .order-left .checkbox-btn label{ font-size:20px; font-weight:600; color:#292929; line-height:22px;}
 .order-left .order-summary{ margin-bottom:15px; -webkit-border-radius: 10px/11px; -moz-border-radius: 10px/11px; border-radius: 10px/11px; background-color: #fff; -webkit-box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); -moz-box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9); padding:10px;}
 .order-summary h3{ text-align:center; margin-bottom:10px; padding-bottom:10px; text-align:center; font-size:22px; font-weight:600;}
-.order-summary-indent{ position:relative; ;overflow-x:hidden;}
+.order-summary-indent{ position:relative;overflow-y: auto ;overflow-x:hidden;height: 400px;}
 .order-summary-indent li{ border-top:1px solid #ccc; padding:0;}
 .order-summary-indent .less-title{ font-size:18x; font-weight:600; color:#292929; line-height: 21px; padding-left:10px; padding-bottom:5px;}
 .order-summary-indent .less-txt{ font-size:18px; color:#6d6d6d; padding-left:10px;}

@@ -305,4 +305,7 @@ echo $this->fetch('script');
              }
         })
     })
+    
+
+
 </script>

@@ -82,7 +82,7 @@ class CooksController extends AppController {
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-                'Cashier.firstname', 'Cashier.lastname', 'Cook.id', 'Cook.firstname', 'Cook.lastname', 'Cook.email', 'Cook.mobile_no', 'Cook.status', 'Cook.is_verified', 'Cook.created'
+                'Admin.restaurant_name', 'Admin.lastname', 'Cook.id', 'Cook.firstname', 'Cook.lastname', 'Cook.email', 'Cook.mobile_no', 'Cook.status', 'Cook.is_verified', 'Cook.created'
             ),
             'order' => $order
         );
@@ -168,17 +168,10 @@ class CooksController extends AppController {
                 $this->request->data = $customer_data;
             }
         }
-        $this->loadModel('Cashier');
 
-        $is_super_admin = $this->Session->read('Admin.is_super_admin');
-        if('Y' == $is_super_admin)
-            $conditions = array('Cashier.status' => 'A');
-        else            
-            $conditions = array('Cashier.status' => 'A');
-        
-        $restaurants = $this->Cashier->find('list',
-            array('fields' => array('Cashier.id', 'Cashier.firstname'), 'conditions' => $conditions, 'order' => array('Cashier.firstname' => 'ASC')));
-
+        $this->loadModel('Admin');
+        $restaurants = $this->Admin->find('list',
+            array('fields' => array('Admin.id', 'Admin.restaurant_name'), 'conditions' => array('Admin.status' => 'A', 'Admin.is_super_admin' => 'N'), 'order' => array('Admin.firstname' => 'ASC')));
 
         $this->set(compact('id', 'restaurants'));
     }
