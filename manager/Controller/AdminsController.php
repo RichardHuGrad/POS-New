@@ -140,7 +140,7 @@ class AdminsController extends AppController {
 
                 // pr($this->data); die;
                 $uid = $this->request->data['Admin']['id'];
-                $table_order = !empty($this->data['Admin']['table_order'])?json_encode($this->data['Admin']['table_order']):"";
+                $table_order = !empty($this->data['Admin']['table_order'])?str_replace("relative", "absolute", json_encode($this->data['Admin']['table_order'])):"";
                 $this->Admin->updateAll(array('Admin.table_order' => "'" . $table_order . "'"), array('Admin.id' => $uid));
 
                 $this->Session->setFlash(__('Table order has been changed successfully.'), 'success');

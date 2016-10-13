@@ -5973,3 +5973,225 @@ Request URL: /pos/manager/js/html5.js
 Stack Trace:
 #0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-12 09:29:44 Error: [MissingConnectionException] Database connection "Mysql" is missing, or could not be created.
+Exception Attributes: array (
+  'class' => 'Mysql',
+  'message' => 'SQLSTATE[HY000] [1045] Access denied for user \'pos\'@\'localhost\' (using password: YES)',
+  'enabled' => true,
+)
+Request URL: /pos/manager/admin/admins/add_edit/NQ%3D%3D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(260): Mysql->connect()
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\ConnectionManager.php(105): DboSource->__construct(Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(3476): ConnectionManager::getDataSource('default')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1126): Model->setDataSource('default')
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(3498): Model->setSource('admin_privilage...')
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): Model->getDataSource()
+#6 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#7 C:\xampp\htdocs\pos\manager\Controller\AppController.php(233): Model->find('all', Array)
+#8 C:\xampp\htdocs\pos\manager\Controller\AppController.php(74): AppController->getAdminPrivilageData()
+#9 C:\xampp\htdocs\pos\manager\Controller\AdminsController.php(16): AppController->beforeFilter()
+#10 [internal function]: AdminsController->beforeFilter(Object(CakeEvent))
+#11 C:\xampp\htdocs\pos\lib\Cake\Event\CakeEventManager.php(247): call_user_func(Array, Object(CakeEvent))
+#12 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(674): CakeEventManager->dispatch(Object(CakeEvent))
+#13 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(182): Controller->startupProcess()
+#14 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#15 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#16 {main}
+2016-10-13 00:22:29 Error: [MissingConnectionException] Database connection "Mysql" is missing, or could not be created.
+Exception Attributes: array (
+  'class' => 'Mysql',
+  'message' => 'SQLSTATE[HY000] [1045] Access denied for user \'pos\'@\'localhost\' (using password: YES)',
+  'enabled' => true,
+)
+Request URL: /pos/manager/
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(260): Mysql->connect()
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\ConnectionManager.php(105): DboSource->__construct(Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(3476): ConnectionManager::getDataSource('default')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1126): Model->setDataSource('default')
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(3498): Model->setSource('admins')
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(1355): Model->getDataSource()
+#6 C:\xampp\htdocs\pos\lib\Cake\View\Helper\FormHelper.php(207): Model->schema()
+#7 C:\xampp\htdocs\pos\lib\Cake\View\Helper\FormHelper.php(459): FormHelper->_introspectModel('Admin', 'fields')
+#8 C:\xampp\htdocs\pos\manager\View\Layouts\login.ctp(62): FormHelper->create('Admin', Array)
+#9 C:\xampp\htdocs\pos\lib\Cake\View\View.php(935): include('C:\xampp\htdocs...')
+#10 C:\xampp\htdocs\pos\lib\Cake\View\View.php(897): View->_evaluate('C:\xampp\htdocs...', Array)
+#11 C:\xampp\htdocs\pos\lib\Cake\View\View.php(529): View->_render('C:\xampp\htdocs...')
+#12 C:\xampp\htdocs\pos\lib\Cake\View\View.php(474): View->renderLayout('', 'login')
+#13 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(952): View->render(NULL, NULL)
+#14 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(192): Controller->render()
+#15 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#16 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#17 {main}
+2016-10-13 00:22:30 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:22:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:22:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:22:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:24:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:24:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:24:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 00:24:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 01:04:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 01:04:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 01:04:22 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 01:04:22 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 04:10:09 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 04:10:09 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 04:10:09 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 04:10:09 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 04:50:47 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 08:41:30 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-13 08:41:30 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/images/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

@@ -394,14 +394,15 @@ $url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
 $project_directory = '/';;
 
 $db_host = 'localhost';
-$db_username = 'root';
-$db_password = '123456';
+
 $db_database = 'pos';
 
+$db_username = 'pos';
+$db_password = 'pos1209';
 if('192.168.1.253:81' == $_SERVER['HTTP_HOST']){
 	$project_directory = '/pos/';
-	$db_username = 'pos';
-	$db_password = 'pos1209';
+	$db_username = 'root';
+	$db_password = '123456';
 } 
 /*
 if('m.brsoftech.net' == $_SERVER['HTTP_HOST']){

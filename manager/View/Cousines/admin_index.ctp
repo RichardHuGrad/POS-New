@@ -163,7 +163,7 @@ if($this->Session->check('cousine_search')){
                                     }
                                     if('all' != $limit){ ?>
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="10">
                                                 <?php echo $this->element('pagination'); ?>
                                             </td>
                                         </tr>
@@ -171,7 +171,7 @@ if($this->Session->check('cousine_search')){
                                 } else {
                                     ?>
                                     <tr>
-                                        <td colspan="5" class="text-center">Cousine Not Available !</td>
+                                        <td colspan="5" class="text-center">Sorry, cuisine not available !</td>
                                     </tr>
                                 <?php } ?>
                                 </tbody>

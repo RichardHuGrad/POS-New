@@ -494,15 +494,15 @@ $(document).ready(function(){
     $(this).addClass("active")
     var type = $(this).attr("id");
     if(type == 'card') {
-        var cash_val = $("#cash_val").val()?parseFloat($("#cash_val").val())*100:0;
         $("#cash").removeClass("active");
-        $("#screen").attr('buffer', cash_val);
-        $("#screen").val($("#cash_val").val());
-    }
-    else if(type == 'cash') {
         var card_val = $("#card_val").val()?parseFloat($("#card_val").val())*100:0;
         $("#screen").attr('buffer', card_val);
         $("#screen").val($("#card_val").val());
+    }
+    else if(type == 'cash') {
+        var cash_val = $("#cash_val").val()?parseFloat($("#cash_val").val())*100:0;
+        $("#screen").attr('buffer', cash_val);
+        $("#screen").val($("#cash_val").val());
     } else {
         var tip_val = $("#tip_val").val()?parseFloat($("#tip_val").val())*100:0;
         $("#screen").attr('buffer', tip_val);
@@ -594,10 +594,10 @@ $(".select_tip"). click(function() {
     var total_price = parseFloat($(".total_price").attr("alt"));
 
     if($("#selected_card").val() == 'cash') {
-      $("#card_val").val(amount.toFixed(2));
+      $("#cash_val").val(amount.toFixed(2));
       $(".cash_price").html("Cash 现金: $"+amount.toFixed(2));
     }if($("#selected_card").val() == 'card') {
-      $("#cash_val").val(amount.toFixed(2));
+      $("#card_val").val(amount.toFixed(2));
       $(".card_price").html("Card 卡: $"+amount.toFixed(2));
     }
     if($("#selected_card").val() == 'tip') { 
@@ -633,23 +633,60 @@ $(".select_tip"). click(function() {
     E.preventDefault();
   })
 
-$("#Clear").click(function() {
+  $("#Clear").click(function() {
 
-  $("#screen").val("");
-  $("#screen").focus();
-  $("#screen").attr('buffer', 0);
+    var selected_card  =$("#selected_card").val();
+    var total_price = parseFloat($(".total_price").attr("alt"));
+    if(selected_card == 'cash') {
+        var amount = $("#cash_val").val();
+        $(".cash_price").html("Cash 现金: $00.00");
+        $("#cash_val").val(0);
 
-  $(".received_price").html("$00.00");
-  $(".received_price").attr('amount', 0);
-  $(".change_price").html("$00.00");
-  $(".change_price").attr('amount', 0);
+        var received_price = parseFloat($(".received_price").attr('amount'));
+        var remaining = received_price - amount;
 
-  $(".cash_price").html("Cash 现金: $00.00");
-  $(".card_price").html("Card 卡: $00.00");
+        $(".received_price").html("$"+remaining.toFixed(2));
+        $(".received_price").attr('amount', remaining.toFixed(2));
 
-  $("#cash_val").val(0);
-  $("#card_val").val(0);
-})
+        if((remaining - total_price)<0){
+          $(".change_price_txt").html("Remaining 其余");
+          $(".change_price").html("$"+(total_price-remaining).toFixed(2));
+        }
+        else{
+          $(".change_price_txt").html("Change 找零");
+        }
+    }
+
+     if(selected_card == 'card') {
+        var amount = $("#card_val").val();
+        $(".card_price").html("Card 卡: $00.00");
+        $("#card_val").val(0);
+
+        var received_price = parseFloat($(".received_price").attr('amount'));
+        var remaining = received_price - amount;
+
+        $(".received_price").html("$"+remaining.toFixed(2));
+        $(".received_price").attr('amount', remaining.toFixed(2));
+
+        if((remaining - total_price)<0){
+          $(".change_price_txt").html("Remaining 其余");
+          $(".change_price").html("$"+(total_price-remaining).toFixed(2));
+        }
+        else{
+          $(".change_price_txt").html("Change 找零");
+        }
+    }
+    if(selected_card == 'tip') {
+
+      $("#tip_val").val(0.00);
+      $(".tip_price").html("$0.00");
+
+    }
+
+    $("#screen").attr('buffer', 0);
+    $("#screen").val("");
+    $("#screen").focus();
+  })
 
   $("#screen").keydown(function (e) {
       // Allow: backspace, delete, tab, escape, enter and .

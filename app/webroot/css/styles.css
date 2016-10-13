@@ -203,7 +203,7 @@ background:#c30e23;
     padding: 6px;
 }
 #product li { border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding-top: 15x; }
-.productbox { height: 500px; position: relative; }
+.productbox { height: 700px; position: relative; overflow-y: auto; }
 .name-title { /*overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;*/ padding:0 0 0 5px; }
 .productbox li { cursor: pointer; float:inherit; display:inline-block; vertical-align:top; }
 .productbox li:hover { background: #f9f9f9; }

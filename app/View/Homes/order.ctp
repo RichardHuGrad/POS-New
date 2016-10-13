@@ -162,10 +162,10 @@ echo $this->fetch('script');
 <script>
     (function ($) {
         $(window).on("load", function () {
-            $(".productbox").mCustomScrollbar({
-                setHeight: 770,
-                theme: "dark-3"
-            });
+            // $(".productbox").mCustomScrollbar({
+            //     setHeight: 770,
+            //     theme: "dark-3"
+            // });
         });
     })(jQuery);
     $(document).on('click', ".add_items", function() {
@@ -306,7 +306,7 @@ echo $this->fetch('script');
 
                     $row = $(this);
 
-                    var id = $row.find("strong").text();//alert(id+" "+id.indexOf(value) );
+                    var id = $row.find(".name-title").text();//alert(id+" "+id.indexOf(value) );
 
                     if (id.toLowerCase().indexOf(value) < 0) {
                         $row.hide();
