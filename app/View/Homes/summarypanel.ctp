@@ -1,6 +1,6 @@
 <?php
 
- ?><div class="clearfix marginB15 cashierbox">
+ ?><div class="clearfix marginB15 cashierbox" style="display:none">
     <div class="pull-left marginR5">
         <?php if ($cashier_detail['Cashier']['image']) { ?>
             <?php echo $this->Html->image(TIMB_PATH."timthumb.php?src=".CASHIER_IMAGE_PATH . $cashier_detail['Cashier']['image']."&h=60&w=60&&zc=4&Q=100", array('class'=>'img-circle img-responsive')); ?>
@@ -42,15 +42,15 @@
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
                         <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
                             <div class="col-md-8 col-sm-8 col-xs-7">
-                                <div class="pull-left">
+                                <!--<div class="pull-left">
                                     <?php 
-                                      if ($value['image']) { 
+                                      /*if ($value['image']) { 
                                         echo $this->Html->image(TIMB_PATH."timthumb.php?src=".COUSINE_IMAGE_PATH . $value['image']."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
                                       } else {
                                         echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive')); 
-                                      } 
+                                      } */
                                       ?>
-                                </div>
+                                </div>-->
                                 <div class="pull-left titlebox">
                                     <!-- to show name of item -->
                                     <div class="less-title"><?php echo $value['name_en']."<br/>".$value['name_xh']; ?></div>
@@ -59,7 +59,7 @@
                                     <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-4 col-xs-5 price-txt paddinT10">$<?php echo ($value['price']+$value['extras_amount']); ?><?php echo $value['qty']>1?"x".$value['qty']:"" ?></div>
+                            <div class="col-md-4 col-sm-4 col-xs-5 price-txt paddinT5">$<?php echo ($value['price']+$value['extras_amount']); ?><?php echo $value['qty']>1?"x".$value['qty']:"" ?></div>
                         </div>
                         <?php
 
@@ -200,7 +200,7 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
         </div>
     </div>
 
-    <div class="clearfix padding15">
+    <div class="clearfix subtotal-btn-wrap">
         <button type="submit" class="submitbtn" id="submit" alt="<?php echo $Order_detail['Order']['id'] ?>">Send to kitchen 发送到厨房</button>
         <button type="submit" class="paybtn" id="pay" alt="<?php echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
     </div>

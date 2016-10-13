@@ -15,7 +15,7 @@
     <header class="home-header text-center">        
         <div class="home-logo">
             <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>">
-                <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
+                <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS", 'class' => 'logo-img')); ?>
             </a>					
             <div class="HomeText text-left">
                 <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'index')) ?>">Home 主页</a>
@@ -27,7 +27,7 @@
 		
 		<div class="sublistingwrap clearfix text-center">
         <div class="container">
-            <div class="col-md-8 clearfix col-sm-6 col-sm-offset-2 col-md-offset-0">
+            <div class="col-md-8 clearfix col-sm-6 col-sm-offset-2 col-md-offset-0 dashboard-btn-list">
 			
 			<ul>
                 
@@ -69,15 +69,15 @@
 			
 			<div class="col-md-4 clearfix col-sm-4">
             <div class="table-colors">
-                <div class="clearfix marginB15">
+                <div class="clearfix marginB5">
                     <div class="pull-left paidb"></div>
                     <div class="pull-left paid-txt">Paid 已付费</div>
                 </div>
-                <div class="clearfix marginB15">
+                <div class="clearfix marginB5">
                     <div class="pull-left notpaid"></div>
                     <div class="pull-left paid-txt">Not Paid 未支付</div>
                 </div>
-                <div class="clearfix marginB15">
+                <div class="clearfix marginB5">
                     <div class="pull-left availableb"></div>
                     <div class="pull-left paid-txt">Available 可用的</div>
                 </div>
@@ -91,11 +91,11 @@
     </header>
         <div class="clearfix homepage">
             <?php echo $this->Session->flash(); ?>
-            <div class="clearfix dine-box">
+            <!--<div class="clearfix dine-box">
 			<div class="col-md-12">
-                <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Dine in Table 堂食</button>
+                <button class="dinebtn"><?php //echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Dine in Table 堂食</button>
             </div>
-			</div>
+			</div>-->
 
             <div class="clearfix marginB30">                
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
@@ -106,7 +106,7 @@
                         	for($i = 1; $i <= $tables['Admin']['no_of_tables']; $i++) {
                         	?>
 	                        <li class="clearfix dine_li" style="<?php echo @$dine_table_order[$i-1] ?>">
-	                        	 <ul class="dropdown-menu">
+	                        	 <ul class="dropdown-menu dine-tables">
                                     <div class="arrow"></div>
                                     <li <?php if(@$dinein_tables_status[$i] == 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'order', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)"; ?>">Order <br/>点餐</a></li>
 
@@ -138,11 +138,14 @@
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
 
                                     <li <?php if(@$dinein_tables_status[$i] == 'A')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:void(0)">Merge Bill</a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:void(0)">Split Bill</a></li>
+                                    <li><a tabindex="-1" href="javascript:void(0)">History</a></li>
 	                        	</ul>
 	                            <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 	                                <div class="number-txt for-dine">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                    
-                                    <div class="order_no_box marginB15 <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+                                    <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 	                                	<?php
                                 	 	if(!@$dinein_tables_status[$i]) 
 	                                		echo "&nbsp;";
@@ -150,7 +153,7 @@
                                 			echo "* ".@$orders_no[$i]['D'];                                   	
 	                                	?>
 	                                </div>
-	                                <div class="txt16 text-center <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php if(@$dinein_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['D']?date("H:i:s", strtotime(@$orders_time[$i]['D'])):"" ?><?php }?>
+	                                <div class="txt12 text-center <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php if(@$dinein_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['D']?date("H:i", strtotime(@$orders_time[$i]['D'])):"" ?><?php }?>
 
                                     <?php echo $this->Html->image('seat.png', array('alt' => 'Seat', 'title' => 'Seats')); ?>
                                     <?php echo @$dine_table[$i-1] ?></div>
@@ -215,12 +218,12 @@
                                             <?php 
                                             if(@$takeway_tables_status[$i]) {
                                             ?>
-			                                <div class="order_no_box marginB15 <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+			                                <div class="order_no_box <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 			                                	<?php
                                                     echo "* ".@$orders_no[$i]['T'];                            	
 			                                	?>
 			                                </div>
-			                                <div class="txt16 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i:s", strtotime(@$orders_time[$i]['T'])):"" ?></div>
+			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>
 		                            	
                                             <?php }?>
 		                            </div>
@@ -281,7 +284,7 @@
 	                        	</ul>
 	                            <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 	                                <div class="number-txt for-dine">等候<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
-	                                <div class="order_no_box marginB15 <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+	                                <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 	                                	<?php
 	                                	if(!@$waiting_tables_status[$i]) 
                                             echo "&nbsp;";
@@ -289,8 +292,8 @@
                                             echo "* ".@$orders_no[$i]['W'];                       	
 	                                	?>
 	                                </div>
-	                                <div class="txt16 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
-                                        <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i:s", strtotime(@$orders_time[$i]['W'])):""; } ?>
+	                                <div class="txt12 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+                                        <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i", strtotime(@$orders_time[$i]['W'])):""; } ?>
                                     <?php echo $this->Html->image('seat.png', array('alt' => 'Seat', 'title' => 'Seats')); ?> 
                                     <?php echo @$dine_table[$i-1] ?></div>
 	                            </div>
@@ -314,6 +317,21 @@ echo $this->fetch('script');
 	        e.stopPropagation();
 	        e.preventDefault();
 	    });
+
+        $('.dropdown-toggle').on('click', function(e) {
+            setTimeout(function() {
+                var ddmenu = $('.open').find('.dropdown-menu');
+                if (ddmenu) {
+                    var position_x = ddmenu.offset().left;
+                    var el_width = ddmenu.outerWidth();
+                    var window_width = $(window).width();
+
+                    if(position_x + el_width > window_width && !ddmenu.hasClass('dropdown-menu-right')) {
+                        ddmenu.addClass('dropdown-menu-right');
+                    }
+                }
+            }, 1);
+        });
 	});
 </script>
 </body>

@@ -1,21 +1,21 @@
 @media screen and (min-width:1024px) {
-.sublistingwrap li .order-brn{ width:120px; height:auto; padding-bottom:10px; border-radius:10px;}
-.sublistingwrap li .inquery-brn{ width:120px; height:auto;padding-bottom:10px; border-radius:10px;}
-.sublistingwrap li .inquiry-txt, .sublistingwrap li .order-txt { font-size:16px;}
-.order_no_box { font-size:22px;}
-.titlebox { width:110px;}
+.sublistingwrap li .order-brn{ width:90px; height:auto; padding-bottom:10px; border-radius:10px;}
+.sublistingwrap li .inquery-brn{ width:90px; height:auto;padding-bottom:10px; border-radius:10px;}
+.sublistingwrap li .inquiry-txt, .sublistingwrap li .order-txt { font-size:12px;}
+.order_no_box { font-size:15px;}
+.titlebox { width:100%;}
 }
 @media screen and (max-width:1023px) {
-.calculator{ width:70%;} 
+.calculator{ width:70%;}
 .product-wrap{ width:100%;}
-.titlebox { width:100px;}
+.titlebox { width:100%;}
 .order-summary-indent .less-title { font-size:14px;}
 .submitbtn, .paybtn{ font-size:16px; padding:10px 15px;}
-.order_no_box { font-size:24px; margin-bottom5px !important;}
+.order_no_box { font-size:15px; margin-bottom5px !important;}
 .sublistingwrap li{ margin:0 3px; float:right;}
-.sublistingwrap li .order-brn{ width:120px; height:auto; padding-bottom:10px; border-radius:10px;}
-.sublistingwrap li .inquery-brn{ width:100px; padding0 5px 10px; height:auto; border-radius:5px;}
-.sublistingwrap li .inquiry-txt, .sublistingwrap li .order-txt { font-size:14px;}
+.sublistingwrap li .order-brn{ width:90px; height:auto; padding-bottom:10px; border-radius:10px;}
+.sublistingwrap li .inquery-brn{ width:90px; padding: 0 5px 10px; height:auto; border-radius:5px;}
+.sublistingwrap li .inquiry-txt, .sublistingwrap li .order-txt { font-size:12px;}
 .txt16 { font-size:13px !important;}
 }
 
@@ -33,7 +33,7 @@
 .HomeText a { margin-right:10px; font-size:13px;}
 
 .dine-wrap li { width:19%; margin-right:1%; margin-bottom:8px;}
-.order_no_box { font-size:30px;}
+.order_no_box { font-size:15px;}
 .dine-wrap li:nth-child(6n) { margin-right:1%;}
 .dine-wrap li:nth-child(5n) { margin-right:0px;}
 .sublistingwrap li .order-txt { font-size:12px;}

@@ -52,7 +52,7 @@
 	
 	<div class="clearfix cart-wrap">
         <div class="col-md-4 col-sm-5 col-xs-12 summary_box">
-            <div class="clearfix marginB15 cashierbox">
+            <div class="clearfix marginB15 cashierbox" style="display:none">
                 <div class="pull-left marginR5">
                     <?php if ($cashier_detail['Cashier']['image']) { ?>
                         <?php echo $this->Html->image(TIMB_PATH."timthumb.php?src=".CASHIER_IMAGE_PATH . $cashier_detail['Cashier']['image']."&h=60&w=60&&zc=4&Q=100", array('class'=>'img-circle img-responsive')); ?>
