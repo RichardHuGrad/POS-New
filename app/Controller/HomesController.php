@@ -257,7 +257,7 @@ class HomesController extends AppController {
             array(
                 'fields'=>array('Order.message','Order.table_no', 'Order.table_status', 'Order.order_type', 'Order.order_no', 'Order.created as order_created', 'OrderItem.*'),
                 'conditions'=>array(
-                    'Order.cashier_id'=>$tables['Admin']['id'], 'Order.is_completed'=>'N', 'Order.is_kitchen'=>'Y'
+                    'Order.cashier_id'=>$tables['Admin']['id'], 'Order.is_completed'=>'N', 'OrderItem.is_kitchen'=>'Y'
                     ),
                 )
             );
@@ -850,11 +850,15 @@ class HomesController extends AppController {
 
         // update message in order table
         $this->loadModel('Order');     
+        $this->loadModel('OrderItem');     
         $data = array(); 
         $data['Order']['id'] = $order_id;
         $data['Order']['message'] = $message;
         $data['Order']['is_kitchen'] = $is_kitchen;
         $this->Order->save($data, false);
+
+
+        $this->OrderItem->updateAll(array('OrderItem.is_kitchen' => "'Y'"), array('OrderItem.order_id' => $order_id));
         if($is_kitchen == 'Y')
             $this->Session->setFlash('Cooking items successfully sent to kitchen.', 'success');
         echo true;

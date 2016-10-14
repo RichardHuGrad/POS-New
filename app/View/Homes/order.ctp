@@ -156,7 +156,7 @@
     </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'epos-print-5.0.0'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -230,6 +230,33 @@ echo $this->fetch('script');
     })
 
     $(document).on("click", "#submit", function(){
+
+      // print receipts
+      var builder = new epson.ePOSBuilder();
+      builder.addTextLang('en');
+      builder.addTextSmooth(true);
+      builder.addTextFont(builder.FONT_A);
+      builder.addTextSize(3, 3);
+      builder.addText('Hello,\tKitchen printer!\n');
+      builder.addCut(builder.CUT_FEED);
+      var request = builder.toString();
+
+      //Set the end point address
+      var address = 'http://asd/cgi-bin/epos/service.cgi?devid=dfgdfg&timeout=100' ;
+      //Create an ePOS-Print object
+      var epos = new epson.ePOSPrint(address);
+      //Set a response receipt callback function
+      epos.onreceive = function (res) {
+        alert("ok");
+      //When the printing is not successful, display a message
+        if (!res.success) {
+          alert('A print error occurred');
+        }
+      }
+      //Send the print document
+      epos.send(request);
+      
+
       // update order message here
       var order_id = $(this).attr("alt");
       $.ajax({
@@ -237,7 +264,7 @@ echo $this->fetch('script');
          method:"post",
          data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"Y"},
          success:function(html) {
-            window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
+            //window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
          },
          beforeSend:function() {
             $(".summary_box").addClass('load1 csspinner');

@@ -125,6 +125,25 @@ $(document).ready(function() {
                                 <?php } ?>
 
                                 <h4 style="margin-left:13px">
+                                    Kitchen Printer Details
+                                </h4>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Printer IP Address <span class="symbol required"></span></label> 
+                                        <?php echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'div' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Printer Device ID <span class="symbol required"></span></label> 
+                                        <?php echo $this->Form->input('printer_device_id', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                 <h4 style="margin-left:13px">
                                     Restaurant Details
                                 </h4>
 
