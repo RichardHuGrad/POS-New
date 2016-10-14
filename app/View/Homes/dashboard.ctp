@@ -414,6 +414,7 @@ echo $this->fetch('script');
 ?>
 <script>
 	$(document).ready(function () {
+            
         $(window).scroll(function () {
             if ($(this).scrollTop() > 100) {
                 $('.scrollUp').fadeIn();
@@ -440,27 +441,28 @@ echo $this->fetch('script');
             return false;
         });
 
-	    $('.dropdown-submenu a.test').on("click", function (e) {
-	        $(this).next('ul').toggle();
-	        e.stopPropagation();
-	        e.preventDefault();
-	    });
+        $('.dropdown-submenu a.test').on("click", function (e) {
+                $(this).next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
 
-        $('.dropdown-toggle').on('click', function(e) {
-            setTimeout(function() {
-                var ddmenu = $('.open').find('.dropdown-menu');
-                if (ddmenu) {
-                    var position_x = ddmenu.offset().left;
-                    var el_width = ddmenu.outerWidth();
-                    var window_width = $(window).width();
 
-                    if(position_x + el_width > window_width && !ddmenu.hasClass('dropdown-menu-right')) {
-                        ddmenu.addClass('dropdown-menu-right');
+$('.dropdown-toggle').on('click', function (e) {
+                setTimeout(function () {
+                    var ddmenu = $('.open').find('.dropdown-menu');
+                    if (ddmenu) {
+                        var position_x = ddmenu.offset().left;
+                        var el_width = ddmenu.outerWidth();
+                        var window_width = $(window).width();
+
+                        if (position_x + el_width > window_width && !ddmenu.hasClass('dropdown-menu-right')) {
+                            ddmenu.addClass('dropdown-menu-right');
+                        }
                     }
                 }, 1);
             });
         });
-	});
 
     $(window).load(function () {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
