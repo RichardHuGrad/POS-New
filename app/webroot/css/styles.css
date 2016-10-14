@@ -127,6 +127,8 @@ header { background: #c30e23; height: 75px; }
 .card-bot .btn { font-size: 19px; vertical-align: middle; margin: 0 10px; padding: 10px 15px; opacity: 0.2; }
 .card-bot .btn.active { opacity: 1 !important; }
 .card-ok { opacity: 1 !important; }
+.add_items {padding-left: 5px; padding-right: 5px;}
+.dish-title, .dish-price {padding: 0;}
 /* Index Page Css */
 .home-header { background: #c30e23; height: auto; padding: 0; }
 .dashboard-btn-list {padding-top: 3px;}
@@ -172,6 +174,19 @@ header { background: #c30e23; height: 75px; }
 .availableb { width: 20px; height: 20px; margin-right: 10px; background: #e3e3e4; border: 1px solid #eee; }
 .paid-txt { font-size: 18px; font-weight: 600; color: #fff; }
 .table-colors { padding-top: 5px; }
+.scrollUp, .scrollDown {
+	width: 40px;
+    height: 40px;
+    position: fixed;
+    right: 20px;
+    display: none;
+    text-indent: -9999px;
+    /*background: url('icon_top.png') no-repeat;*/
+    background-color: #000;
+    opacity: 0.5;
+}
+.scrollUp {bottom: 60px; background: url('../img/up-icon.png') no-repeat center center; background-size: 40px;}
+.scrollDown {bottom: 10px; background: url('../img/down-icon.png') no-repeat center center; background-size: 40px;}
 /* Cart Page Css */
 .cart-wrap { padding: 5px 0; position: relative; background: #f1f1f1; overflow:hidden; }
 .cashierbox { background-color: #fff; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.12); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.12); box-shadow: -2px 5px 5px rgba(0,0,0,.12); padding: 10px 15px; }
@@ -195,8 +210,11 @@ background:#c30e23;
 .commentwrap { padding: 20px 15px 10px; }
 .commentwrap textarea { border-radius: 20px; border-color: #d2d2d2; box-shadow: none; height: 120px; }
 .subtotal-btn-wrap {padding: 0 15px 15px 15px;}
-.submitbtn { float:left; border: 0px; background: #c30e23; padding: 15px 20px; font-size: 13px; color: #fff; border-radius: 8px; margin-right: 10px; font-weight: 600; }
-.paybtn { float: right; border: 0px; background: #292929; padding: 15px 20px; font-size: 18px; color: #fff; border-radius: 8px; margin-right: 10px; font-weight: 600; }
+.submitbtn { float:left; width: 68%; border: 0px; background: #c30e23; padding: 15px 10px; font-size: 13px; color: #fff; border-radius: 8px; font-weight: 600; }
+.paybtn { float: right; width: 30%; border: 0px; background: #292929; padding: 15px 5px; font-size: 18px; color: #fff; border-radius: 8px; font-weight: 600; }
+.add_items:nth-child(1), .add_items:nth-child(2), .add_items:nth-child(3), .add_items:nth-child(4) {border-top: 1px solid rgba(0,0,0,0.5);}
+.add_items {border-bottom: 1px solid rgba(0,0,0,0.5); border-right: 1px solid rgba(0,0,0,0.5);}
+.add_items:nth-child(4n + 1) {border-left: 1px solid rgba(0,0,0,0.5);}
 
 .close-link { 
 	color: rgb(195, 14, 35);
@@ -210,9 +228,10 @@ background:#c30e23;
     padding: 6px;
 }
 #product li { border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding-top: 15x; }
-.productbox { height: 500px; position: relative; overflow-y: auto; }
+.products-panel {padding-left: 0;}
+.productbox { width: 100%; height: 500px; position: relative; overflow-y: auto; overflow-x: hidden; margin: 0; }
 .name-title { /*overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;*/ padding:0 0 0 5px; }
-.productbox li { cursor: pointer; float:inherit; display:inline-block; vertical-align:top; }
+.productbox li { cursor: pointer; float:left; display:inline-block; vertical-align:top; }
 .productbox li:hover { background: #f9f9f9; }
 .cartwrap-wrap { padding: 5px 0; }
 .cart-txt { font-size: 20px; color: #151515; font-weight: 600; padding-top: 5px; }

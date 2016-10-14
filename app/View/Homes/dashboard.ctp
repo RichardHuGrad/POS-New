@@ -99,7 +99,7 @@
 
             <div class="clearfix marginB30">                
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                        <ul class="dine_ul" style="height:auto; overflow:auto; min-height:<?php echo 50*$tables['Admin']['no_of_tables']; ?>px; padding:0">
+                        <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 480px; padding:0">
                         	<?php
                             $dine_table = @explode(",", $tables['Admin']['table_size']);
                             $dine_table_order = @$tables['Admin']['table_order']?@json_decode($tables['Admin']['table_order'], true):array();
@@ -296,6 +296,9 @@
                         </ul>
                     </div>
                 </div>
+                <!-- Scroll buttons -->
+                <a href="#" class="scrollUp">Up</a>
+                <a href="#" class="scrollDown">Down</a>
             </div>
          
 
@@ -306,6 +309,32 @@ echo $this->fetch('script');
 ?>
 <script>
 	$(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('.scrollUp').fadeIn();
+            } else {
+                $('.scrollUp').fadeOut();
+            }
+
+            if ($(this).scrollTop() + $(this).height() >= $(document).height() - 100) {
+                $('.scrollDown').fadeOut();
+            } else {
+                $('.scrollDown').fadeIn();
+            }
+        });
+
+        $('.scrollUp').click(function () {
+            $("html, body").animate({
+                scrollTop: 0
+            }, 300);
+            return false;
+        });
+
+        $('.scrollDown').click(function() {
+            $('html, body').animate({ scrollTop: $(document).height() }, 300);
+            return false;
+        });
+
 	    $('.dropdown-submenu a.test').on("click", function (e) {
 	        $(this).next('ul').toggle();
 	        e.stopPropagation();
@@ -327,5 +356,13 @@ echo $this->fetch('script');
             }, 1);
         });
 	});
+
+    $(window).load(function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+            $('.scrollDown').fadeOut();
+        } else {
+            $('.scrollDown').fadeIn();
+        }
+    });
 </script>
 </body>
