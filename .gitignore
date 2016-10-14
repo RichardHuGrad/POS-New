@@ -1,4 +1,3 @@
-app/tmp
-manager/tmp
-manager/webroot/img/cache
-cook/tmp
+app/temp
+cook/temp
+manage/temp

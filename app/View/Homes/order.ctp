@@ -233,16 +233,16 @@ echo $this->fetch('script');
       // update order message here
       var order_id = $(this).attr("alt");
       $.ajax({
-             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
-             method:"post",
-             data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"Y"},
-             success:function(html) {
-                window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
-             },
-             beforeSend:function() {
-                $(".summary_box").addClass('load1 csspinner');
-             }
-        })
+         url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
+         method:"post",
+         data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"Y"},
+         success:function(html) {
+            window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
+         },
+         beforeSend:function() {
+            $(".summary_box").addClass('load1 csspinner');
+         }
+      })
 
     });
     $(document).on("click", "#pay", function(){
