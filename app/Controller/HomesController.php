@@ -591,6 +591,52 @@ class HomesController extends AppController {
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no'));
     }
 
+    public function tableHistory() {
+        // get cashier details
+        $this->loadModel('Cashier');
+        $cashier_detail = $this->Cashier->find("first",
+            array(
+                'fields'=>array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+                'conditions'=>array('Cashier.id'=>$this->Session->read('Front.id'))
+                )
+            );
+
+        $table_no = $this->params['named']['table_no'];
+
+        $this->loadModel('Order');
+        $this->loadModel('OrderItem');
+
+        $conditions = array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
+                        'Order.table_no'=>$table_no,
+                        'Order.is_completed'=>'Y',
+                        'Order.order_type'=>'D',
+                        'Order.created >=' => date("Ymd")/*, strtotime("-2 weeks"))*/
+                    );
+
+        $Order_detail = $this->Order->find("all",
+            array(
+                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount', 'Order.created'),
+                'conditions'=> $conditions
+                )
+            );
+        if(empty($Order_detail)) {
+            $this->Session->setFlash('Sorry, there is no table history for today.', 'error');
+            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+        }
+
+        $this->paginate = array(
+                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount', 'Order.created'),
+                'conditions'=> $conditions,
+                'limit' => 1,
+                'order' => array('Order.created' => 'desc')
+            );
+
+        $Order_detail = $this->paginate('Order');
+        $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
+
+        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'today'));
+    }
+
    public function donepayment() {
 
         $this->layout = false;

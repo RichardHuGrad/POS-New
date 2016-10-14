@@ -140,7 +140,7 @@
                                     <li <?php if(@$dinein_tables_status[$i] == 'A')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:void(0)">Merge Bill</a></li>
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:void(0)">Split Bill</a></li>
-                                    <li><a tabindex="-1" href="javascript:void(0)">History</a></li>
+                                    <li><a tabindex="-1" href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'tableHistory', 'table_no'=>$i)); ?>">History</a></li>
 	                        	</ul>
 	                            <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 	                                <div class="number-txt for-dine">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
@@ -150,14 +150,10 @@
                                 	 	if(!@$dinein_tables_status[$i]) 
 	                                		echo "&nbsp;";
                                 		else
-                                			echo "* ".@$orders_no[$i]['D'];                                   	
+                                			echo @$orders_no[$i]['D'];
 	                                	?>
 	                                </div>
 	                                <div class="txt12 text-center <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php if(@$dinein_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['D']?date("H:i", strtotime(@$orders_time[$i]['D'])):"" ?><?php }?>
-
-                                    <?php echo $this->Html->image('seat.png', array('alt' => 'Seat', 'title' => 'Seats')); ?>
-                                    <?php echo @$dine_table[$i-1] ?></div>
-
 	                            </div>
 	                        </li>
 	                        <?php }?>
@@ -220,7 +216,7 @@
                                             ?>
 			                                <div class="order_no_box <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 			                                	<?php
-                                                    echo "* ".@$orders_no[$i]['T'];                            	
+                                                    echo @$orders_no[$i]['T'];                            	
 			                                	?>
 			                                </div>
 			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>
@@ -289,13 +285,11 @@
 	                                	if(!@$waiting_tables_status[$i]) 
                                             echo "&nbsp;";
                                 		else
-                                            echo "* ".@$orders_no[$i]['W'];                       	
+                                            echo @$orders_no[$i]['W'];                       	
 	                                	?>
 	                                </div>
 	                                <div class="txt12 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                         <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i", strtotime(@$orders_time[$i]['W'])):""; } ?>
-                                    <?php echo $this->Html->image('seat.png', array('alt' => 'Seat', 'title' => 'Seats')); ?> 
-                                    <?php echo @$dine_table[$i-1] ?></div>
 	                            </div>
 	                        </li>
                             <?php } ?>

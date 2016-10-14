@@ -17,12 +17,12 @@
       <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
 
       <ul class="nav nav-tabs text-center">
-          <li class="active"><a data-toggle="tab" href="#Popular">Popular<br/>流行</a></li>
+          <!--<li class="active"><a data-toggle="tab" href="#Popular">Popular<br/>流行</a></li>-->
           <?php
           if (!empty($records)) {
-              foreach ($records as $category) {
-                  ?>                
-                  <li><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name']."<br/>".$category['Category']['zh_name']; ?></a></li>
+              foreach ($records as $key => $category) {
+                  ?>
+                  <li <?php if($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name']."<br/>".$category['Category']['zh_name']; ?></a></li>
                   <?php
               }
           }
