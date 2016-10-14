@@ -1,6 +1,5 @@
 <header class="product-header">
-  
-      
+
 	  <div class="home-logo">
                     <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>">
                     <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
@@ -15,7 +14,7 @@
       <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
   
 </header>
-        <div class="container">
+		<div class="container">
            <div class="clearfix cartwrap-wrap">
           </div>
             <div class="order-wrap">
@@ -305,7 +304,7 @@
         </div>
         <div style="display:none" >
 
-<div class="order-summary" id="print_panel">
+			<div class="order-summary" id="print_panel">
                         <h3 class="dianming">嘿小面</h3>
                         <h4 class="dianming">3700 Midland Ave. #108</h4>
                         <h4 class="dianming">Scarborougn On M1V 0B3</h4>
