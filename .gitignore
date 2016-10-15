@@ -6,6 +6,14 @@
 /cook/Config
 /manager/Config
 
+app/tmp
+manager/tmp
+manager/webroot/img/cache
+cook/tmp
+app/Config
+cook/Config
+manager/Config
+
 /app/tmp/*
 /manager/tmp/*
 /manager/webroot/img/cache/*
