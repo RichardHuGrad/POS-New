@@ -6195,3 +6195,117 @@ Request URL: /pos/manager/images/favicon.ico
 Stack Trace:
 #0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-15 04:18:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 04:18:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 04:18:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 04:18:37 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/js/html5.js
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 04:50:49 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Cashier.createdno_of_orders' in 'field list'
+Request URL: /pos/manager/admin/cashiers
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('SELECT `Admin`....', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(665): DboSource->execute('SELECT `Admin`....', Array, Array)
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(1077): DboSource->fetchAll('SELECT `Admin`....', false)
+#4 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2902): DboSource->read(Object(Cashier), Array)
+#5 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('all', Array)
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Component\PaginatorComponent.php(173): Model->find('all', Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#8 C:\xampp\htdocs\pos\manager\Controller\CashiersController.php(96): Controller->paginate()
+#9 [internal function]: CashiersController->admin_index()
+#10 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CashiersController), Array)
+#11 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#12 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(CashiersController), Object(CakeRequest), Object(CakeResponse))
+#13 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#14 {main}
+2016-10-15 05:04:31 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'status' at row 1
+Request URL: /pos/manager/admin/cashiers/delete/NQ%3D%3D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`c...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`c...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2541): Mysql->update(Object(Cashier), Array, NULL, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\CashiersController.php(238): Model->updateAll(Array, Array)
+#5 [internal function]: CashiersController->admin_delete('NQ==')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CashiersController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(CashiersController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-15 05:09:13 Error: [MissingControllerException] Controller class UploadsController could not be found.
+Exception Attributes: array (
+  'class' => 'UploadsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/uploads/cashier/thumbnail/1476521725_Cashier.png
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 05:11:46 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'status' at row 1
+Request URL: /pos/manager/admin/cooks/delete/NQ%3D%3D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`c...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`c...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2541): Mysql->update(Object(Cook), Array, NULL, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\CooksController.php(236): Model->updateAll(Array, Array)
+#5 [internal function]: CooksController->admin_delete('NQ==')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CooksController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(CooksController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-15 05:12:03 Error: [PDOException] SQLSTATE[01000]: Warning: 1265 Data truncated for column 'status' at row 1
+Request URL: /pos/manager/admin/cooks/delete/NQ%3D%3D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(458): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\DboSource.php(424): DboSource->_execute('UPDATE `pos`.`c...', Array)
+#2 C:\xampp\htdocs\pos\lib\Cake\Model\Datasource\Database\Mysql.php(400): DboSource->execute('UPDATE `pos`.`c...')
+#3 C:\xampp\htdocs\pos\lib\Cake\Model\Model.php(2541): Mysql->update(Object(Cook), Array, NULL, Array)
+#4 C:\xampp\htdocs\pos\manager\Controller\CooksController.php(236): Model->updateAll(Array, Array)
+#5 [internal function]: CooksController->admin_delete('NQ==')
+#6 C:\xampp\htdocs\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CooksController), Array)
+#7 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(CooksController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2016-10-15 05:19:36 Error: [MissingControllerException] Controller class UploadsController could not be found.
+Exception Attributes: array (
+  'class' => 'UploadsController',
+  'plugin' => NULL,
+)
+Request URL: /pos/manager/uploads/cousine_images/thumbnail/1476523146_cousine.png
+Stack Trace:
+#0 C:\xampp\htdocs\pos\manager\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

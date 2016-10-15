@@ -598,6 +598,7 @@ class HomesController extends AppController {
 
         $data['Order']['card_val'] = $this->data['card_val'];
         $data['Order']['cash_val'] = $this->data['cash_val'];
+        $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
         $data['Order']['tip'] = $this->data['tip_val'];
 
         $this->loadModel('Order');
@@ -683,11 +684,12 @@ class HomesController extends AppController {
         $this->loadModel('OrderItem');
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $tax_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
+            'conditions' => array(
+                        'Order.cashier_id' => $tax_detail['Admin']['id'],
+                        'Order.table_no' => $table,
+                        'Order.is_completed' => 'N',
+                        'Order.order_type' => $type
+                    )
                 )
         );
 

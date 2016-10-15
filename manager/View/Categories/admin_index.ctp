@@ -146,6 +146,12 @@ if($this->Session->check('category_search')){
                                                         array('plugin' => false, 'controller' => 'categories', 'action' => 'add_edit', 'id' => base64_encode($cat['Category']['id']), 'admin' => true),
                                                         array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit category', 'escape' => false)
                                                     );
+
+                                                    if (!$cat['Category']['no_of_orders']) 
+                                                        echo $this->Html->link('<i class="fa fa-trash"></i>',
+                                                            array('plugin' => false, 'controller' => 'categories', 'action' => 'delete',  base64_encode($cat['Category']['id']), 'admin' => true),
+                                                            array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to delete category', "onclick"=>"return confirm('Are you sure you want to delete this category?')", 'escape' => false)
+                                                        );
                                                      ?>
                                                 </div>
                                             </td>

@@ -391,18 +391,18 @@ $directory = $_SERVER['DOCUMENT_ROOT'] . '/';
 $url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
 
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
 $project_directory = '/';
 
 $db_host = 'localhost';
 $db_username = 'pos';
 $db_password = 'pos1209';
-=======
+// =======
 $project_directory = '/';;
 
 $db_host = 'localhost';
 
->>>>>>> 4802d0ed5d55d47ee65cc71f17721904c2dd6af1
+// >>>>>>> 4802d0ed5d55d47ee65cc71f17721904c2dd6af1
 $db_database = 'pos';
 
 $db_username = 'pos';

@@ -79,10 +79,12 @@ class CashiersController extends AppController {
             $conditions['Cashier.restaurant_id'] = $this->Session->read('Admin.id');            
         }
 
+        $this->Cashier->virtualFields['no_of_orders'] = "Select count(orders.id) from orders where orders.counter_id = Cashier.id";
+
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-                'Admin.restaurant_name', 'Cashier.id', 'Cashier.firstname', 'Cashier.lastname', 'Cashier.email', 'Cashier.mobile_no', 'Cashier.status', 'Cashier.is_verified', 'Cashier.created'
+                'Admin.restaurant_name', 'Cashier.id', 'Cashier.firstname', 'Cashier.lastname', 'Cashier.email', 'Cashier.mobile_no', 'Cashier.status', 'Cashier.is_verified', 'Cashier.created', 'no_of_orders'
             ),
             'order' => $order
         );
@@ -231,9 +233,16 @@ class CashiersController extends AppController {
      */
     public function admin_delete($id = '') {
 
-        $this->checkAccess('Cashier', 'can_delete');
         $id = base64_decode($id);
-        $this->Cashier->updateAll(array('Cashier.status' => "'D'"), array('Cashier.id' => $id));
+
+        // get cashier image details
+        $details = $this->Cashier->find('first', array('conditions' => array('Cashier.id' => $id), 'fields'=>'Cashier.image'));
+        if(!empty($details) and @$details['Cashier']['image']) {
+            // unlink image
+            unlink(CASHIER_UPLOAD_PATH ."thumbnail/". $details['Cashier']['image']);
+        }
+
+        $this->Cashier->delete($id);
 
         $this->Session->setFlash('Cashier has been deleted successfully', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'cashiers', 'action' => 'index', 'admin' => true));

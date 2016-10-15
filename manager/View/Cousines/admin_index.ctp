@@ -155,6 +155,12 @@ if($this->Session->check('cousine_search')){
                                                         array('plugin' => false, 'controller' => 'extras', 'action' => 'admin_index', '?'=>array('id' => ($cat['Cousine']['id'])), 'admin' => true),
                                                         array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to add/edit extras', 'escape' => false)
                                                     );
+
+                                                    if (!$cat['Cousine']['no_of_orders']) 
+                                                        echo $this->Html->link('<i class="fa fa-trash"></i>',
+                                                            array('plugin' => false, 'controller' => 'cousines', 'action' => 'delete',  base64_encode($cat['Cousine']['id']), 'admin' => true),
+                                                            array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to delete cousine', "onclick"=>"return confirm('Are you sure you want to delete this cousine?')", 'escape' => false)
+                                                        );
                                                      ?>
                                                 </div>
                                             </td>

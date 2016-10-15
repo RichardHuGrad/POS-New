@@ -199,16 +199,15 @@ if($this->Session->check('cashier_search')){
                                                             );
 
                                                             echo $this->Html->link('<i class="fa fa-key"></i>',
-                                                                array('plugin' => false, 'controller' => 'cashiers', 'action' => 'change_password', base64_encode($customer    ['Cashier']['id']), 'admin' => true),
+                                                                array('plugin' => false, 'controller' => 'cashiers', 'action' => 'change_password', base64_encode($customer['Cashier']['id']), 'admin' => true),
                                                                 array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to change password', 'escape' => false)
                                                             );
                                                         
-                                                        /*if($this->Common->checkAccess($privilage_data, 'Cashier', 'can_view')) {
-                                                            echo $this->Html->link('<i class="fa fa-eye"></i>',
-                                                                array('plugin' => false, 'controller' => 'cashiers', 'action' => 'detail', base64_encode($customer['Cashier']['id']), 'admin' => true),
-                                                                array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to view details', 'escape' => false)
-                                                            );
-                                                        }*/
+                                                            if (!$customer['Cashier']['no_of_orders']) 
+                                                                echo $this->Html->link('<i class="fa fa-trash"></i>',
+                                                                    array('plugin' => false, 'controller' => 'cashiers', 'action' => 'delete',  base64_encode($customer['Cashier']['id']), 'admin' => true),
+                                                                    array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to delete cashier', "onclick"=>"return confirm('Are you sure you want to delete this cashier?')", 'escape' => false)
+                                                                );
                                                         ?>
                                                     </div>
                                                 </td>

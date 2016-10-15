@@ -199,16 +199,14 @@ if($this->Session->check('cashier_search')){
                                                             );
 
                                                             echo $this->Html->link('<i class="fa fa-key"></i>',
-                                                                array('plugin' => false, 'controller' => 'cooks', 'action' => 'change_password', base64_encode($customer    ['Cook']['id']), 'admin' => true),
+                                                                array('plugin' => false, 'controller' => 'cooks', 'action' => 'change_password', base64_encode($customer['Cook']['id']), 'admin' => true),
                                                                 array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to change password', 'escape' => false)
                                                             );
-                                                        
-                                                        /*if($this->Common->checkAccess($privilage_data, 'Cook', 'can_view')) {
-                                                            echo $this->Html->link('<i class="fa fa-eye"></i>',
-                                                                array('plugin' => false, 'controller' => 'cooks', 'action' => 'detail', base64_encode($customer['Cook']['id']), 'admin' => true),
-                                                                array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to view details', 'escape' => false)
+                                                            echo $this->Html->link('<i class="fa fa-trash"></i>',
+                                                                array('plugin' => false, 'controller' => 'cooks', 'action' => 'delete',  base64_encode($customer['Cook']['id']), 'admin' => true),
+                                                                array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to delete cook', "onclick"=>"return confirm('Are you sure you want to delete this cook?')", 'escape' => false)
                                                             );
-                                                        }*/
+                                                        
                                                         ?>
                                                     </div>
                                                 </td>

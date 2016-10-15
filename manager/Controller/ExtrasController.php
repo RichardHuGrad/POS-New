@@ -27,7 +27,7 @@ class ExtrasController extends AppController {
         $limit = DEFAULT_PAGE_SIZE;
         $order = 'Extra.name ASC';
         $conditions = array(
-            'Extra.cousine_id'=>$id
+            // 'Extra.cousine_id'=>$id
             );
 
         if (!empty($this->request->data)) {

@@ -25744,3 +25744,79 @@ Request URL: /pos/img/cake.power.gif
 Stack Trace:
 #0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2016-10-15 02:03:24 Error: [MissingActionException] Action HomesController::split() could not be found.
+Exception Attributes: array (
+  'controller' => 'HomesController',
+  'action' => 'split',
+)
+Request URL: /pos/homes/split/table:13/type:D
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(HomesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-15 02:03:24 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 02:03:24 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/cake.generic.css
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 02:03:25 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 02:03:25 Error: [MissingControllerException] Controller class Favicon.icoController could not be found.
+Exception Attributes: array (
+  'class' => 'Favicon.icoController',
+  'plugin' => NULL,
+)
+Request URL: /pos/favicon.ico
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 02:03:35 Error: [MissingActionException] Action HomesController::tableHistory() could not be found.
+Exception Attributes: array (
+  'controller' => 'HomesController',
+  'action' => 'tableHistory',
+)
+Request URL: /pos/homes/tableHistory/table_no:2
+Stack Trace:
+#0 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(HomesController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2016-10-15 02:03:36 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/css/cake.generic.css
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2016-10-15 02:03:36 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/img/cake.power.gif
+Stack Trace:
+#0 C:\xampp\htdocs\pos\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

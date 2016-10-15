@@ -233,7 +233,7 @@ class CooksController extends AppController {
 
         $this->checkAccess('Cook', 'can_delete');
         $id = base64_decode($id);
-        $this->Cook->updateAll(array('Cook.status' => "'D'"), array('Cook.id' => $id));
+        $this->Cook->delete($id);
 
         $this->Session->setFlash('Cook has been deleted successfully', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'cooks', 'action' => 'index', 'admin' => true));

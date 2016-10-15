@@ -254,6 +254,15 @@
                                   <div class="row">
                                       <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tip 小费</div>
                                       <div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price">$00.00</div>
+                                      <div class="col-md-6">
+                                          <div class="form-group">
+                                              <div class="control-label col-md-4 sub-txt">Paid by:</div>
+                                              <div class="col-md-8">
+                                                <label class="control-label">Card  卡 <input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>&nbsp;&nbsp;&nbsp;
+                                                <label class="control-label">Cash 现金 <input name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio"></label>
+                                              </div>
+                                          </div>
+                                      </div>
                                   </div>
                               </li>                              
                               <?php
@@ -297,6 +306,7 @@
                         <input type="hidden" id="card_val" name="card_val" value="" />
                         <input type="hidden" id="cash_val" name="cash_val" value="" />
                         <input type="hidden" id="tip_val"name="tip" value="" />
+                        <input type="hidden" id="tip_paid_by"name="tip_paid_by" value="" />
                     </div>
 
                 <?php }?>
@@ -527,6 +537,14 @@ $(".select_tip"). click(function() {
     if($("#selected_card").val()) {
       if(parseFloat($(".change_price").attr("amount")) >= 0) {
 
+        // check tip type(card/cash) if exists
+        if(parseFloat($("#tip_val").val())) {
+          if(!$("#tip_paid_by").val()){
+            alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
+            return false;
+          }
+        }
+
         // submit form for complete payment process
         $.ajax({
              url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'donepayment', $table, $type)); ?>",
@@ -542,6 +560,7 @@ $(".select_tip"). click(function() {
                 card_val:$("#card_val").val(),
                 cash_val:$("#cash_val").val(),
                 tip_val:$("#tip_val").val(),
+                tip_paid_by:$("#tip_paid_by").val(),
               },
              success:function(html) {
                 $(".alert-warning").hide();
@@ -767,4 +786,11 @@ $(".select_tip"). click(function() {
     $(document).on('click', ".add-discount", function() {
       $(".discount_view").toggle();
     });
+
+
+    $(document).on('click', ".tip_paid_by", function() {
+      $("#tip_paid_by").val($(this).val());
+    });
+
+
 </script>

@@ -19,7 +19,7 @@ class Cousine extends AppModel {
         ),
         'Extra' => array(
             'className' => 'Extra',
-            'foreignKey' => 'cousine_id',
+            'foreignKey' => false,
             'conditions'=> array('status'=>'A')
         )
     );

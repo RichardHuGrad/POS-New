@@ -75,6 +75,7 @@ class CousinesController extends AppController {
         $this->Cousine->virtualFields['zh_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'zh'";
         $this->Cousine->virtualFields['category_en_name'] = "Select name from category_locales where category_locales.category_id = Cousine.category_id and lang_code = 'en'";
         $this->Cousine->virtualFields['category_zh_name'] = "Select name from category_locales where category_locales.category_id = Cousine.category_id and lang_code = 'zh'";
+        $this->Cousine->virtualFields['no_of_orders'] = "Select count(order_items.item_id) from order_items where order_items.item_id = Cousine.id";
 
         if('all' == $limit){
             $cousines = $this->Cousine->find('all', $query);
@@ -84,7 +85,6 @@ class CousinesController extends AppController {
             $cousines = $this->paginate('Cousine');
         }
         $languages = $this->Language->find('list', array('fields' => array('lang_code', 'language')));
-
 
         $this->loadModel('CategoryLocale');
         $categories = $this->CategoryLocale->find('list',
@@ -272,7 +272,15 @@ class CousinesController extends AppController {
     public function admin_delete($id = '') {
 
         $id = base64_decode($id);
-        $this->Cousine->updateAll(array('Cousine.status' => "'D'"), array('Cousine.id' => $id));
+
+        // get cashier image details
+        $details = $this->Cousine->find('first', array('conditions' => array('Cousine.id' => $id), 'fields'=>'Cousine.image'));
+        if(!empty($details) and @$details['Cousine']['image']) {
+            // unlink image
+            unlink(COUSINE_UPLOAD_PATH ."thumbnail/". $details['Cousine']['image']);
+        }
+
+        $this->Cousine->delete($id);
 
         $this->Session->setFlash('Cousine has been deleted successfully', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'cousines', 'action' => 'index', 'admin' => true));

@@ -62,6 +62,7 @@ class CategoriesController extends AppController {
         }
         $this->Category->virtualFields['eng_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'en'";
         $this->Category->virtualFields['zh_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'zh'";
+        $this->Category->virtualFields['no_of_orders'] = "Select count(order_items.id) from order_items where order_items.category_id = Category.id";
 
         $query = array(
             'conditions' => $conditions,
@@ -199,7 +200,7 @@ class CategoriesController extends AppController {
     public function admin_delete($id = '') {
 
         $id = base64_decode($id);
-        $this->Category->updateAll(array('Category.status' => "'D'"), array('Category.id' => $id));
+        $this->Category->delete($id);
 
         $this->Session->setFlash('Category has been deleted successfully', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'categories', 'action' => 'index', 'admin' => true));
