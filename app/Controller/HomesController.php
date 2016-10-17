@@ -229,7 +229,7 @@ class HomesController extends AppController {
         // get all table details
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", array(
-            'fields' => array('Admin.table_size', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.id'),
+            'fields' => array('Admin.table_size', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.id', 'Admin.printer_ip', 'Admin.printer_device_id'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
@@ -307,7 +307,7 @@ class HomesController extends AppController {
             if (empty($records))
                 unset($items_array[$key]);
         }
-        $this->set(compact('items_array', 'type'));
+        $this->set(compact('items_array', 'type', 'tables'));
     }
 
     function doneitem() {

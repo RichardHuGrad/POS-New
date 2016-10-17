@@ -1,6 +1,32 @@
 <?php
 $option_status = array('A' => 'Active', 'I' => 'Inactive');
 ?>
+<script>
+$(document).ready(function() {
+    $("#AdminNoOfTables, #AdminNoOfTakeoutTables, #AdminNoOfWaitingTables").change(function() {
+        var name = $(this).attr("alt");
+        $("#submit_button").attr("disabled", 'disabled')
+        $(".main-content").addClass('load2 csspinner');
+        window.location = "<?php echo $this->Html->url(array('controller'=>'admins', 'action'=>'updatetable', 'admin'=>true, $this->request->data['Admin']['id'])) ?>?table="+$(this).val()+"&name="+name
+    })
+
+    $("#AdminNoOfTables, #AdminTax, #AdminNoOfTakeoutTables, #AdminNoOfWaitingTables").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+    })
+</script>
 
 <div id="app">
     <!-- sidebar -->
@@ -129,6 +155,41 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label class="control-label">No Of Dinein Tables <span class="symbol required"></span></label>
+                                        <?php
+                                        $options = [];
+                                        for($i = 1; $i <= 50; $i++)
+                                            $options[$i] = $i;
+                                        echo $this->Form->input('no_of_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'div' => false, 'label' => false, 'alt'=>'no_of_tables','default'=>'Please Select',  'required' => true)); ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">No Of Takeout Tables <span class="symbol required"></span></label>
+                                        <?php
+                                        $options = [];
+                                        for($i = 1; $i <= 50; $i++)
+                                            $options[$i] = $i;
+                                        echo $this->Form->input('no_of_takeout_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'div' => false, 'alt'=>'no_of_takeout_tables', 'label' => false,  'required' => true)); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">No Of Waiting Tables <span class="symbol required"></span></label>
+                                        <?php
+                                        $options = [];
+                                        for($i = 1; $i <= 50; $i++)
+                                            $options[$i] = $i;
+                                        echo $this->Form->input('no_of_waiting_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'alt'=>'no_of_waiting_tables', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label class="control-label">Restaurant Address</label>
                                         <div class="clear"></div>
                                         <?php echo $this->Form->textarea("address",array('class' => 'col-xs-12 col-sm-12 col-md-12 form-textarea')); ?>
@@ -141,7 +202,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <div class="clear"></div>
                                         <?php
                                             $tables = explode(",", @$this->request->data['Admin']['table_size']);
-                                            for($i = 1; $i <= DINEIN_TABLE; $i++) {
+                                            for($i = 1; $i <= $this->request->data['Admin']['no_of_tables']; $i++) {
                                                 ?>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -162,7 +223,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <div class="clear"></div>
                                         <?php
                                             $tables = explode(",", @$this->request->data['Admin']['takeout_table_size']);
-                                            for($i = 1; $i <= TAKEOUT_TABLE; $i++) {
+                                            for($i = 1; $i <= $this->request->data['Admin']['no_of_takeout_tables']; $i++) {
                                                 ?>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -183,7 +244,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <div class="clear"></div>
                                         <?php
                                             $tables = explode(",", @$this->request->data['Admin']['waiting_table_size']);
-                                            for($i = 1; $i <= WAITING_TABLE; $i++) {
+                                            for($i = 1; $i <= $this->request->data['Admin']['no_of_waiting_tables']; $i++) {
                                                 ?>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
@@ -196,6 +257,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                             }
                                          ?>
                                     </div>
+                                </div>
                                 </div>
 
                                 <?php }?>

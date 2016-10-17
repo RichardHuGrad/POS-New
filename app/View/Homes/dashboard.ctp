@@ -68,15 +68,15 @@
 
                 <div class="col-md-4 clearfix col-sm-4">
                     <div class="table-colors">
-                        <div class="clearfix marginB5">
+                        <!-- <div class="clearfix marginB5">
                             <div class="pull-left paidb"></div>
                             <div class="pull-left paid-txt">Paid 已付费</div>
-                        </div>
-                        <div class="clearfix marginB5">
+                        </div> -->
+                        <div class="clearfix marginB15">
                             <div class="pull-left notpaid"></div>
                             <div class="pull-left paid-txt">Not Paid 未支付</div>
                         </div>
-                        <div class="clearfix marginB5">
+                        <div class="clearfix marginB15">
                             <div class="pull-left availableb"></div>
                             <div class="pull-left paid-txt">Available 可用的</div>
                         </div>

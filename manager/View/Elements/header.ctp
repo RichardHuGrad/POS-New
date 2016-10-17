@@ -29,6 +29,14 @@
                     <li>
                         <?php echo $this->Html->link('Change Password',array('plugin' => false,'controller' => 'admins','action' => 'change_password', 'admin' => true)); ?>
                     </li>
+                    <?php
+                    $is_super_admin = $this->Session->read('Admin.is_super_admin');
+                    if('Y' <> $is_super_admin){
+                    ?>
+                        <li>
+                            <?php echo $this->Html->link('Reorder Tables',array('plugin' => false,'controller' => 'admins','action' => 'change_password', 'admin' => true)); ?>
+                        </li>
+                    <?php }?>
                     <li>
                         <?php echo $this->Html->link('Logout',array('plugin' => false,'controller' => 'admins','action' => 'logout', 'admin' => true)); ?>
                     </li>
