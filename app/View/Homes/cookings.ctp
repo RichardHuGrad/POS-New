@@ -73,6 +73,7 @@ echo $this->Html->css(array('slick.css'));
                                 $category = explode("|||", $key);
                                 foreach ($records as $order_id => $value) {
                                     if ($count == 1) {
+                                        $text = "";
                                         ?>
                                         <div class="marginB30 rc<?php echo $category[2]; ?> column<?php echo $order_id . $category[2]; ?>" >
                                             <div class="avoid-this text-center reprint" alt="column<?php echo $order_id . $category[2]; ?>"><button type="button" class="submitbtn">Reprint 重印</button></div>
@@ -91,6 +92,8 @@ echo $this->Html->css(array('slick.css'));
                                                         </div>
                                                     </li>
                                                     <?php
+                                                    $text = "Table 桌 ".($value[0]['order_type'] . str_pad($value[0]['table_no'], 2, 0, STR_PAD_LEFT))."\n".($value[0]['category_name_en'] . " " . $value[0]['category_name_zh'])."\n"." Order 订单号 #".$value[0]['order_no']."\n"."Order Time 点餐 时 " . date('h:ia  m/d/Y', strtotime($value[0]['order_created']));
+
                                                     $ids = [];
                                                     foreach ($value as $item) {
                                                         $ids[] = $item['id'];
@@ -109,7 +112,11 @@ echo $this->Html->css(array('slick.css'));
                                                         <li alt="<?php echo $item['id']; ?>"  class="sub_teams sub_item_row<?php echo $item['id']; ?> clearfix <?php if ($item['is_done'] == 'Y') echo "already_done"; ?>">
                                                             <div class="col-md-12 text-center">
                                                                 <!-- <span class='pull-left'> -->
-                                                                    <?php echo $item['name_en'] . "M<br/>" . $item['name_xh'] ?>
+                                                                    <?php echo $item['name_en'] . "<br/>" . $item['name_xh'];
+
+                                                                    $text .= "\n".$item['name_en'] . " " . $item['name_xh']
+
+                                                                     ?>
                                                                 <!-- </span> -->
                                                                 
                                                                     <!-- <span class='pull-right span<?php echo $item['id']; ?>'>
@@ -158,12 +165,17 @@ echo $this->Html->css(array('slick.css'));
                                                 <div class="avoid-this clearfix">
                                                     <button class="finishbtn finish<?php echo $order_id . $category[2]; ?>" row_id="<?php echo $order_id . $category[2]; ?>" alt="<?php echo implode(",", $ids); ?>" type="button">Finish 完成</button>
                                                 </div>
-                                                <div class="timeing"><?php echo $value[0]['time_ago']; ?></div>
+                                                <div class="timeing"><?php echo $value[0]['time_ago']; 
+                                                                $text .= "\n\n\n\n\n".$value[0]['time_ago'];
+
+                                                ?></div>
                                                 <?php
                                             }
                                             ?>                                            
                                         </div>
+                                        <input type="hidden" value="<?php echo $text ?>" id="textcolumn<?php echo $order_id . $category[2]; ?>" />
                                         <?php
+                                        echo $text;
                                     }
                                 }
                             }
@@ -179,30 +191,54 @@ echo $this->Html->css(array('slick.css'));
         </div>
 
         <?php
-        echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'slick.js', 'jQuery.print.js'));
+        echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'slick.js', 'jQuery.print.js', 'epos-print-5.0.0'));
         echo $this->fetch('script');
         ?>
         <script type="text/javascript">
 
             $(document).on('click', '.reprint', function () {
                 var id = $(this).attr("alt");
+                var text = $("#text"+id).val();
+                alert(text);
+
+                // print via epos printer
+                var builder = new epson.ePOSBuilder();
+                builder.addTextLang('en');
+                builder.addTextSmooth(true);
+                builder.addTextFont(builder.FONT_A);
+                builder.addTextSize(3, 3);
+                builder.addText(text);
+                builder.addCut(builder.CUT_FEED);
+                var request = builder.toString();
+
+                //Set the end point address
+                var address = 'http://<?php echo $tables['Admin']['printer_ip'] ?>/cgi-bin/epos/service.cgi?devid=<?php echo $tables['Admin']['printer_device_id'] ?>&timeout=5000';
+                
+                //Create an ePOS-Print object
+                var epos = new epson.ePOSPrint(address);
+                
+                //Send the print document
+                epos.send(request);
+
+
+
                 //Print ele4 with custom options
-                $("." + id).print({
-                    //Use Global styles
-                    globalStyles: false,
-                    //Add link with attrbute media=print
-                    mediaPrint: true,
-                    //Custom stylesheet
-                    stylesheet: "<?php echo Router::url('/', true) ?>css/print.css",
-                    //Print in a hidden iframe
-                    iframe: false,
-                    //Don't print this
-                    noPrintSelector: ".avoid-this",
-                    //Add this at top
-                    // prepend : "<h2></h2>",
-                    //Add this on bottom
-                    // append : "<br/>Buh Bye!"
-                });
+                // $("." + id).print({
+                //     //Use Global styles
+                //     globalStyles: false,
+                //     //Add link with attrbute media=print
+                //     mediaPrint: true,
+                //     //Custom stylesheet
+                //     stylesheet: "<?php echo Router::url('/', true) ?>css/print.css",
+                //     //Print in a hidden iframe
+                //     iframe: false,
+                //     //Don't print this
+                //     noPrintSelector: ".avoid-this",
+                //     //Add this at top
+                //     // prepend : "<h2></h2>",
+                //     //Add this on bottom
+                //     // append : "<br/>Buh Bye!"
+                // });
             });
 
             $(document).on("click", ".change_orders", function (e) {

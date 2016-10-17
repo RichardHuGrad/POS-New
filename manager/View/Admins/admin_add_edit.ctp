@@ -5,12 +5,12 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 $(document).ready(function() {
     $("#AdminNoOfTables, #AdminNoOfTakeoutTables, #AdminNoOfWaitingTables").change(function() {
         var name = $(this).attr("alt");
+        $("#submit_button").attr("disabled", 'disabled')
         $(".main-content").addClass('load2 csspinner');
         window.location = "<?php echo $this->Html->url(array('controller'=>'admins', 'action'=>'updatetable', 'admin'=>true, $this->request->data['Admin']['id'])) ?>?table="+$(this).val()+"&name="+name
     })
 
     $("#AdminNoOfTables, #AdminTax, #AdminNoOfTakeoutTables, #AdminNoOfWaitingTables").keydown(function (e) {
-        $("#submit_button").attr("disabled", 'disabled')
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
              // Allow: Ctrl+A, Command+A
@@ -126,6 +126,25 @@ $(document).ready(function() {
                                 <?php } ?>
 
                                 <h4 style="margin-left:13px">
+                                    Kitchen Printer Details
+                                </h4>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Printer IP Address <span class="symbol required"></span></label> 
+                                        <?php echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'div' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Printer Device ID <span class="symbol required"></span></label> 
+                                        <?php echo $this->Form->input('printer_device_id', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                 <h4 style="margin-left:13px">
                                     Restaurant Details
                                 </h4>
 

@@ -171,7 +171,7 @@ header { background: #c30e23; height: 75px; }
 .notpaid { width: 20px; height: 20px; margin-right: 10px; background: #ff8400; }
 .availableb { width: 20px; height: 20px; margin-right: 10px; background: #e3e3e4; border: 1px solid #eee; }
 .paid-txt { font-size: 18px; font-weight: 600; color: #fff; }
-.table-colors { padding-top: 5px; }
+.table-colors { padding-top: 14px; }
 /* Cart Page Css */
 .cart-wrap { padding: 5px 0; position: relative; background: #f1f1f1; overflow:hidden; }
 .cashierbox { background-color: #fff; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.12); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.12); box-shadow: -2px 5px 5px rgba(0,0,0,.12); padding: 10px 15px; }

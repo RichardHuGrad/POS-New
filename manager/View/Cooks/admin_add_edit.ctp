@@ -44,12 +44,19 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                             <?php echo $this->Form->create('Cook', array('method' => 'post', 'class' => 'form', 'role' => 'form', 'autocomplete' => 'off', 'type' => 'file'));
                             echo $this->Form->input('id', array('type' => 'hidden', 'required' => false)); ?>
                             <div class="row">
+                            <?php
+                                $is_super_admin = $this->Session->read('Admin.is_super_admin');
+                                if('Y' == $is_super_admin){
+                                ?>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Select Restaurant</label>
                                         <?php echo $this->Form->input('restaurant_id', array('options' => $restaurants, 'class' => 'form-control', 'empty' => 'Select Restaurant', 'label' => false, 'div' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
+                                 <?php } else {
+                                    echo $this->Form->input('restaurant_id', array('type' => 'hidden', 'value'=>$this->Session->read('Admin.id'), 'required' => false));
+                                }?>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">First Name <span class="symbol required"></span></label>
@@ -100,9 +107,6 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                                     </div>
                                 </div>
-
-                                
-
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -123,7 +127,6 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         array('class' => 'btn btn-primary btn-wide pull-right', 'escape' => false)
                                     );
                                     ?>
-
                                 </div>
                             </div>
                             <?php echo $this->Form->end(); ?>
