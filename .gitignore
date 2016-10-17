@@ -2,22 +2,22 @@
 /manager/tmp
 /manager/webroot/img/cache
 /cook/tmp
-/app/Config
-/cook/Config
-/manager/Config
+/app/Config/core.php
+/cook/Config/core.php
+/manager/Config/core.php
 
 app/tmp
 manager/tmp
 manager/webroot/img/cache
 cook/tmp
-app/Config
-cook/Config
-manager/Config
+app/Config/core.php
+cook/Config/core.php
+manager/Config/core.php
 
 /app/tmp/*
 /manager/tmp/*
 /manager/webroot/img/cache/*
 /cook/tmp/*
-/app/Config/*
-/cook/Config/*
-/manager/Config/*
+/app/Config/core.php
+/cook/Config/core.php
+/manager/Config/core.php
