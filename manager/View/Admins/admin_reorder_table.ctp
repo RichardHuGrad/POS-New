@@ -42,10 +42,10 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
   .clearfix.draggable    
   {
     background-color: #ccc;margin-bottom: 20px;margin-right: 2%;float:left;
-    width:100px; 
-    height:112px; 
+    width:85px; 
+    height:85px; 
     border:1px solid #ccc;  
-    width: 11%;
+    /*width: 11%;*/
     transition: background-color 300ms linear 0s;
     cursor: pointer;
   }
@@ -88,7 +88,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                             <?php echo $this->Form->create('Admin', array('method' => 'post', 'class' => 'form', 'role' => 'form', 'autocomplete' => 'off', 'type' => 'file'));
                                 echo $this->Form->input('id', array('type' => 'hidden', 'required' => false)); 
                             ?>
-                            <ul class="col-md-12 col-sm-12 col-xs-12" style="list-style:none; height:auto; overflow:auto; min-height:<?php echo 50*$this->request->data['Admin']['no_of_tables']; ?>px; padding:0"  id="containment-wrapper">                            
+                            <ul class="col-md-12 col-sm-12 col-xs-12" style="list-style:none; height:auto; overflow:auto; min-height:480px; padding:0"  id="containment-wrapper">                            
                                 <?php
                                     $tables = $this->request->data['Admin']['table_order']?json_decode(@$this->request->data['Admin']['table_order'], true):array();
 

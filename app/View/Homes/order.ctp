@@ -17,12 +17,12 @@
       <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
 
       <ul class="nav nav-tabs text-center">
-          <li class="active"><a data-toggle="tab" href="#Popular">Popular<br/>流行</a></li>
+          <!--<li class="active"><a data-toggle="tab" href="#Popular">Popular<br/>流行</a></li>-->
           <?php
           if (!empty($records)) {
-              foreach ($records as $category) {
-                  ?>                
-                  <li><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name']."<br/>".$category['Category']['zh_name']; ?></a></li>
+              foreach ($records as $key => $category) {
+                  ?>
+                  <li <?php if($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name']."<br/>".$category['Category']['zh_name']; ?></a></li>
                   <?php
               }
           }
@@ -71,48 +71,48 @@
         <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
             <div class="tab-content">
 
-                <div id="Popular" class="tab-pane fade in active">
+                <!--<div id="Popular" class="tab-pane fade in active">
                   <div class="clearfix">
                       <div class="clearfix row productbox">
-                        <?php if(!empty($populars)) { ?>
+                        <?php //if(!empty($populars)) { ?>
                           <ul>
                             <?php 
-                            foreach($populars as $items) {
+                            //foreach($populars as $items) {
                               ?>
-                              <li class="col-md-2 col-sm-4 col-xs-6 add_items" alt="<?php echo $items['Cousine']['id']; ?>" title="Add to Cart">
+                              <li class="col-md-3 col-sm-4 col-xs-6 add_items" alt="<?php //echo $items['Cousine']['id']; ?>" title="Add to Cart">
                                   <div class="">
                                     <center>
                                       <?php 
-                                      if ($items['Cousine']['image']) { 
+                                      /*if ($items['Cousine']['image']) { 
                                         echo $this->Html->image(TIMB_PATH."timthumb.php?src=".COUSINE_IMAGE_PATH . $items['Cousine']['image']."&h=184&w=220&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
                                       } else {
                                         echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=184&w=220&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive')); 
-                                      } 
+                                      } */
                                       ?>
                                   </center>
                                 </div>
                                 <div class="clearfix padding10 row">
-                                    <div class="txt13 pull-left col-md-8 col-sm-7 col-xs-7 padding"><div class="name-title"><?php echo $items['Cousine']['eng_name']."<br/>".$items['Cousine']['zh_name']; ?></div></div>
-                                    <div class="pull-right txt15 col-md-4 col-sm-5 col-xs-5">$<?php echo number_format($items['Cousine']['price'], 2); ?></div>
+                                    <div class="txt13 pull-left col-md-8 col-sm-7 col-xs-7 padding"><div class="name-title"><?php //echo $items['Cousine']['eng_name']."<br/>".$items['Cousine']['zh_name']; ?></div></div>
+                                    <div class="pull-right txt15 col-md-4 col-sm-5 col-xs-5">$<?php //echo number_format($items['Cousine']['price'], 2); ?></div>
                                 </div>
                               </li>
                               <?php
-                            }
+                            //}
                             ?>
                           </ul>
-                        <?php } else {
-                          echo "<div class='noitems'>No Items Available</div>";
-                        }?>
+                        <?php //} else {
+                          //echo "<div class='noitems'>No Items Available</div>";
+                        //}?>
                       </div>
                   </div>
-                </div>  
+                </div>-->  
                 <?php
                 if (!empty($records)) {
                     $count = 0;
-                    foreach ($records as $category) {
+                    foreach ($records as $key => $category) {
                       $count++;
                         ?>
-                        <div id="tab<?php echo $category['Category']['id']; ?>" class="tab-pane fade in">
+                        <div id="tab<?php echo $category['Category']['id']; ?>" class="tab-pane fade in <?php if($key == 0) echo "active" ?>">
                           <div class="clearfix">
                               <div class="clearfix row productbox">
                                 <?php if(!empty($category['Cousine'])) { ?>
@@ -120,21 +120,21 @@
                                     <?php 
                                     foreach($category['Cousine'] as $items) {
                                       ?>
-                                      <li class="col-md-2 col-sm-4 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
-                                          <div class="">
+                                      <li class="col-md-3 col-sm-4 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
+                                          <!--<div class="">
                                             <center>
                                               <?php 
-                                              if ($items['image']) { 
+                                              /*if ($items['image']) { 
                                                 echo $this->Html->image(TIMB_PATH."timthumb.php?src=".COUSINE_IMAGE_PATH . $items['image']."&h=184&w=220&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
                                               } else {
                                                 echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=184&w=220&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive')); 
-                                              } 
+                                              }*/
                                               ?>
                                           </center>
-                                        </div>
+                                        </div>-->
                                         <div class="clearfix padding10 row">
-                                            <div class="txt13 pull-left col-md-8 col-sm-7 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name']."<br/>".$items['zh_name']; ?></strong></div></div>
-                                            <div class="pull-right txt15 col-md-4 col-sm-5 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
+                                            <div class="dish-title txt13 pull-left col-md-8 col-sm-7 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name']."<br/>".$items['zh_name']; ?></strong></div></div>
+                                            <div class="dish-price pull-right txt15 col-md-4 col-sm-5 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
                                         </div>
                                       </li>
                                       <?php
