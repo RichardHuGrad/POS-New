@@ -114,6 +114,7 @@
                                     	<?php if(@$dinein_tables_status[$i]) {;?>
 	                                        <ul class="dropdown-menu">
                                                 <div class="customchangemenu clearfix">
+                                                <a class="close-btn" href="javascript:void(0)">X</a>
 	                                            <div class="left-arrow"></div>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN 堂食</div>
                                                 <?php
@@ -149,7 +150,7 @@
                                     <li <?php if(@$dinein_tables_status[$i] == 'A')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
 
                                     <!-- Modified by Yishou Liao @ Oct 13 2016. -->
-                                <li class="dropdown-submenu" <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; ?>>
+                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu"' ?>>
                                     <a class="test" tabindex="-1" href="<?php
                                     if (@$dinein_tables_status[$i])
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'changetable', 'table' => $i, 'type' => 'D'));
@@ -162,6 +163,7 @@
                                            ?>
                                         <ul class="dropdown-menu">
                                             <div class="customchangemenu clearfix">
+                                                <a class="close-btn" href="javascript:void(0)">X</a>
                                                 <div class="left-arrow"></div>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Merge Bill 合单</div>
                                                 <?php
@@ -169,7 +171,7 @@
                                                 for ($t = 0; $t < count(@$dinein_tables_status); $t++) {
                                                     if (@$dinein_tables_status[$dinein_tables_keys[$t]] == "N" && $dinein_tables_keys[$t] != $i) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><input type="checkbox" value = "<?php echo $dinein_tables_keys[$t]; ?>" id="mergetable[]" name= "mergetable[]"> <?php echo $dinein_tables_keys[$t]; ?></div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable merge-checkbox"><input type="checkbox" value = "<?php echo $dinein_tables_keys[$t]; ?>" id="mergetable[]" name= "mergetable[]"> <?php echo $dinein_tables_keys[$t]; ?></div>
                                                         <?php
                                                     }
                                                 }
@@ -180,12 +182,27 @@
                                     <?php } ?>
                                 </li>
 
-                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
-                                    if (@$dinein_tables_status[$i] <> 'A')
+                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu"' ?>><a class="test" tabindex="-1" href="<?php
+                                    /*if (@$dinein_tables_status[$i] == 'N')
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'split', 'table' => $i, 'type' => 'D', 'order' => @$orders_no[$i]['D']));
-                                    else
+                                    else*/
                                         echo "javascript:void(0)";
-                                    ?>">Split Bill<br />分单</a></li>
+                                    ?>">Split Bill<br />分单</a>
+                                    <?php
+                                        if (@$dinein_tables_status[$i] == 'N') {
+                                    ?>
+                                            <ul class="dropdown-menu">
+                                                <div class="customchangemenu clearfix">
+                                                    <a class="close-btn" href="javascript:void(0)">X</a>
+                                                    <div class="left-arrow"></div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Avg. Split</div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Cust. Split</div>
+                                                </div>
+                                            </ul>
+                                    <?php
+                                        }
+                                    ?>
+                                </li>
                                 <!-- End. -->
                                 
                                     <li><a tabindex="-1" href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'tableHistory', 'table_no'=>$i)); ?>">History</a></li>
@@ -442,27 +459,54 @@ echo $this->fetch('script');
         });
 
         $('.dropdown-submenu a.test').on("click", function (e) {
-                $(this).next('ul').toggle();
-                e.stopPropagation();
-                e.preventDefault();
-            });
-
-
-$('.dropdown-toggle').on('click', function (e) {
-                setTimeout(function () {
-                    var ddmenu = $('.open').find('.dropdown-menu');
-                    if (ddmenu) {
-                        var position_x = ddmenu.offset().left;
-                        var el_width = ddmenu.outerWidth();
-                        var window_width = $(window).width();
-
-                        if (position_x + el_width > window_width && !ddmenu.hasClass('dropdown-menu-right')) {
-                            ddmenu.addClass('dropdown-menu-right');
-                        }
-                    }
-                }, 1);
-            });
+            var subMenu = $(this).next('ul');
+            subMenu.toggle();
+            if(subMenu.hasClass('sub-open'))
+                subMenu.removeClass('sub-open');
+            else
+                subMenu.addClass('sub-open');
+            e.stopPropagation();
+            e.preventDefault();
         });
+
+        $('.customchangemenu a.close-btn').on("click", function (e) {
+            var subMenu = $(this).closest('ul');
+            subMenu.toggle();
+            subMenu.removeClass('sub-open');
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        $('.dropdown-toggle').on('click', function (e) {
+            setTimeout(function () {
+                var ddmenu = $('.open').find('.dropdown-menu');
+                if (ddmenu) {
+                    var position_x = ddmenu.offset().left;
+                    var el_width = ddmenu.outerWidth();
+                    var window_width = $(window).width();
+
+                    if (position_x + el_width > window_width && !ddmenu.hasClass('dropdown-menu-right')) {
+                        ddmenu.addClass('dropdown-menu-right');
+                    }
+                }
+            }, 1);
+        });
+        $('.dropdown-submenu a.test').on('click', function (e) {
+            setTimeout(function() {
+                var ddmenu = $('.dropdown-submenu').find('ul.dropdown-menu.sub-open');
+                if (ddmenu.offset()) {
+                    var position_y = ddmenu.offset().top;
+                    if (position_y < 0) {
+                        ddmenu.css({top:0});
+                    }
+                }
+            }, 1);
+        });
+
+        $('.merge-checkbox').on('click', function(e) {
+            e.stopPropagation();
+        });
+    });
 
     $(window).load(function () {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {

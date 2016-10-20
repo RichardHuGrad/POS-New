@@ -166,6 +166,8 @@ header { background: #c30e23; height: 75px; }
 .dine-wrap li .dropdown-menu .arrow { position: absolute; bottom: -10px; left: 10%; background: url(../img/bot-arrow.png) left top no-repeat; width: 24px; height: 11px; }
 .dine-wrap li .dropdown-submenu { position: relative; }
 .dine-wrap li .dropdown-submenu .dropdown-menu { top: -250%; left: 106%; margin-top: -1px; border: 2px solid #c30e23; background: #fff; width: 150px; padding-top: 10px; }
+.dine-wrap li .dropdown-submenu .dropdown-menu.dropdown-menu-right { left: auto; }
+.dine-wrap li .dropdown-submenu .dropdown-menu .close-btn { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; z-index: 99; text-align: center; line-height: 1.35; }
 .timetable { font-size: 16px; font-weight: 600; color: #999; line-height: 20px; padding-bottom: 6px; padding-top: 6px; }
 .dine-wrap li .dropdown-submenu .dropdown-menu .left-arrow { position: absolute; top: 141px; left: -10px; background: url(../img/left-arrow.png) left top no-repeat; width: 10px; height: 21px; }
 .takeout-txt { font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 55px; line-height: 45px; }
