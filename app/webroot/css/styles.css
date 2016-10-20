@@ -346,6 +346,13 @@ padding-top: 15px; }
     margin-bottom: 20px;
 }
 
+/* Modified by Yishou Liao @ Oct 18 2016. */
+.addperson .submitbtn{
+    width: 355px;
+    margin-bottom: 20px;
+}
+/* End. */
+
 @media print {
     *{border:none !important;}
     hr{display: none !important;}

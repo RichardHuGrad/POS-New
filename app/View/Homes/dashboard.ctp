@@ -176,7 +176,15 @@
                                                     }
                                                 }
                                                 ?>
-                                                <input type="button" onclick="mergebill(<?php echo $i ?>);" name="mergebill" id="mergebill" value="Okay">
+                                                <input type="button" onclick="mergebill(<?php echo $i ?>,'<?php
+                                                //Modified by Yishou Liao @ Oct 16 2016.
+                                                 if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V'){
+                                                     echo $this->Html->url(array('controller'=>'homes', 'action'=>'merge', 'table'=>$i, 'tablemerge'=>"Merge_table",'type'=>'D'));
+                                                 }else{
+                                                     echo "javascript:void(0)";
+                                                 };
+                                                //End.
+                                                ?>');" name="mergebill" id="mergebill" value="Okay">
                                             </div>
                                         </ul>
                                     <?php } ?>
@@ -195,8 +203,8 @@
                                                 <div class="customchangemenu clearfix">
                                                     <a class="close-btn" href="javascript:void(0)">X</a>
                                                     <div class="left-arrow"></div>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Avg. Split</div>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Cust. Split</div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>">Avg. Split</a></div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1')); ?>">Cust. Split</a></div>
                                                 </div>
                                             </ul>
                                     <?php

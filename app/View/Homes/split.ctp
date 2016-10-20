@@ -1,0 +1,928 @@
+<header class="product-header">
+
+
+    <div class="home-logo">
+        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+            <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
+        </a>
+
+        <div class="HomeText text-left">
+            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
+            <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
+        </div>
+
+    </div>	  
+    <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
+
+</header>
+<div class="container">
+    <div class="clearfix cartwrap-wrap">
+    </div>
+    <div class="order-wrap">
+        <?php echo $this->Session->flash(); ?>
+        <div class="col-md-4 col-sm-4 col-xs-12 order-left">
+            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
+
+            <div class="paid-box">
+                <div class="checkbox-btn">
+                    <input type="checkbox" value="value-1" id="rc1" name="rc1" <?php if ($Order_detail['Order']['table_status'] == 'P') echo "checked='checked'"; ?>/>
+                    <label for="rc1" disabled>Paid 已付费</label>
+                </div>
+            </div>
+            <?php
+            if ($Order_detail['Order']['table_status'] <> 'P') {
+                ?>
+                <!-- Modified by Yishou Liao @ Oct 17 2016. -->
+
+                <div class="table-box dropdown">
+                    <a href="" class="dropdown-toggle"  data-toggle="dropdown">Average <?php
+                        if ($split_method == 0) {
+                            echo "平均分单";
+                        } else {
+                            echo "按人分单";
+                        }
+                        ?> <input type="text" readonly="" id="persons" name="persons" value="1" size="2"> 人</a>
+                    <ul class="dropdown-menu">
+                        <div class="customchangemenu clearfix">
+                            <div class="left-arrow"></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Persons 人数</div>
+                            <?php for ($t = 1; $t <= 20; $t++) { ?>
+                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="#" onclick="javascript:persons(<?php echo $t; ?>)"><?php echo $t; ?></a></div>
+    <?php } ?>
+                        </div>
+                    </ul>
+                </div>
+
+                <!-- End. -->
+<?php } ?>
+
+            <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
+            <!-- Modified by Yishou Liao @ Oct 17 2016. 
+            <div class="avoid-this text-center reprint_2"><button type="button" class="submitbtn">Print Kitchen 打印后厨单</button></div>
+            End. -->
+            <div class="order-summary">
+                <h3>Order Summary 订单摘要</h3>
+                <div class="order-summary-indent clearfix" name="orderitem" id="orderitem">
+                    <!-- Modified by Yishou Liao @ Oct 18 2016. -->
+                </div>
+
+            </div>
+
+            <!-- Modified by Yishou Liao @ Oct 18 2016. -->
+            <?php if ($split_method == 1) { ?>
+                <div class="avoid-this text-center addperson"><button type="button" class="submitbtn">Add Persons 增加人</button></div>
+                <div class="order-summary">
+                    <h3>Split Details 分单明细</h3>
+                    <div class="order-summary-indent clearfix" name="splitmenu" id="splitmenu">
+                        
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+        <!-- End. -->
+    </div>
+
+    <div class="col-md-8 col-sm-8 col-xs-12 RIGHT-SECTION">
+	    <!-- Modified by Yishou Liao @ Oct 18 2016. -->
+	    <div class="paid-box" name="person_id" id="person_id">
+        
+        </div>
+        <!-- End. -->
+        <div class="clearfix total-payment" name="split_accounting_details" id="split_accounting_details">
+            
+        </div>
+
+<?php
+if ($Order_detail['Order']['table_status'] <> 'P') {
+    ?>
+            <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13"></div>
+            <div class="card-indent clearfix">
+                <ul>
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+
+                    <li>4</li>
+                    <li>5</li>
+                    <li>6</li>
+
+                    <li>7</li>
+                    <li>8</li>
+                    <li>9</li>
+
+                    <li class="clear-txt" id="Clear">Clear 清除</li>
+                    <li>0</li>
+                    <li class="enter-txt" id="Enter">Enter 输入</li>
+                </ul>
+            </div>
+
+            <div class="card-bot clearfix text-center">
+                <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> Card 卡</button>
+                <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> Cash 现金</button>
+
+                <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
+
+                <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
+                <input type="hidden" id="selected_card" value="" />
+                <input type="hidden" id="card_val" name="card_val" value="" />
+                <input type="hidden" id="cash_val" name="cash_val" value="" />
+                <input type="hidden" id="tip_val"name="tip" value="" />
+                <input type="hidden" id="tip_paid_by"name="tip_paid_by" value="" />
+            </div>
+
+<?php } ?>
+    </div>
+</div>
+</div>
+<div style="display:none" >
+
+    <div class="order-summary" id="print_panel">
+        <h3 class="dianming">嘿小面</h3>
+        <h4 class="dianming">3700 Midland Ave. #108</h4>
+        <h4 class="dianming">Scarborougn On M1V 0B3</h4>
+        <h4 class="dianming">647-352-5333</h4>
+        <h5></h5>
+        <div class="order-summary-indent clearfix">
+            <div>Order Number 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></div><br>
+        <!-- Modified by Yishou Liao @ Oct 19 2016. -->
+        <div name="Order_print" id="Order_print"></div>
+
+        <!-- End. -->
+        </div>
+        <hr>
+        <div class="clearfix total-payment" style="background-color:#fff; border:none; box-shadow:none" name="print_account" id="print_account">
+            
+        </div>
+        <div style="height:50px;"></div>
+    </div>
+    
+    <!-- Print for kitchen -->
+    <div class="order-summary" id="print_panel_2">
+        <h3 class="dianming">去后厨的单子</h3>
+        <h3><?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?> 桌号 #<?php echo $table; ?></h3>
+        <h5></h5>
+        <div class="order-summary-indent clearfix">
+            <div>Order Number 订单号 #<?php echo $Order_detail['Order']['order_no'] ?></div><br>
+            <ul>
+                <?php
+                if (!empty($Order_detail['OrderItem'])) {
+                    foreach ($Order_detail['OrderItem'] as $key => $value) {
+                        # code...
+                        $selected_extras_name = [];
+                        if ($value['all_extras']) {
+                            $extras = json_decode($value['all_extras'], true);
+                            $selected_extras = json_decode($value['selected_extras'], true);
+
+                            // prepare extras string
+                            $selected_extras_id = [];
+                            if (!empty($selected_extras)) {
+                                foreach ($selected_extras as $k => $v) {
+                                    $enameArr = explode(" ", $v['name']);
+                                    $selected_extras_name[] = array_pop($enameArr);
+                                    // $selected_extras_name[] = $v['name'];
+                                    $selected_extras_id[] = $v['id'];
+                                }
+                            }
+                        }
+                        ?>
+                        <li class="clearfix">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="pull-left avoid-this">
+                                        <?php
+                                        if ($value['image']) {
+                                            echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . COUSINE_IMAGE_PATH . $value['image'] . "&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt' => 'Product', 'class' => 'img-responsive'));
+                                        } else {
+                                            echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . TIMB_PATH . 'no_image.jpg' . "&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt' => 'Product', 'class' => 'img-responsive'));
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="pull-left titlebox1">
+                                        <!-- to show name of item -->
+                                        <div class="less-title"><?php echo $value['name_xh']; ?></div>
+
+                                        <!-- to show the extras item name -->
+                                        <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+    <?php
+    }
+}
+?>
+            </ul>
+        </div>
+        <hr>
+    </div>
+<?php
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js'));
+echo $this->fetch('script');
+?>
+    <script>
+		//Modified by Yishou Liao @ Oct 18 2016.
+		var person_No = 0;
+		var current_person = 0;
+		var person_menu=new Array();
+		var order_menu=new Array();
+		
+		$(document).on('click', '.addperson', function () {
+			if (person_No < $('#persons').val()){
+				person_No++;
+				var addpersonStr=$('#splitmenu').html();
+				addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_No+");'> # "+ person_No + "</label>";
+				$('#splitmenu').html(addpersonStr);
+				current_person = person_No;
+				
+				var sele_person = "account_no_"+(current_person-1);
+				document.getElementById(sele_person).checked = true;
+				showAcountingDetails()
+			};
+        });
+		
+		function setCurrentPerson(currentPerson){
+			current_person = currentPerson;
+			
+			//Modified by Yishou Liao @ Oct 19 2016.
+			var sele_person = "account_no_"+(current_person-1);
+			document.getElementById(sele_person).checked = true;
+			showAcountingDetails();
+			//End.
+			
+			alert("当前添加给#"+current_person);
+		}
+		
+		function addMenuItem(item_no,image,name_en,name_xh,selected_extras_name,price,extras_amount,qty,item_id,order_item_id){
+			if (current_person != 0){
+				person_menu.push(Array(current_person,image,name_en,name_xh,selected_extras_name,price,extras_amount,qty,item_id,order_item_id));
+				person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
+				
+				 //addpersonStr=$('#splitmenu').html()
+				var addpersonStr ="";
+				var curtmp = 0;
+				for (var i=0;i<person_menu.length;i++){
+					if (curtmp != person_menu[i][0]){
+						if (curtmp != 0){addpersonStr += "</ul>";};
+						//Modified by Yishou Liao @ 19 2016l
+						//for (var j=curtmp;j<(person_menu[i][0]-curtmp-1);j++){
+						var j = curtmp+1;
+						//if (j==0) {j++;};
+						while(j<person_menu[i][0]){
+							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+j+");'> # "+ j + "</label><ul></ul>";
+							j++;
+						};
+						//End.
+						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
+						curtmp = person_menu[i][0];
+					};
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
+				};
+				
+				$('#splitmenu').html(addpersonStr);
+				
+				order_menu.splice(item_no,1);
+				addOrderItem();
+				
+				//Modified by Yishou Liao @ Oct 19 2016.
+				showAcountingDetails();
+				//End.
+			};
+		}
+		
+		function delMenuItem(item_no,orderitem_no){
+			if (confirm("Do you want to delete it?")){
+				person_menu[item_no].splice(8,1);
+				order_menu.push(person_menu[item_no]);
+				order_menu[order_menu.length-1][0] = orderitem_no;
+				order_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
+				addOrderItem(orderitem_no);
+				
+				person_menu.splice(item_no,1);
+				person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
+				
+				 //addpersonStr=$('#splitmenu').html()
+				var addpersonStr ="";
+				var curtmp = 0;
+				for (var i=0;i<person_menu.length;i++){
+					if (curtmp != person_menu[i][0]){
+						if (curtmp != 0){addpersonStr += "</ul>";};
+						
+						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
+						curtmp = person_menu[i][0];
+					}
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'>"+person_menu[i][1]+"</div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
+				};
+				
+				$('#splitmenu').html(addpersonStr);
+				
+				showAcountingDetails() //Modified by Yishou Liao @ Oct 19 2016.
+			}
+		};
+		//End.
+		
+        $(document).on('click', '.reprint', function () {
+			print_receipt();//Modified by Yishou @ Oct 19 2016.
+			
+            //Print ele4 with custom options
+            $("#print_panel").print({
+				
+                //Use Global styles
+                globalStyles: false,
+                //Add link with attrbute media=print
+                mediaPrint: true,
+                //Custom stylesheet
+                stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
+                //Print in a hidden iframe
+                iframe: false,
+                //Don't print this
+                noPrintSelector: ".avoid-this",
+                //Add this at top
+                // prepend : "<h2></h2>",
+                //Add this on bottom
+                // append : "<br/>Buh Bye!"
+            });
+        });
+        $(document).on('click', '.reprint_2', function () {
+            //Print ele4 with custom options
+            $("#print_panel_2").print({
+                //Use Global styles
+                globalStyles: false,
+                //Add link with attrbute media=print
+                mediaPrint: true,
+                //Custom stylesheet
+                stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
+                //Print in a hidden iframe
+                iframe: false,
+                //Don't print this
+                noPrintSelector: ".avoid-this",
+                //Add this at top
+                // prepend : "<h2></h2>",
+                //Add this on bottom
+                // append : "<br/>Buh Bye!"
+            });
+        });
+		
+		//Modified by Yishou Liao @ Oct 18 2016.
+		function addOrderItem(orderitem_no=null){
+			var outhtml_str = "<ul>";
+			for (var i=0;i<order_menu.length;i++){
+				if (orderitem_no != null){
+					outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( '+orderitem_no+',"'+order_menu[i][1]+'", "'+order_menu[i][2]+'", "'+order_menu[i][3]+'","'+order_menu[i][4]+'","'+order_menu[i][5]+'","'+order_menu[i][6]+'","'+order_menu[i][7]+'",'+ order_menu[i][0]+','+order_menu[i][8]+' );\'>';
+				}else{
+					outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( '+i+',"'+order_menu[i][1]+'", "'+order_menu[i][2]+'", "'+order_menu[i][3]+'","'+order_menu[i][4]+'","'+order_menu[i][5]+'","'+order_menu[i][6]+'","'+order_menu[i][7]+'",'+ order_menu[i][0]+','+order_menu[i][8]+' );\'>';
+				};
+				outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left"><img src="'+order_menu[i][1]+'" width="62" height="42" /></div><div class="pull-left titlebox1">';
+				outhtml_str += '<div class="less-title">'+order_menu[i][2]+'<br/>'+order_menu[i][3]+'</div><div class="less-txt">'+order_menu[i][4]+'</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
+				outhtml_str += order_menu[i][5]+order_menu[i][6]+order_menu[i][7]+'</div></div></li>'
+			};
+			
+			outhtml_str += "</ul>";
+			$('#orderitem').html(outhtml_str);
+		}
+		//End.
+		
+        $(document).ready(function () {
+			//Modified by Yishou Liao @ Oct 18 2016.
+			<?php
+            if (!empty($Order_detail['OrderItem'])) {
+				$i=0;
+				foreach ($Order_detail['OrderItem'] as $key => $value) {
+					# code...
+					$selected_extras_name = [];
+					if ($value['all_extras']) {
+						$extras = json_decode($value['all_extras'], true);
+						$selected_extras = json_decode($value['selected_extras'], true);
+	
+						// prepare extras string
+						$selected_extras_id = [];
+						if (!empty($selected_extras)) {
+							foreach ($selected_extras as $k => $v) {
+								$selected_extras_name[] = $v['name'];
+								$selected_extras_id[] = $v['id'];
+							}
+						}
+					}
+			?>
+			order_menu.push(Array(<?php echo $i ?>,'<?php if ($value['image']) {echo $value['image'];}else{echo 'no_image.jpg';}; ?>', '<?php echo $value['name_en']; ?>', '<?php echo $value['name_xh']; ?>','<?php echo implode(",", $selected_extras_name); ?>','<?php echo $value['price'] ?>','<?php echo $value['extras_amount'] ?>','<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',<?php echo $value['id'] ?>));//Modified by Yishou Liao @ Oct 20 2016. Added $value['id']. 
+			
+			<?php
+				$i++;
+				};
+			?>
+			addOrderItem();
+			<?php
+			};
+			?>
+
+			var person_id_Str = "";//Modified by Yishou Liao @ Oct 19 2016. '<div class="radio-btn">';
+			for (var i=0;i<$('#persons').val(); i++){
+				if (i==0) {
+					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+				}else{
+					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+				}
+			}
+			//End. person_id_Str += '</div>';
+			
+			$('#person_id').html(person_id_Str);
+			//End.
+			
+			//MOdified by Yishou LIao @ Oct 19 2016.
+			showAcountingDetails();
+			//End.
+			
+            $(".select_card").click(function () {
+                $(".select_card").removeClass("active")
+                $(this).addClass("active")
+                var type = $(this).attr("id");
+                if (type == 'card') {
+                    $("#cash").removeClass("active");
+                    var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
+                    $("#screen").attr('buffer', card_val);
+                    $("#screen").val($("#card_val").val());
+                } else if (type == 'cash') {
+                    var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
+                    $("#screen").attr('buffer', cash_val);
+                    $("#screen").val($("#cash_val").val());
+                } else {
+                    var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+                    $("#screen").attr('buffer', tip_val);
+                    $("#screen").val($("#tip_val").val());
+                }
+                $("#selected_card").val(type);
+            })
+
+
+
+            $(".select_tip").click(function () {
+                $(".select_card").removeClass("active");
+                $(this).toggleClass("active");
+                var val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+                $("#screen").attr('buffer', val);
+                $("#screen").val($("#tip_val").val());
+            })
+
+
+
+            $("#submit").click(function () {
+                if ($("#selected_card").val()) {
+                    if (parseFloat($(".change_price").attr("amount")) >= 0) {
+
+                        // check tip type(card/cash) if exists
+                        if (parseFloat($("#tip_val").val())) {
+                            if (!$("#tip_paid_by").val()) {
+                                alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
+                                return false;
+                            }
+                        };
+						
+						//Modified by Yishou Liao @ Oct 19 2016.
+						var radio_click = 0;
+						$('input[name="account_no[]"]:checked').each(function () {
+						   radio_click = $(this).val();
+						});
+						//End.
+
+						//Modified by Yishou Liao @ Oct 20 2016.
+						var item_detail_id = "";
+						for (var i=0;i<person_menu.length;i++){
+							if (radio_click == person_menu[i][0]){
+								item_detail_id += person_menu[i][9]+",";
+							}
+						};
+						item_detail_id = item_detail_id.substr(0,(item_detail_id.length-1));
+						//End.
+						
+                        // submit form for complete payment process
+                        $.ajax({
+                            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'averdonepayment', $table, $type)); ?>",
+                            method: "post",
+                            data: {
+                                pay: $(".received_price").attr("amount"),
+                                paid_by: $("#selected_card").val(),
+                                change: $(".change_price").attr("amount"),
+                                table: "<?php echo $table ?>",
+                                type: "<?php echo $type ?>",
+                                order_id: "<?php echo $Order_detail['Order']['id'] ?>",
+                                split_method: "<?php echo $split_method ?>",
+                                card_val: $("#card_val").val(),
+                                cash_val: $("#cash_val").val(),
+                                tip_val: $("#tip_val").val(),
+                                tip_paid_by: $("#tip_paid_by").val(),
+								account_no: radio_click,
+								order_detail:item_detail_id
+                            },
+                            success: function (html) {
+                                $(".alert-warning").hide();
+                                $(".reprint").trigger("click");
+                                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                            },
+                            beforeSend: function () {
+                                $(".RIGHT-SECTION").addClass('load1 csspinner');
+                                $(".alert-warning").show();
+                            }
+                        })
+                    } else {
+                        alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
+                        return false;
+                    }
+                } else {
+                    alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
+                    return false;
+                }
+            })
+
+            $(".card-indent li").click(function () {
+                if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
+                    alert("Please select payment type cash/card or select tip.");
+                    return false;
+                }
+
+                if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt"))
+                    return false;
+
+                var digit = parseInt($(this).html());
+                var nums = $("#screen").attr('buffer') + digit;
+
+                // store buffer value
+                $("#screen").attr('buffer', nums);
+                nums = nums / 100;
+                nums = nums.toFixed(2);
+                if (nums.length < 12)
+                    $("#screen").val(nums).focus();
+                else
+                    $("#screen").focus();
+            })
+
+            $("#Enter").click(function () {
+                if (!$("#selected_card").val()) {
+                    alert("Please select payment type card/cash.");
+                    return false;
+                }
+                var amount = $("#screen").val() ? parseFloat($("#screen").val()) : 0;
+                var total_price = parseFloat($(".total_price").attr("alt"));
+
+                if ($("#selected_card").val() == 'cash') {
+                    $("#cash_val").val(amount.toFixed(2));
+                    $(".cash_price").html("Cash 现金: $" + amount.toFixed(2));
+                }
+                if ($("#selected_card").val() == 'card') {
+                    $("#card_val").val(amount.toFixed(2));
+                    $(".card_price").html("Card 卡: $" + amount.toFixed(2));
+                }
+                if ($("#selected_card").val() == 'tip') {
+                    $("#tip_val").val(amount.toFixed(2));
+                    $(".tip_price").html("$" + amount.toFixed(2));
+                }
+
+                var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
+                var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+
+
+                amount = cash_val + card_val;
+                if (amount) {
+                    $(".received_price").html("$" + amount.toFixed(2));
+                    $(".received_price").attr('amount', amount.toFixed(2));
+                    $(".change_price").html("$" + (amount - total_price).toFixed(2));
+                    $(".change_price").attr('amount', (amount - total_price).toFixed(2));
+
+                    if ((amount - total_price) < 0) {
+                        $(".change_price_txt").html("Remaining 其余");
+                        $(".change_price").html("$" + (total_price - amount).toFixed(2));
+                    } else {
+                        $(".change_price_txt").html("Change 找零");
+                    }
+
+                } else {
+                    return false;
+                }
+            })
+
+            $("#rc1").click(function (E) {
+                E.preventDefault();
+            })
+
+            $("#Clear").click(function () {
+
+                var selected_card = $("#selected_card").val();
+                var total_price = parseFloat($(".total_price").attr("alt"));
+                if (selected_card == 'cash') {
+                    var amount = $("#cash_val").val();
+                    $(".cash_price").html("Cash 现金: $00.00");
+                    $("#cash_val").val(0);
+
+                    var received_price = parseFloat($(".received_price").attr('amount'));
+                    var remaining = received_price - amount;
+
+                    $(".received_price").html("$" + remaining.toFixed(2));
+                    $(".received_price").attr('amount', remaining.toFixed(2));
+
+                    if ((remaining - total_price) < 0) {
+                        $(".change_price_txt").html("Remaining 其余");
+                        $(".change_price").html("$" + (total_price - remaining).toFixed(2));
+                    } else {
+                        $(".change_price_txt").html("Change 找零");
+                    }
+                }
+
+                if (selected_card == 'card') {
+                    var amount = $("#card_val").val();
+                    $(".card_price").html("Card 卡: $00.00");
+                    $("#card_val").val(0);
+
+                    var received_price = parseFloat($(".received_price").attr('amount'));
+                    var remaining = received_price - amount;
+
+                    $(".received_price").html("$" + remaining.toFixed(2));
+                    $(".received_price").attr('amount', remaining.toFixed(2));
+
+                    if ((remaining - total_price) < 0) {
+                        $(".change_price_txt").html("Remaining 其余");
+                        $(".change_price").html("$" + (total_price - remaining).toFixed(2));
+                    } else {
+                        $(".change_price_txt").html("Change 找零");
+                    }
+                }
+                if (selected_card == 'tip') {
+
+                    $("#tip_val").val(0.00);
+                    $(".tip_price").html("$0.00");
+
+                }
+
+                $("#screen").attr('buffer', 0);
+                $("#screen").val("");
+                $("#screen").focus();
+            })
+
+            $("#screen").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                        // Allow: Ctrl+A, Command+A
+                                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                // Allow: home, end, left, right, down, up
+                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
+                            // let it happen, don't do anything
+                            return;
+                        }
+                        // Ensure that it is a number and stop the keypress
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+                        }
+                    });
+        })
+
+        $(document).on("keyup", ".discount_section", function () {
+            if ($(this).val()) {
+                $(".discount_section").attr("disabled", "disabled");
+                $(this).removeAttr("disabled");
+            } else {
+                $(".discount_section").removeAttr("disabled");
+            }
+        })
+
+        $(document).on("click", "#apply-discount", function () {
+
+            var fix_discount = $("#fix_discount").val();
+            var discount_percent = $("#discount_percent").val();
+            var promocode = $("#promocode").val();
+
+            if (fix_discount || discount_percent || promocode) {
+                // apply promocode here
+                $.ajax({
+                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
+                    method: "post",
+                    dataType: "json",
+                    data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php echo $Order_detail['Order']['id'] ?>"},
+                    success: function (html) {
+                        if (html.error) {
+                            alert(html.message);
+                            $(".discount_section").val("").removeAttr("disabled");
+                            $(".RIGHT-SECTION").removeClass('load1 csspinner');
+                            return false;
+                        } else {
+                            window.location.reload();
+                        }
+                    },
+                    beforeSend: function () {
+                        $(".RIGHT-SECTION").addClass('load1 csspinner');
+                    }
+                })
+
+
+            } else {
+                alert("Please add discount first.");
+                return false;
+            }
+        })
+
+        $(document).on('click', ".remove_discount", function () {
+            var order_id = "<?php echo $Order_detail['Order']['id'] ?>";
+            var message = $("#Message").val();
+            $.ajax({
+                url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'remove_discount')); ?>",
+                method: "post",
+                data: {order_id: order_id},
+                success: function (html) {
+                    window.location.reload();
+                },
+                beforeSend: function () {
+                    $(".RIGHT-SECTION").addClass('load1 csspinner');
+                }
+            })
+        })
+        $(document).on('click', ".add-discount", function () {
+            $(".discount_view").toggle();
+        });
+
+
+        $(document).on('click', ".tip_paid_by", function () {
+            $("#tip_paid_by").val($(this).val());
+        });
+
+        //Modified by Yishou Liao @ Oct 17 2016.
+        function persons(persons) {
+            $("#persons").val(persons);
+            //Modified by Yishou Liao @ Oct 18 2016.
+<?php if ($split_method == 0) { ?>
+                $("#aver_total").val((((<?php echo $Order_detail['Order']['total']; ?>) / parseInt(persons)).toFixed(2)).toString());
+                $("#aver_total_print").val((((<?php echo $Order_detail['Order']['total']; ?>) / parseInt(persons)).toFixed(2)).toString());
+<?php } ?>
+			
+			
+			var person_id_Str = "";// Modified by Yishou Liao @ Oct 19 2016. '<div class="radio-btn">';
+			for (var i=0;i<$('#persons').val(); i++){
+				if (i==0) {
+					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+				}else{
+					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'"/><label for="rc1" disabled> # '+(i+1)+'</label>';
+				};
+			}
+			//End. person_id_Str += '</div>';
+			$('#person_id').html(person_id_Str);
+            //End.
+        }
+        //End.
+		
+		//Modified by Yishou Liao @ Oct 19 2016.
+		function showAcountingDetails(){
+			var radio_click=0;
+			var subTotal = 0;
+			var Tax = <?php echo $Order_detail['Order']['tax'] ?>;
+			
+			$('input[name="account_no[]"]:checked').each(function () {
+	           radio_click = $(this).val();
+        	});
+			
+			var split_accounting_str = "";
+			
+			if (person_menu.length == 0 && current_person == 0) {
+				for (var i=0; i<order_menu.length;i++){
+					subTotal += parseFloat(order_menu[i][5]);
+				};
+			} else{
+				for (var i=0; i<person_menu.length;i++){
+					if (person_menu[i][0] == radio_click){
+						subTotal += parseFloat(person_menu[i][5]);
+					};
+				};
+			};
+			
+			split_accounting_str = '<ul>';
+			
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total 小计 </div>';
+			split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + subTotal.toFixed(2)+'</div>';
+			<?php if ($Order_detail['Order']['table_status'] <> 'P' and ! $Order_detail['Order']['discount_value']) { ?>
+			split_accounting_str += '<div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Discount 加入折扣</button></div>'
+            <?php } ?>
+			split_accounting_str += '</div></li>';
+			<?php if (!$Order_detail['Order']['discount_value']) { ?>
+			split_accounting_str +='<li class="clearfix discount_view" style="display:none;"><div class="row"><div class="col-md-3"><div class="form-group">';
+			split_accounting_str +='<label for="fix_discount" style="font-size:11px;">Fix Discount</label>';
+            split_accounting_str +='<input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount"></div></div>';
+			split_accounting_str +='<div class="col-md-3"><div class="form-group"><label for="discount_percent" style="font-size:11px;">Discount in %</label><input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent"></div></div>';
+			split_accounting_str += '<div class="col-md-3"><div class="form-group"><label for="promocode" style="font-size:11px;">Promo Code</label>';
+            split_accounting_str += '<input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode"></div></div>';
+			split_accounting_str += '<div class="col-md-3"><div class="form-group"><label for="AdminTableSize" style="width:100%">&nbsp;</label>';
+            split_accounting_str += '<a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a></div></div></div></li>';
+			<?php } ?>
+			split_accounting_str += '<li class="clearfix"><div class="row">';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tax 税 ('+Tax+'%)</div>';
+			
+			var Tax_Amount = subTotal*Tax/100;
+			
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$'+Tax_Amount.toFixed(2)+'</div>';
+            split_accounting_str += '</div></li>';
+			
+			<?php if ($Order_detail['Order']['discount_value']) { ?>
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ';
+			split_accounting_str += <?php echo number_format($Order_detail['Order']['discount_value'], 2); ?>;
+			split_accounting_str += <?php if ($Order_detail['Order']['percent_discount']) { echo "<span class='txt12'> " . $Order_detail['Order']['promocode'] . " (" . $Order_detail['Order']['percent_discount'] . "%)</span>"; } ?>;
+			split_accounting_str += '<a aria-hidden="true" class="fa fa-times remove_discount" order_id="'+<?php echo $Order_detail['Order']['id']; ?>+'" href="javascript:void(0)"></a></div></div></li>';
+			<?php } ?>
+			
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Total 总</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="';
+			
+			var Total_Amount = subTotal + (subTotal*Tax/100);
+			
+			split_accounting_str += Total_Amount.toFixed(2);
+			split_accounting_str += '">$ ';
+			split_accounting_str += Total_Amount.toFixed(2);
+			split_accounting_str += '</div>';
+			<?php if ($split_method == 0) { ?>
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Average 人均:</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price">$<input type="text" id="aver_total" name="aver_total" value="';
+			split_accounting_str += <?php echo number_format($Order_detail['Order']['total'], 2) ?>;
+			split_accounting_str += '" readonly="true" size="5">/人</div>';
+            <?php } ?>
+			split_accounting_str += '</div></li>';
+			<?php if ($Order_detail['Order']['table_status'] == 'P') { ?>
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Receive 收到</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$ ';
+			split_accounting_str += <?php echo $Order_detail['Order']['paid']; ?>;
+			split_accounting_str += '</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price">Cash 现金: $ ';
+			split_accounting_str += <?php echo $Order_detail['Order']['cash_val']; ?>;
+			split_accounting_str += '</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price">Card 卡: $ ';
+			split_accounting_str += <?php echo $Order_detail['Order']['card_val']; ?>;
+			split_accounting_str += '</div></div></li>';
+			
+			<?php if ($Order_detail['Order']['change']) { ?>
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt">Change 找零</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price change_price">$ ';
+			split_accounting_str += <?php echo $Order_detail['Order']['change']; ?>;
+			split_accounting_str += '</div></div></li>';
+			<?php } ?>
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tip 小费</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price">$ ';
+			split_accounting_str += <?php echo $Order_detail['Order']['tip']; ?>;
+			split_accounting_str += '</div></div></li>';
+			<?php } else { ?>
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Receive 收到</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$00.00</div>';
+			split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price">Cash 现金: $00.00</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price">Card 卡: $00.00</div></div></li>';
+            split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt">Remaining 其余</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price change_price">$00.00</div></div></li>';
+			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tip 小费</div>';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price">$00.00</div><div class="col-md-6">';
+            split_accounting_str += '<div class="form-group"><div class="control-label col-md-4 sub-txt">Paid by:</div>';
+            split_accounting_str += '<div class="col-md-8"><label class="control-label">Card  卡 <input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>&nbsp;&nbsp;&nbsp;<label class="control-label">Cash 现金 <input name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio"></label></div></div></div></div></li>';
+			<?php } ?>                   
+			
+			split_accounting_str += '</ul>';
+			
+			$('#split_accounting_details').html(split_accounting_str);
+		}
+		//End.
+		
+		//Modified by Yishou Liao @ Oct 19 2016.
+		function print_receipt(){
+			var radio_click=0;
+			var print_String="";
+			var account_String="";
+			var sub_total=0;
+			var Tax=<?php echo $Order_detail['Order']['tax'] ?>;
+			
+			$('input[name="account_no[]"]:checked').each(function () {
+	           radio_click = $(this).val();
+        	});
+			
+			print_String += "<ul>";
+			for (var i=0;i<person_menu.length;i++){
+				if (person_menu[i][0] == radio_click){
+					
+					sub_total += parseFloat(person_menu[i][5]);
+					print_String += '<li class="clearfix"><div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left avoid-this">';
+					print_String += '<img src="'+person_menu[i][1]+'" width="62" height="42" /></div><div class="pull-left titlebox1">';
+					print_String += '<div class="less-title">'+person_menu[i][2]+'<br/>'+person_menu[i][3]+'</div><div class="less-txt">';
+					print_String += person_menu[i][4]+'</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$ ';
+                    print_String += person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+'</div></div></li>';
+				};
+			};
+			print_String += "</ul>";
+			
+			$('#Order_print').html(print_String);
+			
+			account_String += '<table style="width:100%;"><tr><td width="60%" class="sub-txt">Sub Total 小计 </td>';
+			account_String += '<td width="40%" class="text-right sub-txt">$ '+ sub_total.toFixed(2) + '</td></tr>';
+			account_String += '<tr><td class=" sub-txt">Tax 税 ('+Tax+'%)</td>';
+			
+			var tax_amount = (sub_total*Tax/100).toFixed(2);
+			var total=(parseFloat(sub_total)+parseFloat(tax_amount)).toFixed(2);
+			
+            account_String += '<td class="sub-price">$ '+tax_amount+'</td></tr><tr><td class="sub-txt">Total 总</td>';
+			account_String += '<td class="sub-price total_price" alt="'+total+'">$ '+ total +'</td>';
+            account_String += '</tr>';
+			<?php if ($split_method == 0) { ?>
+            account_String += '<tr><td class="sub-txt">Average 人均</td><td class="sub-price total_price">$ ';
+			account_String += '<input type="text" id="aver_total_print" name="aver_total_print" value="';
+			account_String += <?php echo number_format($Order_detail['Order']['total'], 2) ?>;
+			account_String += '" readonly="true" size="5">/人</td></tr>';
+			<?php } ?>
+            account_String += '</table >';
+			
+			$('#print_account').html(account_String);
+		}
+		//End.
+    </script>
