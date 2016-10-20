@@ -427,7 +427,7 @@ echo $this->fetch('script');
 			$('#person_id').html(person_id_Str);
 			//End.
 			
-			//MOdified by Yishou LIao @ Oct 19 2016.
+			//MOdified by Yishou Liao @ Oct 19 2016.
 			showAcountingDetails();
 			//End.
 			
@@ -751,6 +751,8 @@ echo $this->fetch('script');
 			
 			
 			var person_id_Str = "";// Modified by Yishou Liao @ Oct 19 2016. '<div class="radio-btn">';
+			
+			<?php if ($split_method != 0) { ?> //Modified by Yishou Liao @ Oct 20 2016.
 			for (var i=0;i<$('#persons').val(); i++){
 				if (i==0) {
 					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
@@ -758,6 +760,11 @@ echo $this->fetch('script');
 					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'"/><label for="rc1" disabled> # '+(i+1)+'</label>';
 				};
 			}
+			<?php }else{ ?>
+				var i = 0;
+				person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+			<?php } ?> //End.
+			
 			//End. person_id_Str += '</div>';
 			$('#person_id').html(person_id_Str);
             //End.
@@ -888,7 +895,17 @@ echo $this->fetch('script');
 	           radio_click = $(this).val();
         	});
 			
+			//Modified by Yishou Liao @ Oct 20 2016.
+			if (person_menu.length == 0){
+				for (var i=0; i<order_menu.length; i++){
+					person_menu.push(Array(radio_click,order_menu[i][0],order_menu[i][1],order_menu[i][2],order_menu[i][3],order_menu[i][4],order_menu[i][5],order_menu[i][6],order_menu[i][7],order_menu[i][8]));
+				};
+			}
+			//End.
+			
 			print_String += "<ul>";
+			
+			
 			for (var i=0;i<person_menu.length;i++){
 				if (person_menu[i][0] == radio_click){
 					
