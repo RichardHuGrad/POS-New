@@ -24,7 +24,6 @@ class HomesController extends AppController {
      * @return mixed
      */
     public function index() {
-        //xdebug_break();
         //$this->layout = false;
         if ($this->request->is('post')) {
             $this->loadModel("Cashier");
@@ -229,7 +228,7 @@ class HomesController extends AppController {
         // get all table details
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", array(
-            'fields' => array('Admin.table_size', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.id', 'Admin.printer_ip', 'Admin.printer_device_id'),
+            'fields' => array('Admin.table_size', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.id'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
@@ -307,7 +306,7 @@ class HomesController extends AppController {
             if (empty($records))
                 unset($items_array[$key]);
         }
-        $this->set(compact('items_array', 'type', 'tables'));
+        $this->set(compact('items_array', 'type'));
     }
 
     function doneitem() {
@@ -562,53 +561,7 @@ class HomesController extends AppController {
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no'));
     }
 
-    public function tableHistory() {
-        // get cashier details
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first",
-            array(
-                'fields'=>array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-                'conditions'=>array('Cashier.id'=>$this->Session->read('Front.id'))
-                )
-            );
-
-        $table_no = $this->params['named']['table_no'];
-
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $conditions = array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
-                        'Order.table_no'=>$table_no,
-                        'Order.is_completed'=>'Y',
-                        'Order.order_type'=>'D',
-                        'Order.created >=' => date("Ymd")/*, strtotime("-2 weeks"))*/
-                    );
-
-        $Order_detail = $this->Order->find("all",
-            array(
-                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount', 'Order.created'),
-                'conditions'=> $conditions
-                )
-            );
-        if(empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, there is no table history for today.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-
-        $this->paginate = array(
-                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount', 'Order.created'),
-                'conditions'=> $conditions,
-                'limit' => 1,
-                'order' => array('Order.created' => 'desc')
-            );
-
-        $Order_detail = $this->paginate('Order');
-        $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'today'));
-    }
-
-   public function donepayment() {
+    public function donepayment() {
 
         $this->layout = false;
         $this->autoRender = NULL;
@@ -731,11 +684,11 @@ class HomesController extends AppController {
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array(
-                        'Order.cashier_id' => $tax_detail['Admin']['id'],
-                        'Order.table_no' => $table,
-                        'Order.is_completed' => 'N',
-                        'Order.order_type' => $type
-                    )
+                'Order.cashier_id' => $tax_detail['Admin']['id'],
+                'Order.table_no' => $table,
+                'Order.is_completed' => 'N',
+                'Order.order_type' => $type
+            )
                 )
         );
 
@@ -1278,22 +1231,21 @@ class HomesController extends AppController {
 
     //Modified by Yishou Liao @ Oct 13 2016.
     public function merge() {
-        
-// get cashier details
+        // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-        
+
         $order_no = @$this->params['url']['order_no'];
 
         // get all params
         $type = @$this->params['named']['type'];
         $table = @$this->params['named']['table'];
         $tablemerge = explode(",", ($table . "," . @$this->params['named']['tablemerge']));
-        
+
 
         if ($order_no) {
             $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
@@ -1313,11 +1265,10 @@ class HomesController extends AppController {
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("all", array(
-            'fields' => array('Order.table_no','Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.table_no', 'Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => $conditions
                 )
         );
-        //xdebug_break();
         if (empty($Order_detail)) {
             $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
             return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
@@ -1332,7 +1283,6 @@ class HomesController extends AppController {
             'recursive' => false
                 )
         );
-
 
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'tablemerge', 'orders_no'));
     }
@@ -1530,15 +1480,15 @@ class HomesController extends AppController {
             $new_orderno = $split_detail['Order']['order_no'] . "_" . ((int) $max_id[0]['maxid'] + 1);
 
             $data['Order']['order_no'] = $new_orderno;
-            $data['Order']['tax'] = $split_detail['Order']['tax'];
+            $data['Order']['tax'] = round($split_detail['Order']['tax'],2);
             $data['Order']['recorder_no'] = $split_detail['Order']['recorder_no'];
             $data['Order']['hide_no'] = $split_detail['Order']['hide_no'];
             $data['Order']['cashier_id'] = $split_detail['Order']['cashier_id'];
             $data['Order']['counter_id'] = $split_detail['Order']['counter_id'];
             $data['Order']['table_no'] = $split_detail['Order']['table_no'];
-            $data['Order']['total'] = $data['Order']['paid'] - $data['Order']['change'];
-            $data['Order']['tax_amount'] = $data['Order']['total'] / $data['Order']['tax'];
-            $data['Order']['subtotal'] = $data['Order']['total'] - $data['Order']['tax_amount'];
+            $data['Order']['total'] = round($data['Order']['paid'],2) - round($data['Order']['change'],2);
+            $data['Order']['tax_amount'] = round($data['Order']['total'],2) / round($data['Order']['tax'],2);
+            $data['Order']['subtotal'] = round($data['Order']['total'],2) - round($data['Order']['tax_amount'],2);
             $data['Order']['is_completed'] = 'Y';
             $data['Order']['promocode'] = $split_detail['Order']['promocode'];
             $data['Order']['message'] = $split_detail['Order']['message'];
@@ -1548,8 +1498,7 @@ class HomesController extends AppController {
             $data['Order']['is_hide'] = $split_detail['Order']['is_hide'];
 
             $this->Order->save($data);
-                        xdebug_break();
-            $sumsubtotal = $this->Order->find("all", array('fields' => array('SUM(Order.subtotal) AS sumsubtotal'), 'conditions' => array('Order.order_no' => ("LIKE %".$split_detail['Order']['order_no']."_%")), 'recursive' => false));
+            $sumsubtotal1=$this->Order->query("SELECT SUM(`subtotal`) as sumsubtotal FROM `orders` WHERE `order_no` LIKE '%" . $split_detail['Order']['order_no'] . "_%'");
 
             $this->loadModel('OrderItem');
             for ($i = 0; $i < count($order_detail); $i++) {
@@ -1557,6 +1506,11 @@ class HomesController extends AppController {
                 $this->OrderItem->saveField('order_id', ((int) $max_id[0]['maxid'] + 1),false);
             };
            
+            $sumsubtotal2=$this->Order->query("SELECT `subtotal` FROM `orders` WHERE `order_no` = '" . $split_detail['Order']['order_no'] . "'");
+
+            if ($sumsubtotal1[0][0]['sumsubtotal']>=$sumsubtotal2[0]['orders']['subtotal']){
+                $this->Order->query("DELETE FROM `orders` WHERE id =  " .$order_id);
+            };
             echo true;
         };
     }
