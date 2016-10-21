@@ -827,9 +827,12 @@ echo $this->fetch('script');
             split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$'+Tax_Amount.toFixed(2)+'</div>';
             split_accounting_str += '</div></li>';
 			
+			var discount=0;//Modified by Yishou Liao @ Oct 21 2016.
+			
 			<?php if ($Order_detail['Order']['discount_value']) { ?>
 			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ';
 			split_accounting_str += '<?php echo number_format($Order_detail['Order']['discount_value'],2); ?>';
+			discount = <?php echo number_format($Order_detail['Order']['discount_value'],2); ?>;//Modified by Yishou Liao @ Oct 21 2016.
 			<?php if ($Order_detail['Order']['percent_discount']) { ?>
 			split_accounting_str += '<span class="txt12">';
 			split_accounting_str += '<?php echo $Order_detail['Order']['promocode']; ?>';
@@ -845,9 +848,9 @@ echo $this->fetch('script');
 			
 			var Total_Amount = subTotal + (subTotal*Tax/100);
 			
-			split_accounting_str += Total_Amount.toFixed(2);
+			split_accounting_str += (Total_Amount-discount).toFixed(2);
 			split_accounting_str += '">$ ';
-			split_accounting_str += Total_Amount.toFixed(2);
+			split_accounting_str += (Total_Amount-discount).toFixed(2);
 			split_accounting_str += '</div>';
 			<?php if ($split_method == 0) { ?>
             split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Average 人均:</div>';
