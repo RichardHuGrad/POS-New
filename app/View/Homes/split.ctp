@@ -267,7 +267,7 @@ echo $this->fetch('script');
 			if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
 				selepersonstr = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
 			};
-			if (selepersonstr.indexOf(currentPerson)!=-1){
+			if (selepersonstr.indexOf(current_person)!=-1){
 				return;
 			};
 			//End.
