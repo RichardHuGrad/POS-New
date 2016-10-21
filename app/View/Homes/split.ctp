@@ -242,6 +242,10 @@ echo $this->fetch('script');
 		
 		function setCurrentPerson(currentPerson){
 			//Modified by Yishou Liao @ Oct 21 2016.
+			var selepersonstr = "";
+			if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+				selepersonstr = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+			};
 			if (selepersonstr.indexOf(currentPerson)!=-1){
 				return;
 			};
@@ -258,7 +262,11 @@ echo $this->fetch('script');
 		}
 		
 		function addMenuItem(item_no,image,name_en,name_xh,selected_extras_name,price,extras_amount,qty,item_id,order_item_id){
-			//Modified by Yishou Liao @ Oct 21 2016.
+			//Modified by Yishou Liao @ Oct 21 2016..
+			var selepersonstr = "";
+			if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+				selepersonstr = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+			};
 			if (selepersonstr.indexOf(currentPerson)!=-1){
 				return;
 			};
