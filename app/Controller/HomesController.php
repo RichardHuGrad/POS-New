@@ -1523,7 +1523,7 @@ class HomesController extends AppController {
             $order_detail = explode(",", $this->data['order_detail']);
 
             $this->loadModel('Order');
-            $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
+            $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide','Order.discount_value'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
 
             $max_id = $this->Order->find("first", array('fields' => array('MAX(Order.ID) as maxid')));
             $new_orderno = $split_detail['Order']['order_no'] . "_" . ((int) $max_id[0]['maxid'] + 1);
@@ -1539,6 +1539,7 @@ class HomesController extends AppController {
             $data['Order']['tax_amount'] = round($data['Order']['total'], 2) / round($data['Order']['tax'], 2);
             $data['Order']['subtotal'] = round($data['Order']['total'], 2) - round($data['Order']['tax_amount'], 2);
             $data['Order']['is_completed'] = 'Y';
+            $data['Order']['discount_value'] = $split_detail['Order']['discount_value'];
             $data['Order']['promocode'] = $split_detail['Order']['promocode'];
             $data['Order']['message'] = $split_detail['Order']['message'];
             $data['Order']['reason'] = $split_detail['Order']['reason'];
@@ -1547,7 +1548,7 @@ class HomesController extends AppController {
             $data['Order']['is_hide'] = $split_detail['Order']['is_hide'];
 
             $this->Order->save($data);
-            $sumsubtotal1=$this->Order->query("SELECT SUM(`subtotal`) as sumsubtotal FROM `orders` WHERE `order_no` LIKE '%" . $split_detail['Order']['order_no'] . "_%'");
+            $sumsubtotal1=$this->Order->query("SELECT SUM(`subtotal`) as sumsubtotal, SUM(discount_value) as discount_value FROM `orders` WHERE `order_no` LIKE '%" . $split_detail['Order']['order_no'] . "_%'");
 
             $this->loadModel('OrderItem');
             for ($i = 0; $i < count($order_detail); $i++) {
@@ -1557,7 +1558,7 @@ class HomesController extends AppController {
 
             $sumsubtotal2=$this->Order->query("SELECT `subtotal` FROM `orders` WHERE `order_no` = '" . $split_detail['Order']['order_no'] . "'");
 
-            if ($sumsubtotal1[0][0]['sumsubtotal']>=$sumsubtotal2[0]['orders']['subtotal']){
+            if (($sumsubtotal1[0][0]['sumsubtotal']+$sumsubtotal1[0][0]['discount_value'])>=$sumsubtotal2[0]['orders']['subtotal']){
                 $this->Order->query("DELETE FROM `orders` WHERE id =  " .$order_id);
             };
             echo true;

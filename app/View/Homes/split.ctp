@@ -618,6 +618,11 @@ echo $this->fetch('script');
 								};
 								//End.
 								if (seletmp.split(",").length == $('#account_no').attr('length')){//Modified by Yishou Liao @ Oct 21 2016.
+									deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+									deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+									deleteCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+									deleteCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+									
 									window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
 								}else{//Modified by Yishou Liao @ Oct 21 2016.
 									window.location.reload();
