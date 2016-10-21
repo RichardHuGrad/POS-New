@@ -515,7 +515,13 @@ echo $this->fetch('script');
                             success: function (html) {
                                 $(".alert-warning").hide();
                                 $(".reprint").trigger("click");
+								//Modified by Yishou Liao @ Oct 20 2016.
+								<?php if ($split_method == 0) { ?>
                                 window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+								<?php }else{ ?>
+								window.location.reload();
+								<?php } ?>
+								//End.
                             },
                             beforeSend: function () {
                                 $(".RIGHT-SECTION").addClass('load1 csspinner');
@@ -701,7 +707,7 @@ echo $this->fetch('script');
                             $(".RIGHT-SECTION").removeClass('load1 csspinner');
                             return false;
                         } else {
-                            //window.location.reload();
+                            window.location.reload();
                         }
                     },
                     beforeSend: function () {
@@ -823,10 +829,13 @@ echo $this->fetch('script');
 			
 			<?php if ($Order_detail['Order']['discount_value']) { ?>
 			split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ';
-			var fmttmp = <?php echo number_format($Order_detail['Order']['discount_value'],2); ?>; //Modified by Yishou Liao @ Oct 20 2016.
-			split_accounting_str += fmttmp.toFixed(2);
+			split_accounting_str += '<?php echo number_format($Order_detail['Order']['discount_value'],2); ?>';
 			<?php if ($Order_detail['Order']['percent_discount']) { ?>
-			split_accounting_str += <?php echo "<span class='txt12'> " . $Order_detail['Order']['promocode'] . " (" . $Order_detail['Order']['percent_discount'] . "%)</span>"; ?>
+			split_accounting_str += '<span class="txt12">';
+			split_accounting_str += '<?php echo $Order_detail['Order']['promocode']; ?>';
+			split_accounting_str += ' (';
+			split_accounting_str += '<?php $Order_detail['Order']['percent_discount']; ?>';
+			split_accounting_str += '%)</span>';
 			<?php }; ?>;
 			split_accounting_str += '<a aria-hidden="true" class="fa fa-times remove_discount" order_id="'+<?php echo $Order_detail['Order']['id']; ?>+'" href="javascript:void(0)"></a></div></div></li>';
 			<?php } ?>
@@ -843,8 +852,7 @@ echo $this->fetch('script');
 			<?php if ($split_method == 0) { ?>
             split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Average 人均:</div>';
             split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price">$<input type="text" id="aver_total" name="aver_total" value="';
-			var fmttmp = <?php echo number_format($Order_detail['Order']['total'], 2) ?>; //Modified by Yishou Liao @ Oct 20 2016.
-			split_accounting_str += fmttmp.toFixed(2);
+			split_accounting_str += '<?php echo number_format($Order_detail['Order']['total'], 2) ?>';
 			split_accounting_str += '" readonly="true" size="5">/人</div>';
             <?php } ?>
 			split_accounting_str += '</div></li>';
