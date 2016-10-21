@@ -286,6 +286,11 @@ echo $this->fetch('script');
 				//Modified by Yishou Liao @ Oct 19 2016.
 				showAcountingDetails();
 				//End.
+				
+				//Modified by Yishou Liao @ Oct 21 2016.
+				setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
+				setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+				//End.
 			};
 		}
 		
@@ -316,6 +321,11 @@ echo $this->fetch('script');
 				$('#splitmenu').html(addpersonStr);
 				
 				showAcountingDetails() //Modified by Yishou Liao @ Oct 19 2016.
+				
+				//Modified by Yishou Liao @ Oct 21 2016.
+				setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
+				setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+				//End.
 			}
 		};
 		//End.
@@ -382,6 +392,30 @@ echo $this->fetch('script');
 		//End.
 		
         $(document).ready(function () {
+			//Modified by Yishou Liao @ Oct 21 2016.
+			var addorder_menu = true;
+			/*
+			deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+			deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+			deleteCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				*/
+			if (checkCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+				var orderarray = getCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				var personarray = getCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				
+				$("#persons").val(getCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>));
+				
+				if (orderarray!=""){
+					order_menu = strtoarr(orderarray);
+				};
+				if (personarray != "") {
+					person_menu = strtoarr(personarray);
+				}
+				
+				addorder_menu = false;
+			};
+			//End.
+			
 			//Modified by Yishou Liao @ Oct 18 2016.
 			<?php
             if (!empty($Order_detail['OrderItem'])) {
@@ -403,7 +437,10 @@ echo $this->fetch('script');
 						}
 					}
 			?>
+			
+			if (addorder_menu) {//Modified by Yishou Liao @ Oct 21 2016.
 			order_menu.push(Array(<?php echo $i ?>,'<?php if ($value['image']) {echo $value['image'];}else{echo 'no_image.jpg';}; ?>', '<?php echo $value['name_en']; ?>', '<?php echo $value['name_xh']; ?>','<?php echo implode(",", $selected_extras_name); ?>','<?php echo $value['price'] ?>','<?php echo $value['extras_amount'] ?>','<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',<?php echo $value['id'] ?>));//Modified by Yishou Liao @ Oct 20 2016. Added $value['id']. 
+			};//End.
 			
 			<?php
 				$i++;
@@ -414,15 +451,35 @@ echo $this->fetch('script');
 			};
 			?>
 
-			var person_id_Str = "";//Modified by Yishou Liao @ Oct 19 2016. '<div class="radio-btn">';
+			//Modified by Yishou Liao @ Oct 21 2016.
+			var selepersonstr = "";
+			if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+				selepersonstr = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+			};
+								
+			var person_id_Str = "";
+			var checkflag = false;
 			for (var i=0;i<$('#persons').val(); i++){
 				if (i==0) {
-					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+					if (selepersonstr.indexOf(i+1)!=-1){
+						person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" disabled="true" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+					}else{
+						person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+						checkflag = true;
+					};
 				}else{
-					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+					if (selepersonstr.indexOf(i+1)!=-1){
+						person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" disabled="true" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+					}else{
+						if (checkflag == false){
+							person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+							checkflag = true;
+						}else{
+							person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+						};
+					};
 				}
 			}
-			//End. person_id_Str += '</div>';
 			
 			$('#person_id').html(person_id_Str);
 			//End.
@@ -430,6 +487,23 @@ echo $this->fetch('script');
 			//MOdified by Yishou Liao @ Oct 19 2016.
 			showAcountingDetails();
 			//End.
+			
+			
+			//Modified by Yishou Liao @ Oct 21 2016.
+			var addpersonStr ="";
+				var curtmp = 0;
+				for (var i=0;i<person_menu.length;i++){
+					if (curtmp != person_menu[i][0]){
+						if (curtmp != 0){addpersonStr += "</ul>";};
+						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
+						curtmp = person_menu[i][0];
+					};
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
+				};
+				
+				$('#splitmenu').html(addpersonStr);
+			//End.
+			
 			
             $(".select_card").click(function () {
                 $(".select_card").removeClass("active")
@@ -483,6 +557,15 @@ echo $this->fetch('script');
 						});
 						//End.
 
+						//Modified by Yishou Liao @ Oct 21 2016.
+						if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+							var seletmp = ""+getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)+","+ radio_click;
+						}else{
+							var seletmp = ""+radio_click;
+							};
+						setCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>,seletmp,1);
+						//End.
+						
 						//Modified by Yishou Liao @ Oct 20 2016.
 						var item_detail_id = "";
 						for (var i=0;i<person_menu.length;i++){
@@ -517,9 +600,28 @@ echo $this->fetch('script');
                                 $(".reprint").trigger("click");
 								//Modified by Yishou Liao @ Oct 20 2016.
 								<?php if ($split_method == 0) { ?>
+								//Modified by Yishou Liao @ Oct 21 2016.
+								deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+								deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+								deleteCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+								deleteCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+								//End.
                                 window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
 								<?php }else{ ?>
-								window.location.reload();
+								//Modified by Yishou Liao @ Oct 21 2016.
+								setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
+								setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+								setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
+								
+								if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+									var seletmp = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+								};
+								//End.
+								if (seletmp.split(",").length == $('#account_no').attr('length')){//Modified by Yishou Liao @ Oct 21 2016.
+									window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+								}else{//Modified by Yishou Liao @ Oct 21 2016.
+									window.location.reload();
+								};//End.
 								<?php } ?>
 								//End.
                             },
@@ -707,6 +809,11 @@ echo $this->fetch('script');
                             $(".RIGHT-SECTION").removeClass('load1 csspinner');
                             return false;
                         } else {
+							//Modified by Yishou Liao @ Oct 21 2016.
+							setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
+							setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+							setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
+							//End.
                             window.location.reload();
                         }
                     },
@@ -730,6 +837,11 @@ echo $this->fetch('script');
                 method: "post",
                 data: {order_id: order_id},
                 success: function (html) {
+					//Modified by Yishou Liao @ Oct 21 2016.
+					setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
+					setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+					setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
+					//End.
                     window.location.reload();
                 },
                 beforeSend: function () {
@@ -955,6 +1067,71 @@ echo $this->fetch('script');
             account_String += '</table >';
 			
 			$('#print_account').html(account_String);
+		}
+		//End.
+		
+		//Modified by Yishou Liao @ Oct 21 2016.
+		function setCookie(c_name,value,expiredays)
+		{
+			var exdate=new Date()
+			exdate.setDate(exdate.getDate()+expiredays)
+			document.cookie=c_name+ "=" +escape(value)+
+			((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+		}
+		
+		function getCookie(c_name)
+		{
+			if (document.cookie.length>0)
+			  {
+			  c_start=document.cookie.indexOf(c_name + "=")
+			  if (c_start!=-1)
+				{ 
+					c_start=c_start + c_name.length+1 
+					c_end=document.cookie.indexOf(";",c_start)
+					if (c_end==-1) c_end=document.cookie.length
+					return unescape(document.cookie.substring(c_start,c_end))
+				} 
+			  }
+			return ""
+		}
+		
+		function checkCookie(c_name)
+		{
+			if (getCookie(c_name)!=null && getCookie(c_name)!="")
+			  {return true;}
+			else 
+			  {return false;}
+		}
+		
+		function deleteCookie(c_name)
+		{
+			setCookie(c_name, "", -1);
+		}
+		
+		function arrtostr(c_array){//将二维数组转换为字符串。
+			var strarray = Array();
+			var restr = "";
+			
+			for (var i=0;i<c_array.length;i++){
+				strarray.push(c_array[i].join("-"));
+			};
+			
+			restr = strarray.join(",");
+			
+			return restr;
+		}
+		
+		function strtoarr(c_string){//将字符串转换为二维数组。
+			var strarray;
+			var rearr = Array();
+			
+			strarray = c_string.split(",");
+			
+			for (var i=0;i<strarray.length;i++){
+				rearr.push(strarray[i].split("-"));
+			};
+			
+			return rearr;
 		}
 		//End.
     </script>
