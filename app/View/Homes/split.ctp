@@ -848,9 +848,9 @@ echo $this->fetch('script');
 			
 			var Total_Amount = subTotal + (subTotal*Tax/100);
 			
-			split_accounting_str += (Total_Amount-discount).toFixed(2);
+			split_accounting_str += (Total_Amount-discount).toFixed(2);//Modified by Yishou Liao @ Oct 21 2016.
 			split_accounting_str += '">$ ';
-			split_accounting_str += (Total_Amount-discount).toFixed(2);
+			split_accounting_str += (Total_Amount-discount).toFixed(2);//Modified by Yishou Liao @ Oct 21 2016.
 			split_accounting_str += '</div>';
 			<?php if ($split_method == 0) { ?>
             split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Average 人均:</div>';
