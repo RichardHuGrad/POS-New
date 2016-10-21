@@ -96,7 +96,7 @@
             </div>
 			</div>-->
 
-            <div class="clearfix marginB30">                
+            <div class="clearfix marginB30">
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
                         <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 480px; padding:0">
                         	<?php
@@ -105,8 +105,10 @@
                         	for($i = 1; $i <= $tables['Admin']['no_of_tables']; $i++) {
                         	?>
 	                        <li class="clearfix dine_li" style="<?php echo @$dine_table_order[$i-1] ?>">
-	                        	 <ul class="dropdown-menu dine-tables">
-                                    <div class="arrow"></div>
+                                <div class="dropdown-menu dropdown-overlay">
+	                        	<ul class="dine-tables">
+                                    <!--<div class="arrow"></div>-->
+                                    <li class="dropdown-title">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if(@$dinein_tables_status[$i] == 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'order', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)"; ?>">Order <br/>点餐</a></li>
 
                                     <li class="dropdown-submenu <?php if(!@$dinein_tables_status[$i])echo 'disabled';?>">
@@ -147,10 +149,10 @@
                                     </li>
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
 
-                                    <li <?php if(@$dinein_tables_status[$i] == 'A')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
 
                                     <!-- Modified by Yishou Liao @ Oct 13 2016. -->
-                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu"' ?>>
+                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu bottom-submenu"' ?>>
                                     <a class="test" tabindex="-1" href="<?php
                                     if (@$dinein_tables_status[$i])
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'changetable', 'table' => $i, 'type' => 'D'));
@@ -162,7 +164,7 @@
                                            ;
                                            ?>
                                         <ul class="dropdown-menu">
-                                            <div class="customchangemenu clearfix">
+                                            <div class="clearfix">
                                                 <a class="close-btn" href="javascript:void(0)">X</a>
                                                 <div class="left-arrow"></div>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Merge Bill 合单</div>
@@ -176,21 +178,23 @@
                                                     }
                                                 }
                                                 ?>
-                                                <input type="button" onclick="mergebill(<?php echo $i ?>,'<?php
-                                                //Modified by Yishou Liao @ Oct 16 2016.
-                                                 if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V'){
-                                                     echo $this->Html->url(array('controller'=>'homes', 'action'=>'merge', 'table'=>$i, 'tablemerge'=>"Merge_table",'type'=>'D'));
-                                                 }else{
-                                                     echo "javascript:void(0)";
-                                                 };
-                                                //End.
-                                                ?>');" name="mergebill" id="mergebill" value="Okay">
+                                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable">
+                                                    <input type="button" onclick="mergebill(<?php echo $i ?>,'<?php
+                                                    //Modified by Yishou Liao @ Oct 16 2016.
+                                                     if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V'){
+                                                         echo $this->Html->url(array('controller'=>'homes', 'action'=>'merge', 'table'=>$i, 'tablemerge'=>"Merge_table",'type'=>'D'));
+                                                     }else{
+                                                         echo "javascript:void(0)";
+                                                     };
+                                                    //End.
+                                                    ?>');" name="mergebill" id="mergebill" value="Okay">
+                                                </div>
                                             </div>
                                         </ul>
                                     <?php } ?>
                                 </li>
 
-                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu"' ?>><a class="test" tabindex="-1" href="<?php
+                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu bottom-submenu"' ?>><a class="test" tabindex="-1" href="<?php
                                     /*if (@$dinein_tables_status[$i] == 'N')
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'split', 'table' => $i, 'type' => 'D', 'order' => @$orders_no[$i]['D']));
                                     else*/
@@ -200,7 +204,7 @@
                                         if (@$dinein_tables_status[$i] == 'N') {
                                     ?>
                                             <ul class="dropdown-menu">
-                                                <div class="customchangemenu clearfix">
+                                                <div class="clearfix">
                                                     <a class="close-btn" href="javascript:void(0)">X</a>
                                                     <div class="left-arrow"></div>
                                                     <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>">Avg. Split</a></div>
@@ -215,6 +219,7 @@
                                 
                                     <li><a tabindex="-1" href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'tableHistory', 'table_no'=>$i)); ?>">History</a></li>
 	                        	</ul>
+                                </div>
 	                            <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 	                                <div class="number-txt for-dine">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                    
@@ -250,8 +255,10 @@
                     for ($i = 1; $i <= $tables['Admin']['no_of_takeout_tables']; $i++) {
                         ?>
                         <li class="clearfix">
-                            <ul class="dropdown-menu">
-                                <div class="arrow"></div>
+                            <div class="dropdown-menu dropdown-overlay">
+                            <ul class="takeout-tables">
+                                <!--<div class="arrow"></div>-->
+                                <li class="dropdown-title">外卖<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                 <li <?php if (@$takeway_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                     if (@$takeway_tables_status[$i] <> 'P')
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'T'));
@@ -307,8 +314,9 @@
 	                                        <?php }?>
 	                                    </li>
                                         <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
-	                                    <li <?php if(@$takeway_tables_status[$i] <> 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
+	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
 		                        	</ul>
+                                    </div>
 	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 		                                <!-- <div class="takeout-txt">Takeout</div> -->
                                             <div class="number-txt for-dine">外卖<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
@@ -348,8 +356,10 @@
                     for ($i = 1; $i <= $tables['Admin']['no_of_waiting_tables']; $i++) {
                         ?>
                         <li class="clearfix">
-                            <ul class="dropdown-menu">
-                                <div class="arrow"></div>
+                            <div class="dropdown-menu dropdown-overlay">
+                            <ul class="waiting-tables">
+                                <!--<div class="arrow"></div>-->
+                                <li class="dropdown-title">等候<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                 <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                     if (@$waiting_tables_status[$i] <> 'P')
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'W'));
@@ -406,8 +416,9 @@
                                         <?php }?>
                                     </li>
                                     <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'W')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
-                                    <li <?php if(@$waiting_tables_status[$i] <> 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'W', 'order'=>@$orders_no[$i]['W'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
+                                    <li <?php if(@$waiting_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'W', 'order'=>@$orders_no[$i]['W'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
 	                        	</ul>
+                                </div>
 	                            <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 	                                <div class="number-txt for-dine">等候<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
 	                                <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
@@ -477,7 +488,7 @@ echo $this->fetch('script');
             e.preventDefault();
         });
 
-        $('.customchangemenu a.close-btn').on("click", function (e) {
+        $('.dropdown-menu a.close-btn').on("click", function (e) {
             var subMenu = $(this).closest('ul');
             subMenu.toggle();
             subMenu.removeClass('sub-open');

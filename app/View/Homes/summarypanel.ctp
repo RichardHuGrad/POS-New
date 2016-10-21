@@ -15,7 +15,7 @@
 </div>
 
 <?php
- if (!empty(@$Order_detail['OrderItem'])) { ?>
+ //if (!empty(@$Order_detail['OrderItem'])) { ?>
 <div class="clearfix marginB15 cashierbox">
     <div class="order-summary-indent clearfix">
 
@@ -113,19 +113,21 @@
         </ul>
     </div>
 </div>
-<?php }?>
+<?php// }?>
 
 <?php
-if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
+//if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
     ?>
 <div class="bgwhite clearfix">
-    <?php if(!$Order_detail['Order']['discount_value']) { ?>
+    <?php if(empty($Order_detail) OR !$Order_detail['Order']['discount_value']) { ?>
         <div class="padding10 adddoscount">
-            Add Discount 加入折扣  <i class="fa fa-plus-circle pull-right add-discount" aria-hidden="true"></i>
+            Add Discount 加入折扣  <i class="fa fa-plus-circle pull-right add-discount <?php
+if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
+    ?>" aria-hidden="true"></i>
         </div>
     <?php }?>
 
-    <?php if(!$Order_detail['Order']['discount_value']) { ?>
+    <?php if(!empty($Order_detail) and !$Order_detail['Order']['discount_value']) { ?>
     <div class="subtotalwrap discount_view" style="display:none;">
         <div class="row">
                 <div class="col-md-3">
@@ -159,14 +161,14 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
     <?php } ?>
     <div class="subtotalwrap">
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6">Subtotal 小计: <strong>$<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?></strong></div>
+            <div class="col-xs-6 col-sm-6 col-md-6">Subtotal 小计: <strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00';  ?></strong></div>
 
 
-            <div class="col-xs-6 col-sm-6 col-md-6">Taxes 税 (<?php echo $Order_detail['Order']['tax'] ?>%): <strong>$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></strong> </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">Taxes 税 (<?php if(!empty($Order_detail) and !empty(@$Order_detail['Order'] )) echo $Order_detail['Order']['tax'] ?>%): <strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['tax_amount'], 2); else echo '0.00'; ?></strong> </div>
 
         </div>
     </div>
-    <?php if($Order_detail['Order']['discount_value'])  {
+    <?php if(!empty($Order_detail) and $Order_detail['Order']['discount_value'])  {
             ?>
             <div class="subtotalwrap">
                 <div class="row">
@@ -192,17 +194,21 @@ if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
 
     <div class="subtotalwrap">
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6">Total 总额: <strong>$<?php echo number_format($Order_detail['Order']['total'], 2) ?></strong></div>
+            <div class="col-xs-6 col-sm-6 col-md-6">Total 总额: <strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>
 
             <div class="col-xs-6 col-sm-6 col-md-6">
-                <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php echo $Order_detail['Order']['message'] ?></textarea>
+                <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['message'] ?></textarea>
             </div>
         </div>
     </div>
 
     <div class="clearfix subtotal-btn-wrap">
-        <button type="submit" class="submitbtn" id="submit" alt="<?php echo $Order_detail['Order']['id'] ?>">Send to kitchen 发送到厨房</button>
-        <button type="submit" class="paybtn" id="pay" alt="<?php echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
+        <button type="submit" class="submitbtn <?php
+if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
+    ?>" id="submit" alt="<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['id'] ?>">Send to kitchen 发送到厨房</button>
+        <button type="submit" class="paybtn <?php
+if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
+    ?>" id="pay" alt="<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
     </div>
 </div>
-<?php }?>
+<?php //}?>

@@ -120,7 +120,7 @@
                                     <?php 
                                     foreach($category['Cousine'] as $items) {
                                       ?>
-                                      <li class="col-md-3 col-sm-4 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
+                                      <li class="col-md-4 col-sm-6 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
                                           <!--<div class="">
                                             <center>
                                               <?php 
@@ -132,9 +132,11 @@
                                               ?>
                                           </center>
                                         </div>-->
+                                        <div class="item-wrapper">
                                         <div class="clearfix padding10 row">
-                                            <div class="dish-title txt13 pull-left col-md-8 col-sm-7 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name']."<br/>".$items['zh_name']; ?></strong></div></div>
-                                            <div class="dish-price pull-right txt15 col-md-4 col-sm-5 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
+                                            <div class="dish-title txt13 pull-left col-md-9 col-sm-7 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name']."<br/>".$items['zh_name']; ?></strong></div></div>
+                                            <div class="dish-price pull-right txt14 col-md-3 col-sm-5 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
+                                        </div>
                                         </div>
                                       </li>
                                       <?php
@@ -231,8 +233,9 @@ echo $this->fetch('script');
 
     $(document).on("click", "#submit", function(){
       // update order message here
-      var order_id = $(this).attr("alt");
-      $.ajax({
+      if(!$(this).hasClass('disabled')) {
+        var order_id = $(this).attr("alt");
+        $.ajax({
              url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
              method:"post",
              data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"Y"},
@@ -243,23 +246,24 @@ echo $this->fetch('script');
                 $(".summary_box").addClass('load1 csspinner');
              }
         })
-
+      }
     });
     $(document).on("click", "#pay", function(){
       // update order message here
-      var order_id = $(this).attr("alt");
-      $.ajax({
-             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
-             method:"post",
-             data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"N"},
-             success:function(html) {
-              window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$table, 'type'=>$type)); ?>";
-             },
-             beforeSend:function() {
-                $(".summary_box").addClass('load1 csspinner');
-             }
+      if(!$(this).hasClass('disabled')) {
+        var order_id = $(this).attr("alt");
+        $.ajax({
+           url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
+           method:"post",
+           data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"N"},
+           success:function(html) {
+            window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$table, 'type'=>$type)); ?>";
+           },
+           beforeSend:function() {
+              $(".summary_box").addClass('load1 csspinner');
+           }
         })
-        
+      }
     });
 
     $(document).on("click", ".savebtn", function(){
@@ -402,7 +406,9 @@ echo $this->fetch('script');
         })
     })
     $(document).on('click', ".add-discount", function() {
-      $(".discount_view").toggle();
+      if(!$(this).hasClass('disabled')) {
+        $(".discount_view").toggle();
+      }
     });
     $(document).on("click", '.dropdown-toggle', function (){
       if($(this).attr("aria-expanded") == 'true'){

@@ -15,7 +15,7 @@
     <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
 
 </header>
-<div class="container">
+<div class="merge container-fluid">
     <div class="clearfix cartwrap-wrap">
     </div>
     <div class="order-wrap">
@@ -100,15 +100,15 @@
                         <li class="clearfix">
                             <div class="row">
                                 <div class="col-md-9 col-sm-8 col-xs-8">
-                                    <div class="pull-left">
+                                    <!--<div class="pull-left">
 <?php
-if ($value['image']) {
+/*if ($value['image']) {
 echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . COUSINE_IMAGE_PATH . $value['image'] . "&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt' => 'Product', 'class' => 'img-responsive'));
 } else {
 echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . TIMB_PATH . 'no_image.jpg' . "&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt' => 'Product', 'class' => 'img-responsive'));
-}
+}*/
 ?>
-                                    </div>
+                                    </div>-->
                                     <div class="pull-left titlebox1">
                                         <!-- to show name of item -->
                                         <div class="less-title"><?php echo $value['name_en'] . "<br/>" . $value['name_xh']; ?></div>

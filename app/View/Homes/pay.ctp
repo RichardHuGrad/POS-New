@@ -15,13 +15,13 @@
       <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
   
 </header>
-        <div class="container">
+        <div class="pay container-fluid">
            <div class="clearfix cartwrap-wrap">
           </div>
             <div class="order-wrap">
             <?php echo $this->Session->flash(); ?>
                 <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-                    <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 <?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
+                    <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br>Table 桌 <?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
 
                     <div class="paid-box">
                         <div class="checkbox-btn">
@@ -86,15 +86,15 @@
                                     <li class="clearfix">
                                         <div class="row">
                                             <div class="col-md-9 col-sm-8 col-xs-8">
-                                                <div class="pull-left">
-                                                  <?php 
-                                                  if ($value['image']) { 
+                                                <!--<div class="pull-left">
+                                                  <?php
+                                                  /*if ($value['image']) {
                                                     echo $this->Html->image(TIMB_PATH."timthumb.php?src=".COUSINE_IMAGE_PATH . $value['image']."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
                                                   } else {
-                                                    echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive')); 
-                                                  } 
+                                                    echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
+                                                  }*/
                                                   ?>
-                                                </div>
+                                                </div>-->
                                                 <div class="pull-left titlebox1">
                                                     <!-- to show name of item -->
                                                     <div class="less-title"><?php echo $value['name_en']."<br/>".$value['name_xh']; ?></div>
@@ -257,8 +257,8 @@
                                       <div class="col-md-6">
                                           <div class="form-group">
                                               <div class="control-label col-md-4 sub-txt">Paid by:</div>
-                                              <div class="col-md-8">
-                                                <label class="control-label">Card  卡 <input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>&nbsp;&nbsp;&nbsp;
+                                              <div class="col-md-8 tip-paid-by">
+                                                <label class="control-label">Card  卡 <input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>
                                                 <label class="control-label">Cash 现金 <input name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio"></label>
                                               </div>
                                           </div>
