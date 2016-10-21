@@ -241,6 +241,11 @@ echo $this->fetch('script');
         });
 		
 		function setCurrentPerson(currentPerson){
+			//Modified by Yishou Liao @ Oct 21 2016.
+			if (selepersonstr.indexOf(currentPerson)!=-1){
+				return;
+			};
+			//End.
 			current_person = currentPerson;
 			
 			//Modified by Yishou Liao @ Oct 19 2016.
@@ -253,6 +258,12 @@ echo $this->fetch('script');
 		}
 		
 		function addMenuItem(item_no,image,name_en,name_xh,selected_extras_name,price,extras_amount,qty,item_id,order_item_id){
+			//Modified by Yishou Liao @ Oct 21 2016.
+			if (selepersonstr.indexOf(currentPerson)!=-1){
+				return;
+			};
+			//End.
+			
 			if (current_person != 0){
 				person_menu.push(Array(current_person,image,name_en,name_xh,selected_extras_name,price,extras_amount,qty,item_id,order_item_id));
 				person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
@@ -295,6 +306,16 @@ echo $this->fetch('script');
 		}
 		
 		function delMenuItem(item_no,orderitem_no){
+			//Modified by Yishou Liao @ Oct 21 2016.
+			var selepersonstr = "";
+			if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
+				selepersonstr = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+			};
+			if (selepersonstr.indexOf(person_menu[item_no][0])!=-1){
+				return;
+			};
+			//End.
+			
 			if (confirm("Do you want to delete it?")){
 				person_menu[item_no].splice(8,1);
 				order_menu.push(person_menu[item_no]);
