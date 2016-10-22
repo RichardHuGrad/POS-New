@@ -283,14 +283,6 @@ echo $this->fetch('script');
 					if (curtmp != person_menu[i][0]){
 						if (curtmp != 0){addpersonStr += "</ul>";};
 						//Modified by Yishou Liao @ 19 2016l
-						//for (var j=curtmp;j<(person_menu[i][0]-curtmp-1);j++){
-						var j = curtmp+1;
-						//if (j==0) {j++;};
-						while(j<person_menu[i][0]){
-							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+j+");'> # "+ j + "</label><ul></ul>";
-							j++;
-						};
-						//End.
 						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
 						curtmp = person_menu[i][0];
 					};
@@ -307,8 +299,12 @@ echo $this->fetch('script');
 				//End.
 				
 				//Modified by Yishou Liao @ Oct 21 2016.
+				deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				
 				setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
 				setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+				setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
 				//End.
 			};
 		}
@@ -334,7 +330,6 @@ echo $this->fetch('script');
 				person_menu.splice(item_no,1);
 				person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
 				
-				 //addpersonStr=$('#splitmenu').html()
 				var addpersonStr ="";
 				var curtmp = 0;
 				for (var i=0;i<person_menu.length;i++){
@@ -352,8 +347,13 @@ echo $this->fetch('script');
 				showAcountingDetails() //Modified by Yishou Liao @ Oct 19 2016.
 				
 				//Modified by Yishou Liao @ Oct 21 2016.
+				deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+
+
 				setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
 				setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+				setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
 				//End.
 			}
 		};
@@ -405,11 +405,8 @@ echo $this->fetch('script');
 		function addOrderItem(orderitem_no=null){
 			var outhtml_str = "<ul>";
 			for (var i=0;i<order_menu.length;i++){
-				if (orderitem_no != null){
-					outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( '+orderitem_no+',"'+order_menu[i][1]+'", "'+order_menu[i][2]+'", "'+order_menu[i][3]+'","'+order_menu[i][4]+'","'+order_menu[i][5]+'","'+order_menu[i][6]+'","'+order_menu[i][7]+'",'+ order_menu[i][0]+','+order_menu[i][8]+' );\'>';
-				}else{
-					outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( '+i+',"'+order_menu[i][1]+'", "'+order_menu[i][2]+'", "'+order_menu[i][3]+'","'+order_menu[i][4]+'","'+order_menu[i][5]+'","'+order_menu[i][6]+'","'+order_menu[i][7]+'",'+ order_menu[i][0]+','+order_menu[i][8]+' );\'>';
-				};
+				outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( '+i+',"'+order_menu[i][1]+'", "'+order_menu[i][2]+'", "'+order_menu[i][3]+'","'+order_menu[i][4]+'","'+order_menu[i][5]+'","'+order_menu[i][6]+'","'+order_menu[i][7]+'",'+ order_menu[i][0]+','+order_menu[i][8]+' );\'>';
+				
 				outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left"><img src="'+order_menu[i][1]+'" width="62" height="42" /></div><div class="pull-left titlebox1">';
 				outhtml_str += '<div class="less-title">'+order_menu[i][2]+'<br/>'+order_menu[i][3]+'</div><div class="less-txt">'+order_menu[i][4]+'</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
 				outhtml_str += order_menu[i][5]+order_menu[i][6]+order_menu[i][7]+'</div></div></li>'
@@ -423,11 +420,7 @@ echo $this->fetch('script');
         $(document).ready(function () {
 			//Modified by Yishou Liao @ Oct 21 2016.
 			var addorder_menu = true;
-			/*
-			deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
-			deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
-			deleteCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>);
-				*/
+
 			if (checkCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
 				var orderarray = getCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
 				var personarray = getCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
@@ -441,7 +434,10 @@ echo $this->fetch('script');
 					person_menu = strtoarr(personarray);
 				}
 				
-				addorder_menu = false;
+				var order_detail_length = <?php echo count($Order_detail['OrderItem']); ?>;
+				if (person_menu.length == order_detail_length){
+					addorder_menu = false;
+				};
 			};
 			//End.
 			
@@ -468,7 +464,18 @@ echo $this->fetch('script');
 			?>
 			
 			if (addorder_menu) {//Modified by Yishou Liao @ Oct 21 2016.
-			order_menu.push(Array(<?php echo $i ?>,'<?php if ($value['image']) {echo $value['image'];}else{echo 'no_image.jpg';}; ?>', '<?php echo $value['name_en']; ?>', '<?php echo $value['name_xh']; ?>','<?php echo implode(",", $selected_extras_name); ?>','<?php echo $value['price'] ?>','<?php echo $value['extras_amount'] ?>','<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',<?php echo $value['id'] ?>));//Modified by Yishou Liao @ Oct 20 2016. Added $value['id']. 
+				var order_id = <?php echo $value['id'] ?>;
+				var addmenu = true;
+				
+				for (var j=0;j<person_menu.length;j++){
+					if (person_menu[j][9] == order_id){ addmenu = false;}
+				};
+				for (var j=0;j<order_menu.length;j++){
+					if (order_menu[j][8] == order_id){ addmenu = false;}
+				};
+				if (addmenu){
+					order_menu.push(Array(<?php echo $i ?>,'<?php if ($value['image']) {echo $value['image'];}else{echo 'no_image.jpg';}; ?>', '<?php echo $value['name_en']; ?>', '<?php echo $value['name_xh']; ?>','<?php echo implode(",", $selected_extras_name); ?>','<?php echo $value['price'] ?>','<?php echo $value['extras_amount'] ?>','<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',<?php echo $value['id'] ?>));//Modified by Yishou Liao @ Oct 20 2016. Added $value['id']. 
+				};
 			};//End.
 			
 			<?php
