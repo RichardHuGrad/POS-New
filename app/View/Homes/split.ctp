@@ -280,11 +280,14 @@ echo $this->fetch('script');
 				var addpersonStr ="";
 				var curtmp = 0;
 				for (var i=0;i<person_menu.length;i++){
-					if (curtmp != person_menu[i][0]){
+					if (curtmp != parseInt(person_menu[i][0])){
 						if (curtmp != 0){addpersonStr += "</ul>";};
 						//Modified by Yishou Liao @ 19 2016l
-						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
-						curtmp = person_menu[i][0];
+						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
+							tmpNo = curtmp+1;
+							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+tmpNo+");'> # "+ tmpNo + "</label><ul>";
+						}//End.
+						curtmp = parseInt(person_menu[i][0]);
 					};
 					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
 				};
@@ -330,16 +333,22 @@ echo $this->fetch('script');
 				person_menu.splice(item_no,1);
 				person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
 				
+				//Modified by Yisho Liao @ Oct 22 2016.
+				if (person_menu.length==0) { person_No = 0;};
+				//End.
+				
 				var addpersonStr ="";
 				var curtmp = 0;
 				for (var i=0;i<person_menu.length;i++){
-					if (curtmp != person_menu[i][0]){
+					if (curtmp != parseInt(person_menu[i][0])){
 						if (curtmp != 0){addpersonStr += "</ul>";};
-						
-						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
-						curtmp = person_menu[i][0];
+						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
+							tmpNo = curtmp+1;
+							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+tmpNo+");'> # "+ tmpNo + "</label><ul>";
+						};
+						curtmp = parseInt(person_menu[i][0]);
 					}
-					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'>"+person_menu[i][1]+"</div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
 				};
 				
 				$('#splitmenu').html(addpersonStr);
@@ -529,10 +538,13 @@ echo $this->fetch('script');
 			var addpersonStr ="";
 				var curtmp = 0;
 				for (var i=0;i<person_menu.length;i++){
-					if (curtmp != person_menu[i][0]){
+					if (curtmp != parseInt(person_menu[i][0])){
 						if (curtmp != 0){addpersonStr += "</ul>";};
-						addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_menu[i][0]+");'> # "+ person_menu[i][0] + "</label><ul>";
-						curtmp = person_menu[i][0];
+						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
+							tmpNo = curtmp+1;
+							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+tmpNo+");'> # "+ tmpNo + "</label><ul>";
+						};
+						curtmp = parseInt(person_menu[i][0]);
 					};
 					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
 				};
