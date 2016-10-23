@@ -15,33 +15,26 @@
     <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
 
 </header>
-<div class="container">
+<div class="split container-fluid">
     <div class="clearfix cartwrap-wrap">
     </div>
-    <div class="order-wrap">
+    <div class="order-wrap no-padding">
         <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
-
-            <div class="paid-box">
-                <div class="checkbox-btn">
-                    <input type="checkbox" value="value-1" id="rc1" name="rc1" <?php if ($Order_detail['Order']['table_status'] == 'P') echo "checked='checked'"; ?>/>
-                    <label for="rc1" disabled>Paid 已付费</label>
-                </div>
-            </div>
+            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
             <?php
             if ($Order_detail['Order']['table_status'] <> 'P') {
                 ?>
                 <!-- Modified by Yishou Liao @ Oct 17 2016. -->
 
                 <div class="table-box dropdown">
-                    <a href="" class="dropdown-toggle"  data-toggle="dropdown">Average <?php
+                    <a href="" class="split dropdown-toggle"  data-toggle="dropdown">Average <?php
                         if ($split_method == 0) {
                             echo "平均分单";
                         } else {
                             echo "按人分单";
                         }
-                        ?> <input type="text" readonly="" id="persons" name="persons" value="1" size="2"> 人</a>
+                        ?> <input type="text" class="text-center" readonly="" id="persons" name="persons" value="1" size="2"> 人</a>
                     <ul class="dropdown-menu">
                         <div class="customchangemenu clearfix">
                             <div class="left-arrow"></div>
@@ -60,7 +53,7 @@
             <!-- Modified by Yishou Liao @ Oct 17 2016. 
             <div class="avoid-this text-center reprint_2"><button type="button" class="submitbtn">Print Kitchen 打印后厨单</button></div>
             End. -->
-            <div class="order-summary">
+            <div class="order-summary <?php if ($split_method == 0) echo 'avg'; ?>">
                 <h3>Order Summary 订单摘要</h3>
                 <div class="order-summary-indent clearfix" name="orderitem" id="orderitem">
                     <!-- Modified by Yishou Liao @ Oct 18 2016. -->
@@ -71,9 +64,9 @@
             <!-- Modified by Yishou Liao @ Oct 18 2016. -->
             <?php if ($split_method == 1) { ?>
                 <div class="avoid-this text-center addperson"><button type="button" class="submitbtn">Add Persons 增加人</button></div>
-                <div class="order-summary">
+                <div class="order-summary addperson">
                     <h3>Split Details 分单明细</h3>
-                    <div class="order-summary-indent clearfix" name="splitmenu" id="splitmenu">
+                    <div class="order-summary-indent addperson clearfix" name="splitmenu" id="splitmenu">
                         
                     </div>
                 </div>
@@ -83,11 +76,8 @@
     </div>
 
     <div class="col-md-8 col-sm-8 col-xs-12 RIGHT-SECTION">
-	    <!-- Modified by Yishou Liao @ Oct 18 2016. -->
-	    <div class="paid-box" name="person_id" id="person_id">
-        
-        </div>
-        <!-- End. -->
+        <ul class="nav nav-tabs" id="person-tab">
+        </ul>
         <div class="clearfix total-payment" name="split_accounting_details" id="split_accounting_details">
             
         </div>
@@ -230,7 +220,7 @@ echo $this->fetch('script');
 			if (person_No < $('#persons').val()){
 				person_No++;
 				var addpersonStr=$('#splitmenu').html();
-				addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+person_No+");'> # "+ person_No + "</label>";
+				addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson("+person_No+");'>Customer # "+ person_No + "</label>";
 				$('#splitmenu').html(addpersonStr);
 				current_person = person_No;
 				
@@ -285,11 +275,11 @@ echo $this->fetch('script');
 						//Modified by Yishou Liao @ 19 2016l
 						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
 							tmpNo = curtmp+1;
-							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+tmpNo+");'> # "+ tmpNo + "</label><ul>";
+							addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson("+tmpNo+");'>Customer # "+ tmpNo + "</label><ul>";
 						}//End.
 						curtmp = parseInt(person_menu[i][0]);
 					};
-					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
 				};
 				
 				$('#splitmenu').html(addpersonStr);
@@ -344,11 +334,11 @@ echo $this->fetch('script');
 						if (curtmp != 0){addpersonStr += "</ul>";};
 						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
 							tmpNo = curtmp+1;
-							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+tmpNo+");'> # "+ tmpNo + "</label><ul>";
+							addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson("+tmpNo+");'>Customer # "+ tmpNo + "</label><ul>";
 						};
 						curtmp = parseInt(person_menu[i][0]);
 					}
-					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
 				};
 				
 				$('#splitmenu').html(addpersonStr);
@@ -416,7 +406,7 @@ echo $this->fetch('script');
 			for (var i=0;i<order_menu.length;i++){
 				outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( '+i+',"'+order_menu[i][1]+'", "'+order_menu[i][2]+'", "'+order_menu[i][3]+'","'+order_menu[i][4]+'","'+order_menu[i][5]+'","'+order_menu[i][6]+'","'+order_menu[i][7]+'",'+ order_menu[i][0]+','+order_menu[i][8]+' );\'>';
 				
-				outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left"><img src="'+order_menu[i][1]+'" width="62" height="42" /></div><div class="pull-left titlebox1">';
+				outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left titlebox1">';
 				outhtml_str += '<div class="less-title">'+order_menu[i][2]+'<br/>'+order_menu[i][3]+'</div><div class="less-txt">'+order_menu[i][4]+'</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
 				outhtml_str += order_menu[i][5]+order_menu[i][6]+order_menu[i][7]+'</div></div></li>'
 			};
@@ -501,32 +491,32 @@ echo $this->fetch('script');
 			if (checkCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>)){
 				selepersonstr = getCookie("persons_sele_"+<?php echo $Order_detail['Order']['order_no'] ?>);
 			};
-								
-			var person_id_Str = "";
+
+            var person_tab_Str = "";
 			var checkflag = false;
 			for (var i=0;i<$('#persons').val(); i++){
 				if (i==0) {
 					if (selepersonstr.indexOf(i+1)!=-1){
-						person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" disabled="true" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                        person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" disabled><a data-toggle="tab"># '+(i+1)+'</a></li>';
 					}else{
-						person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                        person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 						checkflag = true;
 					};
 				}else{
 					if (selepersonstr.indexOf(i+1)!=-1){
-						person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" disabled="true" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                        person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" disabled><a data-toggle="tab"># '+(i+1)+'</a></li>';
 					}else{
 						if (checkflag == false){
-							person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                            person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 							checkflag = true;
 						}else{
-							person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                            person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 						};
 					};
 				}
 			}
-			
-			$('#person_id').html(person_id_Str);
+
+            $('#person-tab').html(person_tab_Str);
 			//End.
 			
 			//MOdified by Yishou Liao @ Oct 19 2016.
@@ -542,11 +532,11 @@ echo $this->fetch('script');
 						if (curtmp != 0){addpersonStr += "</ul>";};
 						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
 							tmpNo = curtmp+1;
-							addpersonStr += "<br /><label onclick='javascript:setCurrentPerson("+tmpNo+");'> # "+ tmpNo + "</label><ul>";
+							addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson("+tmpNo+");'>Customer # "+ tmpNo + "</label><ul>";
 						};
 						curtmp = parseInt(person_menu[i][0]);
 					};
-					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left'><img src='"+person_menu[i][1]+"' width='62' height='42' /></div><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
+					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+"</div></div></li>";
 				};
 				
 				$('#splitmenu').html(addpersonStr);
@@ -921,36 +911,48 @@ echo $this->fetch('script');
 <?php } ?>
 			
 			
-			var person_id_Str = "";// Modified by Yishou Liao @ Oct 19 2016. '<div class="radio-btn">';
+
+            var person_tab_Str = "";
 			
 			<?php if ($split_method != 0) { ?> //Modified by Yishou Liao @ Oct 20 2016.
 			for (var i=0;i<$('#persons').val(); i++){
 				if (i==0) {
-					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                    person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 				}else{
-					person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" name="account_no[]" id="account_no_'+i+'"/><label for="rc1" disabled> # '+(i+1)+'</label>';
+                    person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 				};
 			}
 			<?php }else{ ?>
 				var i = 0;
-				person_id_Str += '<input type="radio" onchange="showAcountingDetails();" value="'+(i+1)+'" checked="checked" name="account_no[]" id="account_no_'+i+'" /><label for="rc1" disabled> # '+(i+1)+'</label>';
+                person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 			<?php } ?> //End.
 			
-			//End. person_id_Str += '</div>';
-			$('#person_id').html(person_id_Str);
+			//End. person_id_Str += '</div>';;
+            $('#person-tab').html(person_tab_Str);
             //End.
         }
         //End.
-		
+		function tabSelected(i) {
+            var person_tab_idx = parseInt($('#person-tab').find('.active').attr('name'));
+            if (i !== person_tab_idx) {
+                showAcountingDetails(i);
+            }
+        }
 		//Modified by Yishou Liao @ Oct 19 2016.
-		function showAcountingDetails(){
-			var radio_click=0;
+		function showAcountingDetails(i = 0){
+			var radio_click=i;
 			var subTotal = 0;
 			var Tax = <?php echo $Order_detail['Order']['tax'] ?>;
 			
-			$('input[name="account_no[]"]:checked').each(function () {
+			/*$('input[name="account_no[]"]:checked').each(function () {
 	           radio_click = $(this).val();
-        	});
+        	});*/
+            console.log('radio ', radio_click);
+            if (i === 0) {
+                i = parseInt($('#person-tab').find('.active').attr('name'));
+                console.log('this is ', i);
+                radio_click = i;
+            }
 			
 			var split_accounting_str = "";
 			
@@ -1019,7 +1021,7 @@ echo $this->fetch('script');
 			split_accounting_str += '</div>';
 			<?php if ($split_method == 0) { ?>
             split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Average 人均:</div>';
-            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price">$<input type="text" id="aver_total" name="aver_total" value="';
+            split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price">$<input type="text" class="text-center" id="aver_total" name="aver_total" value="';
 			split_accounting_str += '<?php echo number_format($Order_detail['Order']['total'], 2) ?>';
 			split_accounting_str += '" readonly="true" size="5">/人</div>';
             <?php } ?>
