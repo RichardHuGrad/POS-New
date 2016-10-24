@@ -16,7 +16,10 @@
 
 </header>
 <div class="split container-fluid">
-    <div class="clearfix cartwrap-wrap">
+    <div class="clearfix cartwrap-wrap"></div>
+    <div id="customer-select-alert" class="alert alert-info alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Customer # <span id="customer-number"></span></strong> selected
     </div>
     <div class="order-wrap no-padding">
         <?php echo $this->Session->flash(); ?>
@@ -123,6 +126,22 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
 <?php } ?>
     </div>
 </div>
+</div>
+<div id="confirm" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong>Delete</strong> <span id="dish-to-be-deleted"></span>
+            </div>
+            <div class="modal-body">
+                Are you sure?
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+                <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div style="display:none" >
 
@@ -248,7 +267,11 @@ echo $this->fetch('script');
 			showAcountingDetails();
 			//End.
 			
-			alert("当前添加给#"+current_person);
+			//alert("当前添加给#"+current_person);
+            $('#customer-select-alert').alert();
+            $('#customer-select-alert #customer-number').html(current_person);
+            $('#customer-select-alert').fadeTo(500, 500).fadeOut(500, function() {
+            });
 		}
 		
 		function addMenuItem(item_no,image,name_en,name_xh,selected_extras_name,price,extras_amount,qty,item_id,order_item_id){
@@ -312,49 +335,50 @@ echo $this->fetch('script');
 				return;
 			};
 			//End.
-			
-			if (confirm("Do you want to delete it?")){
-				person_menu[item_no].splice(8,1);
-				order_menu.push(person_menu[item_no]);
-				order_menu[order_menu.length-1][0] = orderitem_no;
-				order_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
-				addOrderItem(orderitem_no);
-				
-				person_menu.splice(item_no,1);
-				person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
-				
-				//Modified by Yisho Liao @ Oct 22 2016.
-				if (person_menu.length==0) { person_No = 0;};
-				//End.
-				
-				var addpersonStr ="";
-				var curtmp = 0;
-				for (var i=0;i<person_menu.length;i++){
-					if (curtmp != parseInt(person_menu[i][0])){
-						if (curtmp != 0){addpersonStr += "</ul>";};
-						for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
-							tmpNo = curtmp+1;
-							addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson("+tmpNo+");'>Customer # "+ tmpNo + "</label><ul>";
-						};
-						curtmp = parseInt(person_menu[i][0]);
-					}
-					addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
-				};
-				
-				$('#splitmenu').html(addpersonStr);
-				
-				showAcountingDetails() //Modified by Yishou Liao @ Oct 19 2016.
-				
-				//Modified by Yishou Liao @ Oct 21 2016.
-				deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
-				deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+
+            $('#confirm #dish-to-be-deleted').html(person_menu[item_no][2]);
+            $('#confirm').modal('show').one('click', '#delete', function() {
+                person_menu[item_no].splice(8,1);
+                order_menu.push(person_menu[item_no]);
+                order_menu[order_menu.length-1][0] = orderitem_no;
+                order_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
+                addOrderItem(orderitem_no);
+                
+                person_menu.splice(item_no,1);
+                person_menu.sort(function(x,y){return x[0]-y[0]});//二维数组排序
+                
+                //Modified by Yisho Liao @ Oct 22 2016.
+                if (person_menu.length==0) { person_No = 0;};
+                //End.
+                
+                var addpersonStr ="";
+                var curtmp = 0;
+                for (var i=0;i<person_menu.length;i++){
+                    if (curtmp != parseInt(person_menu[i][0])){
+                        if (curtmp != 0){addpersonStr += "</ul>";};
+                        for (curtmp;curtmp<person_menu[i][0];curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
+                            tmpNo = curtmp+1;
+                            addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson("+tmpNo+");'>Customer # "+ tmpNo + "</label><ul>";
+                        };
+                        curtmp = parseInt(person_menu[i][0]);
+                    }
+                    addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem("+i+","+person_menu[i][8]+");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>"+person_menu[i][2]+"<br />"+person_menu[i][3]+"</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$"+person_menu[i][4]+person_menu[i][5]+person_menu[i][6]+"</div></div></li>";
+                };
+                
+                $('#splitmenu').html(addpersonStr);
+                
+                showAcountingDetails() //Modified by Yishou Liao @ Oct 19 2016.
+                
+                //Modified by Yishou Liao @ Oct 21 2016.
+                deleteCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>);
+                deleteCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>);
 
 
-				setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
-				setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
-				setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
-				//End.
-			}
+                setCookie("order_menu"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(order_menu),1);
+                setCookie("person_menu_"+<?php echo $Order_detail['Order']['order_no'] ?>,arrtostr(person_menu),1);
+                setCookie("persons_"+<?php echo $Order_detail['Order']['order_no'] ?>,$("#persons").val(),1);
+                //End.
+            })
 		};
 		//End.
 		
@@ -417,6 +441,8 @@ echo $this->fetch('script');
 		//End.
 		
         $(document).ready(function () {
+            $('#customer-select-alert').hide();
+
 			//Modified by Yishou Liao @ Oct 21 2016.
 			var addorder_menu = true;
 
@@ -943,19 +969,14 @@ echo $this->fetch('script');
 			var radio_click=i;
 			var subTotal = 0;
 			var Tax = <?php echo $Order_detail['Order']['tax'] ?>;
-			
-			/*$('input[name="account_no[]"]:checked').each(function () {
-	           radio_click = $(this).val();
-        	});*/
-            console.log('radio ', radio_click);
+
             if (i === 0) {
                 i = parseInt($('#person-tab').find('.active').attr('name'));
-                console.log('this is ', i);
                 radio_click = i;
             }
-			
+
 			var split_accounting_str = "";
-			
+
 			if (person_menu.length == 0 && current_person == 0) {
 				for (var i=0; i<order_menu.length;i++){
 					subTotal += parseFloat(order_menu[i][5]);

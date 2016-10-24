@@ -371,6 +371,8 @@ padding-top: 15px; }
 .split .order-summary.addperson .order-summary-indent.addperson { max-height: 270px; }
 .split .order-summary.addperson .order-summary-indent.addperson .person-label { font-size: 25px; line-height: 25px; }
 .split .order-summary-indent li { padding: 5px 0; }
+.split .alert { margin-bottom: 10px; }
+.split .RIGHT-SECTION { padding-left: 0; }
 
 .no-padding {
 	padding: 0;
