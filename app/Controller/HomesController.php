@@ -668,6 +668,7 @@ class HomesController extends AppController {
 
         $this->loadModel('Order');
         $this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
+        
         // save all 
         $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
         return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));

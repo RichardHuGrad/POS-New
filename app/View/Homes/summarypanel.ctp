@@ -216,7 +216,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 <!-- Modified by Yishou Liao @ Oct 25 2016. -->
 <script type="text/javascript">
-var orderStr = $('#Order_Item').val();
+var orderStr = ""; //$('#Order_Item').val();
 <?php for ($i=0;$i<count(@$Order_detail_print);$i++) {
 	if ($i == (count(@$Order_detail_print)-1)) {?>;
 	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';

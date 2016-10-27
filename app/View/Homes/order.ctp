@@ -182,6 +182,8 @@ echo $this->fetch('script');
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $(".products-panel").removeClass('load1 csspinner');
 				// Modified by Yishou Liao @ Oct 27 2016.
+				Order_Item_Printer = Array();
+				
 				var arrtmp = $('#Order_Item').val().split("#");
 				for (var i = 0; i<arrtmp.length;i++){
 					Order_Item_Printer.push(arrtmp[i].split("*"));
@@ -205,7 +207,10 @@ echo $this->fetch('script');
              success:function(html) {
                 $(".summary_box").html(html);
                 $(".summary_box").removeClass('load1 csspinner');
+				
 				// Modified by Yishou Liao @ Oct 27 2016.
+				Order_Item_Printer = Array();
+				
 				var arrtmp = $('#Order_Item').val().split("#");
 				for (var i = 0; i<arrtmp.length;i++){
 					Order_Item_Printer.push(arrtmp[i].split("*"));
