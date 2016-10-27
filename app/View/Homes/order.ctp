@@ -273,7 +273,7 @@ echo $this->fetch('script');
         $.ajax({
            url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
            method:"post",
-           data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"N"},
+           data:{order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", message:$("#Message").val(), is_kitchen:"N"},
            success:function(html) {
             window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$table, 'type'=>$type)); ?>";
            },

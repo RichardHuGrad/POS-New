@@ -884,6 +884,7 @@ class HomesController extends AppController {
         );
         
         $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+
         //End.
         
         echo true;
