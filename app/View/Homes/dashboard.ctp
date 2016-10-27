@@ -149,7 +149,7 @@
                                     </li>
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
 
-                                    <li <?php if(@$dinein_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D'])); else echo "javascript:void(0)";?>">Make Available<br/>变空桌</a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D']));?>');">Make Available<br/>变空桌</a></li>
 
                                     <!-- Modified by Yishou Liao @ Oct 13 2016. -->
                                 <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu bottom-submenu"' ?>>
@@ -550,5 +550,16 @@ echo $this->fetch('script');
         
         document.location = "merge/table:"+tableId+"/tablemerge:"+table_merge+"/type:D";
     }
+	
+	//Modified by Yishou Liao @ Oct 27 2016.
+	function makeavailable(url){
+		var pwd_makeavailable= prompt("Please enter the password:");
+		if (pwd_makeavailable == "123456"){
+			document.location = url;
+		} else {
+			alert("Your password is incorrect!");
+		};
+	}
+	//End.
 </script>
 <!-- End. -->
