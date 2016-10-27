@@ -835,7 +835,7 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Oct 26 2016.
         $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
         //End.
-        
+
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -854,7 +854,12 @@ class HomesController extends AppController {
         $order_id = $this->data['order_id'];
         $message = $this->data['message'];
         $is_kitchen = $this->data['is_kitchen'];
-
+        
+        //Modified by Yishou Liao @ Oct 27 2016.
+        $table = $this->data['table'];
+        $type = $this->data['type'];
+        //End.
+        
         $this->layout = false;
         $this->autoRender = NULL;
 
@@ -864,9 +869,23 @@ class HomesController extends AppController {
         $data['Order']['id'] = $order_id;
         $data['Order']['message'] = $message;
         $data['Order']['is_kitchen'] = $is_kitchen;
+        $data['Order']['is_print'] = 'Y';
         $this->Order->save($data, false);
+        
         if ($is_kitchen == 'Y')
             $this->Session->setFlash('Cooking items successfully sent to kitchen.', 'success');
+        
+        //Modified by Yishou Liao @ Oct 27 2016.
+        $this->loadModel('Cashier');
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+                )
+        );
+        
+        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        //End.
+        
         echo true;
     }
 
@@ -1105,8 +1124,6 @@ class HomesController extends AppController {
 
         //Modified by Yishou LIao @ Oct 26 2016.
         $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
-
-        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
         
         $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
         //End.

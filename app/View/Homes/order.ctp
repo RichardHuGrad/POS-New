@@ -181,6 +181,12 @@ echo $this->fetch('script');
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $(".products-panel").removeClass('load1 csspinner');
+				// Modified by Yishou Liao @ Oct 27 2016.
+				var arrtmp = $('#Order_Item').val().split("#");
+				for (var i = 0; i<arrtmp.length;i++){
+					Order_Item_Printer.push(arrtmp[i].split("*"));
+				};
+				//End.
              },
              beforeSend:function() {
                 $(".products-panel").addClass('load1 csspinner');
@@ -199,6 +205,12 @@ echo $this->fetch('script');
              success:function(html) {
                 $(".summary_box").html(html);
                 $(".summary_box").removeClass('load1 csspinner');
+				// Modified by Yishou Liao @ Oct 27 2016.
+				var arrtmp = $('#Order_Item').val().split("#");
+				for (var i = 0; i<arrtmp.length;i++){
+					Order_Item_Printer.push(arrtmp[i].split("*"));
+				};
+				//End.
              },
              beforeSend:function() {
                 $(".summary_box").addClass('load1 csspinner');
@@ -244,7 +256,7 @@ echo $this->fetch('script');
         $.ajax({
              url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
              method:"post",
-             data:{order_id: order_id, message:$("#Message").val(), is_kitchen:"Y"},
+             data:{order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", message:$("#Message").val(), is_kitchen:"Y"},
              success:function(html) {
                 window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
              },
