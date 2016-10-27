@@ -473,7 +473,7 @@ $(document).on('click', '.reprint', function () {
 	?>
 	 Order_print.push('<?php echo implode("*",$value); ?>'.split("*"));
 	<?php };}; ?>
-	printReceipt('<?php echo $Order_detail['Order']['order_no'] ?>',"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>",'192.168.0.188','local_printer',Order_print,'<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?>','<?php echo $Order_detail['Order']['tax'] ?>','<?php echo number_format($Order_detail['Order']['total'], 2) ?>');
+	printReceipt('<?php echo $Order_detail['Order']['order_no'] ?>',"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>",'192.168.0.188','local_printer',Order_print,'<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?>','<?php echo $Order_detail['Order']['tax'] ?>','<?php echo number_format($Order_detail['Order']['total'], 2) ?>',"");
 	//End.
 			
     /*$("#print_panel").print({

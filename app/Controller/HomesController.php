@@ -1445,7 +1445,7 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-
+        
         $order_no = @$this->params['url']['order_no'];
 
         // get all params
@@ -1490,6 +1490,7 @@ class HomesController extends AppController {
             'recursive' => false
                 )
         );
+
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
     }
 

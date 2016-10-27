@@ -125,7 +125,7 @@ if (!check_print_flag){
 }
 
 
-function printReceipt(order_no,table_no,ipaddr,devid,print_info) {
+function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,total,memo) {
 
     //
     // build print data
@@ -145,6 +145,16 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info) {
     // initialize (ank mode, smoothing)
     builder.addTextLang('en').addTextSmooth(true);
 
+    // draw image (for raster image)
+    var canvas = $('#canvas').get(0);
+    var context = canvas.getContext('2d');
+    context.drawImage($('#logo').get(0), 0, 0, 200, 70);
+
+    // append raster image
+    builder.addTextAlign(builder.ALIGN_CENTER);
+    builder.addImage(context, 0, 0, 200, 70);
+    builder.addFeedLine(1);
+	
 	//Modified by Yishou Liao @ Oct 26 2016
 	//Print restaurant information.
 	var Print_Str = "3700 Midland Ave. #108";
@@ -189,15 +199,43 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info) {
 	
 	
 	//Print order items
-	//builder.addTextSize(1, 1).addText(FormatStr(print_info[0][7],6));
-	//builder.addTextSize(1, 1).addText(FormatStr(print_info[0][3],10));
-	//builder.addTextSize(1, 1).addText(FormatStr(print_info[0][4],10));
-	//builder.addTextSize(1, 1).addText("CAD$");
-	//builder.addTextSize(1, 1).addText(FormatStr(print_info[0][6],6));
-    //builder.addTextDouble(false, false).addText('\n');
+	for (var i=0;i<print_info.length;i++){
+		builder.addTextSize(1, 1).addText(FormatStr(print_info[i][7],6));
+		builder.addTextSize(1, 1).addText(FormatStr(print_info[i][3],22));
+		builder.addTextSize(1, 1).addText("CAD$");
+		builder.addTextSize(1, 1).addText(FormatStr(parseFloat(print_info[i][6]).toFixed(2),6));
+		builder.addTextDouble(false, false).addText('\n');
+		builder.addTextSize(1, 1).addText(FormatStr("",6));
+		builder.addTextSize(1, 1).addText(FormatStr(print_info[i][4],22));
+		builder.addTextDouble(false, false).addText('\n');
+	};
 	//End.
 
+	Print_Str = "========================================";
+	builder.addTextAlign(builder.ALIGN_LEFT);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = "        Subtotal 小计:       CAD$ " + subtotal;
+	builder.addTextAlign(builder.ALIGN_LEFT);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = "        HST 税:             CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
+	builder.addTextAlign(builder.ALIGN_LEFT);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = "        Total 总:           CAD$ " + total;
+	builder.addTextAlign(builder.ALIGN_LEFT);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
 
+	Print_Str = "        "+memo;
+	builder.addTextAlign(builder.ALIGN_LEFT);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
     // append date and time
     builder.addText(now.toDateString() + ' ' + now.toTimeString().slice(0, 8) + '\n');
     builder.addFeedUnit(16);

@@ -1,5 +1,9 @@
 <header class="product-header">
-
+  <div style="display:none;">
+        <canvas id="canvas" width="512" height="480"></canvas>
+        <?php echo $this->Html->image("logo.png", array('alt' => "POS",'id' => "logo")); ?>
+    </div>
+      
 
     <div class="home-logo">
         <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
@@ -225,7 +229,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
         <hr>
     </div>
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js'));
 echo $this->fetch('script');
 ?>
     <script>
@@ -1093,56 +1097,46 @@ echo $this->fetch('script');
 			var account_String="";
 			var sub_total=0;
 			var Tax=<?php echo $Order_detail['Order']['tax'] ?>;
+			var person_menu_print = Array();//Modified by Yishou Liao @ Oct 27 2016.
 			
+			//Modified by Yishou Liao @ Oct 27 2016.
+			<?php if ($split_method == 0) { ?>
+			for (var i=0;i<order_menu.length;i++){
+				sub_total += parseFloat(order_menu[i][5]);
+				person_menu_print.push(Array("","","",order_menu[i][2],order_menu[i][3],"",order_menu[i][5],"1")); //Modified by Yishou Liao @ Oct 27 2016.
+
+			};
+			<?php }else{ ?>
 			$('input[name="account_no[]"]:checked').each(function () {
 	           radio_click = $(this).val();
         	});
 			
+			//radio_click=1;
 			//Modified by Yishou Liao @ Oct 20 2016.
 			if (person_menu.length == 0){
 				for (var i=0; i<order_menu.length; i++){
-					person_menu.push(Array(radio_click,order_menu[i][0],order_menu[i][1],order_menu[i][2],order_menu[i][3],order_menu[i][4],order_menu[i][5],order_menu[i][6],order_menu[i][7],order_menu[i][8]));
+					person_menu.push(Array(order_menu[i][0],order_menu[i][1],order_menu[i][2],order_menu[i][3],order_menu[i][4],order_menu[i][5],order_menu[i][6],order_menu[i][7],order_menu[i][8],radio_click));
 				};
 			}
 			//End.
 			
-			print_String += "<ul>";
-			
-			
 			for (var i=0;i<person_menu.length;i++){
 				if (person_menu[i][0] == radio_click){
-					
 					sub_total += parseFloat(person_menu[i][5]);
-					print_String += '<li class="clearfix"><div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left avoid-this">';
-					print_String += '<img src="'+person_menu[i][1]+'" width="62" height="42" /></div><div class="pull-left titlebox1">';
-					print_String += '<div class="less-title">'+person_menu[i][2]+'<br/>'+person_menu[i][3]+'</div><div class="less-txt">';
-					print_String += person_menu[i][4]+'</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$ ';
-                    print_String += person_menu[i][5]+person_menu[i][6]+person_menu[i][7]+'</div></div></li>';
+					person_menu_print.push(Array("","","",person_menu[i][2],person_menu[i][3],"",person_menu[i][5],"1")); //Modified by Yishou Liao @ Oct 27 2016.
 				};
 			};
-			print_String += "</ul>";
-			
-			$('#Order_print').html(print_String);
-			
-			account_String += '<table style="width:100%;"><tr><td width="60%" class="sub-txt">Sub Total 小计 </td>';
-			account_String += '<td width="40%" class="text-right sub-txt">$ '+ sub_total.toFixed(2) + '</td></tr>';
-			account_String += '<tr><td class=" sub-txt">Tax 税 ('+Tax+'%)</td>';
-			
+			<?php } ?>
+
 			var tax_amount = (sub_total*Tax/100).toFixed(2);
 			var total=(parseFloat(sub_total)+parseFloat(tax_amount)).toFixed(2);
-			
-            account_String += '<td class="sub-price">$ '+tax_amount+'</td></tr><tr><td class="sub-txt">Total 总</td>';
-			account_String += '<td class="sub-price total_price" alt="'+total+'">$ '+ total +'</td>';
-            account_String += '</tr>';
+			var memo = "";
 			<?php if ($split_method == 0) { ?>
-            account_String += '<tr><td class="sub-txt">Average 人均</td><td class="sub-price total_price">$ ';
-			account_String += '<input type="text" id="aver_total_print" name="aver_total_print" value="';
-			account_String += <?php echo number_format($Order_detail['Order']['total'], 2) ?>;
-			account_String += '" readonly="true" size="5">/人</td></tr>';
+				memo = "Average 人均: CAD$ " + $('#aver_total').val() +"/人";
 			<?php } ?>
-            account_String += '</table >';
 			
-			$('#print_account').html(account_String);
+			printReceipt('<?php echo $Order_detail['Order']['order_no'] ?>',"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>",'192.168.0.188','local_printer',person_menu_print,''+sub_total.toFixed(2),Tax,''+total,memo);
+			
 		}
 		//End.
 		
