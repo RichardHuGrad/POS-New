@@ -496,7 +496,7 @@ class HomesController extends AppController {
             'Order.order_type' => $type
         );
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no'),
+            'fields' => array('Order.order_no','Order.order_type'),
             'conditions' => $conditions,
             'recursive' => false
                 )
@@ -832,7 +832,10 @@ class HomesController extends AppController {
                 )
         );
 
-
+        //Modified by Yishou Liao @ Oct 26 2016.
+        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        //End.
+        
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -841,7 +844,7 @@ class HomesController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail'));
+        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));//Modified by Yishou Liao @ Oct 26 2016.
         $this->render('summarypanel');
     }
 
@@ -937,7 +940,6 @@ class HomesController extends AppController {
 
         $this->Order->save($data, false);
 
-
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
@@ -949,7 +951,11 @@ class HomesController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail'));
+        //Modified by Yishou Liao @ Oct 26 2016.
+        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        //End.
+        
+        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
         $this->render('summarypanel');
     }
 
@@ -1097,8 +1103,13 @@ class HomesController extends AppController {
                 )
         );
 
+        //Modified by Yishou LIao @ Oct 26 2016.
+        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
 
-        $this->set(compact('Order_detail', 'cashier_detail'));
+        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        
+        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
+        //End.
     }
 
     // add discount function

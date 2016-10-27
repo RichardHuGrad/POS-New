@@ -211,4 +211,22 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     ?>" id="pay" alt="<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
     </div>
 </div>
+<input type="hidden" name="Order_Item" id="Order_Item" value="" />
 <?php //}?>
+
+<!-- Modified by Yishou Liao @ Oct 25 2016. -->
+<script type="text/javascript">
+var orderStr = $('#Order_Item').val();
+<?php for ($i=0;$i<count(@$Order_detail_print);$i++) {
+	if ($i == (count(@$Order_detail_print)-1)) {?>;
+	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';
+	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>'
+<?php } else { ?>
+	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';
+	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>'+'#';
+<?php }; ?>
+
+	$('#Order_Item').val(orderStr);
+<?php } ?>
+</script>
+<!-- End. -->

@@ -28,9 +28,7 @@
           }
           ?>
       </ul>
-
 </header>
-
 
   <div class="clearfix cartwrap-wrap">      
        <div class="col-md-9 col-sm-8 col-xs-12 home-link">
@@ -156,12 +154,14 @@
             </div>
         </div>
     </div>
-
+    
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js'));
 echo $this->fetch('script');
 ?>
-<script>
+<script type="text/javascript">
+	var Order_Item_Printer = Array(); //Modified by Oct 25 2016.
+
     (function ($) {
         $(window).on("load", function () {
             // $(".productbox").mCustomScrollbar({
@@ -232,6 +232,12 @@ echo $this->fetch('script');
     })
 
     $(document).on("click", "#submit", function(){
+		//Modified by Yishou Liao @ Oct 26 2016.
+		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.188','local_printer',Order_Item_Printer,'K');
+
+		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'C');
+		//End.
+		
       // update order message here
       if(!$(this).hasClass('disabled')) {
         var order_id = $(this).attr("alt");
@@ -328,6 +334,14 @@ echo $this->fetch('script');
              success:function(html) {
                 $(".summary_box").html(html);
                 $(".products-panel").removeClass('load1 csspinner');
+
+				// Modified by Yishou Liao @ Oct 25 2016.
+				var arrtmp = $('#Order_Item').val().split("#");
+				for (var i = 0; i<arrtmp.length;i++){
+					Order_Item_Printer.push(arrtmp[i].split("*"));
+				};
+				//End.
+				
              },
              beforeSend:function() {
                 $(".products-panel").addClass('load1 csspinner');
