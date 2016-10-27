@@ -558,7 +558,6 @@ class HomesController extends AppController {
                 )
         );
 
-
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no'));
     }
 
@@ -833,7 +832,7 @@ class HomesController extends AppController {
         );
 
         //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
         //End.
 
         // get cashier details        
@@ -883,7 +882,7 @@ class HomesController extends AppController {
                 )
         );
         
-        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
 
         //End.
         
@@ -972,7 +971,7 @@ class HomesController extends AppController {
         );
 
         //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
         //End.
         
         $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
@@ -1124,7 +1123,7 @@ class HomesController extends AppController {
         );
 
         //Modified by Yishou LIao @ Oct 26 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE Orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  Orders.table_no = " . $table . " AND order_items.is_print = 'N' AND Orders.is_completed = 'N' AND Orders.order_type = '". $type . "' ");
+        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
         
         $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
         //End.

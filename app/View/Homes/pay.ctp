@@ -1,5 +1,8 @@
 <header class="product-header">
-  
+  <div style="display:none;">
+        <canvas id="canvas" width="512" height="480"></canvas>
+        <?php echo $this->Html->image("logo.png", array('alt' => "POS",'id' => "logo")); ?>
+    </div>
       
 	  <div class="home-logo">
                     <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>">
@@ -455,13 +458,25 @@
                         <hr>
         </div>
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js'));
 echo $this->fetch('script');
 ?>
 <script>
 $(document).on('click', '.reprint', function () {
     //Print ele4 with custom options
-    $("#print_panel").print({
+	
+	//Modified by Yishou Liao @ Oct 27 2016.
+	var Order_print = Array();
+	<?php
+	if(!empty($Order_detail['OrderItem'])) {
+	  foreach ($Order_detail['OrderItem'] as $key => $value) {
+	?>
+	 Order_print.push('<?php echo implode("*",$value); ?>'.split("*"));
+	<?php };}; ?>
+	printReceipt('<?php echo $Order_detail['Order']['order_no'] ?>',"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>",'192.168.0.188','local_printer',Order_print,'<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?>','<?php echo $Order_detail['Order']['tax'] ?>','<?php echo number_format($Order_detail['Order']['total'], 2) ?>');
+	//End.
+			
+    /*$("#print_panel").print({
         //Use Global styles
         globalStyles: false,
         //Add link with attrbute media=print
@@ -476,7 +491,7 @@ $(document).on('click', '.reprint', function () {
         // prepend : "<h2></h2>",
         //Add this on bottom
         // append : "<br/>Buh Bye!"
-    });
+    });*/
 });
 $(document).on('click', '.reprint_2', function () {
     //Print ele4 with custom options
