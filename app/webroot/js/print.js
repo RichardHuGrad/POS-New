@@ -91,6 +91,12 @@ if (!check_print_flag){
 				builder.addTextSize(2, 1).addText(traditionalized("(外带)"));
 			};
 			builder.addTextDouble(false, false).addText('\n');
+			
+			if (print_info[i][10].length>0) {
+				builder.addTextSize(1, 1).addText(FormatStr("",6));
+				builder.addTextSize(1, 1).addText(traditionalized(print_info[i][10],16));
+				builder.addTextDouble(false, false).addText('\n');
+			};
 		};
 	};
 	//End.

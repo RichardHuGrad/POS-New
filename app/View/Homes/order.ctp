@@ -250,6 +250,16 @@ echo $this->fetch('script');
 
     $(document).on("click", "#submit", function(){
 		//Modified by Yishou Liao @ Oct 26 2016.
+		var ext_arr;
+		for (var i=0;i<Order_Item_Printer.length;i++){
+			if (Order_Item_Printer[i][10]!=""){
+				ext_arr = JSON.parse(Order_Item_Printer[i][10]);
+				Order_Item_Printer[i][10] = "";
+				for (var j=0; j<ext_arr.length;j++){
+					Order_Item_Printer[i][10] += ext_arr[j]['name'] + "  ";
+				};
+			};
+		};
 		
 		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'K');
 
@@ -310,6 +320,16 @@ echo $this->fetch('script');
                 $(".summary_box").html(html);
                 $(".products-panel").removeClass('load1 csspinner');
                 $(".clearfix.cart-wrap").removeClass("csspinner");
+				
+				// Modified by Yishou Liao @ Oct 28 2016.
+				Order_Item_Printer = Array();
+				
+				var arrtmp = $('#Order_Item').val().split("#");
+				for (var i = 0; i<arrtmp.length;i++){
+					Order_Item_Printer.push(arrtmp[i].split("*"));
+				};
+				//End.
+				
              },
              beforeSend:function() {
                 // $(".products-panel").addClass('load1 csspinner');
