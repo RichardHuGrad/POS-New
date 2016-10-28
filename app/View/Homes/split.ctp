@@ -602,9 +602,10 @@ echo $this->fetch('script');
 						
 						//Modified by Yishou Liao @ Oct 19 2016.
 						var radio_click = 0;
-						$('input[name="account_no[]"]:checked').each(function () {
+						/*$('input[name="account_no[]"]:checked').each(function () {
 						   radio_click = $(this).val();
-						});
+						});*/
+                        radio_click = parseInt($('#person-tab').find('.active').attr('name'));
 						//End.
 
 						//Modified by Yishou Liao @ Oct 21 2016.
@@ -1090,9 +1091,10 @@ echo $this->fetch('script');
 
 			};
 			<?php }else{ ?>
-			$('input[name="account_no[]"]:checked').each(function () {
+			/*$('input[name="account_no[]"]:checked').each(function () {
 	           radio_click = $(this).val();
-        	});
+        	});*/
+            radio_click = parseInt($('#person-tab').find('.active').attr('name'));
 			
 			//radio_click=1;
 			//Modified by Yishou Liao @ Oct 20 2016.
