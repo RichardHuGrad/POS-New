@@ -156,7 +156,7 @@
     </div>
     
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js','fanticonvert.js'));
 echo $this->fetch('script');
 ?>
 <script type="text/javascript">
@@ -250,6 +250,7 @@ echo $this->fetch('script');
 
     $(document).on("click", "#submit", function(){
 		//Modified by Yishou Liao @ Oct 26 2016.
+		
 		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'K');
 
 		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'C');

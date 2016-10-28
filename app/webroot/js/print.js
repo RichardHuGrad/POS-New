@@ -4,9 +4,6 @@
 
 
 // Settings
-//var ipaddr1 = '192.168.0.188';
-//var ipaddr2 = '192.168.0.188';
-//var devid = 'local_printer';
 var timeout = '60000';
 var grayscale = false;
 var layout = false;
@@ -46,12 +43,23 @@ if (!check_print_flag){
 	//Modified by Yishou Liao @ Oct 26 2016
 	
 	//Print order number and table number.
+	//Modified by Yishou Liao @ Oct 28 2016.
+	Print_Str = traditionalized("后厨组（分单）");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(2, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	//End.
+	
 	Print_Str = "Order Number:" + order_no;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(2, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "Table:"+table_no;
+	Print_Str = "Table:"
+	if (order_type == "T") {
+		Print_Str += traditionalized("外带");
+	};
+	Print_Str += " "+table_no;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(2, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
@@ -74,21 +82,28 @@ if (!check_print_flag){
 	//Print order items
 	for (var i=0;i<print_info.length;i++){
 		if ( print_info[i][(print_info[i].length-1)] == printer){
-			if (order_type == "T") {
-				builder.addTextSize(2, 1).addText("外");
-			};
-			builder.addTextSize(2, 1).addText(FormatStr(print_info[i][7],6));
-			builder.addTextSize(2, 1).addText(FormatStr(print_info[i][3],20));
+			builder.addTextSize(1, 1).addText(FormatStr(print_info[i][7],6));
+			builder.addTextSize(1, 1).addText(FormatStr(print_info[i][3],20));
 			builder.addTextDouble(false, false).addText('\n');
-			builder.addTextSize(2, 1).addText(FormatStr("",6));
-			builder.addTextSize(2, 1).addText(FormatStr(print_info[i][4],20));
+			builder.addTextSize(1, 1).addText(FormatStr("",6));
+			builder.addTextSize(2, 1).addText(traditionalized(FormatStr(print_info[i][4]),16));
+			if (order_type == "T") {
+				builder.addTextSize(2, 1).addText(traditionalized("(外带)"));
+			};
 			builder.addTextDouble(false, false).addText('\n');
 		};
 	};
 	//End.
 
+	Print_Str = "========================================";
+	builder.addTextAlign(builder.ALIGN_LEFT);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
     // append date and time
-    builder.addText(now.toDateString() + ' ' + now.toTimeString().slice(0, 8) + '\n');
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addText(now.toDateString() + ' ' + now.toTimeString().slice(0, 8) + '\n');
+	
     builder.addFeedUnit(16);
 
     // append barcode
@@ -147,11 +162,11 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
     // draw image (for raster image)
     var canvas = $('#canvas').get(0);
     var context = canvas.getContext('2d');
-    context.drawImage($('#logo').get(0), 0, 0, 200, 70);
+    context.drawImage($('#logo').get(0), 0, 0, 260, 80);
 
     // append raster image
     builder.addTextAlign(builder.ALIGN_CENTER);
-    builder.addImage(context, 0, 0, 200, 70);
+    builder.addImage(context, 0, 0, 260, 80);
     builder.addFeedLine(1);
 	
 	//Modified by Yishou Liao @ Oct 26 2016
@@ -170,6 +185,21 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
 	builder.addTextAlign(builder.ALIGN_CENTER);
 	builder.addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n\n');
+	
+	Print_Str = traditionalized("此单不包含小费");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = traditionalized("感谢光临");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = traditionalized("谢谢");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
 
 	//Print order number and table number.
 	Print_Str = "Order Number:" + order_no;
@@ -177,7 +207,7 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
 	builder.addTextSize(2, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "Table:"+table_no;
+	Print_Str = "Table:"+traditionalized(table_no);
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(2, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
@@ -205,7 +235,7 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
 		builder.addTextSize(1, 1).addText(FormatStr(parseFloat(print_info[i][6]).toFixed(2),6));
 		builder.addTextDouble(false, false).addText('\n');
 		builder.addTextSize(1, 1).addText(FormatStr("",6));
-		builder.addTextSize(1, 1).addText(FormatStr(print_info[i][4],22));
+		builder.addTextSize(1, 1).addText(traditionalized(FormatStr(print_info[i][4]),22));
 		builder.addTextDouble(false, false).addText('\n');
 	};
 	//End.
@@ -295,11 +325,11 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
     // draw image (for raster image)
     var canvas = $('#canvas').get(0);
     var context = canvas.getContext('2d');
-    context.drawImage($('#logo').get(0), 0, 0, 200, 70);
+    context.drawImage($('#logo').get(0), 0, 0, 260, 80);
 
     // append raster image
     builder.addTextAlign(builder.ALIGN_CENTER);
-    builder.addImage(context, 0, 0, 200, 70);
+    builder.addImage(context, 0, 0, 260, 80);
     builder.addFeedLine(1);
 	
 	//Modified by Yishou Liao @ Oct 26 2016
@@ -318,6 +348,21 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
 	builder.addTextAlign(builder.ALIGN_CENTER);
 	builder.addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n\n');
+
+	Print_Str = traditionalized("此单不包含小费");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = traditionalized("感谢光临");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
+	
+	Print_Str = traditionalized("谢谢");
+	builder.addTextAlign(builder.ALIGN_CENTER);
+	builder.addTextSize(1, 1).addText(Print_Str);
+    builder.addTextDouble(false, false).addText('\n');
 
 	//Print order number and table number.
 	Print_Str = "Order Number:";
