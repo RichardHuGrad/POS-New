@@ -69,15 +69,6 @@ if (!check_print_flag){
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "Qty       Name";
-	builder.addTextSize(2, 1).addText(Print_Str);
-	builder.addTextDouble(false, false).addText('\n');
-	
-	Print_Str = "========================================";
-	builder.addTextAlign(builder.ALIGN_LEFT);
-	builder.addTextSize(1, 1).addText(Print_Str);
-    builder.addTextDouble(false, false).addText('\n');
-	
 	
 	//Print order items
 	for (var i=0;i<print_info.length;i++){
@@ -223,21 +214,12 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "Qty       Name                Price";
-	builder.addTextSize(1, 1).addText(Print_Str);
-	builder.addTextDouble(false, false).addText('\n');
-	
-	Print_Str = "========================================";
-	builder.addTextAlign(builder.ALIGN_LEFT);
-	builder.addTextSize(1, 1).addText(Print_Str);
-    builder.addTextDouble(false, false).addText('\n');
-	
 	
 	//Print order items
 	for (var i=0;i<print_info.length;i++){
 		builder.addTextSize(1, 1).addText(FormatStr(print_info[i][7],6));
 		builder.addTextSize(1, 1).addText(FormatStr(print_info[i][3],22));
-		builder.addTextSize(1, 1).addText("CAD$");
+		builder.addTextSize(1, 1).addText("    ");
 		builder.addTextSize(1, 1).addText(FormatStr(parseFloat(print_info[i][6]).toFixed(2),6));
 		builder.addTextDouble(false, false).addText('\n');
 		builder.addTextSize(1, 1).addText(FormatStr("",6));
@@ -251,17 +233,17 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 
-	Print_Str = "    Subtotal 小計 :       CAD$ " + subtotal;
+	Print_Str = "    Subtotal 小計 :           " + subtotal;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "    HST 稅:               CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
+	Print_Str = "    HST 稅:                   " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "    Total 總計:           CAD$ " + total;
+	Print_Str = "    Total 總計:               " + total;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
@@ -272,6 +254,7 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
     builder.addTextDouble(false, false).addText('\n');
 	
     // append date and time
+	builder.addTextAlign(builder.ALIGN_CENTER);
     builder.addText(now.toDateString() + ' ' + now.toTimeString().slice(0, 8) + '\n');
     builder.addFeedUnit(16);
 
@@ -392,15 +375,6 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "Qty       Name                Price";
-	builder.addTextSize(1, 1).addText(Print_Str);
-	builder.addTextDouble(false, false).addText('\n');
-	
-	Print_Str = "========================================";
-	builder.addTextAlign(builder.ALIGN_LEFT);
-	builder.addTextSize(1, 1).addText(Print_Str);
-    builder.addTextDouble(false, false).addText('\n');
-	
 
 	//Print order items
 	for (var key in print_info){
@@ -410,7 +384,7 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
 		for (var j=0;j<print_info[key].length;j++) {
 			builder.addTextSize(1, 1).addText(FormatStr(print_info[key][j][7],6));
 			builder.addTextSize(1, 1).addText(FormatStr(print_info[key][j][3],22));
-			builder.addTextSize(1, 1).addText("CAD$");
+			builder.addTextSize(1, 1).addText("    ");
 			builder.addTextSize(1, 1).addText(FormatStr(parseFloat(print_info[key][j][6]).toFixed(2),6));
 			builder.addTextDouble(false, false).addText('\n');
 			builder.addTextSize(1, 1).addText(FormatStr("",6));
@@ -425,17 +399,17 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "    Subtotal 小計 :       CAD$ " + subtotal;
+	Print_Str = "    Subtotal 小計 :           " + subtotal;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "    HST 稅:               CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
+	Print_Str = "    HST 稅:                  " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "    Total 總計:          CAD$ " + total;
+	Print_Str = "    Total 總計:              " + total;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
@@ -446,6 +420,7 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
     builder.addTextDouble(false, false).addText('\n');
 	
     // append date and time
+	builder.addTextAlign(builder.ALIGN_CENTER);
     builder.addText(now.toDateString() + ' ' + now.toTimeString().slice(0, 8) + '\n');
     builder.addFeedUnit(16);
 
