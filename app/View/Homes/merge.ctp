@@ -1,5 +1,9 @@
 <header class="product-header">
 
+<div style="display:none;">
+        <canvas id="canvas" width="512" height="480"></canvas>
+        <?php echo $this->Html->image("logo.png", array('alt' => "POS",'id' => "logo")); ?>
+    </div>
 
     <div class="home-logo">
         <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
@@ -461,10 +465,8 @@ if ($table_status <> 'P') {
         <div class="order-summary-indent clearfix">
             <div>Order Number 订单号 #<?php
                 //Modified by Yishou Liao @ Oct 16 2016.
-                for ($i = 0;
-                $i < count($Order_detail);
-                $i++) {
-                echo " # " . $Order_detail[$i]['Order']['order_no'];
+                for ($i = 0;$i < count($Order_detail);$i++) {
+                	echo " # " . $Order_detail[$i]['Order']['order_no'];
                 };
                 //End.
                 ?>, Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>
@@ -615,30 +617,100 @@ $selected_extras_id[] = $v['id'];
     
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js'));
 echo $this->fetch('script');
 ?>
 
     <script>
         $(document).on('click', '.reprint', function () {
             //Print ele4 with custom options
-            $("#print_panel").print({
-                //Use Global styles
-                globalStyles: false,
-                //Add link with attrbute media=print
-                mediaPrint: true,
-                //Custom stylesheet
-                stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
-                //Print in a hidden iframe
-                iframe: false,
-                //Don't print this
-                noPrintSelector: ".avoid-this",
-                //Add this at top
-                // prepend : "<h2></h2>",
-                //Add this on bottom
-                // append : "<br/>Buh Bye!"
-            });
+            
+			//Modified by Yishou Liao @ Oct 27 2016.
+			var Order_print = Array();
+			var oder_no = "";
+			
+			<?php
+                for ($i = 0;$i < count($Order_detail);$i++) {
+			?>
+			
+				oder_no += "<?php echo '#' . $Order_detail[$i]['Order']['order_no'] ?>" +" ";
+				
+			<?php
+                };
+                //End.
+            ?>
+			
+			<?php
+				for ($x = 0;$x < count($Order_detail);$x++) {//Modified by Yishou Liao @ Oct 16 2016.
+				
+				if (!empty($Order_detail[$x]['OrderItem'])) {
+			?>
+				Order_print['<?php echo $Order_detail[$x]["Order"]["table_no"] . " BILL" ?>'] = Array();
+			<?php
+					foreach ($Order_detail[$x]['OrderItem'] as $key => $value) {
+					# code...
+					/*$selected_extras_name = [];
+					if ($value['all_extras']) {
+						$extras = json_decode($value['all_extras'], true);
+						$selected_extras = json_decode($value['selected_extras'], true);
+
+						// prepare extras string
+						$selected_extras_id = [];
+						if (!empty($selected_extras)) {
+							foreach ($selected_extras as $k => $v) {
+								$selected_extras_name[] = $v['name'];
+								$selected_extras_id[] = $v['id'];
+							}
+						}
+					}*/
+			?>
+
+			Order_print['<?php echo $Order_detail[$x]["Order"]["table_no"] . " BILL" ?>'].push('<?php echo implode("*",$value); ?>'.split("*"));
+
+			<?php };};}; ?>
+
+			<!-- Modified by Yishou LIao @ Oct 16 2016. -->
+			var merge_str='<?php echo "与";
+					for ($i = 0;$i < count($tablemerge);$i++) {
+						if ($i > 0) {
+						echo "#" . $tablemerge[$i] . " ";
+						};
+					};
+					echo "合单";
+				?>'
+            <!-- End. -->
+
+			var subtotal = '<?php
+                        //Modified by Yishou Liao @ Oct 16 2016.
+                        $subtotal = 0;
+                        for ($i = 0;$i < count($Order_detail);$i++) {
+	                        $subtotal += $Order_detail[$i]['Order']['subtotal'];
+                        };
+                        echo number_format($subtotal, 2);
+                        //End
+                        ?>';
+						
+			var tax_amount = '<?php
+						//Modified by Yishou Liao @ Oct 16 2016.
+						$tax_amount = 0;
+						for ($i = 0;$i < count($Order_detail);$i++) {
+							$tax_amount += $Order_detail[$i]['Order']['tax_amount'];
+						};
+						echo number_format($tax_amount, 2);
+						//End.
+						?>'
+            var total = '<?php
+						//Modified by Yishou Liao @ Oct 16 2016.
+						$total = 0;
+						for ($i = 0;$i < count($Order_detail);$i++) {
+							$total += $Order_detail[$i]['Order']['total'];
+						};
+						echo number_format($total, 2)
+						?>'
+			printMergeReceipt(oder_no,"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>"+merge_str,'192.168.0.188','local_printer',Order_print,subtotal,tax_amount,total,"");
+			
         });
+		
         $(document).on('click', '.reprint_2', function () {
             //Print ele4 with custom options
             $("#print_panel_2").print({
@@ -728,7 +800,8 @@ echo $order_id;
                             },
                             success: function (html) {
                                 $(".alert-warning").hide();
-                                $(".reprint").trigger("click");
+								$(".reprint").trigger("click");
+								
                                 window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
                             },
                             beforeSend: function () {

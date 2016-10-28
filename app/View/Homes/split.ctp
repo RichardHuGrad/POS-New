@@ -389,24 +389,6 @@ echo $this->fetch('script');
         $(document).on('click', '.reprint', function () {
 			print_receipt();//Modified by Yishou @ Oct 19 2016.
 			
-            //Print ele4 with custom options
-            $("#print_panel").print({
-				
-                //Use Global styles
-                globalStyles: false,
-                //Add link with attrbute media=print
-                mediaPrint: true,
-                //Custom stylesheet
-                stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
-                //Print in a hidden iframe
-                iframe: false,
-                //Don't print this
-                noPrintSelector: ".avoid-this",
-                //Add this at top
-                // prepend : "<h2></h2>",
-                //Add this on bottom
-                // append : "<br/>Buh Bye!"
-            });
         });
         $(document).on('click', '.reprint_2', function () {
             //Print ele4 with custom options
@@ -665,6 +647,7 @@ echo $this->fetch('script');
                             },
                             success: function (html) {
                                 $(".alert-warning").hide();
+								$(".reprint").trigger("click");
 
 								//Modified by Yishou Liao @ Oct 20 2016.
 								<?php if ($split_method == 0) { ?>
