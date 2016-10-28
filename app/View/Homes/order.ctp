@@ -250,7 +250,7 @@ echo $this->fetch('script');
 
     $(document).on("click", "#submit", function(){
 		//Modified by Yishou Liao @ Oct 26 2016.
-		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.188','local_printer',Order_Item_Printer,'K');
+		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'K');
 
 		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'C');
 		//End.

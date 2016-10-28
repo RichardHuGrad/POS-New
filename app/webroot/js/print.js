@@ -41,7 +41,7 @@ if (!check_print_flag){
     var now = new Date();
 
     // initialize (ank mode, smoothing)
-    builder.addTextLang('zh-cn').addTextSmooth(true);
+    builder.addTextLang('zh-hant');
 
 	
 	//Modified by Yishou Liao @ Oct 26 2016
@@ -143,7 +143,7 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
     var now = new Date();
 
     // initialize (ank mode, smoothing)
-    builder.addTextLang('zh-cn').addTextSmooth(true);
+    builder.addTextLang('zh-hant');
 
     // draw image (for raster image)
     var canvas = $('#canvas').get(0);
@@ -216,17 +216,17 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "        Subtotal 小计:       CAD$ " + subtotal;
+	Print_Str = "    Subtotal小计:       CAD$ " + subtotal;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "        HST 税:             CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
+	Print_Str = "    HST 税:             CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "        Total 总:           CAD$ " + total;
+	Print_Str = "    Total 总:           CAD$ " + total;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
@@ -291,7 +291,7 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
     var now = new Date();
 
     // initialize (ank mode, smoothing)
-    builder.addTextLang('zh-cn').addTextSmooth(true);
+    builder.addTextLang('zh-hant');
 
     // draw image (for raster image)
     var canvas = $('#canvas').get(0);
@@ -375,17 +375,17 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "        Subtotal 小计:       CAD$ " + subtotal;
+	Print_Str = "    Subtotal 小计 :       CAD$ " + subtotal;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "        HST 税:             CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
+	Print_Str = "    HST 税 :             CAD$ " + (parseFloat(subtotal)*parseFloat(tax)/100).toFixed(2);
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
 	
-	Print_Str = "        Total 总:           CAD$ " + total;
+	Print_Str = "    Total 总 :           CAD$ " + total;
 	builder.addTextAlign(builder.ALIGN_LEFT);
 	builder.addTextSize(1, 1).addText(Print_Str);
     builder.addTextDouble(false, false).addText('\n');
