@@ -41,7 +41,7 @@ if (!check_print_flag){
     var now = new Date();
 
     // initialize (ank mode, smoothing)
-    builder.addTextLang('en').addTextSmooth(true);
+    builder.addTextLang('zh-cn').addTextSmooth(true);
 
 	
 	//Modified by Yishou Liao @ Oct 26 2016
@@ -143,7 +143,7 @@ function printReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,tax,tot
     var now = new Date();
 
     // initialize (ank mode, smoothing)
-    builder.addTextLang('en').addTextSmooth(true);
+    builder.addTextLang('zh-cn').addTextSmooth(true);
 
     // draw image (for raster image)
     var canvas = $('#canvas').get(0);
@@ -291,7 +291,7 @@ function printMergeReceipt(order_no,table_no,ipaddr,devid,print_info,subtotal,ta
     var now = new Date();
 
     // initialize (ank mode, smoothing)
-    builder.addTextLang('en').addTextSmooth(true);
+    builder.addTextLang('zh-cn').addTextSmooth(true);
 
     // draw image (for raster image)
     var canvas = $('#canvas').get(0);
