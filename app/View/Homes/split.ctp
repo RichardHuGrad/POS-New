@@ -665,7 +665,7 @@ echo $this->fetch('script');
                             },
                             success: function (html) {
                                 $(".alert-warning").hide();
-                                $(".reprint").trigger("click");
+
 								//Modified by Yishou Liao @ Oct 20 2016.
 								<?php if ($split_method == 0) { ?>
 								//Modified by Yishou Liao @ Oct 21 2016.

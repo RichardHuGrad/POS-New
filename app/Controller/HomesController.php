@@ -1531,7 +1531,6 @@ class HomesController extends AppController {
         $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
         $data['Order']['tip'] = $this->data['tip_val'];
 
-
         if ($split_method == 0) {//平均分单
             // save order to database        
             $data['Order']['id'] = $order_id;
