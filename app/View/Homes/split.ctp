@@ -35,7 +35,7 @@
                 <!-- Modified by Yishou Liao @ Oct 17 2016. -->
 
                 <div class="table-box dropdown">
-                    <a href="" class="split dropdown-toggle"  data-toggle="dropdown">Average <?php
+                    <a href="" class="split dropdown-toggle"  data-toggle="dropdown">Split <?php
                         if ($split_method == 0) {
                             echo "平均分单";
                         } else {
