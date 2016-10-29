@@ -509,20 +509,20 @@ echo $this->fetch('script');
 			for (var i=0;i<$('#persons').val(); i++){
 				if (i==0) {
 					if (selepersonstr.indexOf(i+1)!=-1){
-                        person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" disabled><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                        person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="disabled"><a data-toggle="tab" class="disabled"># '+(i+1)+'</a></li>';
 					}else{
-                        person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                        person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 						checkflag = true;
 					};
 				}else{
 					if (selepersonstr.indexOf(i+1)!=-1){
-                        person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" disabled><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                        person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="disabled"><a data-toggle="tab" class="disabled"># '+(i+1)+'</a></li>';
 					}else{
 						if (checkflag == false){
-                            person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                            person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 							checkflag = true;
 						}else{
-                            person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');"><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                            person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 						};
 					};
 				}
@@ -605,7 +605,7 @@ echo $this->fetch('script');
 						/*$('input[name="account_no[]"]:checked').each(function () {
 						   radio_click = $(this).val();
 						});*/
-                        radio_click = parseInt($('#person-tab').find('.active').attr('name'));
+                        radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
 						//End.
 
 						//Modified by Yishou Liao @ Oct 21 2016.
@@ -763,9 +763,12 @@ echo $this->fetch('script');
                 }
             })
 
-            $("#rc1").click(function (E) {
-                E.preventDefault();
-            })
+            $(".split .RIGHT-SECTION ul li a").click(function (E) {
+                if ($(this).hasClass('disabled')) {
+                    E.stopPropagation();
+                    E.preventDefault();
+                }
+            });
 
             $("#Clear").click(function () {
 
@@ -931,14 +934,14 @@ echo $this->fetch('script');
 			<?php if ($split_method != 0) { ?> //Modified by Yishou Liao @ Oct 20 2016.
 			for (var i=0;i<$('#persons').val(); i++){
 				if (i==0) {
-                    person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                    person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 				}else{
-                    person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');"><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                    person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 				};
 			}
 			<?php }else{ ?>
 				var i = 0;
-                person_tab_Str += '<li name="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
+                person_tab_Str += '<li name="account_no[]" data-tabIdx="'+(i+1)+'" id="account_no_'+i+'" onclick="tabSelected('+(i+1)+');" class="active"><a data-toggle="tab"># '+(i+1)+'</a></li>';
 			<?php } ?> //End.
 			
 			//End. person_id_Str += '</div>';;
@@ -947,7 +950,7 @@ echo $this->fetch('script');
         }
         //End.
 		function tabSelected(i) {
-            var person_tab_idx = parseInt($('#person-tab').find('.active').attr('name'));
+            var person_tab_idx = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
             if (i !== person_tab_idx) {
                 showAcountingDetails(i);
             }
@@ -959,7 +962,7 @@ echo $this->fetch('script');
 			var Tax = <?php echo $Order_detail['Order']['tax'] ?>;
 
             if (i === 0) {
-                i = parseInt($('#person-tab').find('.active').attr('name'));
+                i = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
                 radio_click = i;
             }
 
@@ -1094,7 +1097,7 @@ echo $this->fetch('script');
 			/*$('input[name="account_no[]"]:checked').each(function () {
 	           radio_click = $(this).val();
         	});*/
-            radio_click = parseInt($('#person-tab').find('.active').attr('name'));
+            radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
 			
 			//radio_click=1;
 			//Modified by Yishou Liao @ Oct 20 2016.
