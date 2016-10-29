@@ -908,23 +908,34 @@ class HomesController extends AppController {
 
         $this->layout = false;
         // $this->autoRender = NULL;
-        // get tax details        
+        // get tax details
         $this->loadModel('OrderItem');
-        $item_detail = $this->OrderItem->find("first", array(
-            'fields' => array('OrderItem.price', 'OrderItem.extras_amount', 'OrderItem.qty', 'OrderItem.id', 'OrderItem.tax_amount'),
-            'conditions' => array('OrderItem.id' => $item_id)
-                )
-        );
-
-        if ($item_detail['OrderItem']['qty'] > 1) {
+        
+        //Modified by Yishou Liao @ Oct 29 2016.
+        $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+        //End.
+        
+        if ($item_detail[0]['order_items']['qty'] > 1) {
             // update item quantity
-            $update_qty['qty'] = $item_detail['OrderItem']['qty'] - 1;
-            $update_qty['id'] = $item_detail['OrderItem']['id'];
+            $update_qty['qty'] = $item_detai[0]['order_items']['qty'] - 1; //Modified by Yishou Liao @ Oct 29 2016.
+            $update_qty['id'] = $item_detail[0]['order_items']['id']; //Modified by Yishou Liao @ Oct 29 2016.
             $this->OrderItem->save($update_qty, false);
         } else {
             // delete item details        
             $this->OrderItem->delete($item_id);
         }
+
+        //Modified by Yishou Liao @ Oct 29 2016.
+        if (count($item_detail)>0 && $item_detail[0]['order_items']['is_print'] == 'Y'){
+            if(isset($_SESSION['DELEITEM_'.$table])) {
+                $_SESSION['DELEITEM_'.$table] .= "#";
+                $_SESSION['DELEITEM_'.$table] .= implode("*",$item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
+            }else{
+                $_SESSION['DELEITEM_'.$table] = implode("*",$item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
+            };
+        };
+        //End.
+        
         // check the item already exists or not
         $this->loadModel('Order');
         $Order_detail = $this->Order->find("first", array(
@@ -940,8 +951,8 @@ class HomesController extends AppController {
         // update order amount        
         $data = array();
         $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['price'] - $item_detail['OrderItem']['extras_amount'];
-        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail['OrderItem']['tax_amount']);
+        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail[0]['order_items']['price'] - $item_detail[0]['order_items']['extras_amount'];
+        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail[0]['order_items']['tax_amount']);
         $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
 
         // calculate discount if exists
@@ -970,11 +981,36 @@ class HomesController extends AppController {
             )
                 )
         );
-
+        
         //Modified by Yishou Liao @ Oct 26 2016.
         $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
         //End.
         
+        //Modified by Yishou Liao @ Oct 29 2016.
+        if (isset($_SESSION['DELEITEM_'.$table])){
+          $deleitem = explode("#", $_SESSION['DELEITEM_'.$table]);
+          for ($i=0;$i<count($deleitem);$i++) {
+              $deleitem[$i] = explode("*", $deleitem[$i]);
+          };
+        };
+
+        for ($i=0;$i<count($deleitem);$i++) {
+            $arr_tmp = array('order_items'=>array(),'categories'=>array('printer'=>$deleitem[$i][17]));
+            array_splice($deleitem[$i],-1);
+             //array_splice($deleitem[$i],-5);
+            $deleitem[$i][13] = 'C';
+            //$x=0;
+            //for ($j=0;$j<count($deleitem[$i]);$j++){
+              //if ($j!=10 && $j!=12)  {
+                  $arr_tmp['order_items']=$deleitem[$i];
+               //   $x++;
+              //};
+            //};
+            
+            array_push($Order_detail_print, $arr_tmp);
+        };
+        //End.
+        xdebug_break();
         $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
         $this->render('summarypanel');
     }
