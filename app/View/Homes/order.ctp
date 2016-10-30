@@ -263,7 +263,7 @@ echo $this->fetch('script');
 
 		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'K');
 
-		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'C');
+		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.188','local_printer1',Order_Item_Printer,'C');
 		//End.
 		<?php if (isset($_SESSION['DELEITEM_'.$table])) {
 			unset ($_SESSION['DELEITEM_'.$table]);
