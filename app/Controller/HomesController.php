@@ -24,7 +24,6 @@ class HomesController extends AppController {
      * @return mixed
      */
     public function index() {
-        //xdebug_break();
         //$this->layout = false;
         if ($this->request->is('post')) {
             $this->loadModel("Cashier");
@@ -1010,7 +1009,7 @@ class HomesController extends AppController {
             array_push($Order_detail_print, $arr_tmp);
         };
         //End.
-        xdebug_break();
+
         $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
         $this->render('summarypanel');
     }
@@ -1385,7 +1384,7 @@ class HomesController extends AppController {
             'conditions' => $conditions
                 )
         );
-        //xdebug_break();
+
         if (empty($Order_detail)) {
             $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
             return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
