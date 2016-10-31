@@ -993,21 +993,18 @@ class HomesController extends AppController {
           };
         };
 
-        for ($i=0;$i<count($deleitem);$i++) {
-            $arr_tmp = array('order_items'=>array(),'categories'=>array('printer'=>$deleitem[$i][17]));
-            array_splice($deleitem[$i],-1);
-             //array_splice($deleitem[$i],-5);
-            $deleitem[$i][13] = 'C';
-            //$x=0;
-            //for ($j=0;$j<count($deleitem[$i]);$j++){
-              //if ($j!=10 && $j!=12)  {
-                  $arr_tmp['order_items']=$deleitem[$i];
-               //   $x++;
-              //};
-            //};
-            
-            array_push($Order_detail_print, $arr_tmp);
-        };
+        if (isset($deleitem)) {//Modified by Yishou Liao @ Oct 31 2016
+            for ($i=0;$i<count($deleitem);$i++) {
+                $arr_tmp = array('order_items'=>array(),'categories'=>array('printer'=>$deleitem[$i][17]));
+                array_splice($deleitem[$i],-1);
+                 //array_splice($deleitem[$i],-5);
+                $deleitem[$i][13] = 'C';
+
+                $arr_tmp['order_items']=$deleitem[$i];
+
+                array_push($Order_detail_print, $arr_tmp);
+            };
+        };//End - Oct 31 2016.
         //End.
 
         $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
