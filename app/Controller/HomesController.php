@@ -1765,7 +1765,12 @@ class HomesController extends AppController {
         //Print order information
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "Order Number: #" . $order_no . " - " . $split_no, 32, 324);
+        //Modified by Yishou Liao @ Nov 09 2016
+        if ($split_no!="") {
+            $split_no = " - " . $split_no;
+        };
+        //End
+        printer_draw_text($handle, "Order Number: #" . $order_no . $split_no, 32, 324);
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 362);
         //End
 
