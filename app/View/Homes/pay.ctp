@@ -481,7 +481,7 @@ $(document).on('click', '.reprint', function () {
 		 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printReceipt', $Order_detail['Order']['order_no'],(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
 		 method:"post",
 		 data:{
-			logo_name:"d:\\temp\logo.bmp",
+			logo_name:"../webroot/img/logo.bmp",
 			Print_Item:Order_print,
 			subtotal:<?php echo $Order_detail['Order']['subtotal'] ?>,
 			tax:<?php echo $Order_detail['Order']['tax'] ?>,

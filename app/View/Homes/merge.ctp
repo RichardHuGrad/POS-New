@@ -699,7 +699,7 @@ echo $this->fetch('script');
 							 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printMergeReceipt',(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
 							 method:"post",
 							 data:{
-								logo_name:"d:\\temp\logo.bmp",
+								logo_name:"../webroot/img/logo.bmp",
 								Print_Item:Order_print,
 								subtotal:subtotal,
 								tax:tax_amount,
