@@ -156,7 +156,7 @@
     </div>
     
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','print.js','fanticonvert.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','barcode.js','epos-print-5.0.0.js','fanticonvert.js'));
 echo $this->fetch('script');
 ?>
 <script type="text/javascript">
