@@ -478,7 +478,7 @@ $(document).on('click', '.reprint', function () {
 
 	//Modified by Yishou Liao @ Nov 08 2016.
 	$.ajax({
-		 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printReceipt', $Order_detail['Order']['order_no'],(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "EPSON TM-T88V")); ?>",
+		 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printReceipt', $Order_detail['Order']['order_no'],(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
 		 method:"post",
 		 data:{
 			logo_name:"d:\\temp\logo.bmp",

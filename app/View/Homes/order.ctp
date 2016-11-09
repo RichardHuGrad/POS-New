@@ -268,7 +268,7 @@ echo $this->fetch('script');
 		 method:"post",
 		 data:{
 			Print_Item:Order_Item_Printer,
-			Printer:{"K":"EPSON TM-T88V","C":"EPSON TM-T88V"},
+			Printer:{"K":"PRINTER1","C":"PRINTER2"},
 			order_no:'<?php echo isset($Order_detail['Order']['order_no'])?$Order_detail['Order']['order_no']:"" ?>',
 			order_type:'<?php echo isset($Order_detail['Order']['order_type'])?$Order_detail['Order']['order_type']:"" ?>',
 			table_no:'<?php echo (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table ?>',
