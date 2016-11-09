@@ -588,6 +588,13 @@ echo $this->fetch('script');
 
 
             $("#submit").click(function () {
+				//Modified by Yishou Liao @ Nov 09 2016
+				if (order_menu.length >0) {
+					alert("请将所有订单分单完毕以后再付账。");
+                    return false;
+				};
+				//End
+				
                 if ($("#selected_card").val()) {
                     if (parseFloat($(".change_price").attr("amount")) >= 0) {
 
