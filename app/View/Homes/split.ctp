@@ -552,7 +552,7 @@ echo $this->fetch('script');
 				
 				$('#splitmenu').html(addpersonStr);
 			//End.
-			
+			person_No = person_menu.length; //Modified by Yishou Liao @ Nov 09 2016
 			
             $(".select_card").click(function () {
                 $(".select_card").removeClass("active")
