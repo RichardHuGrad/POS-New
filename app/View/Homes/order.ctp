@@ -261,29 +261,43 @@ echo $this->fetch('script');
 			};
 		};
 
-		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.189','local_printer1',Order_Item_Printer,'K');
-
-		printTokitchen('<?php echo @$Order_detail['Order']['order_no'] ?>','<?php echo @$Order_detail['Order']['order_type'] ?>','<?php echo $table;  ?>','192.168.0.188','local_printer1',Order_Item_Printer,'C');
-		//End.
-		<?php if (isset($_SESSION['DELEITEM_'.$table])) {
-			unset ($_SESSION['DELEITEM_'.$table]);
-		};
-		?>
-      // update order message here
-      if(!$(this).hasClass('disabled')) {
-        var order_id = $(this).attr("alt");
-        $.ajax({
-             url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
-             method:"post",
-             data:{order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", message:$("#Message").val(), is_kitchen:"Y"},
-             success:function(html) {
-                window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
-             },
-             beforeSend:function() {
-                $(".summary_box").addClass('load1 csspinner');
-             }
+	//Modified by Yishou Liao @ Nov 01 2016.
+	
+	$.ajax({
+		 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printTokitchen')); ?>",
+		 method:"post",
+		 data:{
+			Print_Item:Order_Item_Printer,
+			Printer:{"K":"EPSON TM-T88V","C":"EPSON TM-T88V"},
+			order_no:'<?php echo isset($Order_detail['Order']['order_no'])?$Order_detail['Order']['order_no']:"" ?>',
+			order_type:'<?php echo isset($Order_detail['Order']['order_type'])?$Order_detail['Order']['order_type']:"" ?>',
+			table_no:'<?php echo (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table ?>',
+			table:'<?php echo $table ?>',
+		  },
+		  dataType:"html",
+		  async:false,
+		 success:function(html) {
+			// update order message here
+			  if(!$(this).hasClass('disabled')) {
+				var order_id = $(this).attr("alt");
+				$.ajax({
+					 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'updateordermessage')); ?>",
+					 method:"post",
+					 data:{order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", message:$("#Message").val(), is_kitchen:"Y"},
+					 success:function(html) {
+						window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
+					 },
+					 beforeSend:function() {
+						$(".summary_box").addClass('load1 csspinner');
+					 }
+				})
+			  }
+		 },
+		 error:function(html) {
+			 alert("error");
+		 }
         })
-      }
+	//End.
     });
     $(document).on("click", "#pay", function(){
       // update order message here

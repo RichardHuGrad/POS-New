@@ -495,7 +495,7 @@ class HomesController extends AppController {
             'Order.order_type' => $type
         );
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no','Order.order_type'),
+            'fields' => array('Order.order_no', 'Order.order_type'),
             'conditions' => $conditions,
             'recursive' => false
                 )
@@ -563,42 +563,40 @@ class HomesController extends AppController {
     public function tableHistory() {
         // get cashier details
         $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first",
-            array(
-                'fields'=>array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-                'conditions'=>array('Cashier.id'=>$this->Session->read('Front.id'))
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
-            );
+        );
 
         $table_no = $this->params['named']['table_no'];
 
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
-        $conditions = array('Order.cashier_id'=>$cashier_detail['Admin']['id'],
-                        'Order.table_no'=>$table_no,
-                        'Order.is_completed'=>'Y',
-                        'Order.order_type'=>'D',
-                        'Order.created >=' => date("Ymd")/*, strtotime("-2 weeks"))*/
-                    );
+        $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
+            'Order.table_no' => $table_no,
+            'Order.is_completed' => 'Y',
+            'Order.order_type' => 'D',
+            'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
+        );
 
-        $Order_detail = $this->Order->find("all",
-            array(
-                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount', 'Order.created'),
-                'conditions'=> $conditions
+        $Order_detail = $this->Order->find("all", array(
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
+            'conditions' => $conditions
                 )
-            );
-        if(empty($Order_detail)) {
+        );
+        if (empty($Order_detail)) {
             $this->Session->setFlash('Sorry, there is no table history for today.', 'error');
             return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
         }
 
         $this->paginate = array(
-                'fields'=>array('Order.paid','Order.tip','Order.cash_val','Order.card_val','Order.change','Order.order_no','Order.tax', 'Order.table_status','Order.tax_amount','Order.subtotal','Order.total','Order.message','Order.discount_value','Order.promocode','Order.fix_discount','Order.percent_discount', 'Order.created'),
-                'conditions'=> $conditions,
-                'limit' => 1,
-                'order' => array('Order.created' => 'desc')
-            );
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
+            'conditions' => $conditions,
+            'limit' => 1,
+            'order' => array('Order.created' => 'desc')
+        );
 
         $Order_detail = $this->paginate('Order');
         $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
@@ -606,7 +604,7 @@ class HomesController extends AppController {
         $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'today'));
     }
 
-   public function donepayment() {
+    public function donepayment() {
 
         $this->layout = false;
         $this->autoRender = NULL;
@@ -667,7 +665,7 @@ class HomesController extends AppController {
 
         $this->loadModel('Order');
         $this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
-        
+
         // save all 
         $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
         return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
@@ -730,11 +728,11 @@ class HomesController extends AppController {
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array(
-                        'Order.cashier_id' => $tax_detail['Admin']['id'],
-                        'Order.table_no' => $table,
-                        'Order.is_completed' => 'N',
-                        'Order.order_type' => $type
-                    )
+                'Order.cashier_id' => $tax_detail['Admin']['id'],
+                'Order.table_no' => $table,
+                'Order.is_completed' => 'N',
+                'Order.order_type' => $type
+            )
                 )
         );
 
@@ -832,9 +830,8 @@ class HomesController extends AppController {
         );
 
         //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
+        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
         //End.
-
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -843,7 +840,7 @@ class HomesController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));//Modified by Yishou Liao @ Oct 26 2016.
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print')); //Modified by Yishou Liao @ Oct 26 2016.
         $this->render('summarypanel');
     }
 
@@ -853,12 +850,12 @@ class HomesController extends AppController {
         $order_id = $this->data['order_id'];
         $message = $this->data['message'];
         $is_kitchen = $this->data['is_kitchen'];
-        
+
         //Modified by Yishou Liao @ Oct 27 2016.
         $table = $this->data['table'];
         $type = $this->data['type'];
         //End.
-        
+
         $this->layout = false;
         $this->autoRender = NULL;
 
@@ -870,10 +867,10 @@ class HomesController extends AppController {
         $data['Order']['is_kitchen'] = $is_kitchen;
         $data['Order']['is_print'] = 'Y';
         $this->Order->save($data, false);
-        
+
         if ($is_kitchen == 'Y')
             $this->Session->setFlash('Cooking items successfully sent to kitchen.', 'success');
-        
+
         //Modified by Yishou Liao @ Oct 27 2016.
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -881,11 +878,11 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-        
-        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
+
+        $this->Order->query("UPDATE order_items,orders SET order_items.is_print = 'Y' WHERE orders.id = order_items.order_id and orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
 
         //End.
-        
+
         echo true;
     }
 
@@ -909,11 +906,11 @@ class HomesController extends AppController {
         // $this->autoRender = NULL;
         // get tax details
         $this->loadModel('OrderItem');
-        
+
         //Modified by Yishou Liao @ Oct 29 2016.
         $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
         //End.
-        
+
         if ($item_detail[0]['order_items']['qty'] > 1) {
             // update item quantity
             $update_qty['qty'] = $item_detai[0]['order_items']['qty'] - 1; //Modified by Yishou Liao @ Oct 29 2016.
@@ -925,16 +922,15 @@ class HomesController extends AppController {
         }
 
         //Modified by Yishou Liao @ Oct 29 2016.
-        if (count($item_detail)>0 && $item_detail[0]['order_items']['is_print'] == 'Y'){
-            if(isset($_SESSION['DELEITEM_'.$table])) {
-                $_SESSION['DELEITEM_'.$table] .= "#";
-                $_SESSION['DELEITEM_'.$table] .= implode("*",$item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
-            }else{
-                $_SESSION['DELEITEM_'.$table] = implode("*",$item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
+        if (count($item_detail) > 0 && $item_detail[0]['order_items']['is_print'] == 'Y') {
+            if (isset($_SESSION['DELEITEM_' . $table])) {
+                $_SESSION['DELEITEM_' . $table] .= "#";
+                $_SESSION['DELEITEM_' . $table] .= implode("*", $item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
+            } else {
+                $_SESSION['DELEITEM_' . $table] = implode("*", $item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
             };
         };
         //End.
-        
         // check the item already exists or not
         $this->loadModel('Order');
         $Order_detail = $this->Order->find("first", array(
@@ -980,34 +976,33 @@ class HomesController extends AppController {
             )
                 )
         );
-        
+
         //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
+        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
         //End.
-        
         //Modified by Yishou Liao @ Oct 29 2016.
-        if (isset($_SESSION['DELEITEM_'.$table])){
-          $deleitem = explode("#", $_SESSION['DELEITEM_'.$table]);
-          for ($i=0;$i<count($deleitem);$i++) {
-              $deleitem[$i] = explode("*", $deleitem[$i]);
-          };
+        if (isset($_SESSION['DELEITEM_' . $table])) {
+            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
+            for ($i = 0; $i < count($deleitem); $i++) {
+                $deleitem[$i] = explode("*", $deleitem[$i]);
+            };
         };
 
         if (isset($deleitem)) {//Modified by Yishou Liao @ Oct 31 2016
-            for ($i=0;$i<count($deleitem);$i++) {
-                $arr_tmp = array('order_items'=>array(),'categories'=>array('printer'=>$deleitem[$i][17]));
-                array_splice($deleitem[$i],-1);
-                 //array_splice($deleitem[$i],-5);
+            for ($i = 0; $i < count($deleitem); $i++) {
+                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
+                array_splice($deleitem[$i], -1);
+                //array_splice($deleitem[$i],-5);
                 $deleitem[$i][13] = 'C';
 
-                $arr_tmp['order_items']=$deleitem[$i];
+                $arr_tmp['order_items'] = $deleitem[$i];
 
                 array_push($Order_detail_print, $arr_tmp);
             };
-        };//End - Oct 31 2016.
+        }; //End - Oct 31 2016.
         //End.
 
-        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print'));
         $this->render('summarypanel');
     }
 
@@ -1107,9 +1102,9 @@ class HomesController extends AppController {
         );
 
         //Modified by Yishou LIao @ Oct 28 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
-        
-        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
+        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
+
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print'));
         $this->render('summarypanel');
     }
 
@@ -1160,9 +1155,9 @@ class HomesController extends AppController {
         );
 
         //Modified by Yishou LIao @ Oct 26 2016.
-        $Order_detail_print=$this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '". $type . "' ");
-        
-        $this->set(compact('Order_detail', 'cashier_detail','Order_detail_print'));
+        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
+
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print'));
         //End.
     }
 
@@ -1482,7 +1477,7 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-        
+
         $order_no = @$this->params['url']['order_no'];
 
         // get all params
@@ -1588,7 +1583,7 @@ class HomesController extends AppController {
             $order_detail = explode(",", $this->data['order_detail']);
 
             $this->loadModel('Order');
-            $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide','Order.discount_value'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
+            $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide', 'Order.discount_value'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
 
             $max_id = $this->Order->find("first", array('fields' => array('MAX(Order.ID) as maxid')));
             $new_orderno = $split_detail['Order']['order_no'] . "_" . ((int) $max_id[0]['maxid'] + 1);
@@ -1613,22 +1608,394 @@ class HomesController extends AppController {
             $data['Order']['is_hide'] = $split_detail['Order']['is_hide'];
 
             $this->Order->save($data);
-            $sumsubtotal1=$this->Order->query("SELECT SUM(`subtotal`) as sumsubtotal, SUM(discount_value) as discount_value FROM `orders` WHERE `order_no` LIKE '%" . $split_detail['Order']['order_no'] . "_%'");
+            $sumsubtotal1 = $this->Order->query("SELECT SUM(`subtotal`) as sumsubtotal, SUM(discount_value) as discount_value FROM `orders` WHERE `order_no` LIKE '%" . $split_detail['Order']['order_no'] . "_%'");
 
             $this->loadModel('OrderItem');
             for ($i = 0; $i < count($order_detail); $i++) {
                 $this->OrderItem->id = $order_detail[$i];
-                $this->OrderItem->saveField('order_id', ((int) $max_id[0]['maxid'] + 1),false);
+                $this->OrderItem->saveField('order_id', ((int) $max_id[0]['maxid'] + 1), false);
             };
 
-            $sumsubtotal2=$this->Order->query("SELECT `subtotal` FROM `orders` WHERE `order_no` = '" . $split_detail['Order']['order_no'] . "'");
+            $sumsubtotal2 = $this->Order->query("SELECT `subtotal` FROM `orders` WHERE `order_no` = '" . $split_detail['Order']['order_no'] . "'");
 
-            if (($sumsubtotal1[0][0]['sumsubtotal']+$sumsubtotal1[0][0]['discount_value'])>=$sumsubtotal2[0]['orders']['subtotal']){
-                $this->Order->query("DELETE FROM `orders` WHERE id =  " .$order_id);
+            if (($sumsubtotal1[0][0]['sumsubtotal'] + $sumsubtotal1[0][0]['discount_value']) >= $sumsubtotal2[0]['orders']['subtotal']) {
+                $this->Order->query("DELETE FROM `orders` WHERE id =  " . $order_id);
             };
             echo true;
         };
     }
 
     //End.
+    //Modified by Yishou Liao @ Nov 01 2016.
+    public function printTokitchen() {
+        $Print_Item = $this->data['Print_Item'];
+        $Printer = $this->data['Printer'];
+        $order_no = $this->data['order_no'];
+        $order_type = $this->data['order_type'];
+        $table_no = $this->data['table_no'];
+        $table = $this->data['table'];
+
+        foreach (array_keys($Printer) as $key) {
+            $printer_name = $Printer[$key];
+            $printer_loca = $key;
+
+            $check_print_flag = false;
+            for ($i = 0; $i < count($Print_Item); $i++) {
+                if ($Print_Item[$i][count($Print_Item[$i]) - 1] == $printer_loca) {
+                    $check_print_flag = true;
+                };
+            };
+
+            if ($check_print_flag) {
+
+                date_default_timezone_set("America/Toronto");
+                $date_time = date("l M d Y h:i:s A");
+
+                $handle = printer_open($printer_name);
+                printer_start_doc($handle, "my_Receipt");
+                printer_start_page($handle);
+
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
+
+
+                //Print order information
+                $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
+                printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
+                //End
+
+                $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+                printer_select_pen($handle, $pen);
+                printer_draw_line($handle, 21, 160, 600, 160);
+
+                //Print order items
+                $print_y = 180;
+                for ($i = 0; $i < count($Print_Item); $i++) {
+                    if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
+                        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                        printer_select_font($handle, $font);
+
+                        printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
+                        printer_draw_text($handle, $Print_Item[$i][3], 122, $print_y);
+                        $print_y += 30;
+
+                        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
+                        printer_select_font($handle, $font);
+
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
+
+
+                        if ($order_type == "T") {
+                            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 360, $print_y);
+                        };
+                        if ($Print_Item[$i][13] == "C") {
+                            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 360, $print_y);
+                        };
+
+                        if (strlen($Print_Item[$i][10]) > 0) {
+                            $print_y += 46;
+                            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
+                            printer_select_font($handle, $font);
+                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][10]), 120, $print_y); //特殊口味
+                        };
+                        $print_y += 46;
+                    };
+                };
+                //End.
+                $print_y += 10;
+                $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+                printer_select_pen($handle, $pen);
+                printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+                $print_y += 10;
+                $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, $date_time, 80, $print_y);
+
+                printer_delete_font($font);
+
+                printer_end_page($handle);
+                printer_end_doc($handle);
+                printer_close($handle);
+            };
+        };
+
+        if (isset($_SESSION['DELEITEM_' . $table])) {
+            unset($_SESSION['DELEITEM_' . $table]);
+        };
+
+        echo true;
+        exit;
+    }
+
+    public function printReceipt($order_no, $table_no, $printer_name) {
+        $Print_Item = $this->data['Print_Item'];
+        $logo_name = $this->data['logo_name'];
+        $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
+        $subtotal = isset($this->data['subtotal'])?$this->data['subtotal']:0;
+        $tax = isset($this->data['tax'])?$this->data['tax']:0;
+        $total = isset($this->data['total'])?$this->data['total']:0;
+        $split_no = isset($this->data['split_no'])?"".$this->data['split_no']:"";
+
+        date_default_timezone_set("America/Toronto");
+        $date_time = date("l M d Y h:i:s A");
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "my_Receipt");
+        printer_start_page($handle);
+
+        //Print Logo image
+        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
+        //End.
+        //Print title
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "3700 Midland Ave. #108", 88, 130);
+        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 80, 168);
+        printer_draw_text($handle, "647-352-5333", 156, 206);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, 244);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, 284);
+        //End
+        //Print order information
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "Order Number: #" . $order_no . " - " . $split_no, 32, 324);
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 362);
+        //End
+
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, 400, 600, 400);
+
+
+
+        //Print order items
+        $print_y = 420;
+        for ($i = 0; $i < count($Print_Item); $i++) {
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+
+            printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
+            printer_draw_text($handle, $Print_Item[$i][3], 122, $print_y);
+            printer_draw_text($handle, number_format($Print_Item[$i][6], 2), 360, $print_y);
+            $print_y += 40;
+
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 136, $print_y);
+            $print_y += 40;
+        };
+        //End.
+
+        $print_y += 10;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+        //Print Subtotal
+        $print_y += 10;
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($subtotal, 2)), 360, $print_y);
+        //End.
+        //Print Tax
+        $print_y += 40;
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
+
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%)"), 100, $print_y);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format(($subtotal * $tax / 100), 2)), 360, $print_y);
+        //End.
+        //Print Total
+        $print_y += 40;
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
+
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($total, 2)), 360, $print_y);
+        //End.
+
+        if ($memo != "") {
+            //Print average
+            $print_y += 40;
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Average"), 58, $print_y);
+
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
+
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($memo, 2)), 360, $print_y);
+            //End.
+        };
+
+        $print_y += 40;
+        printer_draw_text($handle, $date_time, 80, $print_y);
+
+        printer_delete_font($font);
+
+        printer_end_page($handle);
+        printer_end_doc($handle);
+        printer_close($handle);
+
+        echo true;
+        exit;
+    }
+
+    //End.
+    //Modified by Yishou Liao @ Nov 02 2016
+    public function printMergeReceipt($table_no, $printer_name) {
+        $Print_Item = $this->data['Print_Item'];
+        $logo_name = $this->data['logo_name'];
+        $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
+        $subtotal = isset($this->data['subtotal'])?$this->data['subtotal']:0;
+        $tax = isset($this->data['tax'])?$this->data['tax']:0;
+        $total = isset($this->data['total'])?$this->data['total']:0;
+        $order_no = $this->data['order_no'];
+        $merge_str = $this->data['merge_str'];
+
+        date_default_timezone_set("America/Toronto");
+        $date_time = date("l M d Y h:i:s A");
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "my_Receipt");
+        printer_start_page($handle);
+
+        //Print Logo image
+        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
+        //End.
+        //Print title
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "3700 Midland Ave. #108", 88, 130);
+        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 80, 168);
+        printer_draw_text($handle, "647-352-5333", 156, 206);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, 244);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, 284);
+        //End
+        //Print order information
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "Order Number: " . $order_no, 32, 324);
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no.$merge_str), 32, 362);
+        //End
+
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, 400, 600, 400);
+
+        //Print order items
+        $print_y = 420;
+        foreach (array_keys($Print_Item) as $key) {
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+
+            printer_draw_text($handle, " # " .  $Print_Item[$key][0][18], 32, $print_y);
+            $print_y += 40;
+
+            for ($i = 0; $i < count($Print_Item[$key]); $i++) {
+                $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+
+                printer_draw_text($handle, $Print_Item[$key][$i][7], 32, $print_y);
+                printer_draw_text($handle, $Print_Item[$key][$i][3], 122, $print_y);
+                printer_draw_text($handle, number_format($Print_Item[$key][$i][6], 2), 360, $print_y);
+                $print_y += 40;
+
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$key][$i][4]), 136, $print_y);
+                $print_y += 40;
+            };
+        };
+        //End.
+
+        $print_y += 10;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+        //Print Subtotal
+        $print_y += 10;
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($subtotal, 2)), 360, $print_y);
+        //End.
+        //Print Tax
+        $print_y += 40;
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
+
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "(13%)"), 100, $print_y);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format(($subtotal * 13 / 100), 2)), 360, $print_y);
+        //End.
+        //Print Total
+        $print_y += 40;
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
+
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
+
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($total, 2)), 360, $print_y);
+        //End.
+
+        $print_y += 40;
+        printer_draw_text($handle, $date_time, 80, $print_y);
+
+        printer_delete_font($font);
+
+        printer_end_page($handle);
+        printer_end_doc($handle);
+        printer_close($handle);
+
+        echo true;
+        exit;
+    }
+
+    //End
 }

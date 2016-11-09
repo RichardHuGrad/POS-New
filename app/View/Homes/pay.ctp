@@ -473,25 +473,25 @@ $(document).on('click', '.reprint', function () {
 	?>
 	 Order_print.push('<?php echo implode("*",$value); ?>'.split("*"));
 	<?php };}; ?>
-	printReceipt('<?php echo $Order_detail['Order']['order_no'] ?>',"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>",'192.168.0.188','local_printer1',Order_print,'<?php echo number_format($Order_detail['Order']['subtotal'], 2) ?>','<?php echo $Order_detail['Order']['tax'] ?>','<?php echo number_format($Order_detail['Order']['total'], 2) ?>',"");
+	
 	//End.
-			
-    /*$("#print_panel").print({
-        //Use Global styles
-        globalStyles: false,
-        //Add link with attrbute media=print
-        mediaPrint: true,
-        //Custom stylesheet
-        stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
-        //Print in a hidden iframe
-        iframe: false,
-        //Don't print this
-        noPrintSelector: ".avoid-this",
-        //Add this at top
-        // prepend : "<h2></h2>",
-        //Add this on bottom
-        // append : "<br/>Buh Bye!"
-    });*/
+
+	//Modified by Yishou Liao @ Nov 08 2016.
+	$.ajax({
+		 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printReceipt', $Order_detail['Order']['order_no'],(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "EPSON TM-T88V")); ?>",
+		 method:"post",
+		 data:{
+			logo_name:"d:\\temp\logo.bmp",
+			Print_Item:Order_print,
+			subtotal:<?php echo $Order_detail['Order']['subtotal'] ?>,
+			tax:<?php echo $Order_detail['Order']['tax'] ?>,
+			total:<?php echo $Order_detail['Order']['total'] ?>,
+		  },
+		 success:function(html) {
+			//window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
+		 }
+        })
+	//End.
 });
 $(document).on('click', '.reprint_2', function () {
     //Print ele4 with custom options

@@ -387,8 +387,7 @@ echo $this->fetch('script');
 		//End.
 		
         $(document).on('click', '.reprint', function () {
-			print_receipt();//Modified by Yishou @ Oct 19 2016.
-			
+			print_receipt();//Modified by Yishou @ Nov 08 2016.
         });
         $(document).on('click', '.reprint_2', function () {
             //Print ele4 with custom options
@@ -1118,12 +1117,27 @@ echo $this->fetch('script');
 
 			var tax_amount = (sub_total*Tax/100).toFixed(2);
 			var total=(parseFloat(sub_total)+parseFloat(tax_amount)).toFixed(2);
-			var memo = "";
-			<?php if ($split_method == 0) { ?>
-				memo = "Average 人均: CAD$ " + $('#aver_total').val() +"/人";
-			<?php } ?>
 			
-			printReceipt('<?php echo $Order_detail['Order']['order_no'] ?>',"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>",'192.168.0.188','local_printer',person_menu_print,''+sub_total.toFixed(2),Tax,''+total,memo);
+			//Modified by Yishou Liao @ Nov 08 2016.
+			$.ajax({
+				 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printReceipt', $Order_detail['Order']['order_no'],(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "EPSON TM-T88V")); ?>",
+				 method:"post",
+				 data:{
+					logo_name:"d:\\temp\logo.bmp",
+					Print_Item:person_menu_print,
+					subtotal:sub_total,
+					tax:Tax,
+					total:total,
+					split_no:radio_click,
+					<?php if ($split_method == 0) { ?>
+					memo:$("#aver_total").val(),
+					<?php } ?>
+				  },
+				 success:function(html) {
+					//window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
+				 }
+				})
+			//End.
 			
 		}
 		//End.

@@ -17,7 +17,6 @@
 
     </div>	  
     <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
-
 </header>
 <div class="merge container-fluid">
     <div class="clearfix cartwrap-wrap">
@@ -626,7 +625,7 @@ echo $this->fetch('script');
             //Print ele4 with custom options
             
 			//Modified by Yishou Liao @ Oct 27 2016.
-			var Order_print = Array();
+			var Order_print = new Array();
 			var oder_no = "";
 			
 			<?php
@@ -639,37 +638,24 @@ echo $this->fetch('script');
                 };
                 //End.
             ?>
-			
+			var y = 0;
 			<?php
 				for ($x = 0;$x < count($Order_detail);$x++) {//Modified by Yishou Liao @ Oct 16 2016.
 				
 				if (!empty($Order_detail[$x]['OrderItem'])) {
 			?>
-				Order_print['<?php echo $Order_detail[$x]["Order"]["table_no"] . " BILL" ?>'] = Array();
+				//Order_print.push({['<?php echo $Order_detail[$x]["Order"]["table_no"] . " BILL" ?>']:Array()});
+				Order_print.push(Array());
 			<?php
 					foreach ($Order_detail[$x]['OrderItem'] as $key => $value) {
-					# code...
-					/*$selected_extras_name = [];
-					if ($value['all_extras']) {
-						$extras = json_decode($value['all_extras'], true);
-						$selected_extras = json_decode($value['selected_extras'], true);
-
-						// prepare extras string
-						$selected_extras_id = [];
-						if (!empty($selected_extras)) {
-							foreach ($selected_extras as $k => $v) {
-								$selected_extras_name[] = $v['name'];
-								$selected_extras_id[] = $v['id'];
-							}
-						}
-					}*/
 			?>
+					Order_print[y].push('<?php echo implode("*",$value) . "*" . $Order_detail[$x]["Order"]["table_no"] . " BILL"; ?>'.split("*"));
 
-			Order_print['<?php echo $Order_detail[$x]["Order"]["table_no"] . " BILL" ?>'].push('<?php echo implode("*",$value); ?>'.split("*"));
+			<?php }; ?>
+				y++;
+			<?php };}; ?>
 
-			<?php };};}; ?>
-
-			<!-- Modified by Yishou LIao @ Oct 16 2016. -->
+			<!-- Modified by Yishou Liao @ Oct 16 2016. -->
 			var merge_str='<?php echo "与";
 					for ($i = 0;$i < count($tablemerge);$i++) {
 						if ($i > 0) {
@@ -698,7 +684,7 @@ echo $this->fetch('script');
 						};
 						echo number_format($tax_amount, 2);
 						//End.
-						?>'
+						?>';
             var total = '<?php
 						//Modified by Yishou Liao @ Oct 16 2016.
 						$total = 0;
@@ -706,8 +692,26 @@ echo $this->fetch('script');
 							$total += $Order_detail[$i]['Order']['total'];
 						};
 						echo number_format($total, 2)
-						?>'
-			printMergeReceipt(oder_no,"<?php echo  (($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>"+merge_str,'192.168.0.188','local_printer',Order_print,subtotal,tax_amount,total,"");
+						?>';
+						
+						//Modified by Yishou Liao @ Nov 08 2016.
+						$.ajax({
+							 url: "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'printMergeReceipt',(($type=='D') ? '[[堂食]]' : (($type=='T') ? '[[外卖]]' : (($type=='W') ? '[[等候]]' : ''))) . ' #' . $table, "EPSON TM-T88V")); ?>",
+							 method:"post",
+							 data:{
+								logo_name:"d:\\temp\logo.bmp",
+								Print_Item:Order_print,
+								subtotal:subtotal,
+								tax:tax_amount,
+								total:total,
+								order_no:oder_no,
+								merge_str:merge_str,
+							  },
+							 success:function(html) {
+								//window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'dashboard')); ?>";
+							 }
+							})
+						//End.
 			
         });
 		
