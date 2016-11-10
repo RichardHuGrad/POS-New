@@ -14,8 +14,6 @@
     </div>
 </div>
 
-<?php
- //if (!empty(@$Order_detail['OrderItem'])) { ?>
 <div class="clearfix marginB15 cashierbox">
     <div class="order-summary-indent clearfix">
 
@@ -42,15 +40,6 @@
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
                         <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
                             <div class="col-md-8 col-sm-8 col-xs-7">
-                                <!--<div class="pull-left">
-                                    <?php 
-                                      /*if ($value['image']) { 
-                                        echo $this->Html->image(TIMB_PATH."timthumb.php?src=".COUSINE_IMAGE_PATH . $value['image']."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
-                                      } else {
-                                        echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive')); 
-                                      } */
-                                      ?>
-                                </div>-->
                                 <div class="pull-left titlebox">
                                     <!-- to show name of item -->
                                     <div class="less-title"><?php echo $value['name_en']."<br/>".$value['name_xh']; ?></div>
@@ -85,7 +74,6 @@
                                 ?>
                                 <div class="show_extras" alt="<?php echo $value['id'] ?>" id="block<?php echo $value['id'] ?>">
                                     <?php
-                                    // pr($selected_extras);
                                         if(!empty($selected_extras)) {
                                             foreach($selected_extras as $selected) {
                                                 ?>
@@ -103,6 +91,10 @@
                                         }
                                      ?>
                                 </div>
+                                <div class="show_extras"><label>Special Instructions:&nbsp;&nbsp;</label><input type="text" name="ext_memo" id="ext_memo" placeholder="e.g. no onions, no mayo" size="30" value="" />&nbsp;&nbsp;&nbsp;<button type="button" id="clearbtn" name="clearbtn" class="clearbtn"  alt="<?php echo $value['id'] ?>">Clear 清除</button></div>
+                                <button type="button" id="extnobtn" class="extbtn"  alt="<?php echo $value['id'] ?>">No</button>
+                                <button type="button" id="extmorebtn" class="extbtn"  alt="<?php echo $value['id'] ?>">More</button>
+                                <button type="button" id="extlessbtn" class="extbtn"  alt="<?php echo $value['id'] ?>">Less</button>
                                 <button type="button" class="savebtn"  alt="<?php echo $value['id'] ?>">Save 保存</button>
                             </ul>
                         <?php }?>
@@ -115,9 +107,6 @@
 </div>
 <?php// }?>
 
-<?php
-//if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
-    ?>
 <div class="bgwhite clearfix">
     <?php if(empty($Order_detail) OR !$Order_detail['Order']['discount_value']) { ?>
         <div class="padding10 adddoscount">
@@ -172,9 +161,6 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             ?>
             <div class="subtotalwrap">
                 <div class="row">
-                    <?php
-                    // show discount code here
-                    ?>
                     <div class="col-xs-8 col-sm-8 col-md-8">Discount 折扣</div>
                     <div class="col-xs-4 col-sm-4 col-md-4 text-right">
                     <strong>
@@ -212,11 +198,10 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     </div>
 </div>
 <input type="hidden" name="Order_Item" id="Order_Item" value="" />
-<?php //}?>
 
 <!-- Modified by Yishou Liao @ Oct 25 2016. -->
 <script type="text/javascript">
-var orderStr = ""; //$('#Order_Item').val();
+var orderStr = "";
 <?php for ($i=0;$i<count(@$Order_detail_print);$i++) {
 	if ($i == (count(@$Order_detail_print)-1)) {?>;
 	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';

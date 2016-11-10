@@ -217,7 +217,14 @@ background:#c30e23;
 }
 .cashierbox .dropdown-menu > li > a:hover/*, .cashierbox .dropdown-menu > li > a:focus*/, .cashierbox .dropdown-menu > li > a.active { background: #c30e23; color: #fff; }
 .cashierbox .menu-arrow { position: absolute; top: 5%; left: -10px; /*background: url(../img/left-arrow.png) left top no-repeat; */width: 10px; height: 21px; }
-.cashierbox .dropdown-menu .savebtn { padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+.cashierbox .dropdown-menu .savebtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+
+/* Modified by Yishou Liao @ Nov 10 2016 */
+.cashierbox .dropdown-menu .clearbtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+
+.cashierbox .dropdown-menu .extbtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+/* End */
+
 .adddoscount { font-size: 20px; font-weight: 600; padding: 15px; line-height: 28px; }
 .adddoscount .fa { font-size: 28px; color: #c30e23; cursor: pointer; }
 .adddoscount .fa.disabled { color: gray; cursor: no-drop; }

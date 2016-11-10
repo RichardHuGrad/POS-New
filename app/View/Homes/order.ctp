@@ -215,7 +215,6 @@ echo $this->fetch('script');
         ;
 
         //Modified by Yishou Liao @ Nov 01 2016.
-
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTokitchen')); ?>",
             method: "post",
@@ -269,6 +268,21 @@ echo $this->fetch('script');
             })
         }
     });
+	
+	//Modified by Yishou Liao @ Nov 10 2016
+	$(document).on("click", ".clearbtn", function () {
+		$("#ext_memo").val("");
+	});
+	$(document).on("click", "#extnobtn", function () {
+		$("#ext_memo").val($("#ext_memo").val()+"No ");
+	});
+	$(document).on("click", "#extmorebtn", function () {
+		$("#ext_memo").val($("#ext_memo").val()+"More ");
+	});
+	$(document).on("click", "#extlessbtn", function () {
+		$("#ext_memo").val($("#ext_memo").val()+"Less ");
+	});
+	//End
 
     $(document).on("click", ".savebtn", function () {
         var id = $(this).attr("alt");
@@ -297,8 +311,7 @@ echo $this->fetch('script');
                 var arrtmp = $('#Order_Item').val().split("#");
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
-                }
-                ;
+                };
                 //End.
 
             },
