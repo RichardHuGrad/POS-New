@@ -84,8 +84,6 @@
                                     $selected_extras_id = [];
                                     if (!empty($selected_extras)) {
                                         foreach ($selected_extras as $k => $v) {
-//							$enameArr = explode(" ", $v['name']);
-//							$selected_extras_name[] = array_pop($enameArr);
                                             $selected_extras_name[] = $v['name'];
                                             $selected_extras_id[] = $v['id'];
                                         }
@@ -95,25 +93,17 @@
                                 <li class="clearfix">
                                     <div class="row">
                                         <div class="col-md-9 col-sm-8 col-xs-8">
-                                            <?php
-                                            /* if ($value['image']) {
-                                              echo $this->Html->image(TIMB_PATH."timthumb.php?src=".COUSINE_IMAGE_PATH . $value['image']."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
-                                              } else {
-                                              echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=42&w=62&&zc=4&Q=100", array('border' => 0, 'alt'=>'Product', 'class'=>'img-responsive'));
-                                              } */
-                                            ?>
-                                        </div>-->
-                                        <div class="pull-left titlebox1">
-                                            <!-- to show name of item -->
-                                            <div class="less-title"><?php echo $value['name_en'] . "<br/>" . $value['name_xh']; ?></div>
+                                            <div class="pull-left titlebox1">
+                                                <!-- to show name of item -->
+                                                <div class="less-title"><?php echo $value['name_en'] . "<br/>" . $value['name_xh']; ?></div>
 
-                                            <!-- to show the extras item name -->
-                                            <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>
+                                                <!-- to show the extras item name -->
+                                                <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">
-                                        $<?php echo ($value['price'] + $value['extras_amount']); ?><?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>
-                                    </div>
+                                        <div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">
+                                            $<?php echo ($value['price'] + $value['extras_amount']); ?><?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>
+                                        </div>
                                     </div>
                                 </li>
     <?php }
@@ -323,6 +313,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
         </div>
     </div>
 </div>
+
 <?php
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js'));
 echo $this->fetch('script');
@@ -355,7 +346,7 @@ if (!empty($Order_detail['OrderItem'])) {
                 total:<?php echo $Order_detail['Order']['total'] ?>,
             },
             success: function (html) {
-                //window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+
             }
         })
         //End.
