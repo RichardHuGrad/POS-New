@@ -167,18 +167,18 @@ echo $this->fetch('script');
 		//End
 
 		//Modified by Yishou Liao @ Nov 11 2016
-		if (person_menu.length == 0) {
+		if (person_menu.length == 0 && person_No == 0) {
 			person_No++;
 		} else {
 			person_menu.sort(function(x, y){return x[0] - y[0]}); //二维数组排序
 			person_No = parseInt(person_menu[person_menu.length-1][0])+1;
-		}
+		};
 		//End
 
 		
 		var addpersonStr = $('#splitmenu').html();
 		
-		//Modified by Yishou Liao @ Nov 10 2016
+		//Modified by Yishou Liao @ Nov 11 2016
 		var person_tab_Str = "";
 		for (var i = 0; i < person_No; i++){
 			if (i == 0) {
@@ -189,9 +189,12 @@ echo $this->fetch('script');
 		};
 		
 		$('#person-tab').html(person_tab_Str);
+
+		if (addpersonStr.indexOf("Customer # " + person_No) == -1) {
+			addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson(" + person_No + ");'>Customer # " + person_No + "</label>";
+		}
 		//End
-	
-		addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson(" + person_No + ");'>Customer # " + person_No + "</label>";
+				
 		$('#splitmenu').html(addpersonStr);
 		current_person = person_No;
 		var sele_person = "account_no_" + (current_person - 1);
