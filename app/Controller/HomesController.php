@@ -656,7 +656,6 @@ class HomesController extends AppController {
     }
 
     public function makeavailable() {
-
         $this->layout = false;
         $this->autoRender = NULL;
 
