@@ -944,7 +944,7 @@ if (!empty($Order_detail['OrderItem'])) {
     function tabSelected(i) {
     var person_tab_idx = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
     if (i !== person_tab_idx) {
-    showAcountingDetails(i);
+	    showAcountingDetails(i);
     }
     }
     //Modified by Yishou Liao @ Oct 19 2016.

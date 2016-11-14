@@ -42,7 +42,7 @@
 
                         <li class="clearfix">
                             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'cookings')) ?>">
-                                <div class="inquery-brn clearfix">
+                                <div class="inquery-brn clearfix" style="display:none"> <!-- Modified by Yishou Liao @ Nov 14 2016 -->
                                     <span class="doc-order"><?php echo $this->Html->image('cooking.png', array('alt' => 'Cooking', 'title' => 'Cooking')); ?></span>
                                     <span class="inquiry-txt">Kitchen Status 烹饪</span>
                                 </div>
@@ -50,7 +50,8 @@
                         </li>
 
                         <li class="clearfix">
-                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'allorders')) ?>">
+                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+                            <!-- <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'allorders')) ?>"> Modified by Yishou Liao @ Nov 14 2016 -->
                                 <div class="inquery-brn clearfix">
                                     <span class="doc-order"><?php echo $this->Html->image('order-list.png', array('alt' => 'Order', 'title' => 'Order')); ?></span>
                                     <span class="order-txt">Order 点餐</span>
