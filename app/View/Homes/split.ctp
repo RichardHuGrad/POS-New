@@ -188,14 +188,14 @@ echo $this->fetch('script');
 		for (var i = 0; i < person_No; i++){
 			if (i == 0) {
 				if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
+					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
 
 				}else{
 					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');" class="active"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
 				};
 			} else{
 				if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
+					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
 				}else{
 					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
 				};
@@ -287,13 +287,13 @@ echo $this->fetch('script');
 			for (var i = 0; i < person_No; i++){
 				if (i == 0) {
 					if (selepersonstr.indexOf(i + 1) != - 1){
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
+						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
 					}else{
 						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="active"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
 					}
 				} else{
 					if (selepersonstr.indexOf(i + 1) != - 1){
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
+						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
 					}else{
 						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
 					};
@@ -368,13 +368,13 @@ echo $this->fetch('script');
 			for (var i = 0; i < person_No; i++){
 				if (i == 0) {
 					if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
+					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
 					}else{
 					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="active"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
 					};
 				} else{
 					if (selepersonstr.indexOf(i + 1) != - 1){
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
+						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
 					}else{
 						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
 					};
@@ -541,14 +541,14 @@ if (!empty($Order_detail['OrderItem'])) {
     for (var i = 0; i < person_No; i++){ //Modified by Yishou Liao @ Nov 14 2016
 		if (i == 0) {
 			if (selepersonstr.indexOf(person_menu[i][0]) != - 1){
-				person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + (parseInt(person_menu[i][0])-1) + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
+				person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + (parseInt(person_menu[i][0])-1) + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
 			} else{
 				person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + (parseInt(person_menu[i][0])-1) + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="active"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
 				checkflag = true;
 			};
 		} else{
 			if (selepersonstr.indexOf(person_menu[i][0]) != - 1){
-				person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + (parseInt(person_menu[i][0])-1) + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
+				person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + (parseInt(person_menu[i][0])-1) + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
 			} else{
 				if (checkflag == false){
 					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + (parseInt(person_menu[i][0])-1) + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="active"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';

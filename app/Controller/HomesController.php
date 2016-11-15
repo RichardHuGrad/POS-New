@@ -696,7 +696,6 @@ class HomesController extends AppController {
     }
 
     public function additems() {
-
         $this->layout = false;
         // $this->autoRender = NULL;
         // get tax details        
@@ -807,9 +806,11 @@ class HomesController extends AppController {
                     $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
                 }
             }
-            $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+            //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+            $data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
         } else {
-            $data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+            //$data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']); // Modified by Yishou Liao @ Nov 15 2016
+            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
         }
 
 
@@ -960,7 +961,8 @@ class HomesController extends AppController {
                 $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
             }
         }
-        $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+        //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+        $data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
 
 
         $this->Order->save($data, false);
@@ -1085,7 +1087,8 @@ class HomesController extends AppController {
                 $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
             }
         }
-        $data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+        //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
+        $data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; // Modified by Yishou Liao @ Nov 15 2016
         $this->Order->save($data, false);
 
 
@@ -1752,9 +1755,9 @@ class HomesController extends AppController {
         //Print title
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "3700 Midland Ave. #108", 88, 130);
-        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 80, 168);
-        printer_draw_text($handle, "647-352-5333", 156, 206);
+        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
+        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
+        printer_draw_text($handle, "416-792-4476", 156, 206);
 
         $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
@@ -1896,9 +1899,9 @@ class HomesController extends AppController {
         //Print title
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "3700 Midland Ave. #108", 88, 130);
-        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 80, 168);
-        printer_draw_text($handle, "647-352-5333", 156, 206);
+        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
+        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
+        printer_draw_text($handle, "416-792-4476", 156, 206);
 
         $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
