@@ -832,6 +832,30 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Oct 26 2016.
         $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
         //End.
+        
+        //Modified by Yishou Liao @ Nov 16 2016.
+        if (isset($_SESSION['DELEITEM_' . $table])) {
+            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
+            for ($i = 0; $i < count($deleitem); $i++) {
+                $deleitem[$i] = explode("*", $deleitem[$i]);
+            };
+        };
+
+        if (isset($deleitem)) {
+            for ($i = 0; $i < count($deleitem); $i++) {
+                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
+                array_splice($deleitem[$i], -1);
+                //array_splice($deleitem[$i],-5);
+                $deleitem[$i][13] = 'C';
+
+                $arr_tmp['order_items'] = $deleitem[$i];
+
+                array_push($Order_detail_print, $arr_tmp);
+            };
+        };
+        //End.
+        
+        
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(

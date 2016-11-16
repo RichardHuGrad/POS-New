@@ -205,7 +205,7 @@ var orderStr = "";
 <?php for ($i=0;$i<count(@$Order_detail_print);$i++) {
 	if ($i == (count(@$Order_detail_print)-1)) {?>;
 	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';
-	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>'
+	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>';
 <?php } else { ?>
 	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';
 	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>'+'#';

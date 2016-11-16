@@ -130,7 +130,13 @@ echo $this->fetch('script');
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $(".products-panel").removeClass('load1 csspinner');
                 // Modified by Yishou Liao @ Oct 27 2016.
-                var arrtmp = $('#Order_Item').val().split("#");
+				Order_Item_Printer = Array();
+				
+				// Modified by Yishou Liao @ Nov 16 2016.
+				if ($('#Order_Item').val() != ""){
+	                var arrtmp = $('#Order_Item').val().split("#");
+				};
+				//End
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
                 }
@@ -156,7 +162,12 @@ echo $this->fetch('script');
                 $(".summary_box").removeClass('load1 csspinner');
 
                 // Modified by Yishou Liao @ Oct 27 2016.
-                var arrtmp = $('#Order_Item').val().split("#");
+				Order_Item_Printer = Array();
+				// Modified by Yishou Liao @ Nov 16 2016.
+				if ($('#Order_Item').val() != ""){
+	                var arrtmp = $('#Order_Item').val().split("#");
+				};
+				//End
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
                 }
@@ -320,8 +331,11 @@ echo $this->fetch('script');
 
                 // Modified by Yishou Liao @ Oct 28 2016.
                 Order_Item_Printer = Array();
-
-                var arrtmp = $('#Order_Item').val().split("#");
+				// Modified by Yishou Liao @ Nov 16 2016.
+				if ($('#Order_Item').val() != ""){
+	                var arrtmp = $('#Order_Item').val().split("#");
+				};
+				//End
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
                 };
@@ -482,7 +496,6 @@ echo $this->fetch('script');
     $(document).on('click', ".dropdown-menu", function (event) {
         event.stopPropagation();
     });
-
 </script>
 
 <style type="text/css">
