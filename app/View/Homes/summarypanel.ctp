@@ -91,7 +91,7 @@
                                         }
                                      ?>
                                 </div>
-                                <div class="show_extras"><label>Special Instructions:&nbsp;&nbsp;</label><input type="text" name="ext_memo" id="ext_memo" placeholder="e.g. no onions, no mayo" size="30" value="" />&nbsp;&nbsp;&nbsp;<button type="button" id="clearbtn" name="clearbtn" class="clearbtn"  alt="<?php echo $value['id'] ?>">Clear 清除</button></div>
+                                <div class="show_extras"><label>Special Instructions:&nbsp;&nbsp;</label><input type="text" name="ext_memo" id="ext_memo<?php echo $value['id']; ?>" placeholder="e.g. no onions, no mayo" size="30" value="" />&nbsp;&nbsp;&nbsp;<button type="button" id="clearbtn" name="clearbtn" class="clearbtn"  alt="<?php echo $value['id'] ?>">Clear 清除</button></div>
                                 <button type="button" id="extnobtn" class="extbtn"  alt="<?php echo $value['id'] ?>">No</button>
                                 <button type="button" id="extmorebtn" class="extbtn"  alt="<?php echo $value['id'] ?>">More</button>
                                 <button type="button" id="extlessbtn" class="extbtn"  alt="<?php echo $value['id'] ?>">Less</button>

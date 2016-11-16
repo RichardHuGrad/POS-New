@@ -130,8 +130,6 @@ echo $this->fetch('script');
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $(".products-panel").removeClass('load1 csspinner');
                 // Modified by Yishou Liao @ Oct 27 2016.
-                Order_Item_Printer = Array();
-
                 var arrtmp = $('#Order_Item').val().split("#");
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
@@ -158,8 +156,6 @@ echo $this->fetch('script');
                 $(".summary_box").removeClass('load1 csspinner');
 
                 // Modified by Yishou Liao @ Oct 27 2016.
-                Order_Item_Printer = Array();
-
                 var arrtmp = $('#Order_Item').val().split("#");
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
@@ -274,16 +270,20 @@ echo $this->fetch('script');
 	
 	//Modified by Yishou Liao @ Nov 10 2016
 	$(document).on("click", ".clearbtn", function () {
-		$("#ext_memo").val("");
+		var item_id = $(this).attr("alt");
+		$("#ext_memo"+item_id).val("");
 	});
 	$(document).on("click", "#extnobtn", function () {
-		$("#ext_memo").val($("#ext_memo").val()+"No ");
+		var item_id = $(this).attr("alt");
+		$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"No ");
 	});
 	$(document).on("click", "#extmorebtn", function () {
-		$("#ext_memo").val($("#ext_memo").val()+"More ");
+		var item_id = $(this).attr("alt");
+		$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"More ");
 	});
 	$(document).on("click", "#extlessbtn", function () {
-		$("#ext_memo").val($("#ext_memo").val()+"Less ");
+		var item_id = $(this).attr("alt");
+		$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"Less ");
 	});
 	//End
 
@@ -304,7 +304,7 @@ echo $this->fetch('script');
 			if (input_value!=""){
 				var_inputext = input_value+","+$("#ext_memo").val();
 			}else{
-				var_inputext = $("#ext_memo").val();
+				var_inputext = $("#ext_memo"+id).val();
 			};
 		}else{
 			var_inputext = input_value;
