@@ -302,7 +302,7 @@ echo $this->fetch('script');
 		var var_inputext;
 		if ($("#ext_memo").val()!=""){
 			if (input_value!=""){
-				var_inputext = input_value+","+$("#ext_memo").val();
+				var_inputext = input_value+","+$("#ext_memo"+id).val();
 			}else{
 				var_inputext = $("#ext_memo"+id).val();
 			};
