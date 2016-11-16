@@ -365,8 +365,11 @@ echo $this->fetch('script');
                 $(".summary_box").html(html);
                 $(".products-panel").removeClass('load1 csspinner');
 
-                // Modified by Yishou Liao @ Oct 25 2016.
-                var arrtmp = $('#Order_Item').val().split("#");
+                // Modified by Yishou Liao @ Nov 16 2016.
+				if ($('#Order_Item').val() != ""){
+	                var arrtmp = $('#Order_Item').val().split("#");
+				}
+				//End
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
                 }

@@ -1736,7 +1736,6 @@ class HomesController extends AppController {
                             $print_str = $Print_Item[$i][10];
                             $len = 0;
                             $print_y+=32;
-                                                        xdebug_break();
                             while (strlen($print_str) != 0) {
                                 $print_str = substr($Print_Item[$i][10], $len, 16);
                                 printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
