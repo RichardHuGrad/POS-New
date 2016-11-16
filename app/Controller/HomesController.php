@@ -1101,7 +1101,7 @@ class HomesController extends AppController {
         $data = array();
         $data['Order']['id'] = $Order_detail['Order']['id'];
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['extras_amount'] + $extras_amount;
-        // $data['Order']['tax_amount'] = ($data['Order']['subtotal']*$Order_detail['Order']['tax']/100);
+        $data['Order']['tax_amount'] = ($data['Order']['subtotal']*$Order_detail['Order']['tax']/100);
         $data['Order']['total'] = ($data['Order']['subtotal'] + $Order_detail['Order']['tax_amount']);
 
         // calculate discount if exists
