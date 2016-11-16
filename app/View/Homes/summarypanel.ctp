@@ -60,10 +60,10 @@
                                 foreach($extras as $ex) {
                                     ?>
                                     <li>
-                                        <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price'] ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
+                                        <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
                                             <?php 
                                                 echo "<span class='pull-left'><!-- ".$ex['name']."<br/ -->".$ex['name_zh']."</span>";
-                                                if($ex['price']){
+                                                if($ex['price']>0){
                                                     echo "<span class='pull-right'>".$ex['price']."</span>";
                                                 }
                                              ?>
@@ -80,7 +80,7 @@
                                                 <div class="extras_inner"  alt="<?php echo $selected['id'] ?>">
                                                     <?php 
                                                         echo "<span>".$selected['name']."</span>";
-                                                        if($selected['price']){
+                                                        if($selected['price']>0){
                                                             echo "<span>".$selected['price']."</span>";
                                                         }
                                                         echo "<a href='javascript:void(0)' class='fa fa-times remove_extra'> </a>";

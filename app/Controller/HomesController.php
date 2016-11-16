@@ -1047,8 +1047,12 @@ class HomesController extends AppController {
 
             foreach ($extras as $value) {
                 # code...
-                $extras_amount += $new_all_extras[$value]['price'];
-                $selected_extras[] = $new_all_extras[$value];
+                if (intval($value, 10) != 0 && $value != "0") {
+                    $extras_amount += $new_all_extras[$value]['price'];
+                    $selected_extras[] = $new_all_extras[$value];
+                } else {
+                    $selected_extras[] = array('id' => "", 'price' => '0', 'name' => $value);
+                }
             }
         }
         // save data to items table        
@@ -1628,8 +1632,8 @@ class HomesController extends AppController {
     }
 
     //End.
-    //Modified by Yishou Liao @ Nov 01 2016.
-    public function printTokitchen() {
+    //Modified by Yishou Liao @ Nov 15 2016.
+    public function printTokitchen($print_zh = false) {
         $Print_Item = $this->data['Print_Item'];
         $Printer = $this->data['Printer'];
         $order_no = $this->data['order_no'];
@@ -1657,9 +1661,15 @@ class HomesController extends AppController {
                 printer_start_doc($handle, "my_Receipt");
                 printer_start_page($handle);
 
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
+                if ($print_zh == true) {
+                    $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+                    printer_select_font($handle, $font);
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
+                } else {
+                    $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    printer_select_font($handle, $font);
+                    printer_draw_text($handle, "Kitchen", 138, 20);
+                };
 
 
                 //Print order information
@@ -1677,33 +1687,65 @@ class HomesController extends AppController {
                 $print_y = 180;
                 for ($i = 0; $i < count($Print_Item); $i++) {
                     if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
-                        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                         if ($print_zh == true) {
+                        $font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+                         }else{
+                             $font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+                         };
                         printer_select_font($handle, $font);
 
                         printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
-                        printer_draw_text($handle, $Print_Item[$i][3], 122, $print_y);
-                        $print_y += 30;
 
-                        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
-                        printer_select_font($handle, $font);
-
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
-
-
-                        if ($order_type == "T") {
-                            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 360, $print_y);
+                        $print_str = $Print_Item[$i][3];
+                        $len = 0;
+                        while (strlen($print_str) != 0) {
+                            $print_str = substr($Print_Item[$i][3], $len, 16);
+                            printer_draw_text($handle, $print_str, 122, $print_y);
+                            $len+=16;
+                            if (strlen($print_str) != 0) {
+                                $print_y+=32;
+                            };
                         };
-                        if ($Print_Item[$i][13] == "C") {
-                            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 360, $print_y);
-                        };
+                        $print_y-=32;
 
-                        if (strlen($Print_Item[$i][10]) > 0) {
-                            $print_y += 46;
-                            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
+                        if ($print_zh == true) {
+                            $print_y += 32;
+                            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
                             printer_select_font($handle, $font);
-                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][10]), 120, $print_y); //特殊口味
+
+                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
+
+
+                            if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
+                                printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 366, $print_y);
+                            };
+                            if ($Print_Item[$i][13] == "C") {
+                                printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
+                            };
+
+                            if (strlen($Print_Item[$i][10]) > 0) {
+                                $print_y += 46;
+                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
+                                printer_select_font($handle, $font);
+                                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][10]), 120, $print_y); //特殊口味
+                            };
+                            $print_y += 46;
+                        } else {
+                            if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
+                                printer_draw_text($handle, "(Takeout)", 366, $print_y);
+                            };
+                            if ($Print_Item[$i][13] == "C") {
+                                printer_draw_text($handle, "(Cancel)", 366, $print_y);
+                            };
+
+                            if (strlen($Print_Item[$i][10]) > 0) {
+                                $print_y += 46;
+                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
+                                printer_select_font($handle, $font);
+                                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][10]), 120, $print_y); //特殊口味
+                            };
+                            $print_y += 46;
                         };
-                        $print_y += 46;
                     };
                 };
                 //End.
@@ -1733,14 +1775,15 @@ class HomesController extends AppController {
         exit;
     }
 
-    public function printReceipt($order_no, $table_no, $printer_name) {
+    //Modified by Yishou Liao @ Nov 15 2016
+    public function printReceipt($order_no, $table_no, $printer_name, $print_zh = false) {
         $Print_Item = $this->data['Print_Item'];
         $logo_name = $this->data['logo_name'];
         $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
-        $subtotal = isset($this->data['subtotal'])?$this->data['subtotal']:0;
-        $tax = isset($this->data['tax'])?$this->data['tax']:0;
-        $total = isset($this->data['total'])?$this->data['total']:0;
-        $split_no = isset($this->data['split_no'])?"".$this->data['split_no']:"";
+        $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0;
+        $tax = isset($this->data['tax']) ? $this->data['tax'] : 0;
+        $total = isset($this->data['total']) ? $this->data['total'] : 0;
+        $split_no = isset($this->data['split_no']) ? "" . $this->data['split_no'] : "";
 
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
@@ -1759,45 +1802,61 @@ class HomesController extends AppController {
         printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
         printer_draw_text($handle, "416-792-4476", 156, 206);
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, 244);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, 284);
+        $print_y = 244;
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
+            $print_y+=40;
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            $print_y+=40;
+        };
         //End
         //Print order information
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         //Modified by Yishou Liao @ Nov 09 2016
-        if ($split_no!="") {
+        if ($split_no != "") {
             $split_no = " - " . $split_no;
         };
         //End
-        printer_draw_text($handle, "Order Number: #" . $order_no . $split_no, 32, 324);
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 362);
+        printer_draw_text($handle, "Order Number: #" . $order_no . $split_no, 32, $print_y);
+        $print_y+=40;
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $print_y);
+        $print_y+=38;
         //End
 
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, 400, 600, 400);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
 
 
 
         //Print order items
-        $print_y = 420;
+        $print_y += 20;
         for ($i = 0; $i < count($Print_Item); $i++) {
             $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
 
             printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
-            printer_draw_text($handle, $Print_Item[$i][3], 122, $print_y);
             printer_draw_text($handle, number_format($Print_Item[$i][6], 2), 360, $print_y);
-            $print_y += 40;
+            $print_str = $Print_Item[$i][3];
+            $len = 0;
+            while (strlen($print_str) != 0) {
+                $print_str = substr($Print_Item[$i][3], $len, 18);
+                printer_draw_text($handle, $print_str, 122, $print_y);
+                $len+=18;
+                if (strlen($print_str) != 0) {
+                    $print_y+=40;
+                };
+            };
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
 
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 136, $print_y);
-            $print_y += 40;
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 136, $print_y);
+                $print_y += 40;
+            };
         };
         //End.
 
@@ -1810,11 +1869,17 @@ class HomesController extends AppController {
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
+        if ($print_zh == true) {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
+        } else {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal :"), 58, $print_y);
+        };
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+        };
 
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
@@ -1824,22 +1889,34 @@ class HomesController extends AppController {
         $print_y += 40;
         printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
+        };
 
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%)"), 100, $print_y);
+        if ($print_zh == true) {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%)"), 100, $print_y);
+        } else {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%) :"), 100, $print_y);
+        };
         printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format(($subtotal * $tax / 100), 2)), 360, $print_y);
         //End.
         //Print Total
         $print_y += 40;
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
+        if ($print_zh == true) {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
+        } else {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total :"), 58, $print_y);
+        };
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
+        };
 
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
@@ -1875,14 +1952,14 @@ class HomesController extends AppController {
     }
 
     //End.
-    //Modified by Yishou Liao @ Nov 02 2016
-    public function printMergeReceipt($table_no, $printer_name) {
+    //Modified by Yishou Liao @ Nov 15 2016
+    public function printMergeReceipt($table_no, $printer_name, $print_zh = false) {
         $Print_Item = $this->data['Print_Item'];
         $logo_name = $this->data['logo_name'];
         $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
-        $subtotal = isset($this->data['subtotal'])?$this->data['subtotal']:0;
-        $tax = isset($this->data['tax'])?$this->data['tax']:0;
-        $total = isset($this->data['total'])?$this->data['total']:0;
+        $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0;
+        $tax = isset($this->data['tax']) ? $this->data['tax'] : 0;
+        $total = isset($this->data['total']) ? $this->data['total'] : 0;
         $order_no = $this->data['order_no'];
         $merge_str = $this->data['merge_str'];
 
@@ -1903,29 +1980,36 @@ class HomesController extends AppController {
         printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
         printer_draw_text($handle, "416-792-4476", 156, 206);
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, 244);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, 284);
+        $print_y = 244;
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
+            $print_y+=40;
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            $print_y+=40;
+        };
         //End
         //Print order information
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "Order Number: " . $order_no, 32, 324);
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no.$merge_str), 32, 362);
+        printer_draw_text($handle, "Order Number: " . $order_no, 32, $print_y);
+        $print_y+=40;
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no . $merge_str), 32, $print_y);
+        $print_y+=38;
         //End
 
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, 400, 600, 400);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
 
         //Print order items
-        $print_y = 420;
+        $print_y += 20;
         foreach (array_keys($Print_Item) as $key) {
             $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
 
-            printer_draw_text($handle, " # " .  $Print_Item[$key][0][18], 32, $print_y);
+            printer_draw_text($handle, " # " . $Print_Item[$key][0][18], 32, $print_y);
             $print_y += 40;
 
             for ($i = 0; $i < count($Print_Item[$key]); $i++) {
@@ -1933,15 +2017,25 @@ class HomesController extends AppController {
                 printer_select_font($handle, $font);
 
                 printer_draw_text($handle, $Print_Item[$key][$i][7], 32, $print_y);
-                printer_draw_text($handle, $Print_Item[$key][$i][3], 122, $print_y);
                 printer_draw_text($handle, number_format($Print_Item[$key][$i][6], 2), 360, $print_y);
-                $print_y += 40;
 
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
+                $print_str = $Print_Item[$key][$i][3];
+                $len = 0;
+                while (strlen($print_str) != 0) {
+                    $print_str = substr($Print_Item[$key][$i][3], $len, 18);
+                    printer_draw_text($handle, $print_str, 122, $print_y);
+                    $len+=18;
+                    if (strlen($print_str) != 0) {
+                        $print_y+=40;
+                    };
+                };
+                if ($print_zh == true) {
+                    $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    printer_select_font($handle, $font);
 
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$key][$i][4]), 136, $print_y);
-                $print_y += 40;
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$key][$i][4]), 136, $print_y);
+                    $print_y += 40;
+                };
             };
         };
         //End.
@@ -1955,11 +2049,17 @@ class HomesController extends AppController {
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
+        if ($print_zh == true) {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
+        } else {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal :"), 58, $print_y);
+        }
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+        };
 
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
@@ -1969,22 +2069,34 @@ class HomesController extends AppController {
         $print_y += 40;
         printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
+        };
 
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "(13%)"), 100, $print_y);
+        if ($print_zh == true) {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(13%)"), 100, $print_y);
+        } else {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(13%) :"), 100, $print_y);
+        };
         printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format(($subtotal * 13 / 100), 2)), 360, $print_y);
         //End.
         //Print Total
         $print_y += 40;
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
+        if ($print_zh == true) {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
+        } else {
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total :"), 58, $print_y);
+        };
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
+        };
 
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);

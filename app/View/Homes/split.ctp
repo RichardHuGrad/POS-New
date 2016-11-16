@@ -28,7 +28,7 @@
     <div class="order-wrap no-padding">
         <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
+            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?></h2>
             <?php
             if ($Order_detail['Order']['table_status'] <> 'P') {
                 ?>
@@ -1097,7 +1097,7 @@ if (!empty($Order_detail['OrderItem'])) {
     var total = (parseFloat(sub_total) + parseFloat(tax_amount)).toFixed(2);
     //Modified by Yishou Liao @ Nov 08 2016.
     $.ajax({
-    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
+    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
             method:"post",
             data:{
             logo_name:"../webroot/img/logo.bmp",

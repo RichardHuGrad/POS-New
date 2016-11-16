@@ -36,7 +36,7 @@
     <div class="order-wrap">
     <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail[0]['Order']['order_no'] ?>, Table 桌 [[堂食]] #<?php echo $table_no; ?>, @ <?php echo $today ?></h2>
+            <h2>Order 订单号 #<?php echo $Order_detail[0]['Order']['order_no'] ?>, Table 桌 [[Dinein]] #<?php echo $table_no; ?>, @ <?php echo $today ?></h2>
 
             <div class="paid-box">
                 <div class="checkbox-btn">

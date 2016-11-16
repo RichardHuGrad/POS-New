@@ -206,13 +206,16 @@ echo $this->fetch('script');
                 ext_arr = JSON.parse(Order_Item_Printer[i][10]);
                 Order_Item_Printer[i][10] = "";
                 for (var j = 0; j < ext_arr.length; j++) {
-                    Order_Item_Printer[i][10] += ext_arr[j]['name'] + "  ";
-                }
-                ;
-            }
-            ;
-        }
-        ;
+					//Modified by Yishou Liao @ Nov 16 2016
+					if (ext_arr[j]['price'] == "-1") {
+						Order_Item_Printer[i][16] = "#T#";
+					}else{
+	                    Order_Item_Printer[i][10] += ext_arr[j]['name'] + "  ";
+					};
+					//End
+                };
+            };
+        };
 
         //Modified by Yishou Liao @ Nov 01 2016.
         $.ajax({
@@ -223,7 +226,7 @@ echo $this->fetch('script');
                 Printer: {"K": "PRINTER1", "C": "PRINTER2"},
                 order_no: '<?php echo isset($Order_detail['Order']['order_no']) ? $Order_detail['Order']['order_no'] : "" ?>',
                 order_type: '<?php echo isset($Order_detail['Order']['order_type']) ? $Order_detail['Order']['order_type'] : "" ?>',
-                table_no: '<?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table ?>',
+                table_no: '<?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table ?>',
                 table: '<?php echo $table ?>',
             },
             dataType: "html",
@@ -296,10 +299,20 @@ echo $this->fetch('script');
         var input_value = array.toString();
         var element = $(this).parent("ul.dropdown-menu");
 
+		var var_inputext;
+		if ($("#ext_memo").val()!=""){
+			if (input_value!=""){
+				var_inputext = input_value+","+$("#ext_memo").val();
+			}else{
+				var_inputext = $("#ext_memo").val();
+			};
+		}else{
+			var_inputext = input_value;
+		};
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_extras')); ?>",
             method: "post",
-            data: {item_id: id, extras: input_value, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            data: {item_id: id, extras: var_inputext, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".products-panel").removeClass('load1 csspinner');

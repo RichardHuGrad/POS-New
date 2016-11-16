@@ -30,7 +30,7 @@
                     echo " # " . $Order_detail[$i]['Order']['order_no'];
                 };
                 //End.
-                ?>, Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>
+                ?>, Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?>
                 <!-- Modified by Yishou LIao @ Oct 14 2016. -->
                 <?php
                 echo "与";
@@ -439,17 +439,17 @@ for ($x = 0; $x < count($Order_detail); $x++) {//Modified by Yishou Liao @ Oct 1
     <?php };
 }; ?>
 
-            <!--  Modified by Yishou Liao @ Oct 16 2016. -->
+            <!--  Modified by Yishou Liao @ Nov 16 2016. -->
                     var   merge_str = '<?php
-echo "与";
+echo " and ";
 for ($i = 0; $i < count($tablemerge); $i++) {
     if ($i > 0) {
         echo "#" . $tablemerge[$i] . " ";
     };
 };
-echo "合单";
+echo "merge";
 ?>'
-< !-- End. -- >
+<!-- End. -- >
 
                     var  subtotal  =  '<?php
 //Modified by Yishou Liao @ Oct 16 2016.
@@ -479,7 +479,7 @@ echo number_format($total, 2)
 ?>';
                     //Modified by Yishou Liao @ Nov 08 2016.
                     $.ajax({
-                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printMergeReceipt', (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
+                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printMergeReceipt', (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
                             method:"post",
                             data:{
                             logo_name:"../webroot/img/logo.bmp",

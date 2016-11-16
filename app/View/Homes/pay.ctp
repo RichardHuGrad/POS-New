@@ -24,7 +24,7 @@
     <div class="order-wrap">
         <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br>Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
+            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br>Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?></h2>
 
             <div class="paid-box">
                 <div class="checkbox-btn">
@@ -39,21 +39,21 @@
                     <ul class="dropdown-menu">
                         <div class="customchangemenu clearfix">
                             <div class="left-arrow"></div>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN 堂食</div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN</div>
                             <?php for ($t = 1; $t <= DINEIN_TABLE; $t++) {
                                 if (!@$orders_no[$t]['D']) {
                                     ?>
                                     <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">D<?php echo $t; ?></a></div>
                                 <?php }
                             } ?>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖 </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT</div>
                             <?php for ($t = 1; $t <= TAKEOUT_TABLE; $t++) {
                                 if (!@$orders_no[$t]['T']) {
                                     ?>
                                     <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">T<?php echo $t; ?></a></div>
                                 <?php }
                             } ?>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING</div>
     <?php for ($t = 1; $t <= WAITING_TABLE; $t++) {
         if (!@$orders_no[$t]['W']) {
             ?>
@@ -336,7 +336,7 @@ if (!empty($Order_detail['OrderItem'])) {
 
         //Modified by Yishou Liao @ Nov 08 2016.
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
             method: "post",
             data: {
                 logo_name: "../webroot/img/logo.bmp",
