@@ -719,7 +719,6 @@ class HomesController extends AppController {
             'conditions' => array('Cousine.id' => $item_id)
                 )
         );
-
         // check the item already exists or not
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
@@ -941,7 +940,7 @@ class HomesController extends AppController {
             $update_qty['id'] = $item_detail[0]['order_items']['id']; //Modified by Yishou Liao @ Oct 29 2016.
             $this->OrderItem->save($update_qty, false);
         } else {
-            // delete item details        
+            // delete item details
             $this->OrderItem->delete($item_id);
         }
 
@@ -966,12 +965,11 @@ class HomesController extends AppController {
             )
                 )
         );
-
         // update order amount        
         $data = array();
         $data['Order']['id'] = $order_id;
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail[0]['order_items']['price'] - $item_detail[0]['order_items']['extras_amount'];
-        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail[0]['order_items']['tax_amount']);
+        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail[0]['order_items']['tax_amount'] - ($item_detail[0]['order_items']['extras_amount']*$Order_detail['Order']['tax']/100)); //Modified by Yishou Liao @ Nov 17 2016
         $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
 
         // calculate discount if exists
