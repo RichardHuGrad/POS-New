@@ -222,7 +222,7 @@
 	                        	</ul>
                                 </div>
 	                            <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-	                                <div class="number-txt for-dine">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+	                                <div class="number-txt for-dine">Dine<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                    
                                     <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 	                                	<?php
@@ -259,7 +259,7 @@
                             <div class="dropdown-menu dropdown-overlay">
                             <ul class="takeout-tables">
                                 <!--<div class="arrow"></div>-->
-                                <li class="dropdown-title">外卖<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                <li class="dropdown-title">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                 <li <?php if (@$takeway_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                     if (@$takeway_tables_status[$i] <> 'P')
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'T'));
@@ -321,7 +321,7 @@
                                     </div>
 	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
 		                                <!-- <div class="takeout-txt">Takeout</div> -->
-                                            <div class="number-txt for-dine">外卖<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                                            <div class="number-txt for-dine">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                             <?php 
                                             if(@$takeway_tables_status[$i]) {
                                             ?>
@@ -361,7 +361,7 @@
                             <div class="dropdown-menu dropdown-overlay">
                             <ul class="waiting-tables">
                                 <!--<div class="arrow"></div>-->
-                                <li class="dropdown-title">等候<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                <li class="dropdown-title">Waiting<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                 <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                     if (@$waiting_tables_status[$i] <> 'P')
                                         echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'W'));
@@ -422,7 +422,7 @@
 	                        	</ul>
                                 </div>
 	                            <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-	                                <div class="number-txt for-dine">等候<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+	                                <div class="number-txt for-dine">Waiting<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
 	                                <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 	                                	<?php
 	                                	if(!@$waiting_tables_status[$i]) 
