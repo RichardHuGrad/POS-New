@@ -410,6 +410,7 @@ echo $this->fetch('script');
 			if (person_menu.length == 0) {
 				person_No = person_menu.length;
 				$("#person_details").css("display","none");
+				current_person = 0;
 				
 				var person_tab_Str = "";
 				for (var i = 0; i < person_No; i++){
