@@ -735,11 +735,13 @@ echo $order_id;
                     method: "post",
                     dataType: "json",
                     data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php
+$order_id = "";
 for ($i = 0; $i < count($Order_detail); $i++) {
-    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $order_id = $Order_detail[$i]['Order']['id'];
-    };
+    //if ($Order_detail[$i]['Order']['table_no'] == $table) { //Modified by Yishou Liao @ Nov 18 2016
+        $order_id .= $Order_detail[$i]['Order']['id'].',';
+    //};	//Modified by Yishou Liao @ Nov 18 2016
 };
+$order_id = substr($order_id,0,strlen($order_id)-1);
 echo $order_id;
 ?>"},
                     success: function (html) {
@@ -773,10 +775,11 @@ echo $order_id;
                     //Modified by Yishou @ Oct 16 2016.
                     $(document).on('click', ".remove_discount", function () {
             var order_id = "<?php
+$order_id = "";
 for ($i = 0; $i < count($Order_detail); $i++) {
-    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $order_id = $Order_detail[$i]['Order']['id'];
-    };
+    //if ($Order_detail[$i]['Order']['table_no'] == $table) { //Modified by Yishou Liao @ Nov 18 2016
+        $order_id .= $Order_detail[$i]['Order']['id'] . ',';
+    //}; //Modified by Yishou Liao @ Nov 18 2016
 };
 echo $order_id;
 ?>";
