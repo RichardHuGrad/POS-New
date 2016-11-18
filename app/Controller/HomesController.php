@@ -831,7 +831,6 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Oct 26 2016.
         $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
         //End.
-        
         //Modified by Yishou Liao @ Nov 16 2016.
         if (isset($_SESSION['DELEITEM_' . $table])) {
             $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
@@ -853,8 +852,6 @@ class HomesController extends AppController {
             };
         };
         //End.
-        
-        
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -969,7 +966,7 @@ class HomesController extends AppController {
         $data = array();
         $data['Order']['id'] = $order_id;
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail[0]['order_items']['price'] - $item_detail[0]['order_items']['extras_amount'];
-        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail[0]['order_items']['tax_amount'] - ($item_detail[0]['order_items']['extras_amount']*$Order_detail['Order']['tax']/100)); //Modified by Yishou Liao @ Nov 17 2016
+        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail[0]['order_items']['tax_amount'] - ($item_detail[0]['order_items']['extras_amount'] * $Order_detail['Order']['tax'] / 100)); //Modified by Yishou Liao @ Nov 17 2016
         $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
 
         // calculate discount if exists
@@ -1099,7 +1096,7 @@ class HomesController extends AppController {
         $data = array();
         $data['Order']['id'] = $Order_detail['Order']['id'];
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['extras_amount'] + $extras_amount;
-        $data['Order']['tax_amount'] = ($data['Order']['subtotal']*$Order_detail['Order']['tax']/100);
+        $data['Order']['tax_amount'] = ($data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100);
         $data['Order']['total'] = ($data['Order']['subtotal'] + $Order_detail['Order']['tax_amount']);
 
         // calculate discount if exists
@@ -1191,7 +1188,6 @@ class HomesController extends AppController {
 
     // add discount function
     public function add_discount() {
-
         $this->layout = false;
         $this->autoRender = NULL;
 
@@ -1228,7 +1224,12 @@ class HomesController extends AppController {
                 $data['Order']['fix_discount'] = $fix_discount;
                 $data['Order']['percent_discount'] = 0;
                 $data['Order']['promocode'] = "";
-                $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                //Modified by Yishou Liao @ Nov 18 2016
+                //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
+                $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
+                $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+                //End
 
                 $this->Order->save($data, false);
                 $response = array(
@@ -1244,11 +1245,16 @@ class HomesController extends AppController {
                 );
             } else {
 
-                $data['Order']['discount_value'] = $Order_detail['Order']['total'] * $percent_discount / 100;
+                $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'] * $percent_discount / 100;
                 $data['Order']['percent_discount'] = $percent_discount;
                 $data['Order']['fix_discount'] = 0;
                 $data['Order']['promocode'] = "";
-                $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                //Modified by Yishou Liao @ Nov 18 2016
+                //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
+                $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
+                $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+                //End
 
                 $this->Order->save($data, false);
                 $response = array(
@@ -1283,22 +1289,35 @@ class HomesController extends AppController {
                     // get promocode discount and validate here
                     if ($promo_detail['Promocode']['discount_type'] == 1) {
                         // calculate percentage here
-                        $data['Order']['discount_value'] = $Order_detail['Order']['total'] * $promo_detail['Promocode']['discount_value'] / 100;
+                        $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'] * $promo_detail['Promocode']['discount_value'] / 100;
                         $data['Order']['percent_discount'] = $promo_detail['Promocode']['discount_value'];
                         $data['Order']['fix_discount'] = 0;
-                        $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                        //Modified by Yishou Liao @ Nov 18 2016
+                        //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                        $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
+                        $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
+                        $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+                        //End
                     } else {
                         // calculate fix discount here
                         $discount_val = $promo_detail['Promocode']['discount_value'];
-                        if ($Order_detail['Order']['total'] < $discount_val) {
-                            $data['Order']['discount_value'] = $Order_detail['Order']['total'];
-                            $data['Order']['fix_discount'] = $Order_detail['Order']['total'];
+                        //if ($Order_detail['Order']['total'] < $discount_val) {
+                        if ($Order_detail['Order']['subtotal'] < $discount_val) {//Modified by Yishou Liao @ Nov 18 2016
+                            //$data['Order']['discount_value'] = $Order_detail['Order']['total'];
+                            //$data['Order']['fix_discount'] = $Order_detail['Order']['total'];
+                            $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'];
+                            $data['Order']['fix_discount'] = $Order_detail['Order']['subtotal'];
                         } else {
                             $data['Order']['discount_value'] = $discount_val;
                             $data['Order']['fix_discount'] = $discount_val;
                         }
                         $data['Order']['percent_discount'] = 0;
-                        $data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                        //Modified by Yishou Liao @ Nov 18 2016
+                        //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                        $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
+                        $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
+                        $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+                        //End
                     }
                     $data['Order']['promocode'] = $promocode;
 
@@ -1330,7 +1349,7 @@ class HomesController extends AppController {
 
         $this->loadModel('Order');
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.total', 'Order.discount_value'),
+            'fields' => array('Order.total', 'Order.subtotal', 'Order.tax', 'Order.discount_value'),
             'conditions' => array(
                 'Order.id' => $order_id,
             ),
@@ -1348,7 +1367,12 @@ class HomesController extends AppController {
         $data['Order']['promocode'] = "";
         $data['Order']['fix_discount'] = 0;
         $data['Order']['percent_discount'] = 0;
-        $data['Order']['total'] = $Order_detail['Order']['total'] + $Order_detail['Order']['discount_value'];
+        //Modified by Yishou Liao @ Nov 18 2016
+        //$data['Order']['total'] = $Order_detail['Order']['total'] + $Order_detail['Order']['discount_value'];
+        $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] + $Order_detail['Order']['discount_value'];
+        $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
+        $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+        //End
         $this->Order->save($data, false);
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
