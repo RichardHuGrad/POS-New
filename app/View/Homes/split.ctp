@@ -743,6 +743,8 @@ if (!empty($Order_detail['OrderItem'])) {
 				deleteCookie("fix_discount_"+<?php echo $Order_detail['Order']['order_no'] ?>);
 				deleteCookie("discount_percent_"+<?php echo $Order_detail['Order']['order_no'] ?>);
 				deleteCookie("promocode_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				deleteCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+				deleteCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>);
 				//End
                 window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
                 } else{//Modified by Yishou Liao @ Oct 21 2016.
@@ -897,56 +899,59 @@ if (!empty($Order_detail['OrderItem'])) {
 
             $(document).on("keyup", ".discount_section", function () {
     if ($(this).val()) {
-    $(".discount_section").attr("disabled", "disabled");
-    $(this).removeAttr("disabled");
-    } else {
-    $(".discount_section").removeAttr("disabled");
-    }
-    })
-
-            $(document).on("click", "#apply-discount", function () {
-
-    var fix_discount = $("#fix_discount").val();
-    var discount_percent = $("#discount_percent").val();
-    var promocode = $("#promocode").val();
+		$(".discount_section").attr("disabled", "disabled");
+		$(this).removeAttr("disabled");
+		} else {
+		$(".discount_section").removeAttr("disabled");
+		}
+		})
 	
-	//Modified by Yishou Liao @ Nov 19 2016
-	setCookie("fix_discount_"+<?php echo $Order_detail['Order']['order_no'] ?>, fix_discount, 1);
-	setCookie("discount_percent_"+<?php echo $Order_detail['Order']['order_no'] ?>, discount_percent, 1);
-	setCookie("promocode_"+<?php echo $Order_detail['Order']['order_no'] ?>, promocode, 1);
-	//End
-    if (fix_discount || discount_percent || promocode) {
-    // apply promocode here
-    $.ajax({
-    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
-            method: "post",
-            dataType: "json",
-            data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php echo $Order_detail['Order']['id'] ?>"},
-            success: function (html) {
-            if (html.error) {
-            alert(html.message);
-            $(".discount_section").val("").removeAttr("disabled");
-            $(".RIGHT-SECTION").removeClass('load1 csspinner');
-            return false;
-            } else {
-            //Modified by Yishou Liao @ Oct 21 2016.
-            setCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(order_menu), 1);
-            setCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(person_menu), 1);
-            setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, $("#persons").val(), 1);
-            //End.
-            window.location.reload();
-            }
-            },
-            beforeSend: function () {
-            $(".RIGHT-SECTION").addClass('load1 csspinner');
-            }
-    })
-
-
-    } else {
-    alert("Please add discount first.");
-    return false;
-    }
+			$(document).on("click", "#apply-discount", function () {
+	
+		var fix_discount = $("#fix_discount").val();
+		var discount_percent = $("#discount_percent").val();
+		var promocode = $("#promocode").val();
+		
+		//Modified by Yishou Liao @ Nov 19 2016
+		setCookie("fix_discount_"+<?php echo $Order_detail['Order']['order_no'] ?>, fix_discount, 1);
+		setCookie("discount_percent_"+<?php echo $Order_detail['Order']['order_no'] ?>, discount_percent, 1);
+		setCookie("promocode_"+<?php echo $Order_detail['Order']['order_no'] ?>, promocode, 1);
+		//End
+		if (fix_discount || discount_percent || promocode) {
+			// apply promocode here
+			$.ajax({
+			url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
+					method: "post",
+					dataType: "json",
+					data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php echo $Order_detail['Order']['id'] ?>"},
+					success: function (html) {
+						if (html.error) {
+							alert(html.message);
+							$(".discount_section").val("").removeAttr("disabled");
+							$(".RIGHT-SECTION").removeClass('load1 csspinner');
+							return false;
+						} else {
+							//Modified by Yishou Liao @ Oct 21 2016.
+							setCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(order_menu), 1);
+							setCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(person_menu), 1);
+							setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, $("#persons").val(), 1);
+							//End.
+							
+							//Modified by Yishou Liao @ Nov 19 2016
+							setCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>, html.discount_type, 1);
+							setCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>, html.discount_value, 1);
+							//End
+							window.location.reload();
+						}
+					},
+					beforeSend: function () {
+						$(".RIGHT-SECTION").addClass('load1 csspinner');
+					}
+			})
+		} else {
+			alert("Please add discount first.");
+			return false;
+		}
     })
 
             $(document).on('click', ".remove_discount", function () {
@@ -995,6 +1000,8 @@ if (!empty($Order_detail['OrderItem'])) {
     function showAcountingDetails(i = 0){
     var radio_click = i;
     var subTotal = 0;
+	var keepsubTotal = 0;
+	
     var Tax = <?php echo $Order_detail['Order']['tax'] ?>;
     if (i === 0) {
     i = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
@@ -1011,17 +1018,29 @@ if (!empty($Order_detail['OrderItem'])) {
     <?php } else{ ?>
 		for (var i = 0; i < person_menu.length; i++){
 			if (person_menu[i][0] == radio_click){
-				keepsubTotal =parseFloat(person_menu[i][5]);
+				keepsubTotal +=parseFloat(person_menu[i][5]);
 				subTotal += parseFloat(person_menu[i][5]);
 			};
 		};
 		<?php if ($Order_detail['Order']['discount_value']) { ?>
-			if (checkCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			//Modified by Yishou Liao @ Nov 19 2016
+			if (getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
 				subTotal -= parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>));
 			};
-			if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			if (getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
 				subTotal -= subTotal*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100;
 			};
+			if (getCookie("promocode_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
+				//Modified by Yishou Liao @ Nov 19 2016
+				if (getCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>)==1) {
+					subTotal -= subTotal*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100;
+				} else {
+					subTotal -= parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>));
+				};
+				//End
+				subTotal -= subTotal*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100;
+			};
+			//End
 		<?php }; ?>
     <?php }; ?>
     split_accounting_str = '<ul>';
@@ -1056,6 +1075,15 @@ if (!empty($Order_detail['OrderItem'])) {
 		};
 		if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
 			discount = (parseFloat(keepsubTotal)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+		};
+		if (getCookie("promocode_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
+			//Modified by Yishou Liao @ Nov 19 2016
+			if (getCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>)==1) {
+				discount = (parseFloat(keepsubTotal)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+			} else {
+				discount = parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
+			};
+			//End
 		};
 		//End
         split_accounting_str += discount;

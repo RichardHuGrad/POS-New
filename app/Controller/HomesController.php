@@ -1190,7 +1190,11 @@ class HomesController extends AppController {
     public function add_discount() {
         $this->layout = false;
         $this->autoRender = NULL;
-        
+       //Modified by Yishou Liao @ Nov 19 2016
+       $discount_type = -1;
+       $discount_value = -1;
+       //End
+
         // get all params
         $order_id = $this->data['order_id'];
         $mainorder_id = isset($this->data['mainorder_id'])?$this->data['mainorder_id']:$order_id;
@@ -1245,7 +1249,9 @@ class HomesController extends AppController {
                     $this->Order->save($data, false);
                     $response = array(
                         'error' => false,
-                        'message' => 'Discount successfully applied'
+                        'message' => 'Discount successfully applied',
+                        'discount_type'=>$discount_type,
+                        'discount_value'=>$discount_value
                     );
                 }
             } else if ($percent_discount) {
@@ -1270,7 +1276,9 @@ class HomesController extends AppController {
                     $this->Order->save($data, false);
                     $response = array(
                         'error' => false,
-                        'message' => 'Discount successfully applied'
+                        'message' => 'Discount successfully applied',
+                        'discount_type'=>$discount_type,
+                        'discount_value'=>$discount_value
                     );
                 }
             } else if ($promocode) {
@@ -1297,6 +1305,11 @@ class HomesController extends AppController {
                             'message' => 'Sorry, promo code is expired'
                         );
                     } else {
+                        //Modified by Yishou Liao @ Nov 19 2016
+                        $discount_type = $promo_detail['Promocode']['discount_type'];
+                        $discount_value = $promo_detail['Promocode']['discount_value'];
+                        //End
+                        
                         // get promocode discount and validate here
                         if ($promo_detail['Promocode']['discount_type'] == 1) {
                             // calculate percentage here
@@ -1338,7 +1351,9 @@ class HomesController extends AppController {
                         $this->Order->save($data, false);
                         $response = array(
                             'error' => false,
-                            'message' => 'Discount successfully applied'
+                            'message' => 'Discount successfully applied',
+                            'discount_type'=>$discount_type,
+                            'discount_value'=>$discount_value
                         );
                     }
                 }
@@ -1656,7 +1671,6 @@ class HomesController extends AppController {
         } else {//按每个人点的菜分单
             $account_no = $this->data['account_no'];
             $order_detail = explode(",", $this->data['order_detail']);
-            xdebug_break();
             $this->loadModel('Order');
             $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide', 'Order.discount_value'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
 
