@@ -1190,7 +1190,7 @@ class HomesController extends AppController {
     public function add_discount() {
         $this->layout = false;
         $this->autoRender = NULL;
-
+        
         // get all params
         $order_id = $this->data['order_id'];
         $mainorder_id = isset($this->data['mainorder_id'])?$this->data['mainorder_id']:$order_id;

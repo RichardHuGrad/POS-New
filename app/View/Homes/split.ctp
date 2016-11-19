@@ -39,7 +39,7 @@
                     <?php
                     if ($split_method == 0) {
                         ?>
-                        <a href="" class="split dropdown-toggle"  data-toggle="dropdown">Split 平均分单 <input type="text" class="text-center" readonly="readonly" id="persons" name="persons" value="1" size="2"> 人</a>
+                        <a href="" class="split dropdown-toggle"  data-toggle="dropdown">Split 平均分单 <input type="text" class="text-center" readonly="readonly" id="av_persons" name="av_persons" value="1" size="2"> 人</a>
                         <?php
                     } else {
                         ?>
@@ -964,7 +964,7 @@ if (!empty($Order_detail['OrderItem'])) {
     });
     //Modified by Yishou Liao @ Oct 17 2016.
     function persons(persons) {
-    $("#persons").val(persons);
+    $("#av_persons").val(persons);
     //Modified by Yishou Liao @ Oct 18 2016.
 <?php if ($split_method == 0) { ?>
         $("#aver_total").val((((<?php echo $Order_detail['Order']['total']; ?>) / parseInt(persons)).toFixed(2)).toString());
@@ -989,17 +989,19 @@ if (!empty($Order_detail['OrderItem'])) {
     }
 
     var split_accounting_str = "";
-    if (person_menu.length == 0 && current_person == 0) {
-    for (var i = 0; i < order_menu.length; i++){
-    subTotal += parseFloat(order_menu[i][5]);
-    };
-    } else{
-    for (var i = 0; i < person_menu.length; i++){
-    if (person_menu[i][0] == radio_click){
-    subTotal += parseFloat(person_menu[i][5]);
-    };
-    };
-    };
+	//Modified by Yishou Liao @ Nov 18 2016
+	<?php if ($split_method == 0) { ?>
+    //if (person_menu.length == 0 && current_person == 0) {
+		for (var i = 0; i < order_menu.length; i++){
+			subTotal = <?php echo $Order_detail['Order']['subtotal'] ?>//parseFloat(order_menu[i][5]);
+		};
+    <?php } else{ ?>
+		for (var i = 0; i < person_menu.length; i++){
+			if (person_menu[i][0] == radio_click){
+				subTotal += parseFloat(person_menu[i][5]);
+			};
+		};
+    <?php }; ?>
     split_accounting_str = '<ul>';
     split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total 小计 </div>';
     split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + subTotal.toFixed(2) + '</div>';
@@ -1041,9 +1043,9 @@ if (!empty($Order_detail['OrderItem'])) {
     split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Total 总</div>';
     split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="';
     var Total_Amount = subTotal + (subTotal * Tax / 100);
-    split_accounting_str += (Total_Amount - discount).toFixed(2); //Modified by Yishou Liao @ Oct 21 2016.
+    split_accounting_str += Total_Amount.toFixed(2); //Modified by Yishou Liao @ Oct 21 2016.
     split_accounting_str += '">$ ';
-    split_accounting_str += (Total_Amount - discount).toFixed(2); //Modified by Yishou Liao @ Oct 21 2016.
+    split_accounting_str += Total_Amount.toFixed(2); //Modified by Yishou Liao @ Oct 21 2016.
     split_accounting_str += '</div>';
 <?php if ($split_method == 0) { ?>
         split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Average 人均:</div>';
