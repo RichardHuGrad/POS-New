@@ -247,7 +247,8 @@ echo number_format($tax_amount, 2);
                             };
                         };
                         if ($table_percent_discount) {
-                            echo "<span class='txt12'> " . $table_percent_discount . " (" . $table_percent_discount . "%)</span>";
+                            //echo "<span class='txt12'> " . $table_percent_discount . " (" . $table_percent_discount . "%)</span>";
+							echo "<span class='txt12'> " . " (" . $table_percent_discount . "%)</span>";
                         }
                         //End.
                         ?> 
