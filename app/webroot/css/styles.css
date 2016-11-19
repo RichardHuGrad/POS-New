@@ -791,4 +791,25 @@ li.already_done {
 
 
 }
-	
+
+.popPassword{
+	position:fixed;
+	top:45%;
+	left:50%;
+	z-index:9999;	
+	background:#f6f6f6;
+	border:2px solid red;
+	border-radius:20px;
+	width:240px;
+	margin-left: -120px;
+}
+
+.popPassword *{
+	margin:10px;
+	display:block;	
+	font-size:16px;
+}
+
+.EntPassword{
+	width:210px;	
+}
