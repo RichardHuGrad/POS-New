@@ -1311,24 +1311,27 @@ class HomesController extends AppController {
                             //End
                         } else {
                             // calculate fix discount here
-                            $discount_val = $promo_detail['Promocode']['discount_value'];
-                            //if ($Order_detail['Order']['total'] < $discount_val) {
-                            if ($Order_detail['Order']['subtotal'] < $discount_val) {//Modified by Yishou Liao @ Nov 18 2016
-                                //$data['Order']['discount_value'] = $Order_detail['Order']['total'];
-                                //$data['Order']['fix_discount'] = $Order_detail['Order']['total'];
-                                $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'];
-                                $data['Order']['fix_discount'] = $Order_detail['Order']['subtotal'];
-                            } else {
-                                $data['Order']['discount_value'] = $discount_val;
-                                $data['Order']['fix_discount'] = $discount_val;
-                            }
-                            $data['Order']['percent_discount'] = 0;
-                            //Modified by Yishou Liao @ Nov 18 2016
-                            //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
-                            $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
-                            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
-                            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-                            //End
+                            //Modified by Yishou Liao @ Nov 18 2016 (The goal is only discount for main table.)
+                            if ($order_id == $mainorder_id) {
+                                $discount_val = $promo_detail['Promocode']['discount_value'];
+                                //if ($Order_detail['Order']['total'] < $discount_val) {
+                                if ($Order_detail['Order']['subtotal'] < $discount_val) {//Modified by Yishou Liao @ Nov 18 2016
+                                    //$data['Order']['discount_value'] = $Order_detail['Order']['total'];
+                                    //$data['Order']['fix_discount'] = $Order_detail['Order']['total'];
+                                    $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'];
+                                    $data['Order']['fix_discount'] = $Order_detail['Order']['subtotal'];
+                                } else {
+                                    $data['Order']['discount_value'] = $discount_val;
+                                    $data['Order']['fix_discount'] = $discount_val;
+                                }
+                                $data['Order']['percent_discount'] = 0;
+                                //Modified by Yishou Liao @ Nov 18 2016
+                                //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
+                                $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
+                                $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
+                                $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+                                //End
+                            };//Modified by Yishou Liao @ Nov 18 2016 (if };)
                         }
                         $data['Order']['promocode'] = $promocode;
 
