@@ -15,7 +15,7 @@
             <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
         </div>
 
-    </div>	  
+    </div>
     <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
 
 </header>
@@ -1001,10 +1001,14 @@ if (!empty($Order_detail['OrderItem'])) {
 				subTotal += parseFloat(person_menu[i][5]);
 			};
 		};
+		<?php if ($Order_detail['Order']['discount_value']) { ?>
+			subTotal -= parseFloat('<?php echo $Order_detail['Order']['discount_value']; ?>');
+		<?php }; ?>
     <?php }; ?>
     split_accounting_str = '<ul>';
     split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total 小计 </div>';
-    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + subTotal.toFixed(2) + '</div>';
+    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + subTotal.toFixed(2)+ '</div>';
+	
 <?php if ($Order_detail['Order']['table_status'] <> 'P' and ! $Order_detail['Order']['discount_value']) { ?>
         split_accounting_str += '<div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Discount 加入折扣</button></div>'
 <?php } ?>
@@ -1194,7 +1198,7 @@ if (!empty($Order_detail['OrderItem'])) {
     var strarray = Array();
     var restr = "";
     for (var i = 0; i < c_array.length; i++){
-    strarray.push(c_array[i].join("-"));
+    strarray.push(c_array[i].join("*"));
     };
     restr = strarray.join(",");
     return restr;
@@ -1205,7 +1209,7 @@ if (!empty($Order_detail['OrderItem'])) {
     var rearr = Array();
     strarray = c_string.split(",");
     for (var i = 0; i < strarray.length; i++){
-    rearr.push(strarray[i].split("-"));
+    rearr.push(strarray[i].split("*"));
     };
     return rearr;
     }
