@@ -443,7 +443,12 @@
                 <a href="#" class="scrollUp">Up</a>
                 <a href="#" class="scrollDown">Down</a>
             </div>
-         
+<div id="dialog" title="Please Enter Password" style="display:none" class="popPassword">
+<span>Please Enter Your Password</span>
+<input type="password"  class="EntPassword"/>
+<input type="hidden" id="url" value="" />
+<input type="button" value="Enter" onclick="checkPassword()"/>
+</div>
 
    
 <?php
@@ -554,15 +559,22 @@ echo $this->fetch('script');
         document.location = "merge/table:"+tableId+"/tablemerge:"+table_merge+"/type:D";
     }
 	
-	//Modified by Yishou Liao @ Oct 27 2016.
+	//Modified by Yishou Liao @ Nov 18 2016.
 	function makeavailable(url){
-		var pwd_makeavailable= prompt("Please enter the password:");
+		$('#dialog').show();
+		$(".EntPassword").val("");
+		$('#url').val(url);
+	}
+	
+	function checkPassword(){
+		$('#dialog').hide();
+        var pwd_makeavailable = $(".EntPassword").val();
 		if (pwd_makeavailable == "123456"){
-			document.location = url;
+			document.location = $('#url').val();;
 		} else {
 			alert("Your password is incorrect!");
 		};
-	}
+    }
 	//End.
 </script>
 <!-- End. -->
