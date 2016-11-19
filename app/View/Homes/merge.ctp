@@ -734,16 +734,31 @@ echo $order_id;
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
                     method: "post",
                     dataType: "json",
-                    data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php
-$order_id = "";
+                    data: {
+						fix_discount: fix_discount,
+						discount_percent: discount_percent,
+						promocode: promocode,
+//Modified by Yishou Liao @ Nov 18 2016
+						mainorder_id: "<?php
 for ($i = 0; $i < count($Order_detail); $i++) {
     if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $order_id .= $Order_detail[$i]['Order']['id'].',';
+        $order_id = $Order_detail[$i]['Order']['id'];
     };
+};
+echo $order_id;
+?>",
+//End
+						order_id: "<?php
+//Modified by Yishou Liao @ Nov 18 2016
+$order_id = "";
+for ($i = 0; $i < count($Order_detail); $i++) {
+    $order_id .= $Order_detail[$i]['Order']['id'].',';
 };
 $order_id = substr($order_id,0,strlen($order_id)-1);
 echo $order_id;
-?>"},
+//End
+?>",
+},
                     success: function (html) {
                     if (html.error) {
                     alert(html.message);
@@ -775,13 +790,13 @@ echo $order_id;
                     //Modified by Yishou @ Oct 16 2016.
                     $(document).on('click', ".remove_discount", function () {
             var order_id = "<?php
+//Modified by Yishou Liao @ Nov 18 2016
 $order_id = "";
 for ($i = 0; $i < count($Order_detail); $i++) {
-    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $order_id .= $Order_detail[$i]['Order']['id'] . ',';
-    };
+	$order_id .= $Order_detail[$i]['Order']['id'] . ',';
 };
 echo $order_id;
+//End
 ?>";
                     var message = $("#Message").val();
                     $.ajax({

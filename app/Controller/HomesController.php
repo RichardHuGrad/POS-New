@@ -1193,16 +1193,19 @@ class HomesController extends AppController {
 
         // get all params
         $order_id = $this->data['order_id'];
-
-        //Modified by Yishou Liao @ Nov 18 2016
-        $order_id_arr = explode(",", $order_id);
-        //End
-
+        $mainorder_id = isset($this->data['mainorder_id'])?$this->data['mainorder_id']:$order_id;
         $fix_discount = $this->data['fix_discount'];
         $percent_discount = $this->data['discount_percent'];
         $promocode = $this->data['promocode'];
 
         //Modified by Yishou Liao @ Nov 18 2016
+        if (!empty($fix_discount)){
+            $order_id_tmp = explode(",", $order_id);
+            $order_id_arr=array($mainorder_id);
+        }else{
+            $order_id_arr = explode(",", $order_id);
+        };
+
         for ($i = 0; $i < count($order_id_arr); $i++) {
             $order_id = $order_id_arr[$i];
             //End
