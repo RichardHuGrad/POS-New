@@ -1628,6 +1628,7 @@ class HomesController extends AppController {
 
         $data['Order']['paid'] = $pay;
         $data['Order']['change'] = $change;
+        $data['Order']['discount'] = $this->data['discount'];//Modified by Yishou Liao @ Nov 19 2016
         $data['Order']['is_kitchen'] = 'Y';
 
 
@@ -1655,7 +1656,7 @@ class HomesController extends AppController {
         } else {//按每个人点的菜分单
             $account_no = $this->data['account_no'];
             $order_detail = explode(",", $this->data['order_detail']);
-
+            xdebug_break();
             $this->loadModel('Order');
             $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide', 'Order.discount_value'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
 
@@ -1669,11 +1670,19 @@ class HomesController extends AppController {
             $data['Order']['cashier_id'] = $split_detail['Order']['cashier_id'];
             $data['Order']['counter_id'] = $split_detail['Order']['counter_id'];
             $data['Order']['table_no'] = $split_detail['Order']['table_no'];
+            //Modified by Yishou Liao @ Nov 19 2016
+            $data['Order']['subtotal'] = $data['Order']['paid'] - $data['Order']['change'];
+            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $data['Order']['tax']/100;
+            $data['Order']['total'] = $data['Order']['subtotal']+$data['Order']['tax_amount'];
+            /*
             $data['Order']['total'] = round($data['Order']['paid'], 2) - round($data['Order']['change'], 2);
             $data['Order']['tax_amount'] = round($data['Order']['total'], 2) / round($data['Order']['tax'], 2);
             $data['Order']['subtotal'] = round($data['Order']['total'], 2) - round($data['Order']['tax_amount'], 2);
+            */
+            //End
             $data['Order']['is_completed'] = 'Y';
-            $data['Order']['discount_value'] = $split_detail['Order']['discount_value'];
+            //$data['Order']['discount_value'] = $split_detail['Order']['discount_value'];
+            $data['Order']['discount_value'] = $data['Order']['discount']; //Modified by Yishou Liao @ Nov 19 2016
             $data['Order']['promocode'] = $split_detail['Order']['promocode'];
             $data['Order']['message'] = $split_detail['Order']['message'];
             $data['Order']['reason'] = $split_detail['Order']['reason'];

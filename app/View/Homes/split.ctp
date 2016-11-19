@@ -160,6 +160,7 @@ echo $this->fetch('script');
     var current_person = 0;
     var person_menu = new Array();
     var order_menu = new Array();
+	var discount = 0;
     $(document).on('click', '#addperson', function () {
 		//Modifed by Yishou Liao @ Nov 10 2016
 		//if (person_No < $('#persons').val()){
@@ -709,7 +710,8 @@ if (!empty($Order_detail['OrderItem'])) {
                     tip_val: $("#tip_val").val(),
                     tip_paid_by: $("#tip_paid_by").val(),
                     account_no: radio_click,
-                    order_detail:item_detail_id
+                    order_detail:item_detail_id,
+					discount:discount,
             },
             success: function (html) {
             $(".alert-warning").hide();
@@ -737,6 +739,11 @@ if (!empty($Order_detail['OrderItem'])) {
                 deleteCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
                 deleteCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>);
                 deleteCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+				//Modified by Yishou Liao @ Nov 19 2016
+				deleteCookie("fix_discount_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				deleteCookie("discount_percent_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				deleteCookie("promocode_"+<?php echo $Order_detail['Order']['order_no'] ?>);
+				//End
                 window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
                 } else{//Modified by Yishou Liao @ Oct 21 2016.
                 window.location.reload();
@@ -902,6 +909,12 @@ if (!empty($Order_detail['OrderItem'])) {
     var fix_discount = $("#fix_discount").val();
     var discount_percent = $("#discount_percent").val();
     var promocode = $("#promocode").val();
+	
+	//Modified by Yishou Liao @ Nov 19 2016
+	setCookie("fix_discount_"+<?php echo $Order_detail['Order']['order_no'] ?>, fix_discount, 1);
+	setCookie("discount_percent_"+<?php echo $Order_detail['Order']['order_no'] ?>, discount_percent, 1);
+	setCookie("promocode_"+<?php echo $Order_detail['Order']['order_no'] ?>, promocode, 1);
+	//End
     if (fix_discount || discount_percent || promocode) {
     // apply promocode here
     $.ajax({
@@ -998,11 +1011,17 @@ if (!empty($Order_detail['OrderItem'])) {
     <?php } else{ ?>
 		for (var i = 0; i < person_menu.length; i++){
 			if (person_menu[i][0] == radio_click){
+				keepsubTotal =parseFloat(person_menu[i][5]);
 				subTotal += parseFloat(person_menu[i][5]);
 			};
 		};
 		<?php if ($Order_detail['Order']['discount_value']) { ?>
-			subTotal -= parseFloat('<?php echo $Order_detail['Order']['discount_value']; ?>');
+			if (checkCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+				subTotal -= parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>));
+			};
+			if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+				subTotal -= subTotal*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100;
+			};
 		<?php }; ?>
     <?php }; ?>
     split_accounting_str = '<ul>';
@@ -1028,12 +1047,19 @@ if (!empty($Order_detail['OrderItem'])) {
     var Tax_Amount = subTotal * Tax / 100;
     split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$' + Tax_Amount.toFixed(2) + '</div>';
     split_accounting_str += '</div></li>';
-    var discount = 0; //Modified by Yishou Liao @ Oct 21 2016.
 
 <?php if ($Order_detail['Order']['discount_value']) { ?>
         split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ';
-        split_accounting_str += '<?php echo number_format($Order_detail['Order']['discount_value'], 2); ?>';
-        discount = <?php echo number_format($Order_detail['Order']['discount_value'], 2); ?>; //Modified by Yishou Liao @ Oct 21 2016.
+		//Modified by Yishou Liao @ Nov 19 2016
+		if (checkCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			discount = parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
+		};
+		if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			discount = (parseFloat(keepsubTotal)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+		};
+		//End
+        split_accounting_str += discount;
+        
     <?php if ($Order_detail['Order']['percent_discount']) { ?>
             split_accounting_str += '<span class="txt12">';
             split_accounting_str += '<?php echo $Order_detail['Order']['promocode']; ?>';
