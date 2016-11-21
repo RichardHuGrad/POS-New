@@ -232,11 +232,12 @@ echo number_format($tax_amount, 2);
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price">
                                     $<?php
-                        //Modified by Yishou Liao @ Oct 14 2016.
+                        //Modified by Yishou Liao @ Nov 19 2016.
+						$table_discount_value = 0;
                         for ($i = 0; $i < count($Order_detail); $i++) {
-                            if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                $table_discount_value = $Order_detail[$i]['Order']['discount_value'];
-                            };
+                            //if ($Order_detail[$i]['Order']['table_no'] == $table) {//Modified by Yishou Liao @ Nov 19 2016
+                                $table_discount_value += $Order_detail[$i]['Order']['discount_value'];
+                            //}; //End
                         };
                         echo number_format($table_discount_value, 2);
 
