@@ -97,7 +97,7 @@ $registered_till = @$search['registered_till'];
                         ); ?>
 
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label class="control-label">Payment Status</label>
                                 <?php 
@@ -138,39 +138,19 @@ $registered_till = @$search['registered_till'];
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-8" style="margin-top: 30px;">
                             <div class="form-group">
-                                <label class="control-label">Cooking Status</label>
-                                <?php 
-                                $options = array(
-                                        'COOKED'=>'COOKED',
-                                        'UNCOOKED'=>'UNCOOKED',
-                                    );
-                                echo $this->Form->input('cooking_status', array( 
-                                    'multiple' => 'checkbox',
-                                    'div' => false, 
-                                    'options' =>  $options,
-                                    'label' => false,
-                                    "legend" => false,      'value' => $cooking_status,                               
-                                   ), array('class'=>'validate[minCheckbox[1]] checkbox')
-                                );   
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="col-md-12" style="padding:0px">
+                                <div class="col-md-4">
                                     <?php echo $this->Form->input('search', array('type' => 'text', 'value' => $search_txt, 'placeholder' => 'Search order number', 'class' =>'form-control reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
                                 </div>
-                                <div class="col-md-6" style="padding:0px">
+                                <div class="col-md-4" >
                                     <?php echo $this->Form->input('registered_from', array('value' => $registered_from, 'placeholder' => 'From date', 'type' => 'text', 'class' =>'form-control datepicker reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
                                 </div>
-                                <div class="col-md-6" style="padding:0px">
+                                <div class="col-md-4" >
                                     <?php echo $this->Form->input('registered_till', array('value' => $registered_till, 'placeholder' => 'To date', 'type' => 'text', 'class' =>'form-control datepicker reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
                                 </div>
                             </div>
-                            <div class="col-md-12" style="margin-top:58px">
+                            <div class="col-md-12" style="margin-top:28px">
                                 <?php
                                 echo $this->Form->button('Search <i class="fa fa-arrow-circle-right"></i>',array('class' => 'btn btn-primary btn-wide pull-right margin-right-10','type' => 'submit','id' => 'submit_button')) ?>
                             </div>

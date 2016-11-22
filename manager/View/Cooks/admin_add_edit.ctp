@@ -12,7 +12,7 @@ echo $this->Html->script(array('bootstrap-datepicker')); ?>
 </script>
 
 <?php $option_yes_no = array('Y' => 'Yes', 'N' => 'No');
-$option_status = array('A' => 'Active', 'I' => 'Inactive');
+$option = array('K' => 'Kitchen', 'S' => 'Service');
 ?>
 
 <div id="app">
@@ -95,18 +95,48 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Contact Number <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <label class="control-label">Phone Number</label>
+                                        <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
-
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Status</label>
-                                        <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <label class="control-label">Job Position <span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('job_position', array('options' => $option, 'class' => 'form-control', 'empty' => "Select Position", 'label' => false, 'div' => false, 'required'=>true)); ?>
                                     </div>
                                 </div>
+
+                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Image</label>
+                                        <?php echo $this->Form->input('image', array('type' => 'file', 'maxlength' => '200', 'class' => 'form-control', 'id' => 'image', 'div' => false, 'label' => false)); ?>
+                                        <span id="beaconkey-error" class="help-block"></span>
+                                    </div>                                                                              
+                                </div>  
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        &nbsp;                                        
+                                    </div>                                                                              
+                                </div>   
+                                <?php
+                                if($id) {
+                                 ?>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">&nbsp;</label>
+                                            <?php if ($this->request->data['Cook']['image']) { ?>
+                                                <?php echo $this->Html->image(COOK_IMAGE_PATH . $this->request->data['Cook']['image'], array('border' => 0, 'width' => 100)); ?>
+                                            <?php } else { ?>
+                                                <?php echo $this->Html->image('/img/no_image.jpg', array('border' => 0, 'width' => 100)); ?>
+                                            <?php } ?>
+                                        </div> 
+                                    </div>
+                                <?php }?>
+
+
                             </div>
                             <div class="row">
                                 <div class="col-md-12">

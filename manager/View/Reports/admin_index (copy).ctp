@@ -259,12 +259,17 @@ $registered_till = @$search['registered_till'];
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="control-label">Select Cashier</label>
-                                <?php echo $this->Form->input('cashier', array('value' => $cashier, 'options'=>$cashiers, 'type' => 'select', 'class' =>'form-control', 'empty'=>'Please Select', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                <label class="control-label">Date From</label>
+                                <?php echo $this->Form->input('registered_from', array('value' => $registered_from, 'type' => 'text', 'class' =>'form-control datepicker reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
                             </div>
                         </div>
 
-                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Date To</label>
+                                <?php echo $this->Form->input('registered_till', array('value' => $registered_till, 'type' => 'text', 'class' =>'form-control datepicker reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
+                            </div>
+                        </div>
 
 
                         <div class="col-md-4">
@@ -343,7 +348,7 @@ $registered_till = @$search['registered_till'];
                                 <li>
                                     <div class="pull-right">
                                         <div class="btn-group">
-                                            <a class="padding-10" href="<?php echo $this->Html->url(array('controller' => 'reports', 'action' => 'index', 'admin' => true, "?"=>array('year'=>$year, 'date'=>date('Y-m-d', strtotime($date. ' - 1 days')), 'cashier'=>$cashier))) ?>" style="font-size:30px" >
+                                            <a class="padding-10" href="<?php echo $this->Html->url(array('controller' => 'reports', 'action' => 'index', 'admin' => true, "?"=>array('year'=>$year-1, 'date'=>$date, 'cashier'=>$cashier))) ?>" style="font-size:30px" >
                                                 <i class="fa fa-arrow-circle-left"></i>
                                             </a>
                                         </div>
@@ -352,14 +357,14 @@ $registered_till = @$search['registered_till'];
                                 <li>
                                     <div class="rate">
                                         <span class="value">
-                                        <?php echo $date; ?>
+                                        <?php echo $year; ?>
                                         </span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="pull-right">
                                         <div class="btn-group">
-                                            <a class="padding-10" href="<?php echo $this->Html->url(array('controller' => 'reports', 'action' => 'index', 'admin' => true, "?"=>array('year'=>$year, 'date'=>date('Y-m-d', strtotime($date. ' + 1 days')), 'cashier'=>$cashier))) ?>" style="font-size:30px" >
+                                            <a class="padding-10" href="<?php echo $this->Html->url(array('controller' => 'reports', 'action' => 'index', 'admin' => true, "?"=>array('year'=>$year+1, 'date'=>$date, 'cashier'=>$cashier))) ?>" style="font-size:30px" >
                                                 <i class="fa fa-arrow-circle-right"></i>
                                             </a>
                                         </div>

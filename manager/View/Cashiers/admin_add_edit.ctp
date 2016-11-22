@@ -96,31 +96,8 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Contact Number <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Printer IP Address <span class="symbol required"></span></label> 
-                                        <?php echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'div' => false)); ?>
-                                        <span id="place-error" class="help-block"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Printer Device ID <span class="symbol required"></span></label> 
-                                        <?php echo $this->Form->input('printer_device_id', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false)); ?>
-                                        <span id="place-error" class="help-block"></span>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Status</label>
-                                        <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <label class="control-label">Phone Number </label>
+                                        <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
 

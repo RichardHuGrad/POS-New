@@ -31,7 +31,7 @@
                                     <i class="fa fa-graduation-cap"></i>
                                 </div>
                                 <div class="item-inner">
-                                    <span class="title">Restaurant Owners Management</span>
+                                    <span class="title">Restaurant Manager</span>
                                 </div>
                             </div>
                         </a>
@@ -49,43 +49,7 @@
                             </div>
                         </a>
                     </li> 
-                   <!--  <li class="<?php echo (isset($tab_open) && $tab_open == 'extras') ? 'active open' : '' ?>">
-                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'extras','action' => 'index')); ?>">
-                            <div class="item-content">
-                                <div class="item-media">
-                                    <i class="ti-menu"></i>
-                                </div>
-                                <div class="item-inner">
-                                    <span class="title"> Extras Management </span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>   -->
                 <?php }?>
-                <li class="<?php echo (isset($tab_open) && $tab_open == 'cashiers') ? 'active open' : '' ?>">
-                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cashiers','action' => 'index', 'admin' => 'true')); ?>">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa fa-money"></i>
-                            </div>
-                            <div class="item-inner">
-                                <span class="title">Cashiers Management</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>  
-                <li class="<?php echo (isset($tab_open) && $tab_open == 'cooks') ? 'active open' : '' ?>">
-                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cooks','action' => 'index', 'admin' => 'true')); ?>">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa fa-cutlery"></i>
-                            </div>
-                            <div class="item-inner">
-                                <span class="title">Cooks Management</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>   
 
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'cousines') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cousines','action' => 'index', 'admin' => 'true')); ?>">
@@ -94,24 +58,58 @@
                                 <i class="fa fa-cutlery"></i>
                             </div>
                             <div class="item-inner">
-                                <span class="title">Cuisines Management</span>
+                                <span class="title">Product Management</span>
                             </div>
                         </div>
                     </a>
                 </li>
 
-                <li class="<?php echo (isset($tab_open) && $tab_open == 'promocodes') ? 'active open' : '' ?>">
-                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'promocodes','action' => 'index', 'admin' => 'true')); ?>">
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'cashiers') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cashiers','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-money"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Manager Management</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>  
+
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'cooks') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cooks','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-cutlery"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Staff Managementt</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>   
+
+                <li class="slide_class <?php echo (isset($tab_open) && in_array($tab_open, array('promocodes', 'specials'))) ? 'active open' : '' ?>">
+                    <a href="javascript:void(0)">
                         <div class="item-content">
                             <div class="item-media">
                                 <i class="fa fa-ticket"></i>
                             </div>
                             <div class="item-inner">
-                                <span class="title">Promocode Management</span>
+                                <span class="title">Marketing Management</span><i class="icon-arrow"></i>
                             </div>
                         </div>
                     </a>
-                </li>  
+                    <ul class="sub-menu" style="<?php echo (isset($tab_open) && in_array($tab_open, array('promocodes', 'specials'))) ? '' : 'display: none;' ?>">
+                        <li class="<?php echo (isset($tab_open) && $tab_open == 'promocodes') ? 'active' : '' ?>">
+                            <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'promocodes','action' => 'index', 'admin' => true)); ?>">
+                                <span class="title">Promocodes and Specials</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'orders') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'orders','action' => 'index', 'admin' => 'true')); ?>">
@@ -133,7 +131,7 @@
                                 <i class="fa fa-reorder"></i>
                             </div>
                             <div class="item-inner">
-                                <span class="title">Reports</span>
+                                <span class="title">Sales Reports</span>
                             </div>
                         </div>
                     </a>
