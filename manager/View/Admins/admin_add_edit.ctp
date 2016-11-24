@@ -45,7 +45,7 @@ $(document).ready(function() {
                             <?php if($id == $this->Session->read('Admin.id')){
                                 echo 'Update Profile';
                             }else{
-                                echo ('' == $id) ? 'Add' : 'Edit' . ' Admin User';
+                                echo ('' == $id) ? 'Add' : 'Edit' . ' Restaurant Manager';
                             } ?>
                             </h1>
                         </div>                        
@@ -63,24 +63,58 @@ $(document).ready(function() {
                                 echo $this->Form->input('id', array('type' => 'hidden', 'required' => false)); 
                             ?>
                             <div class="row">
-                                <h4 style="margin-left:13px">
-                                    Restaurant Owner Details
+                                <h4 style="margin-left: 13px;">
+                                    Restaurant Details
                                 </h4>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">First Name<span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('firstname', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Last Name<span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('lastname', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <label class="control-label">Restaurant Name<span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('restaurant_name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
                                     </div>
                                 </div>
 
                                 <div class="clearfix"></div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">First Name</label>
+                                        <?php echo $this->Form->input('firstname', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Last Name</label>
+                                        <?php echo $this->Form->input('lastname', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+
+                                <!-- location panel goes here -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Street</label>
+                                        <?php echo $this->Form->input('street', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">City</label>
+                                        <?php echo $this->Form->input('city', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Province</label>
+                                        <?php echo $this->Form->input('province', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Zip code</label>
+                                        <?php echo $this->Form->input('zip_code', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+                                <!-- location end here -->
+
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -90,18 +124,18 @@ $(document).ready(function() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Contact Number<span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <label class="control-label">Phone Number</label>
+                                        <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
 
                                 <?php if($id != $this->Session->read('Admin.id')){ ?>
-                                    <div class="col-md-6">
+                                    <!--div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Status</label>
                                             <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                                         </div>
-                                    </div>
+                                    </div-->
 
                                     <div class="clearfix"></div>
 
@@ -125,41 +159,57 @@ $(document).ready(function() {
 
                                 <?php } ?>
 
-                                <h4 style="margin-left:13px">
+                                <!-- <h4 style="margin-left: 13px; margin-top: 28px;">
                                     Kitchen Printer Details
-                                </h4>
+                                </h4> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Printer IP Address <span class="symbol required"></span></label> 
-                                        <?php echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'div' => false, 'required' => true)); ?>
+                                        <label class="control-label">Kitchen Printer IP </label> 
+                                        <?php echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control', 'label' => false, 'div' => false, 'required' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Printer Device ID <span class="symbol required"></span></label> 
-                                        <?php echo $this->Form->input('printer_device_id', array('type' => 'text',  'class' => 'form-control validate[required]', 'label' => false, 'required' => true)); ?>
+                                        <label class="control-label">Kitchen Printer ID </label> 
+                                        <?php echo $this->Form->input('printer_device_id', array('type' => 'text',  'class' => 'form-control', 'label' => false, 'required' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
 
-                                 <h4 style="margin-left:13px">
-                                    Restaurant Details
-                                </h4>
+                             <!--    <h4 style="margin-left: 13px; margin-top: 28px;">
+                                    Service Printer Details
+                                </h4> -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Restaurant Name<span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('restaurant_name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <label class="control-label">Service Printer IP</label> 
+                                        <?php echo $this->Form->input('service_printer_ip', array('type' => 'text',  'class' => 'form-control ', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Service Printer ID </label> 
+                                        <?php echo $this->Form->input('service_printer_device_id', array('type' => 'text',  'class' => 'form-control ', 'label' => false, 'required' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Tax <span class="symbol required"></span></label>
                                         <?php echo $this->Form->input('tax', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
+
+                                <div class="clearfix"></div>
+                                 <h4 style="margin-left: 13px; margin-top: 28px;">
+                                    Dinein Tables
+                                </h4>   
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -171,39 +221,6 @@ $(document).ready(function() {
                                         echo $this->Form->input('no_of_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'div' => false, 'label' => false, 'alt'=>'no_of_tables','default'=>'Please Select',  'required' => true)); ?>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">No Of Takeout Tables <span class="symbol required"></span></label>
-                                        <?php
-                                        $options = [];
-                                        for($i = 1; $i <= 50; $i++)
-                                            $options[$i] = $i;
-                                        echo $this->Form->input('no_of_takeout_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'div' => false, 'alt'=>'no_of_takeout_tables', 'label' => false,  'required' => true)); ?>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">No Of Waiting Tables <span class="symbol required"></span></label>
-                                        <?php
-                                        $options = [];
-                                        for($i = 1; $i <= 50; $i++)
-                                            $options[$i] = $i;
-                                        echo $this->Form->input('no_of_waiting_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'alt'=>'no_of_waiting_tables', 'div' => false, 'label' => false, 'required' => true)); ?>
-                                    </div>
-                                </div>
-
-
-
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Restaurant Address</label>
-                                        <div class="clear"></div>
-                                        <?php echo $this->Form->textarea("address",array('class' => 'col-xs-12 col-sm-12 col-md-12 form-textarea')); ?>
-                                    </div>
-                                </div>
-
                                 <div class="col-md-12" style="margin-top:10px">
                                     <div class="form-group">
                                         <label class="control-label">Size For Dinein Table</label>
@@ -225,6 +242,21 @@ $(document).ready(function() {
                                     </div>
                                 </div>
 
+                                <div class="clearfix"></div>
+                                 <h4 style="margin-left: 13px; margin-top: 28px;">
+                                    Takeout Tables
+                                </h4>   
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">No Of Takeout Tables <span class="symbol required"></span></label>
+                                        <?php
+                                        $options = [];
+                                        for($i = 1; $i <= 50; $i++)
+                                            $options[$i] = $i;
+                                        echo $this->Form->input('no_of_takeout_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'div' => false, 'alt'=>'no_of_takeout_tables', 'label' => false,  'required' => true)); ?>
+                                    </div>
+                                </div>
                                 <div class="col-md-12" style="margin-top:10px">
                                     <div class="form-group">
                                         <label class="control-label">Size For TakeOut Table</label>
@@ -243,6 +275,22 @@ $(document).ready(function() {
                                                 <?php
                                             }
                                          ?>
+                                    </div>
+                                </div>
+
+
+                                <div class="clearfix"></div>
+                                 <h4 style="margin-left: 13px; margin-top: 28px;">
+                                    Waiting Tables
+                                </h4>  
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">No Of Waiting Tables <span class="symbol required"></span></label>
+                                        <?php
+                                        $options = [];
+                                        for($i = 1; $i <= 50; $i++)
+                                            $options[$i] = $i;
+                                        echo $this->Form->input('no_of_waiting_tables', array(/*'options'=>$options,*/ 'type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'alt'=>'no_of_waiting_tables', 'div' => false, 'label' => false, 'required' => true)); ?>
                                     </div>
                                 </div>
 

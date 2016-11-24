@@ -9,20 +9,20 @@ class Admin extends AppModel {
 
     public $validate = array(
 
-        'firstname' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                'message' => 'First name can\'t be empty',
-                'allowEmpty' => false
-            )
-        ),
-        'lastname' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                'message' => 'Last name can\'t be empty',
-                'allowEmpty' => false
-            )
-        ),
+        // 'firstname' => array(
+        //     'notEmpty' => array(
+        //         'rule' => array('notEmpty'),
+        //         'message' => 'First name can\'t be empty',
+        //         'allowEmpty' => false
+        //     )
+        // ),
+        // 'lastname' => array(
+        //     'notEmpty' => array(
+        //         'rule' => array('notEmpty'),
+        //         'message' => 'Last name can\'t be empty',
+        //         'allowEmpty' => false
+        //     )
+        // ),
         'email' => array(
             'notEmpty' => array(
                 'rule' => array('notEmpty'),
@@ -87,7 +87,7 @@ class Admin extends AppModel {
             'allowNumberOnly' => array(
                 'rule' => array('allowNumberOnly'),
                 'message' => 'Mobile number should be numeric only',
-                'allowEmpty' => false
+                'allowEmpty' => true
             ),
             'between' => array(
                 'rule' => array('between', 8, 15),

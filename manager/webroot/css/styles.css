@@ -1056,7 +1056,7 @@ h5.over-title {
   font-family: themify;
 }
 #sidebar > div nav > ul li.open {
-  background: #007aff !important;
+  /*background: #007aff !important;*/
 }
 #sidebar > div nav > ul li.open > a .icon-arrow {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);

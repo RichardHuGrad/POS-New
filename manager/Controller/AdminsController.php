@@ -70,7 +70,25 @@ class AdminsController extends AppController {
      */
     public function admin_dashboard() {
         $this->layout = 'admin';
+
+        $this->loadModel('Order');
+
+        $is_super_admin = $this->Session->read('Admin.is_super_admin');
+        if('Y' <> $is_super_admin)
+            $conditions = array('Order.is_completed'=>'Y', 'Order.cashier_id'=>$this->Session->read('Admin.id'));
+        else        
+            $conditions = array('Order.is_completed'=>'Y');
+        $query = array(
+            'conditions' => $conditions,
+            'fields' => array(
+                 'count(Order.id) as no_of_order', 'sum(Order.total) as sale'
+            ),
+            'recursive'=>-1
+        );
+        $record = $this->Order->find('first', $query);
+        // pr($record); die;
         $this->set('tab_open','dashboard');
+        $this->set('record',$record);
     }
 
     /**

@@ -151,7 +151,7 @@ if($this->Session->check('cashier_search')){
                                         <th>Restaurant Name</th>
                                         <th>Cashier Name</th>
                                         <th>Email</th>
-                                        <th>Mobile</th>
+                                        <th>Phone</th>
                                         <!-- <th>Is Verified</th> -->
                                         <th>Status</th>
                                         <th>Registered On</th>

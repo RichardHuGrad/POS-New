@@ -34,7 +34,7 @@ class PromocodesController extends AppController {
 
             if(isset($this->request->data['Promocode']) && !empty($this->request->data['Promocode'])) {
                 $search_data = $this->request->data['Promocode'];
-                $this->Session->write('cashier_search', $search_data);
+                $this->Session->write('Promocode_search', $search_data);
             }
 
             if(isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
@@ -46,8 +46,8 @@ class PromocodesController extends AppController {
             $limit = $this->Session->read('page_size');
         }
 
-        if($this->Session->check('cashier_search')){
-            $search = $this->Session->read('cashier_search');
+        if($this->Session->check('Promocode_search')){
+            $search = $this->Session->read('Promocode_search');
 
             if(!empty($search['search'])){
                 $conditions['OR'] = array(
@@ -93,7 +93,7 @@ class PromocodesController extends AppController {
     }
 
     /**
-     * To add or edit cashier detail
+     * To add or edit Promocode detail
      * @param string $id
      * @return mixed
      */
@@ -108,9 +108,17 @@ class PromocodesController extends AppController {
 
         $this->layout = 'admin';
 
+
         if (!empty($this->request->data)) {
             $this->Promocode->set($this->request->data);
             if ($this->Promocode->validates()) {
+
+
+	            $start_time =  $this->request->data['Promocode']['start_time'];
+	            $end_time =  $this->request->data['Promocode']['end_time'];
+	            $this->request->data['Promocode']['start_time'] = date("H:i:s", strtotime(trim($start_time)));
+	            $this->request->data['Promocode']['end_time'] = date("H:i:s", strtotime(trim($end_time)));
+	            $this->request->data['Promocode']['week_days'] = implode(",", $this->request->data['Promocode']['week_days']);
 
                 if ($this->Promocode->save($this->request->data, $validate = false)) {
 
@@ -134,6 +142,10 @@ class PromocodesController extends AppController {
             }
 
             if (empty($this->request->data)) {
+
+	            $customer_data['Promocode']['start_time'] = date('h:i A', strtotime($customer_data['Promocode']['start_time']));
+	            $customer_data['Promocode']['end_time'] = date('h:i A', strtotime($customer_data['Promocode']['end_time']));
+	            $customer_data['Promocode']['week_days'] = $customer_data['Promocode']['week_days']?explode(",", $customer_data['Promocode']['week_days']):"";
                 $this->request->data = $customer_data;
             }
         }
@@ -141,12 +153,44 @@ class PromocodesController extends AppController {
         $restaurants = $this->Admin->find('list',
             array('fields' => array('Admin.id', 'Admin.restaurant_name'), 'conditions' => array('Admin.status' => 'A', 'Admin.is_super_admin' => 'N'), 'order' => array('Admin.firstname' => 'ASC')));
 
+        
+        $this->loadModel('CategoryLocale');
+        $categories = $this->CategoryLocale->find('list',
+            array(
+                'fields' => array('CategoryLocale.category_id', 'CategoryLocale.name'),
+                'conditions' => array('CategoryLocale.lang_code' => 'en'),
+                'order' => array('CategoryLocale.name' => 'ASC')
+            )
+        );
 
-        $this->set(compact('id', 'restaurants'));
+		$is_super_admin = $this->Session->read('Admin.is_super_admin');
+        if('Y' <> $is_super_admin)
+    		$restaurant_id = $this->Session->read('Admin.id');
+		else
+    		$restaurant_id = @$customer_data['Promocode']['restaurant_id'];
+
+        $this->loadModel('CousineLocal');
+        $items_list = $this->CousineLocal->find('all', array(
+            'conditions' => array(
+                'Cousine.restaurant_id' => @$restaurant_id, 'CousineLocal.lang_code' => 'en','Cousine.category_id' => @$customer_data['Promocode']['category_id'], 
+            ),
+            'fields' => array(
+                'CousineLocal.parent_id', 'CousineLocal.name'
+            )
+        )); 
+        $arr = [];
+        if(!empty($items_list))
+        	foreach ($items_list as $key => $value) {
+        		# code...
+        		$arr[$value['CousineLocal']['parent_id']] = $value['CousineLocal']['name'];
+        	}
+    	$items_list = $arr;
+        
+        $this->set(compact('id', 'restaurants', 'categories', 'items_list'));
     }
 
     /**
-     * Change the status of the cashier
+     * Change the status of the Promocode
      * @param string $id
      * @param string $status
      * @return null
@@ -181,7 +225,7 @@ class PromocodesController extends AppController {
     }
 
     /**
-     * Delete the cashier
+     * Delete the Promocode
      * @param string $id
      * @return null
      */
@@ -196,126 +240,33 @@ class PromocodesController extends AppController {
 
     }
 
-    /**
-     * Listing of promocodes whom age proof document is pending for approval
-     * @return mixed
-     */
-    public function admin_pending_approvals(){
-        $this->checkAccess('Promocode', 'can_view');
-        $this->layout = 'admin';
-        $this->set('tab_open', 'customer_pending_approval');
-        $limit = DEFAULT_PAGE_SIZE;
-
-        if (!empty($this->request->data)) {
-
-            if(isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
-                $this->Session->write('page_size', $this->request->data['PageSize']['records_per_page']);
-            }
-        }
-
-        if($this->Session->check('page_size')){
-            $limit = $this->Session->read('page_size');
-        }
-        $query = array(
-            'conditions' => array('Promocode.is_verified' => 'N'),
-            'fields' => array(
-                'Promocode.id', 'Promocode.firstname', 'Promocode.lastname', 'Promocode.email', 'Promocode.mobile_no'
-            ),
-            'order' => array('Promocode.created' => 'DESC')
-        );
-        if('all' == $limit){
-            $customer_list = $this->Promocode->find('all', $query);
-        }else{
-            $query['limit'] = $limit;
-            $this->paginate = $query;
-            $customer_list = $this->paginate();
-        }
-        $this->set(compact('customer_list', 'limit'));
-    }
+    public function admin_get_item() {
+        $this->autoRender = false;
+        $this->autoLayout = false;
+        if ($this->request->is('ajax')) {
+            $categoryid = $this->request->data['categoryid'];
+            $restaurant_id = $this->request->data['restaurant_id'];
 
 
-    /**
-     * Approve the selected cashier
-     * @param string $id
-     * @return null
-     */
-    public function admin_approve_customer($id = '') {
-
-        $this->checkAccess('Promocode', 'can_edit');
-        $id = base64_decode($id);
-
-        $is_valid = true;
-        $name = $email = '';
-        if('' == $id){
-            $is_valid = false;
-        }else{
-            $check_user_exists = $this->Promocode->Find('first', array('fields' => array('Promocode.firstname', 'Promocode.lastname', 'Promocode.email'), 'conditions' => array('Promocode.id' => $id)));
-            if (empty($check_user_exists)) {
-                $is_valid = false;
-            }else{
-                $name = ucfirst($check_user_exists['Promocode']['firstname']) . ' ' . ucfirst($check_user_exists['Promocode']['lastname']);
-                $email = $check_user_exists['Promocode']['email'];
-            }
-        }
-
-        if($is_valid) {
-            $this->Promocode->updateAll(array('Promocode.is_verified' => "'Y'"), array('Promocode.id' => $id));
-
-            $viewVars = array('name' => $name, 'type' => 'approve');
-            $this->sendMail($email, 'POS: Profile Approve', 'status_update', 'default', $viewVars);
-
-            $this->Session->setFlash('Promocode has been approved successfully', 'success');
-            $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'pending_approvals', 'admin' => true));
-        }else{
-            $this->Session->setFlash('Invalid Request', 'error');
-            $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'pending_approvals', 'admin' => true));
-        }
-        
-    }
-
-    /**
-     * Change the password of the cashier by the admin
-     * @param string $id
-     * @return null
-     */
-    function admin_change_password($id = '') {
-
-        $this->checkAccess('Promocode', 'can_edit');
-        $this->layout = 'admin';
-
-        $id = base64_decode($id);
-        $is_valid = true;
-        if('' == $id){
-            $is_valid = false;
-        }else{
-            $user_data = $this->Promocode->Find('first', array(
-                'fields' => array('Promocode.firstname', 'Promocode.lastname'),
-                'conditions' => array('Promocode.id' => $id), 'limit' => 1
-            ));
-
-            $this->set(compact('id', 'user_data'));
-            if (empty($user_data)) {
-                $is_valid = false;
-            }
-        }
-
-        if(!$is_valid) {
-            $this->Session->setFlash('Invalid Request', 'error');
-            $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'index', 'admin' => true));
-        }
-
-        if (!empty($this->request->data)) {
-
-            $this->Promocode->set($this->request->data);
-
-            if ($this->Promocode->validates()) {
-
-                $new_password = Security::hash($this->request->data['Promocode']['password'], 'md5');
-
-                $this->Promocode->updateAll(array('Promocode.password' => "'" . $new_password . "'"), array('Promocode.id' => $id));
-                $this->Session->setFlash('Password has been updated successfully', 'success');
-                $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'index', 'admin' => true));
-            }
+	        $this->loadModel('CousineLocal');
+	        $items_list = $this->CousineLocal->find('all', array(
+	            'conditions' => array(
+	                'Cousine.restaurant_id' => @$restaurant_id, 
+	                'CousineLocal.lang_code' => 'en',
+	                'Cousine.category_id' => $categoryid, 
+	            ),
+	            'fields' => array(
+	                'CousineLocal.parent_id', 'CousineLocal.name'
+	            )
+	        ));
+	        // pr($items_list); 
+            $output = "<option value=''>Select</option>";
+	        		
+            if(!empty($items_list))
+	            foreach ($items_list as $key => $index) {
+	            	$output.="<option value='" . $index['CousineLocal']['parent_id'] . "'>" . $index['CousineLocal']['name'] . "</option>";
+	            }
+            echo $output;
         }
     }
 

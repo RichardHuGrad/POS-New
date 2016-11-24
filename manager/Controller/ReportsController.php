@@ -27,75 +27,101 @@ class ReportsController extends AppController {
         $this->loadModel("Order");
         $this->layout = 'admin';
         $limit = DEFAULT_PAGE_SIZE;
-        $order = 'Order.created DESC';
 
-        $conditions = array();
+        $conditions = array('Order.is_completed'=>'Y');
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
         if('Y' <> $is_super_admin){
-            $conditions = array('is_hide'=>'N');
+            $conditions['Order.is_hide'] = 'N';
+            $conditions['Order.cashier_id'] = $this->Session->read('Admin.id');
         }
 
-        if (!empty($this->request->data)) {
-
-            if(isset($this->request->data['Order']) && !empty($this->request->data['Order'])) {
-                $search_data = $this->request->data['Order'];
-                $this->Session->write('order_search', $search_data);
-            }
-
-            if(isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
-                $this->Session->write('page_size', $this->request->data['PageSize']['records_per_page']);
-            }
-        }
-
-        if($this->Session->check('page_size')){
-            $limit = $this->Session->read('page_size');
-        }
-
-        if($this->Session->check('order_search')){
-            $search = $this->Session->read('order_search');
-
-            if(!empty($search['table_status'])){
-                $conditions['Order.table_status'] =array(@$search['table_status'][0], @$search['table_status'][1]);
-            }
-            if(!empty($search['paid_by'])){
-                $conditions['Order.paid_by'] =array(@$search['paid_by'][0], @$search['paid_by'][1], @$search['paid_by'][2]);
-            }
-
-            if(!empty($search['cooking_status'])){
-                $conditions['Order.cooking_status'] =array(@$search['cooking_status'][0], @$search['cooking_status'][1]);
-            }
-
-
-            if(!empty($search['search'])){
-                $conditions['Order.order_no'] = $search['search'];
-            }
-            if(!empty($search['registered_from'])){
-                $conditions['date(Order.created) >='] = $search['registered_from'];
-            }
-            if(!empty($search['registered_till'])){
-                $conditions['date(Order.created) <='] = $search['registered_till'];
-            }
-
-        }
+        $year = @$this->params->query['year']?@$this->params->query['year']:date("Y");
+        $date = @$this->params->query['date']?@$this->params->query['date']:date("Y-m-d");
+        $cashier = @$this->params->query['cashier'];
+        $conditions['Order.created like '] = "%$year%";
+        if($cashier)
+            $conditions['Order.counter_id'] = $cashier;
 
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-                'Order.counter_id', 'Cashier.firstname', 'Cashier.lastname', 'count(Order.id) as counter', 'sum(Order.total) as total', 'sum(Order.tip) as total_tip', 'sum(Order.tax_amount) as total_tax_amount', 'sum(Order.card_val) as total_card_val', 'sum(Order.cash_val) as total_cash_val'
+                'sum(Order.total) as total', 'DATE_FORMAT(Order.created, "%m") as month'
             ),
-            'order' => $order,
-            'group'=>"Order.counter_id",
-            // 'recursive'=>-1
+            'group'=>'DATE_FORMAT(Order.created, "%m")',
+            'recursive'=>-1
         );
-        if('all' == $limit){
-            $records = $this->Order->find('all', $query);
-        }else{
-            $query['limit'] = $limit;
-            $this->paginate = $query;
-            $records = $this->paginate('Order');
+        $records = $this->Order->find('all', $query);
+        $months = array(0,0,0,0,0,0,0,0,0,0,0,0);
+        if(!empty($records)) {
+            foreach ($records as $key => $value) {
+                $months[intval($value[0]['month'])] = round($value[0]['total'], 2);
+            }
         }
-        // pr($records);
-        $this->set(compact('records', 'limit', 'order', 'is_super_admin'));
+        $months = implode(",", $months);
+
+        // get daily statics
+        $conditions_new = array('Order.is_completed'=>'Y');
+        $conditions_new['created like'] = "%$date%";
+        
+        if('Y' <> $is_super_admin){
+            $conditions_new['Order.is_hide'] = 'N';
+            $conditions_new['Order.cashier_id'] = $this->Session->read('Admin.id');
+        }
+
+        if($cashier)
+            $conditions_new['Order.counter_id'] = $cashier;
+        $query = array(
+            'conditions' => $conditions_new,
+            'fields' => array(
+                'sum(Order.total) as total', 'DATE_FORMAT(Order.created, "%H") as hour'
+            ),
+            'group'=>'DATE_FORMAT(Order.created, "%H")',
+            'recursive'=>-1
+        );
+        $records = $this->Order->find('all', $query);
+        $hour = array(
+            "'12:00 am-1:00 am'",
+            "'1:00 am-2:00 am'",
+            "'2:00 am-3:00am'",
+            "'3:00am-4:00am'",
+            "'4:00am-5:00am'",
+            "'5:00am-6:00am'",
+            "'6:00am-7:00am'",
+            "'7:00am-8:00am'",
+            "'8:00am-9:00am'",
+            "'9:00am-10:00am'",
+            "'10:00am-11:00am'",
+            "'11:00am-12:00pm'",
+            "'12:00pm-1:00pm'",
+            "'1:00pm-2:00pm'",
+            "'2:00pm-3:00pm'",
+            "'3:00pm-4:00pm'",
+            "'4:00pm-5:00pm'",
+            "'5:00pm-6:00pm'",
+            "'6:00pm-7:00pm'",
+            "'7:00pm-8:00pm'",
+            "'8:00pm-9:00pm'",
+            "'9:00pm-10:00pm'",
+            "'10:00pm-11:00pm'",
+            "'11:00pm-11:59pm'");
+        $hours = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        if(!empty($records)) {
+            foreach ($records as $key => $value) {
+                $hours[intval($value[0]['hour'])] = round($value[0]['total'], 2);
+            }
+        }
+        $hours = implode(",", $hours);
+        $hour = implode(",", $hour);
+
+        // get all cashiers list        
+        $this->loadModel('Cashier');
+        $conditions = [];
+        if($is_super_admin <> 'Y')
+            $conditions = array('restaurant_id'=> $this->Session->read('Admin.id'));
+
+        $cashiers = $this->Cashier->find('list',
+            array('fields' => array('Cashier.id', 'Cashier.firstname'), 'conditions' => $conditions, 'order' => array('Cashier.firstname' => 'ASC')));
+        $this->set(compact('records', 'limit', 'order', 'is_super_admin', 'months', 'year', 'date', 'cashier', 'hours', 'hour', 'cashiers'));
     }
 
 }

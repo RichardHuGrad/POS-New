@@ -119,7 +119,7 @@ class CooksController extends AppController {
                  $is_error_image = 0;
                 if (isset($this->request->data['Cook']['image']['name']) && $this->request->data['Cook']['image']['name'] != "") {
 
-                    @unlink(CASHIER_UPLOAD_PATH.'thumbnail/' . @$result_data['Cook']['image']);
+                    @unlink(COOK_UPLOAD_PATH.'thumbnail/' . @$result_data['Cook']['image']);
                     $is_image_uploaded = 1;
                     $allowed_extension = array('jpg', 'jpeg', 'png', 'gif');
                     $extension = pathinfo($this->request->data['Cook']['image']['name'], PATHINFO_EXTENSION);
@@ -130,10 +130,10 @@ class CooksController extends AppController {
                     } else {
                         $is_error_image = 0;
                         $product_pic = time() . "_Cashier." . $extension;
-                        if (move_uploaded_file($this->request->data['Cook']['image']['tmp_name'], CASHIER_UPLOAD_PATH . $product_pic)) {
-                            $this->resize($product_pic, 60, CASHIER_UPLOAD_PATH);
+                        if (move_uploaded_file($this->request->data['Cook']['image']['tmp_name'], COOK_UPLOAD_PATH . $product_pic)) {
+                            $this->resize($product_pic, 60, COOK_UPLOAD_PATH);
                             $this->request->data['Cook']['image'] = $product_pic;
-                            unlink(CASHIER_UPLOAD_PATH . $product_pic);
+                            unlink(COOK_UPLOAD_PATH . $product_pic);
                         }
                     }
                 } else {

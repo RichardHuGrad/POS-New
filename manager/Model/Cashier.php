@@ -93,7 +93,7 @@ class Cashier extends AppModel {
             'allowNumberOnly' => array(
                 'rule' => array('allowNumberOnly'),
                 'message' => 'Mobile number should be numeric only',
-                'allowEmpty' => false
+                'allowEmpty' => true
             ),
             'between' => array(
                 'rule' => array('between', 8, 15),
