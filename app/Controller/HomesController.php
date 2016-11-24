@@ -2018,11 +2018,13 @@ class HomesController extends AppController {
         if ($memo != "") {
             //Print average
             $print_y += 40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Average"), 58, $print_y);
+            printer_draw_text($handle, "Average", 58, $print_y);
 
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
+			if ($print_zh == true) {
+				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+				printer_select_font($handle, $font);
+				printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
+			};
 
             $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
