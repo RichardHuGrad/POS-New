@@ -150,6 +150,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     <?php } ?>
     <div class="subtotalwrap">
         <div class="row">
+        	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
             <div class="col-xs-8 col-sm-8 col-md-8">Subtotal <?php 
 			if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) { ?>小计(原价)<?php } else { ?> 小计 <?php } ?>: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php 
 			if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) {
@@ -157,7 +158,9 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 			}else{
 				if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00';  
 			};
-			?></strong></div>
+			?></strong>
+            <!-- End -->
+            </div>
 		</div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
     </div>
     
