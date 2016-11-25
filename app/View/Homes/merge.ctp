@@ -118,7 +118,13 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                 <ul>
                     <li class="clearfix">
                         <div class="row">
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total 小计 </div>
+                        	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total <?php
+							$table_discount_value = 0;
+							for ($i = 0; $i < count($Order_detail); $i++) {
+	                            $table_discount_value += $Order_detail[$i]['Order']['discount_value'];
+                                }; 
+							if($table_discount_value) { ?>小计(原价)<?php } else { ?> 小计 <?php } ?> </div>
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
 <?php
 //Modified by Yishou Liao @ Oct 14 2016.
@@ -126,8 +132,9 @@ $subtotal = 0;
 for ($i = 0; $i < count($Order_detail); $i++) {
     $subtotal += $Order_detail[$i]['Order']['subtotal'];
 };
-echo number_format($subtotal, 2);
+echo number_format($subtotal+$table_discount_value, 2);
 //End.
+//End of Nov 25 2016
 ?></div>
 
                                 <?php
@@ -187,32 +194,6 @@ echo number_format($subtotal, 2);
                         </li>
 <?php } ?>
 
-                    <li class="clearfix">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tax 税 (
-<?php
-//Modified by Yishou Liao @ Oct 14 2016.
-for ($i = 0; $i < count($Order_detail); $i++) {
-    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $table_tax = $Order_detail[$i]['Order']['tax'];
-    };
-};
-echo $table_tax;
-//End.
-?>%)</div>
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
-<?php
-//Modified by Yishou Liao @ Oct 14 2016.
-$tax_amount = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
-};
-echo number_format($tax_amount, 2);
-//End.
-?></div>
-                        </div>
-                    </li>
-
 
                                 <?php
                                 //Modified by Yishou Liao @ Oct 14 2016.
@@ -266,11 +247,57 @@ echo number_format($tax_amount, 2);
 
                             </div>
                         </li>
+
+<!-- Modified by Yishou Liao @ Nov 25 2016 -->
+<li class="clearfix">
+                        <div class="row">
+                        	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">After Discount 打折后: </div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
+<?php
+//Modified by Yishou Liao @ Oct 14 2016.
+$subtotal = 0;
+for ($i = 0; $i < count($Order_detail); $i++) {
+    $subtotal += $Order_detail[$i]['Order']['subtotal'];
+};
+echo number_format($subtotal, 2);
+//End.
+//End of Nov 25 2016
+?></div>
+</li>
+<!-- End -->
+             
                                     <?php
                                 }
                                 ?>
 
-
+					<!-- Modified by Yishou Liao @ Nov 25 2016 -->
+                    <li class="clearfix">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tax 税 (
+<?php
+//Modified by Yishou Liao @ Oct 14 2016.
+for ($i = 0; $i < count($Order_detail); $i++) {
+    if ($Order_detail[$i]['Order']['table_no'] == $table) {
+        $table_tax = $Order_detail[$i]['Order']['tax'];
+    };
+};
+echo $table_tax;
+//End.
+?>%)</div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
+<?php
+//Modified by Yishou Liao @ Oct 14 2016.
+$tax_amount = 0;
+for ($i = 0; $i < count($Order_detail); $i++) {
+    $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
+};
+echo number_format($tax_amount, 2);
+//End.
+?></div>
+                        </div>
+                    </li>
+                    <!-- End -->
 
                     <li class="clearfix">
                         <div class="row">
