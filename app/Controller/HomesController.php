@@ -1726,11 +1726,15 @@ class HomesController extends AppController {
     //Modified by Yishou Liao @ Nov 15 2016.
     public function printTokitchen($print_zh = false,$splitItme=false) {
         //Modified by Yishou Liao @ Nov 28 2016
-        //if ($splitItme == false) {
+        if ($splitItme == false) {
             $Print_Item = $this->data['Print_Item'];
-        //}else{
-        //    $Print_Item_split = $this->data['Print_Item'];
-        //};
+        }else{
+            $Print_Item_split = $this->data['Print_Item'];
+            $Print_Item = array();
+        };
+        //End
+        for ($x=0;$x<(isset($Print_Item_split)?count($Print_Item_split):1);$x++){//Modified by Yishou Liao @ Nov 28 2016
+        if (isset($Print_Item_split)) { $Print_Item[0]=$Print_Item_split[$x]; };//Modified by Yishou Liao @ Nov 28 2016
         $Printer = $this->data['Printer'];
         $order_no = $this->data['order_no'];
         $order_type = $this->data['order_type'];
@@ -1869,6 +1873,7 @@ class HomesController extends AppController {
         };
 
         echo true;
+        };//End @ Nov 28 2016
         exit;
     }
 
