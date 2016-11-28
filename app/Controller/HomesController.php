@@ -1097,7 +1097,7 @@ class HomesController extends AppController {
         $data['Order']['id'] = $Order_detail['Order']['id'];
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['extras_amount'] + $extras_amount;
         $data['Order']['tax_amount'] = ($data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100);
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $Order_detail['Order']['tax_amount']);
+        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);//Modified by Yishou Liao @ Nov 28 2016
 
         // calculate discount if exists
         $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
@@ -1724,8 +1724,13 @@ class HomesController extends AppController {
 
     //End.
     //Modified by Yishou Liao @ Nov 15 2016.
-    public function printTokitchen($print_zh = false) {
-        $Print_Item = $this->data['Print_Item'];
+    public function printTokitchen($print_zh = false,$splitItme=false) {
+        //Modified by Yishou Liao @ Nov 28 2016
+        //if ($splitItme == false) {
+            $Print_Item = $this->data['Print_Item'];
+        //}else{
+        //    $Print_Item_split = $this->data['Print_Item'];
+        //};
         $Printer = $this->data['Printer'];
         $order_no = $this->data['order_no'];
         $order_type = $this->data['order_type'];
