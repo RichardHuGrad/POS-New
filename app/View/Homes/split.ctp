@@ -1015,6 +1015,7 @@ if (!empty($Order_detail['OrderItem'])) {
 		for (var i = 0; i < order_menu.length; i++){
 			subTotal = <?php echo $Order_detail['Order']['subtotal'] ?>//parseFloat(order_menu[i][5]);
 		};
+		keepsubTotal =<?php echo $Order_detail['Order']['subtotal']+$Order_detail['Order']['discount_value'] ?>;//Modified by Yishou Liao @ Nov 28 2016
     <?php } else{ ?>
 		for (var i = 0; i < person_menu.length; i++){
 			if (person_menu[i][0] == radio_click){
@@ -1044,7 +1045,15 @@ if (!empty($Order_detail['OrderItem'])) {
 		<?php }; ?>
     <?php }; ?>
     split_accounting_str = '<ul>';
-    split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total 小计 </div>';
+	//Modified by Yishou Liao @ Nov 25 2016
+    split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total ';
+	split_accounting_str += <?php if($Order_detail['Order']['discount_value']) { ?> "小计(原价):" <?php } else { ?> "小计:" <?php }; ?>;
+	split_accounting_str += '</div>';
+	//End
+	
+	//Modified by Yishou Liao @ Nov 28 2016
+	<?php if (!$Order_detail['Order']['discount_value']) { ?>
+	//End
     split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + subTotal.toFixed(2)+ '</div>';
 	
 <?php if ($Order_detail['Order']['table_status'] <> 'P' and ! $Order_detail['Order']['discount_value']) { ?>
@@ -1060,15 +1069,9 @@ if (!empty($Order_detail['OrderItem'])) {
         split_accounting_str += '<input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode"></div></div>';
         split_accounting_str += '<div class="col-md-3"><div class="form-group"><label for="AdminTableSize" style="width:100%">&nbsp;</label>';
         split_accounting_str += '<a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a></div></div></div></li>';
-<?php } ?>
-    split_accounting_str += '<li class="clearfix"><div class="row">';
-    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tax 税 (' + Tax + '%)</div>';
-    var Tax_Amount = subTotal * Tax / 100;
-    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$' + Tax_Amount.toFixed(2) + '</div>';
-    split_accounting_str += '</div></li>';
+<?php };};//Modified by Yishou Liao @ Nof 28 2016 (Add }; ) ?>
 
 <?php if ($Order_detail['Order']['discount_value']) { ?>
-        split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ';
 		//Modified by Yishou Liao @ Nov 19 2016
 		if (checkCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
 			discount = parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
@@ -1086,6 +1089,11 @@ if (!empty($Order_detail['OrderItem'])) {
 			//End
 		};
 		//End
+		
+		//Modified by Yishou Liao @ Nov 28 2016
+split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + (parseFloat(subTotal)+parseFloat(discount)).toFixed(2) + '</div>';
+		//End
+        split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣:</div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ';//Modified by Yishou Liao @ Nov 28 2016
         split_accounting_str += discount;
         
     <?php if ($Order_detail['Order']['percent_discount']) { ?>
@@ -1096,9 +1104,22 @@ if (!empty($Order_detail['OrderItem'])) {
             split_accounting_str += '%)</span>';
     <?php }; ?>;
         split_accounting_str += '<a aria-hidden="true" class="fa fa-times remove_discount" order_id="' +<?php echo $Order_detail['Order']['id']; ?> + '" href="javascript:void(0)"></a></div></div></li>';
+		
+	//Modified by Yishou Liao @ Nov 25 2016
+    split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">After Discount 打折后:</div>';
+    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' + subTotal.toFixed(2)+ '</div></li>';
+	//End
+	
 <?php } ?>
 
-    split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Total 总</div>';
+	//Modified by Yishou Liao @ Nov 28 2016
+	split_accounting_str += '<li class="clearfix"><div class="row">';
+    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tax 税 (' + Tax + '%):</div>';
+    var Tax_Amount = subTotal * Tax / 100;
+    split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$' + Tax_Amount.toFixed(2) + '</div>';
+    split_accounting_str += '</div></li>';
+	//End
+    split_accounting_str += '<li class="clearfix"><div class="row"><div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Total 总:</div>';
     split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="';
     var Total_Amount = subTotal + (subTotal * Tax / 100);
     split_accounting_str += Total_Amount.toFixed(2); //Modified by Yishou Liao @ Oct 21 2016.
