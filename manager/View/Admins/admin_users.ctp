@@ -160,14 +160,15 @@ if($this->Session->check('admin_search')){
                                                                 array('plugin' => false, 'controller' => 'admins', 'action' => 'add_edit', base64_encode($user['Admin']['id']), 'admin' => true),
                                                                 array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit admin user details', 'escape' => false)
                                                             );
+                                                            
+                                                            echo $this->Html->link('<i class="fa fa-random"></i>',
+                                                                array('plugin' => false, 'controller' => 'admins', 'action' => 'reorder_table', base64_encode($user['Admin']['id']), 'admin' => true),
+                                                                array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to reorder tables', 'escape' => false)
+                                                            );
 
                                                             echo $this->Html->link('<i class="fa fa-key"></i>',
                                                                 array('plugin' => false, 'controller' => 'admins', 'action' => 'change_password', base64_encode($user['Admin']['id']), 'admin' => true),
                                                                 array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to change password', 'escape' => false)
-                                                            );
-                                                            echo $this->Html->link('<i class="fa fa-random"></i>',
-                                                                array('plugin' => false, 'controller' => 'admins', 'action' => 'reorder_table', base64_encode($user['Admin']['id']), 'admin' => true),
-                                                                array('class' => 'btn btn-transparent btn-xs tooltips', 'title' => 'Click here to reorder tables', 'escape' => false)
                                                             );
                                                         }
                                                         ?>

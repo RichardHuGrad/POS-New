@@ -86,7 +86,7 @@ class CashiersController extends AppController {
             'fields' => array(
                 'Admin.restaurant_name', 'Cashier.id', 'Cashier.firstname', 'Cashier.lastname', 'Cashier.email', 'Cashier.mobile_no', 'Cashier.status', 'Cashier.is_verified', 'Cashier.created', 'no_of_orders'
             ),
-            'order' => $order
+            'order' => 'Cashier.created DESC'
         );
         if('all' == $limit){
             $customer_list = $this->Cashier->find('all', $query);

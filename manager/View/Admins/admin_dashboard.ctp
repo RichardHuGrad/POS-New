@@ -1,8 +1,3 @@
-<?php echo $this->Html->script(array('Chart.min','index'), array('inline' => false)); ?>
-<?php echo $this->Html->scriptBlock("
-        jQuery(document).ready(function () {
-        Index.init();
-    });  ", array('inline' => false)); ?>
 <div id="app">
     <!-- sidebar -->
     <?php echo $this->element('sidebar'); ?>

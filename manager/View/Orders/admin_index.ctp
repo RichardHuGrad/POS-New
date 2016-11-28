@@ -227,10 +227,10 @@ $registered_till = @$search['registered_till'];
                                         <?php foreach ($records as $customer) { $ids[] = $customer['Order']['id'];
                                             /* if($customer['Order']['is_hide'] == 'N') { */
                                                 $total += $customer['Order']['total'];
-						$order_tips = $customer['Order']['change'];
-                                            if(($customer['Order']['paid_by'] == 'CARD') && !empty($order_tips)) {
+					                          $order_tips = $customer['Order']['tip'];
                                                 $tips += $order_tips;
-						$order_tips = "\$" . number_format($order_tips, 2);
+                                            if(($customer['Order']['paid_by'] == 'CARD') && !empty($order_tips)) {
+						                          $order_tips = "\$" . number_format($order_tips, 2);
                                             } else {
                                                 $order_tips = " ";
                                             }

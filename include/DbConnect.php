@@ -14,7 +14,7 @@ class DbConnect
 		
     }
  
-  /*  function connect() 
+    function connect() 
 	{
         include_once dirname(__FILE__) . '/config.php';
  
@@ -24,20 +24,6 @@ class DbConnect
  
         // returing connection resource
         return $this->conn;
-    }
-	*/
-	
-	function connect() {
-        include_once dirname(__FILE__) . '/config.php';
-
-        // Connecting to mysql database
-        $connection = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD,DB_NAME);
-        if (!$connection) {
-	    die("Database connection failed: " . mysqli_error());
-	}
-        $this->conn = mysqli_select_db($connection,DB_NAME);
-        // returing connection resource
-        return $connection;
     }
 }
 ?>

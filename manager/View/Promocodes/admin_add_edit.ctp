@@ -167,13 +167,13 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <?php echo $this->Form->input('valid_from', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid From<span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required] datepicker')); ?>
+                                        <?php echo $this->Form->input('valid_from', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid From <span class="symbol required"></span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required] datepicker')); ?>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                      <div class="form-group">
-                                        <?php echo $this->Form->input('valid_to', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid To<span class="mandatory">*</span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required] datepicker')); ?>
+                                        <?php echo $this->Form->input('valid_to', array('type' => 'text', 'maxlength' => '255', 'label' => 'Valid To <span class="symbol required"></span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required] datepicker')); ?>
                                     </div>
                                 </div>
 
