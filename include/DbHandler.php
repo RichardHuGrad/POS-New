@@ -1,766 +1,466 @@
 <?php
-/**
- * @author Manoj Sharma
- */
-class DbHandler
-{
+class DbHandler {
     private $conn;
-    function __construct()
-	{
+    function __construct() {
         require_once dirname(__FILE__) . '/DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
-    }	
- 
-	public function getBeaconsList()
-	{
-		$select_beacon="SELECT * from beacons where status='A'";
-		$beacons= mysqli_query($this->conn,$select_beacon);
-        return $beacons;
-	}
- 
-	public function getCategoriesList()
-	{
-		$select_cat="SELECT * from categories where status='A'";
-		$categories=mysqli_query($this->conn,$select_cat);
-        return $categories;
-	}
-	
-	public function getMenusList($catId)
-	{
-		$select_menu="SELECT * from menus where status='A' and categoryid=$catId";
-		$menus=mysqli_query($this->conn,$select_menu);
-        return $menus;
-	}
-	
-	public function getEventsList()
-	{
-		$select_menu="SELECT * from events where status='A' and eventdate=CURDATE()";
-		$menus=mysqli_query($this->conn,$select_menu);
-        return $menus;
-	}
- 
-	public function getOffersList()
-	{
-		$select_menu="SELECT * from offers where status='A' and NOW() between startedon and endedon";
-		$menus=mysqli_query($this->conn,$select_menu);
-        return $menus;
-	}
-	
-	public function createUser($firstname, $lastname, $mobile_no, $address, $date_of_birth, $image, $age_proof_doc, $email, $password) {
-		$created = date("Y-m-d h:i:s");
-		$passwords = md5($password);
-        $response = array();
-        if (!$this->isEmailExists($email)) {
+    }
 
-			$pass= $password;
-            $user_image = "";
-            if ($image != '') {
-				if(isset($image['name']) && $image['name'] != '')
-				{ 
-					$ex1=explode(".",$image['name']);
-					$ext=end($ex1);
-					$user_image = rand(1,9999999).'-'.time()."porfileimage.".$ext; 
-					if (!move_uploaded_file($image['tmp_name'],"../app/webroot/uploads/customer_images/".$user_image))
-					{
-						$user_image = ''; 
-					}
-				}
-			}
+    public function cashierLogin($username, $password, $devicetoken, $deviceid) {
+        $regAt = date('Y-m-d H:i:s');
+        $userData = $this->isUsernameExists($username);
+        if (!$userData) {
+            return 'INVALID_USERNAME';
+        } else {
+            if ($userData['password'] != md5($password)) {
+                    return 'INVALID_USERNAME_PASSWORD';
+            }
+            if ($userData['status'] == 'I') {
+                return 'USER_ACCOUNT_DEACTVATED';
+            }
+            $update_token = "UPDATE cashiers set ipad_deviceid='', ipad_devicetoken='', logintype='NA' where ipad_deviceid='$deviceid'";
+            $up_token = mysql_query($update_token);
 
-			$user_age_proof_doc = ""; 
-            if ($age_proof_doc != '') {
-				if(isset($age_proof_doc['name']) && $age_proof_doc['name'] != '')
-				{ 
-					$ex1=explode(".",$age_proof_doc['name']);
-					$ext=end($ex1);
-					$user_age_proof_doc = rand(1,9999999).'-'.time()."doc.".$ext; 
-					if (!move_uploaded_file($age_proof_doc['tmp_name'],"../app/webroot/uploads/customer_age_proof_docs/".$user_age_proof_doc))
-					{
-						$user_age_proof_doc = ""; 
-					}
-				}
-			}
+            $update_user = "UPDATE cashiers set ipad_devicetoken='$devicetoken', ipad_deviceid='$deviceid', logintype='M' where id=".$userData['id'];
+            $up_user = mysql_query($update_user);
+            $userData = $this->getUserById($userData['id']);
+            return $userData;
+        }
+    }
+    
+    public function cashierLogout($userid) { 
+        $cashierUpdate="update cashiers set ipad_deviceid='', ipad_devicetoken='', logintype='NA' where id=$userid";
+        if(mysql_query($cashierUpdate)) {
+            return 'SUCCESSFULLY_DONE';  
+        }else{
+            return 'UNABLE_TO_PROCEED';  
+        }
+    }
 
-            $save_user = "INSERT INTO users(firstname, lastname, mobile_no, address, date_of_birth, image, age_proof_doc, email, password, created) VALUES '($firstname', '$lastname', '$mobile_no', '$address', '$date_of_birth', '$user_image', '$user_age_proof_doc', '$email', '$password','$created')";	
+    public function cashierTables($userid) {
+        $userData = $this->getUserById($userid);
+        /*for($i=1; $i<=$userData['no_of_takeout_tables']; $i++) {
+            $take_row=$i-1;
+            $takeout[$take_row]['table_no'] = 'T'.$i;
+            $takeout[$take_row]['order_no'] = '';
+            $takeout[$take_row]['order_type'] = 'A';
+            $takeout[$take_row]['created'] = '';
 
-            $result = mysqli_query($this->conn,$save_user);
-            if ($result) {
-                $inserted_id = mysqli_insert_id($this->conn);
+        }*/
 
-                // update user doc and image name as related to user id
-                if($user_age_proof_doc) {
-                	$new_name = "age_proof_".base64_encode($inserted_id)."_doc";
-                	@rename("../app/webroot/uploads/customer_age_proof_docs/".$user_age_proof_doc, "../app/webroot/uploads/customer_age_proof_docs/".$new_name);
-                	
-                	// update customer image name to DB table
-	                $sql = "update users set age_proof_doc = '$new_name' where users.id = '$inserted_id'";
-		            mysqli_query($this->conn, $sql);
-		            $user_age_proof_doc = $new_name;
+        for($i=1; $i<=$userData['no_of_tables']; $i++) {
+            $dine_row=$i-1;
+            $dinein[$dine_row]['table_no'] = 'T'.$i;
+            $dinein[$dine_row]['order_no'] = '';
+            $dinein[$dine_row]['order_type'] = 'A';
+            $dinein[$dine_row]['created'] = '';
+            $dinein[$dine_row]['table_color'] = 'AVAILABLE';
+        }
+
+        /*for($i=1; $i<=$userData['no_of_waiting_tables']; $i++) {
+            $wait_row=$i-1;
+            $waiting[$wait_row]['table_no'] = 'T'.$i;
+            $waiting[$wait_row]['order_no'] = '';
+            $waiting[$wait_row]['order_type'] = 'A';
+            $waiting[$wait_row]['created'] = '';
+        }*/
+
+        $output = array();
+        $takeOrder_row="select o.* from orders o where o.cashier_id='".$userData['restaurant_id']."' and is_completed='N' and order_type='D' order by table_no asc";
+        if ($takeOrder_row_res = mysql_query($takeOrder_row)) {
+            if(count($takeOrder_row_res)>0) {
+                while ($arr = mysql_fetch_assoc($takeOrder_row_res)) {
+
+                    /*$take_key = array_search('T'.$arr['table_no'], array_column($takeout, 'table_no'));
+                    if ($take_key>=0 && $arr['order_type']=='T') {
+                        $takeout[$take_key]['order_no'] = $arr['order_no'];
+                        $takeout[$take_key]['order_type'] = $arr['order_type'];
+                        $takeout[$take_key]['created'] = $arr['created'];
+                    }*/
+
+                    $dine_key = array_search('T'.$arr['table_no'], array_column($dinein, 'table_no'));
+                    if ($dine_key>=0 && $arr['order_type']=='D') {
+                        $dinein[$dine_row]['order_no'] = $arr['order_no'];
+                        $dinein[$dine_row]['order_type'] = $arr['order_type'];
+                        $dinein[$dine_row]['created'] = $arr['created'];
+                        $dinein[$dine_row]['table_color'] = 'OCCUPIED';
+                    }
+
+                    /*$wait_key = array_search('T'.$arr['table_no'], array_column($waiting, 'table_no'));
+                    if ($take_key>=0 && $arr['order_type']=='W') {
+                        $waiting[$take_key]['order_no'] = $arr['order_no'];
+                        $waiting[$take_key]['order_type'] = $arr['order_type'];
+                        $waiting[$take_key]['created'] = $arr['created'];
+                    }*/
                 }
+            } 
+            $output=array();
+            //$output['takeout']=$takeout;
+            $output['dinein']=$dinein;
+            //$output['waiting']=$waiting;
+            return $output;
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
 
-                if($user_image) {
-                	$new_name = "profile_image_".base64_encode($inserted_id);
-                	@rename("../app/webroot/uploads/customer_images/".$user_image, "../app/webroot/uploads/customer_images/".$new_name);
+    public function pendingOrders($userid, $type, $tableno) {
+        $userData = $this->getUserById($userid);
+        $order_row="select o.* from orders o where o.order_type='$type' and is_completed='N' and o.cashier_id='".$userData['restaurant_id']."'";
+        if ($tableno>0)
+            $order_row.=" and o.table_no = '$tableno'";
+        $order_row.=" order by o.id desc";
 
-                	// update customer image name to DB table
-	                $sql = "update users set image = '$new_name' where users.id = '$inserted_id'";
-		            mysqli_query($this->conn, $sql);
-		            $user_image = $new_name;
+        if ($order_res = mysql_query($order_row)) {
+            $num_rows = mysql_num_rows($order_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                while ($arr = mysql_fetch_assoc($order_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $output[$count]['order_no'] = $arr['order_no'];
+                    $output[$count]['table_no'] = $arr['table_no'];
+                    $output[$count]['tax'] = $arr['tax'];
+                    $output[$count]['tax_amount'] = $arr['tax_amount'];
+                    $output[$count]['subtotal'] = $arr['subtotal'];
+                    $output[$count]['total'] = $arr['total'];
+                    $output[$count]['created'] = $arr['created'];
+
+                    $orderItemsArr=$this->getOrderItems($arr['id']);
+                    if (count($orderItemsArr)>0) {
+                        $i=0;
+                        while ($itemArr = mysql_fetch_assoc($orderItemsArr)) {
+                            $output[$count]['items'][$i]['id']=$itemArr['id'];
+                            $output[$count]['items'][$i]['name_en']=$itemArr['name_en'];
+                            $output[$count]['items'][$i]['name_zh']=$itemArr['name_xh'];
+                            $output[$count]['items'][$i]['price']=$itemArr['price'];
+                            $output[$count]['items'][$i]['qty']=$itemArr['qty'];
+                            $output[$count]['items'][$i]['tax']=$itemArr['tax'];
+                            $output[$count]['items'][$i]['tax_amount']=$itemArr['tax_amount'];
+                            $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
+                            $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
+                            $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
+                            $i++;
+                        }
+                    } else {
+                        $output[$count]['items']=array();
+                    }
+                    $count++;
                 }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
 
-                $response['userid'] = $inserted_id;
-                $response['firstname'] = '' . $firstname;
+    public function items($userid, $categoryid) {
+        $categories_row="select c.id, (select group_concat(name SEPARATOR '----') as itemname from category_locales cl where cl.category_id=c.id) as catname from categories c where c.status='A'";
+        if ($categoryid>0)
+            $categories_row.=" and c.id=$categoryid";
+        if ($categories_res = mysql_query($categories_row)) {
+            $num_rows = mysql_num_rows($categories_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                while ($arr = mysql_fetch_assoc($categories_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $catNameArr=explode('----', $arr['catname']);
 
-                $response['lastname'] = '' . $lastname;
-                $response['mobile_no'] = '' . $mobile_no;
-                $response['address'] = '' . $address;
-                $response['date_of_birth'] = '' . $date_of_birth;
-                $response['image'] = '' . $user_image;
-                $response['age_proof_doc'] = '' . $user_age_proof_doc;
-                $response['firstname'] = '' . $firstname;
-                $response['firstname'] = '' . $firstname;
-                $response['firstname'] = '' . $firstname;
+                    $output[$count]['catname_en'] = $catNameArr[0];
+                    $output[$count]['catname_zh'] = $catNameArr[1];
+
+                    $itemsArr=$this->getCategoryItems($arr['id']);
+                    if (count($itemsArr)>0) {
+                        $i=0;
+                        while ($itemArr = mysql_fetch_assoc($itemsArr)) {
+                            $output[$count]['items'][$i]['id']=$itemArr['id'];
+                            $itemNameArr=explode('----', $itemArr['itemname']);
+                            $output[$count]['items'][$i]['itemname_en'] = $itemNameArr[0];
+                            $output[$count]['items'][$i]['itemname_zh'] = $itemNameArr[1];
+                            $output[$count]['items'][$i]['price']=$itemArr['price'];
+                            $output[$count]['items'][$i]['is_tax']=$itemArr['is_tax'];
+                            $i++;
+                        }
+                    } else {
+                        $output[$count]['items']=array();
+                    }
+                    $count++;
+                }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function extras($userid, $type) {
+        $extras_row="select * from extras where status='A'";
+        if ($type!='0')
+            $extras_row.=" and type='$type'";
+        if ($extras_res = mysql_query($extras_row)) {
+            $num_rows = mysql_num_rows($extras_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                while ($arr = mysql_fetch_assoc($extras_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $output[$count]['name_en'] = $arr['name'];
+                    $output[$count]['name_zh'] = $arr['name_zh'];
+                    $output[$count]['price'] = $arr['price'];
+                    $count++;
+                }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function reservation($userid, $name, $noofperson, $phoneno, $date, $time, $required) {
+        $userData = $this->getUserById($userid);
+        $createdat=date('Y-m-d H:i:s');
+        $reserve_query = "insert into reservations set restaurant_id='".$userData['restaurant_id']."', cashier_id='$userid', name='$name', noofperson='$noofperson',phoneno='$phoneno', reserve_date='$date', reserve_time='$time', required='$required', created='$createdat'";
+        if(mysql_query($reserve_query)) {
+            $insertId = mysql_insert_id();
+            return $insertId;
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function cancelReservation($userid, $reservationid, $reason) {
+        $cancelledat=date('Y-m-d H:i:s');
+        $reserve_query = "update reservations set cancelledby='$userid', cancelledreason='$reason', cancelledat='$cancelledat', status='C' where id=$reservationid";
+        if(mysql_query($reserve_query)) {
+            return 'SUCCESSFULLY_DONE';
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function reservations($userid, $type) {
+        $reservations_row="select * from reservations";
+        if ($type!='0')
+            $reservations_row.=" where status='$type'";
+
+        $reservations_row.=" order by reserve_date, reserve_time asc";
+        if ($reservations_res = mysql_query($reservations_row)) {
+            $num_rows = mysql_num_rows($reservations_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                while ($arr = mysql_fetch_assoc($reservations_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $output[$count]['name'] = $arr['name'];
+                    $output[$count]['noofperson'] = $arr['noofperson'];
+                    $output[$count]['phoneno'] = $arr['phoneno'];
+                    $output[$count]['reserve_date'] = $arr['reserve_date'];
+                    $output[$count]['reserve_time'] = $arr['reserve_time'];
+                    $output[$count]['required'] = $arr['required'];
+                    $output[$count]['status'] = $arr['status'];
+                    $output[$count]['created'] = $arr['created'];
+                    $count++;
+                }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function updateReservation($userid, $reservationid, $name, $noofperson, $phoneno, $date, $time, $required) {
+        $modified=date('Y-m-d H:i:s');
+        $reserve_query = "update reservations set name='$name', noofperson='$noofperson',phoneno='$phoneno', reserve_date='$date', reserve_time='$time', required='$required', modified='$modified' where id=$reservationid";
+        if(mysql_query($reserve_query)) {
+            return 'SUCCESSFULLY_DONE';
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function reserveTable($userid, $reservationid, $tableno) {
+        $reservedat=date('Y-m-d H:i:s');
+        if(!$this->isTableAvailable($tableno)) {
+            if($reserveData=$this->isValidReservationId($reservationid)) {
+                if ($reserveData['status']=='C') {
+                    return 'ALREADY_CANCELLED';
+                }
+                if ($reserveData['status']=='A') {
+                    return 'ALREADY_ASSIGNED';
+                }
+                $reserve_query = "update reservations set reservedby='$userid', reservedat='$reservedat', status='A' where id=$reservationid";
+                if(mysql_query($reserve_query)) {
+                    $userData = $this->getUserById($userid);
+                    $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='$tableno', order_type='D', created='$reservedat', reservation_id='$reservationid', , tax='".$userData['tax']."'";
+                    $OrderInsert=mysql_query($order_insert);
+                    $orderId = mysql_insert_id();
+                    $order_no=str_pad($orderId, 5, rand(98753, 87563), STR_PAD_LEFT);
+
+                    $order_update = "update orders set order_no='$order_no' where id=$orderId";
+                    $OrderUpdate=mysql_query($order_update);
+                    return 'SUCCESSFULLY_DONE';
+                } else {
+                    return 'UNABLE_TO_PROCEED';
+                }
+            } else {
+                return 'INVALID_RESERVATION';
+            }
+        } else {
+            return 'TABLE_ALREADY_OCCUPIED';
+        }
+    }
+
+    public function makeOrder($userid, $type, $itemdata, $tableno) {
+        $orderedat=date('Y-m-d H:i:s');
+        if(!$this->isTableAvailable($tableno)) {
+            $itemdataArr=json_decode($itemdata);
 
 
-                $response['email'] = '' . $email;
-				
-                $sub = 'Register Successfully on Utrem App';
-				$headers = "From: info@utremapp.com\r\n"; 
-				$headers .= "Reply-To: \r\n";
-				$headers .= "MIME-Version: 1.0\r\n";
-				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-				$message = "<html><head></head><body>
-				<table><tr><td> Hello : ".$firstname." ".$lastname." </td></tr>
-				<tr><td>Your are successfully registered on Utrem App. </td></tr>  
-				<tr><td> Your User Name : ".$firstname." ".$lastname." </td></tr>
-				<tr><td> Password : ".$pass." </td></tr>
-				<tr><td>Thanks, </td></tr>
-				<tr><td>Utrem App </td></tr>        
-				</table>
-				</body></html>";											
-				$mail_res = mail($email, $sub, $message, $headers);  
-					
-                return $response;
+
+
+
+            $userData = $this->getUserById($userid);
+            $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='$tableno', order_type='D', created='$reservedat', tax='".$userData['tax']."'";
+            if(mysql_query($order_insert)) {
+                $orderId = mysql_insert_id();
+                $order_no=str_pad($orderId, 5, rand(98753, 87563), STR_PAD_LEFT);
+                $order_update = "update orders set order_no='$order_no' where id=$orderId";
+                $OrderUpdate=mysql_query($order_update);
+
+
+
+
+
+                return 'SUCCESSFULLY_DONE';
             } else {
                 return 'UNABLE_TO_PROCEED';
             }
-        
-		} else {
-            return 'EMAIL_ALREADY_EXISTED';
-        }
-        return $response;
-    }
-	
-	 private function isEmailExists($email) {
-        $save_user = "SELECT id from users WHERE email ='$email'";
-        $result = mysqli_query($this->conn,$save_user);
-        $num_rows = mysqli_num_rows($result);
-        return $num_rows > 0;
-    }
-	
-	
-	public function loginuser_11_5_2016($name, $email, $loginfrom, $password, $device_token, $user_type)
-	{            
-
-		switch($user_type) {
-			case 'C':
-				$table = 'customers';
-				break;
-			case 'V':
-				$table = 'vendors';
-				break;
-			case 'DB':
-				$table = 'delivery_boys';
-				break;
-			case 'VU':
-				$table = 'vendor_users';
-				break;
-			default:
-				$table = 'customers';
-		}
-
-		if ($loginfrom == 'F')
-		{        
-			$chkusr = mysqli_query($this->conn,"select * from {$table} where  email='$email'");
-			if(mysqli_num_rows($chkusr)>0) {      
-				$chkusr = mysqli_query($this->conn,"select * from {$table} where email='$email'");
-		
-				if(mysqli_num_rows($chkusr)>0) {   
-					$usrdat = mysqli_fetch_assoc($chkusr); 
-					if($usrdat['status'] == 'D') {   
-						return USER_ACCOUNT_DEACTVATED; 
-					}
-					else {
-						$update_user = "UPDATE {$table} set device_token='$device_token', loginfrom='F' where email='$email'";
-						$result = mysqli_query($this->conn,$update_user);
-						return $usrdat; 
-					}
-				}
-				else {
-					
-					return INVALID_REQUEST;
-				}
-			} 
-			else {  
-				$chkmmel = 0;
-				if($email != '') {  
-					$chkkmel = mysqli_query($this->conn,"select * from {$table} where email='$email' ");
-					if(mysqli_num_rows($chkkmel)>0) {
-						$chkmmel = 1;
-					}
-				}
-				
-				if($chkmmel == 0) { 
-					if($password != '') {  
-						$npassword = $password;
-						$password = md5($password); 
-					}
-					else {  
-						$npassword = $this->generateRandomPassword(6);
-						$password = md5($npassword);
-					}
-					
-					$save_user = "insert into {$table} set name='".$name."', 
-					                                 email='".$email."',
-													 password='".$password."',
-													 status='A', 												 
-													 loginfrom='F',   
-													 created='".date('Y-m-d H:i:s')."'";   
-						//	echo $save_user; exit;								 
-					$user=mysqli_query($this->conn,$save_user);
-					$insertId=mysqli_insert_id($this->conn);
-					if ($insertId>0)
-						{													
-						$usrdat = mysqli_query($this->conn,"select * from {$table} where id=".$insertId);
-						if(mysqli_num_rows($usrdat)>0) {
-							$datusr = mysqli_fetch_assoc($usrdat);
-							$msg = "Your Login Id : " . $email . " AND  Password : " . $npassword;
-							@mail($email, "Utrem app login detail", $msg, "From :info@utremapp.com");
-						
-							return $datusr;   
-						} 
-					}
-					else
-					{
-						return UNABLE_TO_PROCEED;
-					}
-				}else{
-					return EMAIL_ALREADY_EXISTED;   
-				}
-			}
-		}  
-		else if($loginfrom == 'G') 
-		{        
-			$chkusr = mysqli_query($this->conn,"select * from {$table} where  email='$email'");
-			if(mysqli_num_rows($chkusr)>0) {   
-			//echo "select * from users where loginfrom='G' and email='$email'" ;  
-				$chkusr = mysqli_query($this->conn,"select * from {$table} where email='$email'");
-		
-				if(mysqli_num_rows($chkusr)>0) {   
-					$usrdat = mysqli_fetch_assoc($chkusr); 
-					if($usrdat['status'] == 'D') {   
-						return USER_ACCOUNT_DEACTVATED; 
-					}else{
-						$update_user = "UPDATE {$table} set device_token='$device_token', loginfrom='G' where email='$email'";
-						$result = mysqli_query($this->conn,$update_user);
-						return $usrdat; 
-					}
-				}else {
-					
-					return INVALID_REQUEST;
-				}
-			}else{  
-				$chkmmel = 0;
-				if($email != '') {  
-					$chkkmel = mysqli_query($this->conn,"select * from {$table} where email='$email' ");
-					if(mysqli_num_rows($chkkmel)>0) {
-						$chkmmel = 1;
-					}
-				}
-				
-				if($chkmmel == 0) { 
-					if($password != '') {  
-						$npassword = $password;
-						$password = md5($password); 
-					}else{  						
-						$npassword = $this->generateRandomPassword(6);
-						$password = md5($npassword);						 
-					}					
-					$save_user = "insert into {$table} set name='".$name."', 
-					                                 email='".$email."',
-													 password='".$password."',
-													 status='A', 												 
-													 loginfrom='G',   
-													 created='".date('Y-m-d H:i:s')."'";   								 
-					$user=mysqli_query($this->conn,$save_user);
-					$insertId=mysqli_insert_id($this->conn);
-					if ($insertId>0)
-						{														
-						$usrdat = mysqli_query($this->conn,"select * from {$table} where id=".$insertId);
-						if(mysqli_num_rows($usrdat)>0) {
-							$datusr = mysqli_fetch_assoc($usrdat);							
-							$msg = "Your Login Id : " . $email . " AND  Password : " . $npassword;
-							@mail($email, "Utrem app login detail", $msg, "From :info@utremapp.com");
-							return $datusr;   
-						} 
-					}else{
-						return UNABLE_TO_PROCEED;
-					}
-				}else{
-					return EMAIL_ALREADY_EXISTED;   
-				}
-			}
-		}
-		else if($loginfrom == 'N')
-		{
-			if($password != '') {  
-			$chkusrlogin = mysqli_query($this->conn,"SELECT * FROM {$table} WHERE email='$email'");
-			if(mysqli_num_rows($chkusrlogin)>0) { 
-			$password1 = md5($password);				
-			$usrdats = mysqli_query($this->conn,"SELECT * FROM {$table} WHERE password='".$password1."' AND email='$email'");
-				if(mysqli_num_rows($usrdats)>0) { 
-					$datusr = mysqli_fetch_assoc($usrdats); 
-					if($datusr['status'] == 'D') { 
-						return USER_ACCOUNT_DEACTVATED; 
-					}else{
-						$update_user = "UPDATE {$table} SET device_token='$device_token', loginfrom='N' WHERE email='$email'";
-						$result = mysqli_query($this->conn,$update_user);
-						return $datusr; 
-					}
-				}else{
-					return INVALID_EMAIL_PASSWORD;   
-				}
-			}else{
-				return INVALID_EMAIL;
-			}
-			}
-			else {
-				return NEED_PASSWORD;
-			}
-		}else{ 
-			return INVALID_REQUEST;     
-		}
-    }
-
-	public function loginuser($name, $email, $loginfrom, $password, $device_type, $device_token, $user_type)
-	{
-
-		switch($user_type) {
-			case 'C':
-				$table = 'customers';
-				break;
-			case 'V':
-				$table = 'vendors';
-				break;
-			case 'DB':
-				$table = 'delivery_boys';
-				break;
-			case 'VU':
-				$table = 'vendor_users';
-				break;
-			default:
-				$table = 'customers';
-		}
-
-		$login_types = array('N', 'F', 'G');
-		if(in_array($loginfrom, $login_types)){
-
-			$query = "SELECT * FROM {$table} WHERE email = '{$email}' LIMIT 1";
-			$chkusrlogin = mysqli_query($this->conn, $query);
-			$datusr = mysqli_fetch_assoc($chkusrlogin);
-			$datetime = date('Y-m-d H:i:s');
-			if('N' == $loginfrom) {
-
-				if(!empty($datusr) && $datusr['password'] == md5($password)) {
-					if ('A' == $datusr['status']) {
-						if ('VU' != $user_type) {
-							$update_user = "UPDATE {$table} SET loginfrom = '{$loginfrom}', device_token = '{$device_token}', device_type = '{$device_type}'";
-
-							if('C' == $user_type) {
-								$update_user .= ", last_login = '{$datetime}'";
-							}
-							$update_user .= " WHERE email='{$email}' LIMIT 1";
-							mysqli_query($this->conn, $update_user);
-						}
-						return $datusr;
-					} else {
-						return USER_ACCOUNT_DEACTVATED;
-					}
-				}else{
-					return INVALID_EMAIL_PASSWORD;
-				}
-			}else{
-
-				if('C' == $user_type) {
-					if (!empty($datusr)) {
-						if ($datusr['status'] == 'A') {
-							$update_user = "UPDATE {$table} SET device_token='{$device_token}', device_type = '{$device_type}', loginfrom = '{$loginfrom}', last_login = '{$datetime}' WHERE email = '{$email}' LIMIT 1";
-							mysqli_query($this->conn, $update_user);
-							return $datusr;
-						} else {
-							return USER_ACCOUNT_DEACTVATED;
-						}
-					} else {
-						if ('' != $password) {
-							$npassword = $password;
-							$password = md5($password);
-						} else {
-							$npassword = $this->generateRandomPassword(6);
-							$password = md5($npassword);
-						}
-						$save_user = "INSERT INTO {$table} SET firstname = '{$name}', 
-												 email = '{$email}',
-												 password = '{$password}',
-												 device_token = '{$device_token}',
-												 device_type = '{$device_type}',
-												 is_verified = 'N',
-												 status = 'A', 												 
-												 loginfrom = '{$loginfrom}',   
-												 last_login = '{$datetime}',   
-												 created = '{$datetime}'";
-
-						mysqli_query($this->conn, $save_user);
-						$insertId = mysqli_insert_id($this->conn);
-						if ($insertId > 0) {
-							$usrdat = mysqli_query($this->conn, "SELECT * FROM {$table} WHERE id = {$insertId}");
-							if (mysqli_num_rows($usrdat) > 0) {
-								$datusr = mysqli_fetch_assoc($usrdat);
-								$msg = "Your Login Id : " . $email . " AND  Password : " . $npassword;
-								@mail($email, "Utrem app login detail", $msg, "From :info@utremapp.com");
-								return $datusr;
-							}
-						} else {
-							return UNABLE_TO_PROCEED;
-						}
-					}
-				}else{
-					return INVALID_EMAIL_PASSWORD;
-				}
-			}
-		}else{
-			return INVALID_REQUEST;
-		}
-	}
-	
-	 public function generateRandomPassword($length) {
-        $characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        for ($i = 0; $i <= $length; $i++) {
-            $num = rand(0, strlen($characters) - 1);
-            $output[] = $characters[$num];
-        }
-        return implode($output);
-    }
-	
-	 //send new password on forgot password
-    public function sendNewPassword($email) {
-        $sel_user = "SELECT * FROM users WHERE email = '$email'";
-        $result = mysqli_query($this->conn,$sel_user);
-        $user = mysqli_fetch_assoc($result);
-        if (!empty($user)) {
-            $newpass = $this->generateRandomPassword(6);
-            $newpassdb = md5($newpass);
-            $update_user = "UPDATE users set password='$newpassdb' where email='$email'";
-            $result = mysqli_query($this->conn,$update_user);
-            $msg = "Your Login Id : " . $email . " AND New Password : " . $newpass;
-            //echo $user['email'];die;
-
-
-            @mail($user['email'], "utremapp New password", $msg, "From :info@utremapp.com");
-
-            if ($result) {
-                return SUCCESSFULLY_DONE;
-            } else {
-                return UNABLE_TO_PROCEED;
-            }
         } else {
-            return INVALID_USERNAME;
+            return 'TABLE_ALREADY_OCCUPIED';
+        }
+    }
+    
+    /*------------------------------------------------- Called functions -----------------------------------------------*/
+    public function isValidReservationId($reservationid) {
+        $todayDate=date('Y-m-d H:i:s');
+        $sel_reservation = "SELECT * from reservations WHERE id=$reservationid";
+        $reservation = mysql_query($sel_reservation);
+        if (mysql_num_rows($reservation) > 0) {
+            $data=mysql_fetch_assoc($reservation);
+            return $data;
         }
     }
 
-    //update passsword
-    public function changePassword($user_id, $oldpassword, $newpassword)
-	{		 
-	//echo $user_id; exit;
-		$select_user="SELECT * FROM users WHERE id =".$user_id;
-		$user_res=mysqli_query($this->conn,$select_user);
-		$user=mysqli_fetch_assoc($user_res);
-		if (!empty($user))
-		{
-			//$oldpassword=md5($oldpassword);
-			if ($user['password']==$oldpassword || $user['password']==md5($oldpassword))
-			{  
-				$newpassword = md5($newpassword);
-				$update_user="UPDATE users set password='$newpassword',modified=NOW() where id=$user_id";
-				$user_update=mysqli_query($this->conn,$update_user);
-				$result=mysqli_affected_rows($this->conn);
-				if ($result){
-					return SUCCESSFULLY_DONE;
-				}else{
-					return UNABLE_TO_PROCEED;
-				}
-			}
-			else{
-				return INVALID_OLD_PASSWORD;
-			}
-		}
-		else
-		{
-			return INVALID_USER; 
-		}
-	}
-	
-	public function updateUser($user_id, $fullname, $gender, $dob, $image, $gluten_free,$vegetarian, $vegan, $dairy_free, $low_sodium, $Kosher, $halal, $organic)
-	{    
-        $response = array();
-        $db = new DbHandler();
-		$chk_user = mysqli_query($this->conn,"select  * from users where id=".$user_id);
-		//echo "select * from users where id=$user_id"; exit;
-		if(mysqli_num_rows($chk_user) > 0) {  
-			$pass_data = mysqli_fetch_array($chk_user);
-			$updtd = date('Y-m-d H:i:s');
-			$country  = (isset($country) && !empty($country)) ? $country : 0;
-			$city     = (isset($city) && !empty($city)) ? $city : 0;
-			$select_user="update users set name='$fullname', gender='$gender', dob='$dob', gluten_free='$gluten_free', vegetarian='$vegetarian' , vegan='$vegan' , dairy_free='$dairy_free' , low_sodium='$low_sodium' , Kosher='$Kosher' , halal='$halal', organic='$organic' ";			
-			if ($image != ''){ 		
-		      $user_image = mysqli_query($this->conn,"select image from users where id=".$user_id);
-		      $uimagedata = mysqli_fetch_array($user_image);
-			  //echo $uimagedata['image']; exit;
-				if(isset($image['name']) && $image['name'] != '')
-				{ 
-					$ex1=explode(".",$image['name']);
-					$ext=end($ex1);
-					$user_image = $user_id.'-'.time()."_flixa.".$ext; 
-					//echo "../app/webroot/uploads/users/$image "; exit;
-					if (move_uploaded_file($image['tmp_name'],"../app/webroot/uploads/profile_pic/".$user_image))
-					{
-						if(file_exists("../app/webroot/uploads/profile_pic/".$uimagedata['image'])){
-                         	@unlink("../app/webroot/uploads/profile_pic/".$uimagedata['image']);
-                       }
-					
-					}
-				}
-						 
-				$select_user.=", image='$user_image'"; 
-			}						
-			$select_user.=", modified=NOW() where id=$user_id"; 
-		//echo $select_user; exit;
-			$user_res = mysqli_query($this->conn,$select_user);
-			
-			$result=mysqli_affected_rows($this->conn);
-				if($result > 0) {  
-					$chk_user = mysqli_query($this->conn,"select * from users where id=".$user_id);
-					$udata = mysqli_fetch_array($chk_user);
-					//print_r($udata); exit;
-					return $udata;
-				}else { 
-					return UNABLE_TO_PROCEED;
-				}
-		}
-		else { 
-			return EMAIL_ALREADY_EXISTED;
-		}
-    }
-	
-	
-	  public function validateUser($email, $password) {
-		//echo $email . $password; exit;
-        $sel_user = "SELECT id  from users WHERE email = '" . $email . "' AND (password = '" . $password . "' or password = '" . md5($password) . "') and status='A'";       
-        $user = mysqli_query($this->conn,$sel_user);
-        $user_id = mysqli_fetch_assoc($user);
-        if (mysqli_num_rows($user) > 0) {
-            return $user_id;
-        }
-    }
-	
-	
-	public function getPageContent($page_id) {
-		
-		$res=mysqli_query($this->conn,"select * from pages  where id=".$page_id." and status='A'");
-		if(mysqli_num_rows($res) > 0) {
-			$r = mysqli_fetch_assoc($res);
-		    $response = array();
-			$response['id'] = $r['id'];
-			$response['name'] = strip_tags($r['name']);			
-			$response['discription'] = str_replace(array("\r", "\n"), '', strip_tags($r['discription']));
-			return $response;
-		}
-		else {
-			return UNABLE_TO_PROCEED;
-		}
-	}	
-	
-	
-	 public function restroListByLatLlong($user_id, $latitude, $longitude){
-        $response    = array();
-        $query = "SELECT *,
-                        ( 
-                            6371 * acos(
-                                        cos( radians($latitude) ) 
-                                        * cos( radians( lat ) ) 
-                                        * cos( radians( `long` ) - radians($longitude) ) 
-                                        + sin( radians($latitude) ) * sin( radians( lat ) ) 
-                                    ) 
-                        ) as distance 
-                            from locations 
-                                where is_deleted='N'
-									having distance < 1000 
-                                    order by distance
-									";
-        // echo  $query; exit;
-        $result = mysqli_query($this->conn,$query);
-        $num_rows = mysqli_num_rows($result);
-        if ($num_rows > 0) {
-                $restaurantListArray = '';
-                $count = 0;
-                while ($array = mysqli_fetch_assoc($result)) {
-                    $restaurantListArray['id'] = $array['id'];
-                    $restaurantListArray['name'] = $array['name'];
-                    $restaurantListArray['address'] = $array['address'];
-                    $restaurantListArray['unique_id'] = $array['unique_id'];
-
-                    $restaurantListArray['pro_beacon_key'] = $array['pro_beacon_key'];
-                    $restaurantListArray['dev_beacon_key'] = $array['dev_beacon_key'];
-                    $restaurantListArray['display_name'] = $array['display_name'];
-                    $restaurantListArray['phone'] = $array['phone'];
-                    $restaurantListArray['lat'] = $array['lat'];
-                    $restaurantListArray['long'] = $array['long'];
-
-					$restaurantListArray['distance'] = number_format($array['distance'],1);	
-                            
-                    $response[$count] = $restaurantListArray;
-                    $count++;
-                }
-
-            return $response;
-        } else {
-            return 'UNABLE_TO_PROCEED';
+    public function isTableAvailable($tableno) {
+        $todayDate=date('Y-m-d');
+        $sel_user = "SELECT * from orders WHERE table_no='$tableno' and is_completed='N' and order_type='D' and DATE(created)='$todayDate'";
+        $user = mysql_query($sel_user);
+        if (mysql_num_rows($user) > 0) {
+            $data=mysql_fetch_assoc($user);
+            return $data;
         }
     }
 
-    public function listrestaurants($user_id){
-        $response    = array();
-        $query = "SELECT *
-                            from locations 
-                                where is_deleted='N'
-                                ";
-        // echo  $query; exit;
-        $result = mysqli_query($this->conn,$query);
-        $num_rows = mysqli_num_rows($result);
-        if ($num_rows > 0) {
-                $restaurantListArray = '';
-                $count = 0;
-                while ($array = mysqli_fetch_assoc($result)) {
-                    $restaurantListArray['id'] = $array['id'];
-                    $restaurantListArray['name'] = $array['name'];
-                    $restaurantListArray['address'] = $array['address'];
-                    $restaurantListArray['unique_id'] = $array['unique_id'];
+    function convertoround($amount) {
+        $amount_array = explode(".", $amount);
+        if (@$amount_array[1][1] < 3) {
+            $afterdot = @$amount_array[1][0] . '0';
+        } else if (@$amount_array[1][1] >= 3) {
+            $afterdot = @$amount_array[1][0] . '5';
+        }
+        if ($afterdot) {
+            $amount = $amount_array[0] . '.' . $afterdot;
+        }
+        return $amount;
+    }
+    
+    public function getCategoryItems($categoryid) {
+       $sel_items = "SELECT c.*, (select group_concat(name SEPARATOR '----') as itemname from cousine_locals cl where cl.parent_id=c.id) as itemname from cousines c WHERE category_id=$categoryid and c.status='A'";
+        $items = mysql_query($sel_items);
+        if (mysql_num_rows($items) > 0) {
+            return $items;
+        } 
+    }
 
-                    $restaurantListArray['pro_beacon_key'] = $array['pro_beacon_key'];
-                    $restaurantListArray['dev_beacon_key'] = $array['dev_beacon_key'];
-                    $restaurantListArray['display_name'] = $array['display_name'];
-                    $restaurantListArray['phone'] = $array['phone'];
-                    $restaurantListArray['lat'] = $array['lat'];
-                    $restaurantListArray['long'] = $array['long'];
-                    $response[$count] = $restaurantListArray;
-                    $count++;
-                }
-            return $response;
-        } else {
-            return 'UNABLE_TO_PROCEED';
+    public function getOrderItems($orderid) {
+       $sel_items = "SELECT * from order_items WHERE order_id=$orderid";
+        $items = mysql_query($sel_items);
+        if (mysql_num_rows($items) > 0) {
+            return $items;
+        } 
+    }
+
+    public function isUsernameExists($username) {
+        $sel_user = "SELECT id, password, status, email from cashiers WHERE email='$username'";
+        $user = mysql_query($sel_user);
+        if (mysql_num_rows($user) > 0) {
+            $data=mysql_fetch_assoc($user);
+            return $data;
         }
     }
-    public function getCategories($restaurant_id){
-        $response    = array();
-        $query = "SELECT *
-                            from categories 
-                                where location_id='$restaurant_id' and status = 'A'
-                                ";
-        $result = mysqli_query($this->conn,$query);
-        $num_rows = mysqli_num_rows($result);
-        if ($num_rows > 0) {
-                $categorieslistarray = '';
-                $count = 0;
-                while ($array = mysqli_fetch_assoc($result)) {
-                    $categorieslistarray['id'] = $array['id'];
-                    $categorieslistarray['name'] = $array['name'];
-                    $categorieslistarray['unique_id'] = $array['unique_id'];
-					$categorieslistarray['image'] = $array['unique_id']?CATEGORY_IMAGE_URL . 'thumbnail/' .$array['image']:"";
-                    $response[$count] = $categorieslistarray;
-                    $count++;
-                }
-            return $response;
-        } else {
-            return 'UNABLE_TO_PROCEED';
+
+    public function validateUser($mobileno, $password) {
+        $sel_user = "SELECT id from cashiers WHERE email = '$mobileno' AND (password = md5('$password') or password = '$password') and status='A'";
+        $user = mysql_query($sel_user);
+        if (mysql_num_rows($user) > 0) {
+            $userid = mysql_fetch_assoc($user);
+            return $userid;
         }
     }
-    public function getMenus($categoryid){
-        $response    = array();
-        $query = "SELECT *
-                            from menus 
-                                where categoryid='$categoryid' and status = 'A' and  is_deleted = 'N'
-                                ";
-        $result = mysqli_query($this->conn,$query);
-        $num_rows = mysqli_num_rows($result);
-        if ($num_rows > 0) {
-                $categorieslistarray = '';
-                $count = 0;
-                while ($array = mysqli_fetch_assoc($result)) {
-
-                	// get menu related items
-	                $related_resoponse = '';
-                	if($array['related_items']) {
-	                	$query = "SELECT id, name
-	                            from extras 
-	                                where id in(".$array['related_items'].") 
-	                                ";
-				        $result_items = mysqli_query($this->conn,$query);
-				        $num_rows = mysqli_num_rows($result_items);
-				        if ($num_rows > 0) {
-                			$count_items = 0;
-			                while ($related_items_array = mysqli_fetch_assoc($result_items)) {
-			                	$related_items = array();
-			                	$related_items['id'] = $related_items_array['id'];
-			                    $related_items['name'] = $related_items_array['name'];
-			                    $related_resoponse[$count_items] = $related_items;
-			                    $count_items++;
-			                }
-			            }
-			        }
-
-			        // get menu images here
-			        $response_images = "";
-			        $query = "SELECT image
-	                            from menu_images 
-	                                where menu_id = '".$array['id']."'
-	                                ";
-				        $result_images = mysqli_query($this->conn,$query);
-				        $num_rows = mysqli_num_rows($result_images);
-				        if ($num_rows > 0) {
-			                while ($image_array = mysqli_fetch_assoc($result_images)) {
-			                	$images = array();
-			                	$images['image'] = MENU_IMAGE_URL . 'thumbnail/' .$image_array['image'];
-			                    $response_images[] = $images;
-			                }
-			            }
-
-                    $categorieslistarray['id'] = $array['id'];
-                    $categorieslistarray['name'] = $array['name'];
-                    $categorieslistarray['unique_id'] = $array['unique_id'];
-                    $categorieslistarray['price'] = $array['price'];
-                    $categorieslistarray['ingredients'] = $array['ingredients'];
-                    $categorieslistarray['extras'] = $related_resoponse;
-                    $categorieslistarray['images'] = $response_images;
-                    $response[$count] = $categorieslistarray;
-                    $count++;
-                }
-            return $response;
-        } else {
-            return 'UNABLE_TO_PROCEED';
+    
+    public function getUserById($userid) {
+        $sel_user = "SELECT c.*, a.restaurant_name, a.address, a.tax, a.no_of_tables, a.no_of_takeout_tables, a.no_of_waiting_tables, a.table_size, a.table_order, a.takeout_table_size, a.waiting_table_size from cashiers c JOIN admins a ON a.id=c.restaurant_id WHERE c.id=$userid";
+        $user = mysql_query($sel_user);
+        if (mysql_num_rows($user) > 0) {
+            $userdata = mysql_fetch_assoc($user);
+            return $userdata;
         }
     }
-	
+
+    public function pushNotification($deviceToken, $message) {
+        $token = $deviceToken;
+        $message = array("data" => $message);
+        $url = 'https://android.googleapis.com/gcm/send';
+        $fields = array(
+            'registration_ids' => array($token),
+            'data' => $message,
+        );
+        //print_r($fields); 
+        $headers = array(
+            'Authorization: key=AIzaSyB_4G54ifqa2TOU0Ofnm8RcmMrMqwCwbac',
+            'Content-Type: application/json'
+        );
+
+        // Open connection
+        $ch = curl_init();
+        // Set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Disabling SSL Certificate support temporarly
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        // Execute post
+        $result = curl_exec($ch);
+        if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+        }
+        // Close connection
+        curl_close($ch);
+        //print_r($result); exit; 
+        return $result;
+    }
 }
- 
 ?>

@@ -1,21 +1,540 @@
 <?php
-ini_set("display_errors", "1");
-error_reporting(E_ALL);
-require_once '../include/DbConnect.php';
 require_once '../include/DbHandler.php';
-require_once '../include/PassHash.php';
 require '../lib/Slim/Slim.php';
-
-use Braintree\Configuration;
-
 \Slim\Slim::registerAutoloader();
 $app = new \Slim\Slim();
 $user_id = NULL;
- 
+$zone_id = NULL;
+error_reporting(0);
+ini_set('display_errors', '1');
 
 /**
- * Verifying required params posted or not
- */
+* Cashier Login
+* url - /login
+* method - POST
+* params - username(mandatory), password(mandatory), devicetoken(mandatory), deviceid(mandatory)
+**/
+$app->post('/login', function() use ($app) {
+    verifyRequiredParams(array('username', 'password', 'deviceid', 'devicetoken'));
+    $username = $app->request()->post('username');
+    $password = $app->request()->post('password');
+    $devicetoken = $app->request()->post('devicetoken');
+    $deviceid = $app->request()->post('deviceid');
+
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->cashierLogin($username, $password, $devicetoken, $deviceid);
+    if ($res == 'ACCOUNT_DEACTVATED') {
+        $response['code'] = 1;
+        $response['error'] = true;
+        $response['message'] = "Account Deactivated";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_USERNAME_PASSWORD') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Invalid Urername OR Password";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_USERNAME') {
+        $response['code'] = 3;
+        $response['error'] = true;
+        $response['message'] = "Username is not registered with us";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response["error"] = false;
+        $response['message'] = 'Login user data';
+        $response['data']['id'] = $res['id'];
+        $response['data']['firstname'] = $res['firstname'];
+        $response['data']['lastname'] = $res['lastname'];
+        $response['data']['mobile_no'] = $res['mobile_no'];
+        $response['data']['email'] = $res['email'];
+        $response['data']['password'] = $res['password'];
+        $response['data']['profilepic'] = $res['image'];
+
+        $response['data']['restaurant_name'] = $res['restaurant_name'];
+        $response['data']['street'] = $res['street'];
+        $response['data']['city'] = $res['city'];
+        $response['data']['province'] = $res['province'];
+        $response['data']['tax'] = $res['tax'];
+        $response['data']['no_of_tables'] = $res['no_of_tables'];
+        $response['data']['no_of_takeout_tables'] = $res['no_of_takeout_tables'];
+        $response['data']['no_of_waiting_tables'] = $res['no_of_waiting_tables'];
+        $response['data']['table_size'] = $res['table_size'];
+        $response['data']['table_order'] = $res['table_order'];
+        $response['data']['takeout_table_size'] = $res['takeout_table_size'];
+        $response['data']['waiting_table_size'] = $res['waiting_table_size'];
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Cashier Logout
+* url - /logout
+* method - GET
+* header Params - username(mandatory), password(mandatory) 
+**/
+$app->get('/logout', 'authenticate', function() use ($app) {
+    global $user_id;
+    $db = new DbHandler();
+    $response = array();
+    $user = $db->cashierLogout($user_id);
+    if ($user == 'UNABLE_TO_PROCEED') {
+        $response['code'] = 1;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed your request";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response["error"] = false;
+        $response["message"] = "User Logout successfully";
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Cashier Details (Authenticated)
+* url - /cashierdetails/:cashierid
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/cashierdetails/:cashierid', 'authenticate', function($cashierid) use ($app) {
+    global $user_id;
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->getUserById($cashierid);
+    if (!$res) {
+        $response['code'] = 1;
+        $response['error'] = true;
+        $response['message'] = "Invalid Cashier ID";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response["error"] = false;
+        $response['message'] = 'User Profile data';
+        $response['data']['id'] = $res['id'];
+        $response['data']['firstname'] = $res['firstname'];
+        $response['data']['lastname'] = $res['lastname'];
+        $response['data']['mobile_no'] = $res['mobile_no'];
+        $response['data']['email'] = $res['email'];
+        $response['data']['password'] = $res['password'];
+        $response['data']['profilepic'] = $res['image'];
+
+        $response['data']['restaurant_name'] = $res['restaurant_name'];
+        $response['data']['street'] = $res['street'];
+        $response['data']['city'] = $res['city'];
+        $response['data']['province'] = $res['province'];
+        $response['data']['tax'] = $res['tax'];
+        $response['data']['no_of_tables'] = $res['no_of_tables'];
+        $response['data']['no_of_takeout_tables'] = $res['no_of_takeout_tables'];
+        $response['data']['no_of_waiting_tables'] = $res['no_of_waiting_tables'];
+        $response['data']['table_size'] = $res['table_size'];
+        $response['data']['table_order'] = $res['table_order'];
+        $response['data']['takeout_table_size'] = $res['takeout_table_size'];
+        $response['data']['waiting_table_size'] = $res['waiting_table_size'];
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Table list assigned to cashier
+* url - /cashiertables
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/cashiertables', 'authenticate', function() use ($app) {
+    global $user_id;     
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->cashierTables($user_id);   
+    if ($res=='UNABLE_TO_PROCEED') {
+	    $response['code'] = 1;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+	    echoRespnse(200, $response);
+    } else {
+	    $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Table list"; 
+	    $response['data'] = $res;
+	    echoRespnse(201, $response);
+    }
+});
+
+/**
+* All pending orders
+* url - /pendingorders/:type/:tableno
+* type :- T / W , T-> Takeout, W -> Waiting
+* tableno :- default 0 when type= W / T
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/pendingorders/:type/:tableno', 'authenticate', function($type, $tableno) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->pendingOrders($user_id, $type, $tableno);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Pending Orders list"; 
+        $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Get all items with category
+* url - /items/:categoryid
+* categoryid :- default 0  , If O then all items and categories will return
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/items/:categoryid', 'authenticate', function($categoryid) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->items($user_id, $categoryid);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Items list"; 
+        $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Get extras list with type
+* url - /extras/:type
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/extras/:type', 'authenticate', function($type) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->extras($user_id, $type);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Extras list"; 
+        $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Make a reservation
+* url - /reservation 
+* method - POST
+* params - name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/reservation', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('name', 'noofperson', 'phoneno', 'date', 'time', 'required'));
+    $response = array();
+    // reading post params
+    $name = $app->request->post('name');
+    $noofperson = $app->request->post('noofperson');
+    $phoneno = $app->request->post('phoneno');
+    $date = $app->request->post('date');
+    $time = $app->request->post('time');
+    $required = $app->request->post('required');
+    
+    $db = new DbHandler();
+    $res = $db->reservation($user_id, $name, $noofperson, $phoneno, $date, $time, $required);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Request successfully Saved";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Cancel reservation
+* url - /cancelreservation 
+* method - POST
+* params - reservationid(mandatory), reason(optional)
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/cancelreservation', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('reservationid'));
+    $response = array();
+    // reading post params
+    $reservationid = $app->request->post('reservationid');
+    $reason = $app->request->post('reason');
+    
+    $db = new DbHandler();
+    $res = $db->cancelReservation($user_id, $reservationid, $reason);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Request successfully Updated";
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Get all reservation
+* url - /reservations/:type
+* type :- P -> Pending, A -> Assigned, C-> Cancelled, If all needed then use 'O'
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/reservations/:type', 'authenticate', function($type) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->reservations($user_id, $type);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Reseravtion list"; 
+        $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Update reservation
+* url - /updatereservation 
+* method - POST
+* params - reservationid(mandatory), name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/updatereservation', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('reservationid', 'name', 'noofperson', 'phoneno', 'date', 'time', 'required'));
+    $response = array();
+    // reading post params
+    $reservationid = $app->request->post('reservationid');
+    $name = $app->request->post('name');
+    $noofperson = $app->request->post('noofperson');
+    $phoneno = $app->request->post('phoneno');
+    $date = $app->request->post('date');
+    $time = $app->request->post('time');
+    $required = $app->request->post('required');
+    
+    $db = new DbHandler();
+    $res = $db->updateReservation($user_id, $reservationid, $name, $noofperson, $phoneno, $date, $time, $required);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Request successfully Updated";
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Assign a table against reservation
+* url - /reservetable 
+* method - POST
+* params - reservationid(mandatory), tableno(mandatory)
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/reservetable', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('reservationid', 'tableno'));
+    $response = array();
+    // reading post params
+    $reservationid = $app->request->post('reservationid');
+    $tableno = $app->request->post('tableno');
+   
+    $db = new DbHandler();
+    $res = $db->reserveTable($user_id, $reservationid, $tableno);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'TABLE_ALREADY_OCCUPIED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Table already occupied";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_CANCELLED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Reservation already cancelled";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_RESERVATION') {
+        $response["code"] = 4;
+        $response["error"] = true;
+        $response["message"] = "Reservation not found";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_ASSIGNED') {
+        $response["code"] = 5;
+        $response["error"] = true;
+        $response["message"] = "Table already assigned";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Request successfully Updated";
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Make Order
+* url - /makeorder 
+* method - POST
+* params - type(mandatory), itemdata(mandatory), tableno(optional)
+* type :- D-> Dinin, T -> Take-out, W -> Waiting
+* when type=D
+* tableno(mandatory)
+* when type != D
+* name(mandatory), noofperson(mandatory), phoneno(mandatory)
+* when type = T
+* takeout_date(mandatory), takeout_time(mandatory)
+* itemdata = [{ "itemid": "1",  "qty": "20", "allextras": 
+[{ "id": "56", "cousine_id": "103", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
+        "id": "57", "cousine_id": "103", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
+    "selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
+        "id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+}]
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/makeorder', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('type', 'itemdata', 'tableno'));
+    $type = $app->request->post('type');
+
+    /*if ($type!='D') {
+        verifyRequiredParams(array('name', 'noofperson', 'phoneno'));
+    }
+
+    if ($type!='T') {
+        verifyRequiredParams(array('takeout_date', 'takeout_time'));
+    }*/
+
+    $response = array();
+    // reading post params
+    
+    $itemdata = $app->request->post('itemdata');
+    $tableno = $app->request->post('tableno');
+    
+    $db = new DbHandler();
+    $res = $db->makeOrder($user_id, $type, $itemdata, $tableno);
+    if ($res == 'INVALID_ORDER_DATA') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Data";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Order successfully Saved";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Get chat messages
+* url - /messages/:eventid/:userid
+* currently my events will return in both type (created by me)
+* method - GET
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/pushnoti', function($eventid, $userid) use ($app) { 
+    verifyRequiredParams(array('token'));
+    $token = $app->request()->post('token');
+    $response = array();
+    $db = new DbHandler();
+    $message='test noti from nearyou';
+    //$token='APA91bGRClKUtgoZMswPqFaXJ-oCb_cz7mIb01m3bNUIFvSSEjMG0a-g4GUZj1cxISyi_k5Zdt1_Xd91jN9pusNVzZhTrlZzQg7XPDggdu10M681Yx8oHAjhrgM6odR6ESDyqhG4DjfH';
+    $res = $db->pushNotification($token, $message);   
+    
+});
+
+function verifyUser($user_id) {
+    $response = array();
+    $db = new DbHandler();
+    if ($db->isUserExists($user_id)) {
+        return true;
+    } else {
+        $app = \Slim\Slim::getInstance();
+        $response["code"] = 11;
+        $response["error"] = true;
+        $response["message"] = 'Invalid User id ' . $user_id;
+        echoRespnse(200, $response);
+        $app->stop();
+    }
+}
+
+/**
+* Verifying required params posted or not
+**/
 function verifyRequiredParams($required_fields) {
     $error = false;
     $error_fields = "";
@@ -32,375 +551,73 @@ function verifyRequiredParams($required_fields) {
             $error_fields .= $field . ', ';
         }
     }
- 
     if ($error) {
-        // Required field(s) are missing or empty
-        // echo error json and stop the app
         $response = array();
         $app = \Slim\Slim::getInstance();
-		$response["code"] = 10;
+        $response["code"] = 10;
         $response["error"] = true;
         $response["message"] = 'Required field(s) ' . substr($error_fields, 0, -2) . ' is missing or empty';
         echoRespnse(400, $response);
         $app->stop();
     }
 }
-  
-/**
- * Echoing json response to client
- * @param String $status_code Http response code
- * @param Int $response Json response
- */
-function echoRespnse($status_code, $response) {
-    $app = \Slim\Slim::getInstance();
-    // Http response code
-    $app->status($status_code);
- 
-    // setting response content type to json
-    $app->contentType('application/json');
- 
-    echo json_encode($response);
-}
 
 /**
- * Validating email address
- */
+* Validating email address
+**/
 function validateEmail($email) {
     $app = \Slim\Slim::getInstance();
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response["code"] = 11;
         $response["error"] = true;
         $response["message"] = 'Email address is not valid';
-        echoRespnse(200, $response);
+        echoRespnse(400, $response);
         $app->stop();
     }
 }
 
-
 /**
- * User Registration
- * url - /userregisteration
- * method - POST
- * params - firstname(mandatory), lastname(mandatory), mobile_no(mandatory), address(mandatory), date_of_birth(mandatory), email(mandatory), password(mandatory),
- */
-$app->post('/registeration', function () use ($app) {
-    // check for required params
-    verifyRequiredParams(array('email', 'firstname', 'lastname', 'mobile_no', 'address', 'date_of_birth', 'password'));
+* Echoing json response to client
+* @param String $status_code Http response code
+* @param Int $response Json response
+**/
+function echoRespnse($status_code, $response) {
+    $app = \Slim\Slim::getInstance();
+    // Http response code
+    $app->status($status_code);
+    // setting response content type to json
+    $app->contentType('application/json');
+    echo json_encode($response);
+}
 
-    $response = array();
-
-    // reading post params
-    $firstname = $app->request->post('firstname');
-    $email = $app->request->post('email');
-    $password = $app->request->post('password');
-
-    $firstname = $app->request->post('firstname');
-    $lastname = $app->request->post('lastname');
-    $mobile_no = $app->request->post('mobile_no');
-    $address = $app->request->post('address');
-    $date_of_birth = $app->request->post('date_of_birth');
-
-   	validateEmail($email);
-    $db = new DbHandler();
-    if(isset($_FILES['image']) && $_FILES['image'] != '') {   
-		$image = $_FILES['image']; 
-	}else {
-		$image = ''; 
-	}
-
-	if(isset($_FILES['age_proof_doc']) && $_FILES['age_proof_doc'] != '') {   
-		$age_proof_doc = $_FILES['age_proof_doc']; 
-	}else {
-		$age_proof_doc = ''; 
-	}	
-
-    $res = $db->createUser($firstname, $lastname, $mobile_no, $address, $date_of_birth, $image, $age_proof_doc, $email, $password);
-    if ($res == 'UNABLE_TO_PROCEED') {
-        $response["code"] = 1;
+function validateLevel($level) {
+    $app = \Slim\Slim::getInstance();
+    if ($level <= 0 || $level > 8) {
+        $response["code"] = 13;
         $response["error"] = true;
-        $response["message"] = "Unable to proceed";
-        echoRespnse(200, $response);
-    } else if ($res == 'EMAIL_ALREADY_EXISTED') {
-        $response["code"] = 2;
-        $response["error"] = true;
-        $response["message"] = "Email already exists";
-        echoRespnse(200, $response);
-    }  else {
-        $response["code"] = 0;
-        $response["error"] = false;
-        $response["message"] = "Customer successfully registered";
-        $response["data"] = $res;
-        echoRespnse(201, $response);
+        $response["message"] = 'Invalid Value For Level';
+        echoRespnse(400, $response);
+        $app->stop();
     }
-});
-
-
-/**
- * User Login
- * url - /userlogin
- * method - POST
- * params - name (optional), email (mandatory) ,password (optional),loginfrom(mandatory),device_token(mandatory),
- * loginfrom  -   N -> normal,F -> facebook,G -> google+
- */
-$app->post('/login', function() use ($app)
-{                          
-	// check for required params
-	verifyRequiredParams(array('email', 'loginfrom', 'device_type', 'device_token', 'user_type'));
-	$response = array();
-	
-	// reading post params
-    $name = $app->request->post('name');
-    $email = $app->request->post('email');   
-	$loginfrom = $app->request->post('loginfrom');
-	$password = $app->request->post('password');
-	$device_type = $app->request->post('device_type');
-	$device_token = $app->request->post('device_token');
-	$user_type = $app->request->post('user_type');
-
-	$db = new DbHandler(); 
-	$res = $db->loginuser($name, $email, $loginfrom, $password, $device_type, $device_token, $user_type);
-	if ($res == INVALID_REQUEST)  
-	{ 
-		$response["code"] = 1;
-		$response["error"] = true;
-		$response["message"] = "Invalid Login From";  
-	} 
-	else if ($res == NEED_PASSWORD)  
-	{  
-		$response["code"] = 2;
-		$response["error"] = true;
-		$response["message"] = "Need password for login from App";    
-	}
-	else if ($res == INVALID_EMAIL)  
-	{  
-		$response["code"] = 2;
-		$response["error"] = true;
-		$response["message"] = "Invalid Email Id";    
-	}
-	
-	else if ($res == INVALID_EMAIL_PASSWORD)  
-	{
-		$response["code"] = 4;
-		$response["error"] = true;
-		$response["message"] = "Invalid Email Id or Password";   
-	}
-	
-	else if ($res == UNABLE_TO_PROCEED)  
-	{
-		$response["code"] = 6;
-		$response["error"] = true;
-		$response["message"] = "Unable to proceed your request";    
-	}
-	else if ($res == EMAIL_ALREADY_EXISTED)  
-	{
-		$response["code"] = 7;
-		$response["error"] = true;
-		$response["message"] = "Email already exist";        
-	}
-	else
-	{ 
-		$response["code"] = 0;
-		$response["error"] = false;
-		$response["message"] = "User Profile"; 
-		$response['data']['userid'] = $res['id'];
-		$response['data']['firstname'] = $res['firstname'];
-		$response['data']['lastname'] = $res['lastname'];
-		$response['data']['email'] = $res['email'];
-		$response['data']['status'] = $res['status'];
-		$response['data']['loginfrom'] = $res['loginfrom'];
-		
-		/*if ($res['image']!='')
-		{		
-			$response['data']['image'] = PROFILEPIC.$res['image']; 			
-		} else {
-			$response['data']['image'] = '';
-		}*/
-	}
-	echoRespnse(200, $response);
-});
-
+}
 
 /**
- * User Forgot Password
- * url - /forgotpassword
- * method - POST
- * params - email (mandatory)
- */
-$app->post('/forgotpassword', function () use ($app) {
-    verifyRequiredParams(array('email'));
-
-    $email = $app->request()->post('email');
-    $response = array();
-
-    $db = new DbHandler();
-    $user = $db->sendNewPassword($email);
-    if ($user == UNABLE_TO_PROCEED) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Unable to proceed your request";
-    } else if ($user == INVALID_USERNAME) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Email address does not exist";
-    } else {
-        $response['code'] = 0;
-        $response['error'] = false;
-        $response['message'] = "New Password sent to your registered mail address";
-    }
-    echoRespnse(200, $response);
-});
-
-
-/**
- * User Change Password
- * url - /changepassword
- * method - POST
- * params - oldpassword (mandatory), newpassword (mandatory)
- * header Params - email (mandatory), password (mandatory)
- */
-$app->post('/changepassword', 'authenticate', function () use ($app) {
-    global $user_id;
-    verifyRequiredParams(array('oldpassword', 'newpassword'));
-
-    $oldpassword = $app->request()->post('oldpassword');
-    $newpassword = $app->request()->post('newpassword');
-    $response = array();
-
-    $db = new DbHandler();
-    $user = $db->changePassword($user_id, $oldpassword, $newpassword);
-    if ($user == UNABLE_TO_PROCEED) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Unable to proceed your request";
-    } else if ($user == INVALID_USERNAME) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Invalid user access";
-    } else if ($user == INVALID_OLD_PASSWORD) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Invalid old password";
-    } else {
-        $response['code'] = 0;
-        $response['error'] = false;
-        $response['message'] = "Password successfully changed";
-    }
-    echoRespnse(200, $response);
-});
-
-/**
- * User Profile Update
- * url - /updateprofile
- * method - POST
- * params - fullname(mandatory), gender(mandatory), dob(mandatory), image(optional),     	gluten_free(optional),vegetarian(optional),vegan(optional),dairy_free(optional),low _sodium(optional),Kosher(optional),halal(optional) ,organic(optional) 
- * header Params - username(mandatory), password(mandatory) 
- * Note gender = M-> Male, F->Female
- * dob -> (date formate) 1988-02-20
- *
- */
-$app->post('/updateprofile', 'authenticate', function() use ($app)  
-{  
-	global $user_id;
-	$db = new DbHandler();
-	// check for required params
-	verifyRequiredParams(array('fullname','gender','dob'));
-	
-	$response = array();
-	// reading post params
-	$fullname = $app->request->post('fullname');
-	$gender = $app->request->post('gender');
-	$dob = $app->request->post('dob');
-
-	$gluten_free = $app->request->post('gluten_free');
-	$vegetarian = $app->request->post('vegetarian');
-	$vegan = $app->request->post('vegan');	
-	$dairy_free = $app->request->post('dairy_free');
-	$low_sodium = $app->request->post('low_sodium');
-	$Kosher = $app->request->post('kosher');	
-	$halal = $app->request->post('halal');	
-	$organic = $app->request->post('organic');	
-	
-	
-	
-	if(isset($_FILES['image']) && $_FILES['image'] != '') {   
-		$image = $_FILES['image']; 
-	}else {
-		$image = ''; 
-	}
-	
-	$res = $db->updateUser($user_id, $fullname, $gender, $dob, $image, $gluten_free,$vegetarian, $vegan, $dairy_free, $low_sodium, $Kosher, $halal, $organic); 
-	if ($res==UNABLE_TO_PROCEED)
-	{   
-		$response['code'] = 1;
-		$response['error'] = true;
-		$response['message'] = "Unable to proceed your request";
-	}
-	else if ($res==INVALID_USER)
-	{
-		$response['code'] = 2;
-		$response['error'] = true;
-		$response['message'] = "Invalid user";
-	}
-	else if ($res==EMAIL_ALREADY_EXISTED)
-	{
-		$response['code'] = 3;
-		$response['error'] = true;
-		$response['message'] = "Email already exist";
-	}
-	else 
-	{
-		$response["code"] = 0;
-		$response["error"] = false;
-		$response["message"] = "User Profile successfully updated, User Data";
-		$response['data']['userid'] = $res['id'];
-		$response['data']['name'] = $res['name'];   
-		$response['data']['email'] = $res['email'];		
-		$response['data']['status'] = $res['status'];
-		$response['data']['loginfrom'] = $res['loginfrom']; 
-		$response['data']['dob'] = $res['dob'];
-		$response['data']['gender'] = ''.$res['gender'];		
-		$response['data']['gluten_free'] = ''.$res['gluten_free'];
-		$response['data']['vegetarian'] = ''.$res['vegetarian'];
-		$response['data']['vegan'] = ''.$res['vegan'];
-		$response['data']['dairy_free'] = ''.$res['dairy_free'];
-		$response['data']['kosher'] = ''.$res['kosher'];
-		$response['data']['halal'] = ''.$res['halal'];
-		$response['data']['organic'] = ''.$res['organic'];
-		$response['data']['low_sodium'] = ''.$res['low_sodium'];		
-		if ($res['image']!='')
-			{				
-				$response['data']['image'] = PROFILEPIC.$res['image']; 							
-			}
-			else
-			{
-				$response['data']['image'] = '';
-			}
-	}
-	echoRespnse(200, $response);
-});
-
-/**
- * Adding Middle Layer to authenticate every request
- * Checking if the request has valid api key in the 'Authorization' header
- */
+* Adding Middle Layer to authenticate every request
+* Checking if the request has valid api key in the 'Authorization' header
+**/
 function authenticate(\Slim\Route $route) {
     $app = \Slim\Slim::getInstance();
     $realm = 'Protected APIS';
-
     $req = $app->request();
     $res = $app->response();
-
     $username = $req->headers('PHP_AUTH_USER');
     $password = $req->headers('PHP_AUTH_PW');
-
     if (isset($username) && $username != '' && isset($password) && $password != '') {
-		
-		$dbconn = new DbConnect();
         $db = new DbHandler();
-		
-        if ($userid = $db->validateUser($username, $password)) {
+        if ($userdata = $db->validateUser($username, $password)) {
             global $user_id;
-            $user_id = $userid["id"];
+            $user_id = $userdata["id"];
+            $zone_id = $userdata["zoneid"];
             return true;
         } else {
             $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $realm));
@@ -415,257 +632,5 @@ function authenticate(\Slim\Route $route) {
         $app->stop();
     }
 }
-
-/**
- * Get Page Content
- * url - /getpage
- * method - GET
- * params - page_id (mandatory), 
- */
-$app->get('/getpage/:page_id', function($page_id) use ($app){
-	//global $user_id;	
-	$response = array();	
-	$db = new DbHandler();	
-    $dbconn = new DbConnect();
-	$r=$db->getPageContent($page_id);	
-	if ($r=='')
-	{
-		$response['code'] = 1;
-		$response['error'] = true;
-		$response['message'] = "No Record Found";
-	}
-	else if ($r==UNABLE_TO_PROCEED)
-	{
-		$response['code'] = 2;
-		$response['error'] = true;
-		$response['message'] = "No Record Found";
-	}
-	else
-	{
-		$response['code'] = 0;
-		$response['error'] = false;
-		$response['message'] = "Page Content:-";
-		$response['data'] = $r;
-	}
-	
-	echoRespnse(200, $response);
-});
-
-/**
- * Get Restaurants  List via latitude ,longitude
- * url - /searchrestaurants
- * method - POST
- * params - latitude (mandatory), longitude (mandatory)
- * header Params - email (mandatory), password (mandatory)
- */
-$app->post('/searchrestaurants','authenticate', function () use ($app) {
-    global $user_id;
-    verifyRequiredParams(array('latitude', 'longitude'));
-
-    $latitude = $app->request()->post('latitude');
-    $longitude = $app->request()->post('longitude');
-    $response = array();
-
-    $db = new DbHandler();
-    $user = $db->restroListByLatLlong($user_id, $latitude, $longitude);
-    if ($user == UNABLE_TO_PROCEED) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Unable to proceed your request";
-    }  else {
-        $response['code'] = 0;
-        $response['error'] = false;
-        $response['userdata'] = $user;
-        $response['message'] = "Restaurants List";
-    }
-    echoRespnse(200, $response);
-});
-
-
-/**
- * Get Restaurants  List via latitude ,longitude
- * url - /listrestaurants
- * method - POST
- * header Params - email (mandatory), password (mandatory)
- */
-$app->post('/listrestaurants','authenticate', function () use ($app) {
-    global $user_id;
-
-    $response = array();
-
-    $db = new DbHandler();
-    $user = $db->listrestaurants($user_id);
-    if ($user == UNABLE_TO_PROCEED) {
-        $response['code'] = 1;
-        $response['error'] = true;
-        $response['message'] = "Unable to proceed your request";
-    }  else {
-        $response['code'] = 0;
-        $response['error'] = false;
-        $response['userdata'] = $user;
-        $response['message'] = "Restaurants List";
-    }
-    echoRespnse(200, $response);
-});
-
-
-/**
- * Get categories  List via latitude ,longitude
- * url - /getCategoriesList
- * method - POST
- * params - restaurant_id (mandatory)
- * header Params - email (mandatory), password (mandatory)
- */
-$app->get('/getCategories/:restaurant_id', 'authenticate', function($restaurant_id) use ($app){
-
-	$response = array();	
-	$db = new DbHandler();	
-    $dbconn = new DbConnect();
-	$r=$db->getCategories($restaurant_id);	
-	if ($r=='')
-	{
-		$response['code'] = 1;
-		$response['error'] = true;
-		$response['message'] = "No Record Found";
-	}
-	else if ($r==UNABLE_TO_PROCEED)
-	{
-		$response['code'] = 2;
-		$response['error'] = true;
-		$response['message'] = "No Record Found";
-	}
-	else
-	{
-		$response['code'] = 0;
-		$response['error'] = false;
-		$response['message'] = "Categories List:-";
-		$response['data'] = $r;
-	}
-	echoRespnse(200, $response);
-});
-
-
-
-/**
- * Get categories  List via latitude ,longitude
- * url - /getMenus
- * method - POST
- * params - category_id (mandatory)
- * header Params - email (mandatory), password (mandatory)
- */
-$app->get('/getMenus/:category_id', 'authenticate', function($category_id) use ($app){
-
-	$response = array();	
-	$db = new DbHandler();	
-    $dbconn = new DbConnect();
-	$r=$db->getMenus($category_id);	
-	if ($r=='')
-	{
-		$response['code'] = 1;
-		$response['error'] = true;
-		$response['message'] = "No Record Found";
-	}
-	else if ($r==UNABLE_TO_PROCEED)
-	{
-		$response['code'] = 2;
-		$response['error'] = true;
-		$response['message'] = "No Record Found";
-	}
-	else
-	{
-		$response['code'] = 0;
-		$response['error'] = false;
-		$response['message'] = "Menus List:-";
-		$response['data'] = $r;
-	}
-	
-	echoRespnse(200, $response);
-});
-
-
-/**
- * Get Page Content
- * url - /generatetoken
- * method - GET
- * params - customer_id (mandatory), 
- */
-$app->get('/generatetoken', function() use ($app){
-	$response = array();	
-
-	require_once 'Setup.php';
-
-    Configuration::environment('sandbox');
-    Configuration::merchantId('tbb23ppsvmcmxrmc');
-    Configuration::publicKey('kc9k4sgn4wxxg666');
-    Configuration::privateKey('41000f2f335b5f4d2df8da86f66a136a');
-	$clientToken = Braintree_ClientToken::generate();
-
-	if ($clientToken=='')
-	{
-		$response['code'] = 1;
-		$response['error'] = true;
-		$response['message'] = "Some Errors Occured, please try after some time";
-	}
-	else
-	{
-		$response['code'] = 0;
-		$response['error'] = false;
-		$response['message'] = "Token successfully generated.";
-		$response['data'] = array('token'=>$clientToken);
-	}
-	
-	echoRespnse(200, $response);
-});
-
-
-/**
- * Get Page Content
- * url - /braintreetransaction
- * method - GET
- */
-$app->post('/braintreetransaction', function() use ($app){
-	
-
-    verifyRequiredParams(array('payment_method_nonce'));
-
-    $payment_method_nonce = $app->request()->post('payment_method_nonce');
-
-	require_once 'Setup.php';
-
-    Configuration::environment('sandbox');
-    Configuration::merchantId('tbb23ppsvmcmxrmc');
-    Configuration::publicKey('kc9k4sgn4wxxg666');
-    Configuration::privateKey('41000f2f335b5f4d2df8da86f66a136a');
-
-    $result = Braintree_Transaction::sale([
-		'amount' => '100.00',
-		'paymentMethodNonce' => $payment_method_nonce,
-		'options' => [
-		'submitForSettlement' => True
-	  ]
-	]);
-
-	if (!$result->success)
-	{
-		$response['code'] = 1;
-		$response['error'] = true;
-		$response['message'] = $result->errors->deepAll();
-	}
-	else
-	{
-		$transaction = $result->transaction;
-		$transaction->status;
-		$response['code'] = 0;
-		$response['error'] = false;
-		$response['message'] = "Payment successfully done.";
-		$response['data'] = array('transaction_status'=>$transaction->status, 'transaction_id'=>$transaction->id);
-	}
-	
-	echoRespnse(200, $response);
-});
-
-
-
 $app->run();
 ?>
-
