@@ -81,7 +81,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                     <?php echo $this->Form->button('Save <i class="fa fa-arrow-circle-right"></i>',array('class' => 'btn btn-primary btn-wide pull-left_form','type' => 'submit','id' => 'submit_button'));
 
                                     echo $this->Html->link('Cancel <i class="fa fa-times-circle"></i>',
-                                        array('plugin' => false,'controller' => 'extras','action' => 'index', 'admin' => true),
+                                        array('plugin' => false,'controller' => 'extras','action' => 'index', 'admin' => true, "?"=>array("id"=>$cousine_id)),
                                         array('class' => 'btn btn-primary btn-wide pull-right', 'escape' => false)
                                     );
                                     ?>

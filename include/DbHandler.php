@@ -321,28 +321,52 @@ class DbHandler {
         }
     }
 
-    public function makeOrder($userid, $type, $itemdata, $tableno) {
+    public function makeOrderDineIn($userid, $type, $itemdata, $tableno) {
         $orderedat=date('Y-m-d H:i:s');
         if(!$this->isTableAvailable($tableno)) {
             $itemdataArr=json_decode($itemdata);
-
-
-
-
-
             $userData = $this->getUserById($userid);
-            $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='$tableno', order_type='D', created='$reservedat', tax='".$userData['tax']."'";
+            $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='$tableno', order_type='D', created='$orderedat', tax='".$userData['tax']."'";
             if(mysql_query($order_insert)) {
                 $orderId = mysql_insert_id();
                 $order_no=str_pad($orderId, 5, rand(98753, 87563), STR_PAD_LEFT);
                 $order_update = "update orders set order_no='$order_no' where id=$orderId";
                 $OrderUpdate=mysql_query($order_update);
+                $totItems=count($itemdataArr);
+                $totprice=0;
+                $totextra=0;
+                if ($totItems>0) {
+                    for ($i=0; $i<$totItems; $i++) {
+                        $selectedextras=json_encode($itemdataArr[$i]->selectedextras);
+                        $allextras=json_encode($itemdataArr[$i]->allextras);
+                        $itemData=$this->getItemData($itemdataArr[$i]->itemid);
+                        $itemnameArr=explode('----', $itemData['cousine']);
+                        $itemNameEn=$itemnameArr[0];
+                        $itemNameZh=$itemnameArr[1];
+                        
+                        $price=$itemData['price'] * $itemdataArr[$i]->qty;
+                        $extraprice = 0;
+                        foreach($itemdataArr[$i]->selectedextras as $num => $values) {
+                           $extraprice += $values->price;
+                        }
+                        $totprice += $price;
+                        $totextra += $extraprice;
 
+                        $itemPrice=$itemData['price'] * $itemdataArr[$i]->qty;
+                        $itemTot= $itemPrice + $totextra;
+                        $taxAmount= $itemTot / $userData['tax'];
 
-
-
-
-                return 'SUCCESSFULLY_DONE';
+                        $orderitem_insert = "insert into order_items set order_id='$orderId', item_id='".$itemdataArr[$i]->itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$itemdataArr[$i]->qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice'";
+                        $items_added=mysql_query($orderitem_insert);
+                    }
+                }
+                $orderTotal = $totprice + $totextra;
+                $tax = $orderTotal / $userData['tax'];
+                $subTotal= $orderTotal - $tax;
+                
+                $orderPrice_update = "update orders set tax_amount='$tax', subtotal='$subTotal', total='$orderTotal' where id=$orderId";
+                $orderPriceUpdate=mysql_query($orderPrice_update);
+                return $order_no;
             } else {
                 return 'UNABLE_TO_PROCEED';
             }
@@ -350,8 +374,139 @@ class DbHandler {
             return 'TABLE_ALREADY_OCCUPIED';
         }
     }
+
+    public function makeOrderOther($userid, $type, $name, $noofperson, $phoneno, $takeout_date, $takeout_time) {
+        $orderedat=date('Y-m-d H:i:s');
+
+        $userData = $this->getUserById($userid);
+        $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='0', order_type='$type', created='$orderedat', tax='".$userData['tax']."', name='$name', noofperson='$noofperson', phoneno='$phoneno'";
+        if($type=='T') {
+            $order_insert .= ", takeout_date='$takeout_date', takeout_time='$takeout_time'";
+        }
+        if(mysql_query($order_insert)) {
+            $orderId = mysql_insert_id();
+            $order_no=str_pad($orderId, 5, rand(98753, 87563), STR_PAD_LEFT);
+            $order_update = "update orders set order_no='$order_no' where id=$orderId";
+            $OrderUpdate=mysql_query($order_update);
+            return $order_no;
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function addOrderItem($userid, $itemdata, $orderid) {
+        $orderedat=date('Y-m-d H:i:s');
+        if($orderData=$this->isOrderExist($orderid)) {
+            if ($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            $itemdataArr=json_decode($itemdata);
+            $userData = $this->getUserById($userid);
+
+            $totItems=count($itemdataArr);
+            $totprice=0;
+            $totextra=0;
+            if ($totItems>0) {
+                for ($i=0; $i<$totItems; $i++) {
+                    $selectedextras=json_encode($itemdataArr[$i]->selectedextras);
+                    $allextras=json_encode($itemdataArr[$i]->allextras);
+                    $itemData=$this->getItemData($itemdataArr[$i]->itemid);
+                    $itemnameArr=explode('----', $itemData['cousine']);
+                    $itemNameEn=$itemnameArr[0];
+                    $itemNameZh=$itemnameArr[1];
+                    
+                    $price=$itemData['price'] * $itemdataArr[$i]->qty;
+                    $extraprice = 0;
+                    foreach($itemdataArr[$i]->selectedextras as $num => $values) {
+                       $extraprice += $values->price;
+                    }
+                    $totprice += $price;
+                    $totextra += $extraprice;
+                    $itemPrice=$itemData['price'] * $itemdataArr[$i]->qty;
+                    $itemTot= $itemPrice + $totextra;
+                    $taxAmount= $itemTot / $userData['tax'];
+
+                    $orderitem_insert = "insert into order_items set order_id='$orderid', item_id='".$itemdataArr[$i]->itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$itemdataArr[$i]->qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice'";
+                    $items_added=mysql_query($orderitem_insert);
+                }
+            }
+            $orderTotal = $totprice + $totextra;
+            $tax = $orderTotal / $userData['tax'];
+            $subTotal= $orderTotal - $tax;
+            
+            $orderPrice_update = "update orders set tax_amount=tax_amount + $tax, subtotal=subtotal + $subTotal, total=total + $orderTotal where id=$orderid";
+            $orderPriceUpdate=mysql_query($orderPrice_update);
+            return $orderData['order_no'];
+            
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
+
+    public function removeOrderItem($userid, $itemdata, $orderid) {
+        $orderedat=date('Y-m-d H:i:s');
+        if($orderData=$this->isOrderExist($orderid)) {
+            if ($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            $itemdataArr=json_decode($itemdata);
+            $userData = $this->getUserById($userid);
+            $totItems=count($itemdataArr);
+            $totprice=0;
+            $totextra=0;
+            $taxAmount=0;
+            if ($totItems>0) {
+                for ($i=0; $i<$totItems; $i++) {
+                    $itemData=$this->getOrderItemData($itemdataArr[$i]->rowid);
+                    $totprice += $itemData ['price'];
+                    $totextra += $itemData['extras_amount'];
+                    $taxAmount = $itemData['tax_amount'];
+                    $orderitem_remove = "delete from order_items where id=".$itemdataArr[$i]->rowid;
+                    $items_removed=mysql_query($orderitem_remove);
+                }
+            }
+            $orderTotal = $totprice;
+            $tax = $taxAmount;
+            $subTotal= $orderTotal - $taxAmount;
+            $orderPrice_update = "update orders set tax_amount=tax_amount - $tax, subtotal=subtotal - $subTotal, total=total - $orderTotal where id=$orderid";
+            $orderPriceUpdate=mysql_query($orderPrice_update);
+            return $orderid;
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
+
+
     
     /*------------------------------------------------- Called functions -----------------------------------------------*/
+    
+    public function getOrderItemData($rowid) {
+        $sel_order = "select * from order_items where id=$rowid";
+        $order = mysql_query($sel_order);
+        if (mysql_num_rows($order) > 0) {
+            $data=mysql_fetch_assoc($order);
+            return $data;
+        }
+    }
+
+    public function isOrderExist($orderId) {
+        $sel_order = "select * from orders where id=$orderId";
+        $order = mysql_query($sel_order);
+        if (mysql_num_rows($order) > 0) {
+            $data=mysql_fetch_assoc($order);
+            return $data;
+        }
+    }
+
+    public function getItemData($itemId) {
+        $sel_item = "SELECT c.*, (select group_concat(name SEPARATOR '----') from cousine_locals where parent_id=c.id) as cousine from cousines c WHERE c.id=$itemId";
+        $item = mysql_query($sel_item);
+        if (mysql_num_rows($item) > 0) {
+            $data=mysql_fetch_assoc($item);
+            return $data;
+        }
+    }
+
     public function isValidReservationId($reservationid) {
         $todayDate=date('Y-m-d H:i:s');
         $sel_reservation = "SELECT * from reservations WHERE id=$reservationid";
@@ -364,7 +519,8 @@ class DbHandler {
 
     public function isTableAvailable($tableno) {
         $todayDate=date('Y-m-d');
-        $sel_user = "SELECT * from orders WHERE table_no='$tableno' and is_completed='N' and order_type='D' and DATE(created)='$todayDate'";
+        $sel_user = "SELECT * from orders WHERE table_no='$tableno' and is_completed='N' and order_type='D'";
+        //and DATE(created)='$todayDate'
         $user = mysql_query($sel_user);
         if (mysql_num_rows($user) > 0) {
             $data=mysql_fetch_assoc($user);
@@ -410,8 +566,8 @@ class DbHandler {
         }
     }
 
-    public function validateUser($mobileno, $password) {
-        $sel_user = "SELECT id from cashiers WHERE email = '$mobileno' AND (password = md5('$password') or password = '$password') and status='A'";
+    public function validateUser($username, $password) {
+        $sel_user = "SELECT id from cashiers WHERE email = '$username' AND (password = md5('$password') or password = '$password') and status='A'";
         $user = mysql_query($sel_user);
         if (mysql_num_rows($user) > 0) {
             $userid = mysql_fetch_assoc($user);

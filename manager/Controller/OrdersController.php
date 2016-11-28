@@ -67,7 +67,7 @@ class OrdersController extends AppController {
 
 
             if(!empty($search['search'])){
-                $conditions['Order.order_no'] = $search['search'];
+                $conditions['Order.order_no'] = str_replace("#", "", $search['search']);
             }
             if(!empty($search['registered_from'])){
                 $conditions['date(Order.created) >='] = $search['registered_from'];
@@ -115,20 +115,25 @@ class OrdersController extends AppController {
 
         // check whole order is hide or show
         $ids = explode(",", $this->data['Reorder']['ids']);
-        foreach($ids as $val) {
-            if(in_array($val, $this->data['Reorder']['display'])) {
+        if(!empty($this->data['Reorder']['display']))
+            foreach($ids as $val) {
+                if(in_array($val, $this->data['Reorder']['display'])) {
 
-                // update reorder no
-                $this->Order->query("UPDATE orders set `reorder_no` = '$reorder_no',is_hide = 'N' where id = '$val' and !reorder_no");    
-                if($this->Order->getAffectedRows())
-                    $reorder_no += 1;
-            } else {
+                    // update reorder no
+                    $this->Order->query("UPDATE orders set `reorder_no` = '$reorder_no',is_hide = 'N' where id = '$val' and !reorder_no");    
+                    if($this->Order->getAffectedRows())
+                        $reorder_no += 1;
+                } else {
 
-                // update reorder no
-                $this->Order->query("UPDATE orders set `hide_no` = '$hide_no',is_hide = 'Y' where id = '$val' and !hide_no"); 
-                if($this->Order->getAffectedRows())
-                    $hide_no += 1; 
+                    // update reorder no
+                    $this->Order->query("UPDATE orders set `hide_no` = '$hide_no',is_hide = 'Y' where id = '$val' and !hide_no"); 
+                    if($this->Order->getAffectedRows())
+                        $hide_no += 1; 
+                }
             }
+        else {
+            $this->Session->setFlash('Please select atleast one order.', 'error');
+            $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
         }
         $this->Session->setFlash('Order settings successfully updated.', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));

@@ -50,7 +50,7 @@ $option = array('K' => 'Kitchen', 'S' => 'Service');
                                 ?>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Select Restaurant</label>
+                                        <label class="control-label">Select Restaurant <span class="symbol required"></span></label>
                                         <?php echo $this->Form->input('restaurant_id', array('options' => $restaurants, 'class' => 'form-control', 'empty' => 'Select Restaurant', 'label' => false, 'div' => false, 'required' => false)); ?>
                                     </div>
                                 </div>

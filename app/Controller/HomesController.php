@@ -1281,7 +1281,7 @@ class HomesController extends AppController {
                         'discount_value'=>$discount_value
                     );
                 }
-            } else if ($promocode) {
+            } else if ($promocode <> "") {
                 // check promocode valid or not here
                 $this->loadModel('Promocode');
                 $promo_detail = $this->Promocode->find("first", array(

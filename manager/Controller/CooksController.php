@@ -52,7 +52,7 @@ class CooksController extends AppController {
 
             if(!empty($search['search'])){
                 $conditions['OR'] = array(
-                    'concat_ws(" ", Cashier.firstname, Cashier.lastname) LIKE' => '%' . $search['search'] . '%',
+                    'concat_ws(" ", Admin.restaurant_name) LIKE' => '%' . $search['search'] . '%',
                     'concat_ws(" ", Cook.firstname, Cook.lastname) LIKE' => '%' . $search['search'] . '%',
                     'Cook.lastname LIKE' => '%' . $search['search'] . '%',
                     'Cook.email LIKE' => '%' . $search['search'] . '%',

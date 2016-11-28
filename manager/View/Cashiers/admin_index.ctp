@@ -117,12 +117,12 @@ if($this->Session->check('cashier_search')){
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">Order By</label>
                                 <?php echo $this->Form->input('order_by', array('options' => $option_order, 'value' => $order, 'id' => 'order_by', 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-md-12">
                             <?php echo $this->Form->button('Reset <i class="fa fa-times-circle"></i>',array('class' => 'btn btn-primary btn-wide pull-right','type' => 'button','id' => 'reset_button'));

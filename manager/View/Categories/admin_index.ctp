@@ -109,10 +109,10 @@ if($this->Session->check('category_search')){
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                 <tr>
-                                    <th><?php echo $this->Paginator->sort('eng_name', 'Category Name(EN)') ?></th>
-                                    <th><?php echo $this->Paginator->sort('zh_name', 'Category Name(ZH)') ?></th>
-                                    <th><?php echo $this->Paginator->sort('Category.status', 'Status') ?></th>
-                                    <th><?php echo $this->Paginator->sort('Category.modified', 'Updated On') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('eng_name', 'Category Name(EN)') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('zh_name', 'Category Name(ZH)') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('Category.status', 'Status') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('Category.modified', 'Updated On') ?></th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>

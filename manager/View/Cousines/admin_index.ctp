@@ -111,11 +111,11 @@ if($this->Session->check('cousine_search')){
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                 <tr>
-                                    <th><?php echo $this->Paginator->sort('category_en_name', 'Category') ?></th>
-                                    <th><?php echo $this->Paginator->sort('eng_name', 'Cuisines Name(EN)') ?></th>
-                                    <th><?php echo $this->Paginator->sort('zh_name', 'Cuisines Name(ZH)') ?></th>
-                                    <th><?php echo $this->Paginator->sort('Cousine.status', 'Status') ?></th>
-                                    <th><?php echo $this->Paginator->sort('Cousine.modified', 'Updated On') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('category_en_name', 'Category') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('eng_name', 'Cuisines Name(EN)') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('zh_name', 'Cuisines Name(ZH)') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('Cousine.status', 'Status') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('Cousine.modified', 'Updated On') ?></th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>

@@ -2,7 +2,7 @@
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '123456');
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'wine_delivery');
+define('DB_NAME', 'pos');
  
 define('USER_CREATED_SUCCESSFULLY', 0);
 define('USER_CREATE_FAILED', 1);
@@ -27,13 +27,5 @@ define('ALREADY_REPLIED', 13);
 define('INVALID_REQUEST', 14);
 define('NEED_PASSWORD', 15);
 
-define('APIURL', 'http://'.$_SERVER['HTTP_HOST'].'/winedelivery/');
-define('PROFILEPIC', APIURL.'profile_pic/');
-
-define('MENU_IMAGE_URL', APIURL . 'restaurant/webroot/uploads/menus/');
-define('CATEGORY_IMAGE_URL', APIURL . 'restaurant/webroot/uploads/categories/');
-
-define('CATIMAGES', APIURL.'cat_images/');
-define('MENUIMAGES', APIURL.'menu_images/');
-define('EVENTIMAGES', APIURL.'event_images/');
+define('APIURL', 'http://'.$_SERVER['HTTP_HOST'].'/pos/');
 ?>

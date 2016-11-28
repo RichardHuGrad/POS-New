@@ -439,47 +439,31 @@ $app->post('/reservetable', 'authenticate', function() use ($app) {
 });
 
 /**
-* Make Order
-* url - /makeorder 
+* Make Order For Dinein
+* url - /makeorderdinein 
 * method - POST
 * params - type(mandatory), itemdata(mandatory), tableno(optional)
-* type :- D-> Dinin, T -> Take-out, W -> Waiting
-* when type=D
-* tableno(mandatory)
-* when type != D
-* name(mandatory), noofperson(mandatory), phoneno(mandatory)
-* when type = T
-* takeout_date(mandatory), takeout_time(mandatory)
-* itemdata = [{ "itemid": "1",  "qty": "20", "allextras": 
-[{ "id": "56", "cousine_id": "103", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
-        "id": "57", "cousine_id": "103", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
+* type :- D-> Dinin
+* itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
+[{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
+        "id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
     "selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
         "id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
 }]
 * header Params - email (mandatory), password (mandatory)
 **/
-$app->post('/makeorder', 'authenticate', function() use ($app) {
+$app->post('/makeorderdinein', 'authenticate', function() use ($app) {
     global $user_id;
     // check for required params
     verifyRequiredParams(array('type', 'itemdata', 'tableno'));
     $type = $app->request->post('type');
-
-    /*if ($type!='D') {
-        verifyRequiredParams(array('name', 'noofperson', 'phoneno'));
-    }
-
-    if ($type!='T') {
-        verifyRequiredParams(array('takeout_date', 'takeout_time'));
-    }*/
-
     $response = array();
     // reading post params
     
     $itemdata = $app->request->post('itemdata');
     $tableno = $app->request->post('tableno');
-    
     $db = new DbHandler();
-    $res = $db->makeOrder($user_id, $type, $itemdata, $tableno);
+    $res = $db->makeOrderDineIn($user_id, $type, $itemdata, $tableno);
     if ($res == 'INVALID_ORDER_DATA') {
         $response["code"] = 1;
         $response["error"] = true;
@@ -490,6 +474,11 @@ $app->post('/makeorder', 'authenticate', function() use ($app) {
         $response["error"] = true;
         $response["message"] = "Unable to proceed";
         echoRespnse(200, $response);
+    } else if ($res == 'TABLE_ALREADY_OCCUPIED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Table is already occupied";
+        echoRespnse(200, $response);
     } else {
         $response["code"] = 0;
         $response["error"] = false;
@@ -498,6 +487,141 @@ $app->post('/makeorder', 'authenticate', function() use ($app) {
         echoRespnse(201, $response);
     }
 });
+
+/**
+* Make Order
+* url - /makeorderother
+* method - POST
+* params - type(mandatory), name(mandatory), noofperson(mandatory), phoneno(mandatory)
+* type :- T / W : Takeout / Waiting
+* when type = T
+* takeout_date(mandatory), takeout_time(mandatory)
+**/
+$app->post('/makeorderother', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('type', 'name', 'noofperson', 'phoneno'));
+    $type = $app->request->post('type');
+    if ($type=='T') {
+        verifyRequiredParams(array('takeout_date', 'takeout_time'));
+    }
+    $response = array();
+    // reading post params
+    $type = $app->request->post('type');
+    $name = $app->request->post('name');
+    $noofperson = $app->request->post('noofperson');
+    $phoneno = $app->request->post('phoneno');
+    $takeout_date = $app->request->post('takeout_date');
+    $takeout_time = $app->request->post('takeout_time');
+    
+    $db = new DbHandler();
+    $res = $db->makeOrderOther($user_id, $type, $name, $noofperson, $phoneno, $takeout_date, $takeout_time);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Order successfully Created";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Add item in order
+* url - /addorderitem 
+* method - POST
+* params - itemdata(mandatory), orderid(mandatory)
+* itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
+[{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
+        "id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
+    "selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
+        "id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+}]
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/addorderitem', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('itemdata', 'orderid'));
+    $response = array();
+    // reading post params
+    
+    $itemdata = $app->request->post('itemdata');
+    $orderid = $app->request->post('orderid');
+    
+    $db = new DbHandler();
+    $res = $db->addOrderItem($user_id, $itemdata, $orderid);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Order successfully Saved";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Remove item from order
+* url - /removeorderitem 
+* method - POST
+* params - itemdata(mandatory), orderid(mandatory)
+* itemdata = [{ "itemid": "68", "rowid":"153"}]
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/removeorderitem', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('itemdata', 'orderid'));
+    $response = array();
+    // reading post params
+    $itemdata = $app->request->post('itemdata');
+    $orderid = $app->request->post('orderid');
+    
+    $db = new DbHandler();
+    $res = $db->removeOrderItem($user_id, $itemdata, $orderid);
+    if ($res == 'INVALID_ORDER_DATA') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Data";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'TABLE_ALREADY_OCCUPIED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Table is already occupied";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Order successfully Saved";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
 
 /**
 * Get chat messages
@@ -617,7 +741,6 @@ function authenticate(\Slim\Route $route) {
         if ($userdata = $db->validateUser($username, $password)) {
             global $user_id;
             $user_id = $userdata["id"];
-            $zone_id = $userdata["zoneid"];
             return true;
         } else {
             $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', $realm));

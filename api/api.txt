@@ -72,6 +72,42 @@ Password : 123456
     params - reservationid(mandatory), tableno(mandatory)
     header Params - email (mandatory), password (mandatory)
     
+13. Make Order For Dinein
+    url - /makeorderdinein 
+    method - POST
+    params - type(mandatory), itemdata(mandatory), tableno(optional)
+    type :- D-> Dinin
+    itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
+	[{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
+			"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
+		"selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
+			"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+	}]
+    header Params - email (mandatory), password (mandatory)
     
+14. Make Order
+    url - /makeorderother
+    method - POST
+    params - type(mandatory), name(mandatory), noofperson(mandatory), phoneno(mandatory)
+    type :- T / W : Takeout / Waiting
+    when type = T
+    takeout_date(mandatory), takeout_time(mandatory)
     
-    [{"id":"56","price":"2","name":"extra egg"},{"id":"57","price":"3.5","name":"extra cha-shu"}]
+15. Add item in order
+    url - /addorderitem 
+    method - POST
+    params - itemdata(mandatory), orderid(mandatory)
+    itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
+	[{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
+			"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
+		"selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
+			"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+	}]
+    header Params - email (mandatory), password (mandatory)
+    
+16. Remove item from order
+    url - /removeorderitem 
+    method - POST
+    params - itemdata(mandatory), orderid(mandatory)
+    itemdata = [{ "itemid": "68", "rowid":"153"}]
+    header Params - email (mandatory), password (mandatory)
