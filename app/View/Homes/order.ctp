@@ -226,7 +226,7 @@ echo $this->fetch('script');
 
         //Modified by Yishou Liao @ Nov 01 2016.
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTokitchen')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTokitchen',false,true)); ?>",
             method: "post",
             data: {
                 Print_Item: Order_Item_Printer,
@@ -382,12 +382,10 @@ echo $this->fetch('script');
                 // Modified by Yishou Liao @ Nov 16 2016.
 				if ($('#Order_Item').val() != ""){
 	                var arrtmp = $('#Order_Item').val().split("#");
-				}
-				//End
-                for (var i = 0; i < arrtmp.length; i++) {
-                    Order_Item_Printer.push(arrtmp[i].split("*"));
-                }
-                ;
+					for (var i = 0; i < arrtmp.length; i++) {
+						Order_Item_Printer.push(arrtmp[i].split("*"));
+					};
+				};//Modified by Yishou Liao @ Nov 28 2016
                 //End.
 
             },
