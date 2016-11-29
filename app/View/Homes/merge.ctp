@@ -489,6 +489,19 @@ for ($i = 0; $i < count($Order_detail); $i++) {
 echo number_format($subtotal, 2);
 //End
 ?>';
+
+//Modified by Yishou Liao @ Nov 29 2016
+                    var  discount  =  '<?php
+//Modified by Yishou Liao @ Oct 16 2016.
+$discount_value = 0;
+for ($i = 0; $i < count($Order_detail); $i++) {
+    $discount_value += $Order_detail[$i]['Order']['discount_value'];
+};
+echo number_format($discount_value, 2);
+//End
+?>';
+//End
+
                     var tax_amount = '<?php
 //Modified by Yishou Liao @ Oct 16 2016.
 $tax_amount = 0;
@@ -513,8 +526,14 @@ echo number_format($total, 2)
                             data:{
                             logo_name:"../webroot/img/logo.bmp",
                                     Print_Item:Order_print,
-                                    subtotal:subtotal,
-                                    tax:tax_amount,
+                                    subtotal:(parseFloat(subtotal)+parseFloat(discount)).toFixed(2),
+									discount:discount,
+									after_discount:subtotal,
+									//Modified by Yishou Liao @ Nov 29 2016
+									tax_Amount: tax_amount,
+									paid: $(".received_price").attr("amount"),
+									change: $(".change_price").attr("amount"),
+									//End
                                     total:total,
                                     order_no:oder_no,
                                     merge_str:merge_str,
