@@ -447,7 +447,8 @@
 <span>Please Enter Your Password</span>
 <input type="password"  class="EntPassword"/>
 <input type="hidden" id="url" value="" />
-<input type="button" value="Enter" onclick="checkPassword()"/>
+<input type="button" style="display:inline-block" value="Enter" onclick="checkPassword()"/>
+<input type="button" style="display:inline-block" value="Cancel" onclick="checkPasswordC()"/>
 </div>
 
    
@@ -575,6 +576,9 @@ echo $this->fetch('script');
 			alert("Your password is incorrect!");
 		};
     }
+	function checkPasswordC(){
+		$('#dialog').hide();
+	}
 	//End.
 </script>
 <!-- End. -->

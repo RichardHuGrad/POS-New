@@ -1205,8 +1205,29 @@ split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' +
         };
 <?php } ?>
 
-    var tax_amount = (sub_total * Tax / 100).toFixed(2);
-    var total = (parseFloat(sub_total) + parseFloat(tax_amount)).toFixed(2);
+
+//Modified by Yishou Liao @ Nov 29 2016
+var discount=0;
+		if (checkCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			discount = parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
+		};
+		if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			discount = (parseFloat(keepsubTotal)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+		};
+		if (getCookie("promocode_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
+			//Modified by Yishou Liao @ Nov 19 2016
+			if (getCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>)==1) {
+				discount = (parseFloat(keepsubTotal)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+			} else {
+				discount = parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
+			};
+			//End
+		};
+//End
+
+
+    var tax_amount = ((sub_total-discount) * Tax / 100).toFixed(2);
+    var total = (parseFloat(sub_total-discount) + parseFloat(tax_amount)).toFixed(2);
     //Modified by Yishou Liao @ Nov 08 2016.
     $.ajax({
     url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, "PRINTER2")); ?>",
@@ -1215,7 +1236,15 @@ split_accounting_str += '<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$ ' +
             logo_name:"../webroot/img/logo.bmp",
                     Print_Item:person_menu_print,
                     subtotal:sub_total,
+					discount:discount,
+					after_discount: (sub_total-discount),
                     tax:Tax,
+					//Modified by Yishou Liao @ Nov 29 2016
+					tax_Amount: tax_amount,
+					//paid_by: $("#selected_card").val(),
+					paid: $(".received_price").attr("amount"),
+					change: $(".change_price").attr("amount"),
+					//End
                     total:total,
                     split_no:radio_click,
 <?php if ($split_method == 0) { ?>

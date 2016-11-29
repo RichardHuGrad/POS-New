@@ -1683,10 +1683,10 @@ class HomesController extends AppController {
             $data['Order']['cashier_id'] = $split_detail['Order']['cashier_id'];
             $data['Order']['counter_id'] = $split_detail['Order']['counter_id'];
             $data['Order']['table_no'] = $split_detail['Order']['table_no'];
-            //Modified by Yishou Liao @ Nov 19 2016
-            $data['Order']['subtotal'] = $data['Order']['paid'] - $data['Order']['change'];
-            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $data['Order']['tax'] / 100;
-            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
+            //Modified by Yishou Liao @ Nov 29 2016
+            $data['Order']['total'] = $data['Order']['paid'] - $data['Order']['change'];
+            $data['Order']['subtotal'] = $data['Order']['total'] / ($data['Order']['tax']/100+1);
+            $data['Order']['tax_amount'] = $data['Order']['total'] - $data['Order']['subtotal'];
             /*
               $data['Order']['total'] = round($data['Order']['paid'], 2) - round($data['Order']['change'], 2);
               $data['Order']['tax_amount'] = round($data['Order']['total'], 2) / round($data['Order']['tax'], 2);
