@@ -47,12 +47,12 @@ class DbHandler {
             $takeout[$take_row]['order_no'] = '';
             $takeout[$take_row]['order_type'] = 'A';
             $takeout[$take_row]['created'] = '';
-
         }*/
 
         for($i=1; $i<=$userData['no_of_tables']; $i++) {
             $dine_row=$i-1;
-            $dinein[$dine_row]['table_no'] = 'T'.$i;
+            $dinein[$dine_row]['order_id'] = "0";
+            $dinein[$dine_row]['table_no'] = "$i";
             $dinein[$dine_row]['order_no'] = '';
             $dinein[$dine_row]['order_type'] = 'A';
             $dinein[$dine_row]['created'] = '';
@@ -80,12 +80,13 @@ class DbHandler {
                         $takeout[$take_key]['created'] = $arr['created'];
                     }*/
 
-                    $dine_key = array_search('T'.$arr['table_no'], array_column($dinein, 'table_no'));
+                    $dine_key = array_search($arr['table_no'], array_column($dinein, 'table_no'));
                     if ($dine_key>=0 && $arr['order_type']=='D') {
-                        $dinein[$dine_row]['order_no'] = $arr['order_no'];
-                        $dinein[$dine_row]['order_type'] = $arr['order_type'];
-                        $dinein[$dine_row]['created'] = $arr['created'];
-                        $dinein[$dine_row]['table_color'] = 'OCCUPIED';
+                         $dinein[$dine_key]['order_id'] = $arr['id'];
+                        $dinein[$dine_key]['order_no'] = $arr['order_no'];
+                        $dinein[$dine_key]['order_type'] = $arr['order_type'];
+                        $dinein[$dine_key]['created'] = $arr['created'];
+                        $dinein[$dine_key]['table_color'] = 'OCCUPIED';
                     }
 
                     /*$wait_key = array_search('T'.$arr['table_no'], array_column($waiting, 'table_no'));
@@ -128,11 +129,18 @@ class DbHandler {
                     $output[$count]['total'] = $arr['total'];
                     $output[$count]['created'] = $arr['created'];
 
+                    $output[$count]['name'] = $arr['name'];
+                    $output[$count]['noofperson'] = $arr['noofperson'];
+                    $output[$count]['phoneno'] = $arr['phoneno'];
+                    $output[$count]['takeout_date'] = $arr['takeout_date'];
+                    $output[$count]['takeout_time'] = $arr['takeout_time'];
+
                     $orderItemsArr=$this->getOrderItems($arr['id']);
                     if (count($orderItemsArr)>0) {
                         $i=0;
                         while ($itemArr = mysql_fetch_assoc($orderItemsArr)) {
                             $output[$count]['items'][$i]['id']=$itemArr['id'];
+                            $output[$count]['items'][$i]['item_id']=$itemArr['item_id'];
                             $output[$count]['items'][$i]['name_en']=$itemArr['name_en'];
                             $output[$count]['items'][$i]['name_zh']=$itemArr['name_xh'];
                             $output[$count]['items'][$i]['price']=$itemArr['price'];
@@ -420,6 +428,7 @@ class DbHandler {
                     foreach($itemdataArr[$i]->selectedextras as $num => $values) {
                        $extraprice += $values->price;
                     }
+
                     $totprice += $price;
                     $totextra += $extraprice;
                     $itemPrice=$itemData['price'] * $itemdataArr[$i]->qty;
@@ -431,13 +440,23 @@ class DbHandler {
                 }
             }
             $orderTotal = $totprice + $totextra;
-            $tax = $orderTotal / $userData['tax'];
-            $subTotal= $orderTotal - $tax;
-            
+
+            if ($orderData['fix_discount']>0 || $orderData['percent_discount']>0){
+                if ($orderData['fix_discount']>0) {
+                    $subTotal= $orderTotal - $orderData['fix_discount'];
+                }
+                if ($orderData['percent_discount']>0) {
+                    $subTotal= $orderTotal * $orderData['percent_discount'] / 100;
+                }
+
+            } else {
+                $subTotal= $orderTotal;
+            }
+            $tax = $subTotal * $userData['tax'] / 100;
+
             $orderPrice_update = "update orders set tax_amount=tax_amount + $tax, subtotal=subtotal + $subTotal, total=total + $orderTotal where id=$orderid";
             $orderPriceUpdate=mysql_query($orderPrice_update);
             return $orderData['order_no'];
-            
         } else {
             return 'INVALID_ORDERID';
         }
@@ -466,8 +485,26 @@ class DbHandler {
                 }
             }
             $orderTotal = $totprice;
+
+            if ($orderData['fix_discount']>0 || $orderData['percent_discount']>0){
+                if ($orderData['fix_discount']>0) {
+                    $subTotal= $orderTotal - $orderData['fix_discount'];
+                }
+                if ($orderData['percent_discount']>0) {
+                    $subTotal= $orderTotal * $orderData['percent_discount'] / 100;
+                }
+
+            } else {
+                $subTotal= $orderTotal;
+            }
+            $tax = $subTotal * $userData['tax'] / 100;
+
+
+
+           /* $orderTotal = $totprice;
             $tax = $taxAmount;
-            $subTotal= $orderTotal - $taxAmount;
+            $subTotal= $orderTotal - $taxAmount;*/
+
             $orderPrice_update = "update orders set tax_amount=tax_amount - $tax, subtotal=subtotal - $subTotal, total=total - $orderTotal where id=$orderid";
             $orderPriceUpdate=mysql_query($orderPrice_update);
             return $orderid;
@@ -476,9 +513,180 @@ class DbHandler {
         }
     }
 
+    public function changeTable($user_id, $tableno, $newtableno, $orderid) {
+        $reservedat=date('Y-m-d H:i:s');
+        if(!$this->isTableAvailable($newtableno)) {
+            $order_insert = "update orders set table_no='$newtableno' where id=$orderid";
+            if(mysql_query($order_insert)) {
+                return 'SUCCESSFULLY_UPDATED';
+            } else {
+                return 'UNABLE_TO_PROCEED';
+            }
+        } else {
+            return 'TABLE_ALREADY_OCCUPIED';
+        }
+    }
 
+    public function mergingTableData($userid, $type, $tableno) {
+        $userData = $this->getUserById($userid);
+        $order_row="select o.* from orders o where o.order_type='$type' and is_completed='N' and o.cashier_id='".$userData['restaurant_id']."'";
+        if ($tableno>0)
+            $order_row.=" and o.table_no = '$tableno'";
+        $order_row.=" order by o.id desc";
+
+        if ($order_res = mysql_query($order_row)) {
+            $num_rows = mysql_num_rows($order_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                while ($arr = mysql_fetch_assoc($order_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $output[$count]['order_no'] = $arr['order_no'];
+                    $output[$count]['table_no'] = $arr['table_no'];
+                    $output[$count]['tax'] = $arr['tax'];
+                    $output[$count]['tax_amount'] = $arr['tax_amount'];
+                    $output[$count]['subtotal'] = $arr['subtotal'];
+                    $output[$count]['total'] = $arr['total'];
+                    $output[$count]['created'] = $arr['created'];
+
+                    $output[$count]['name'] = $arr['name'];
+                    $output[$count]['noofperson'] = $arr['noofperson'];
+                    $output[$count]['phoneno'] = $arr['phoneno'];
+                    $output[$count]['takeout_date'] = $arr['takeout_date'];
+                    $output[$count]['takeout_time'] = $arr['takeout_time'];
+
+                    $orderItemsArr=$this->getOrderItems($arr['id']);
+                    if (count($orderItemsArr)>0) {
+                        $i=0;
+                        while ($itemArr = mysql_fetch_assoc($orderItemsArr)) {
+                            $output[$count]['items'][$i]['id']=$itemArr['id'];
+                            $output[$count]['items'][$i]['item_id']=$itemArr['item_id'];
+                            $output[$count]['items'][$i]['name_en']=$itemArr['name_en'];
+                            $output[$count]['items'][$i]['name_zh']=$itemArr['name_xh'];
+                            $output[$count]['items'][$i]['price']=$itemArr['price'];
+                            $output[$count]['items'][$i]['qty']=$itemArr['qty'];
+                            $output[$count]['items'][$i]['tax']=$itemArr['tax'];
+                            $output[$count]['items'][$i]['tax_amount']=$itemArr['tax_amount'];
+                            $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
+                            $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
+                            $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
+                            $i++;
+                        }
+                    } else {
+                        $output[$count]['items']=array();
+                    }
+                    $count++;
+                }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function applyDiscount($userid, $type, $value, $orderid) {
+        $orderedat=date('Y-m-d H:i:s');
+        if($orderData=$this->isOrderExist($orderid)) {
+            if ($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            $promocode='';
+            $fix_discount='';
+            $percent_discount='';
+
+            if ($type=='F') {
+                $subTotal=$orderData['subtotal'] - $value;
+                $tax= $subTotal * $orderData['tax'] / 100;
+                $orderTotal= $subTotal + $tax;
+                $fix_discount=$value;
+                $discount_value=$value;
+            }
+
+            if ($type=='P') {
+                $discount_value=$orderData['subtotal'] / $value;
+                $subTotal=$orderData['subtotal'] - $discount_value;
+                $tax= $subTotal * $orderData['tax'] / 100;
+                $orderTotal= $subTotal + $tax;
+                $percent_discount=$value;
+            }
+
+            if ($type=='PR') {
+                $todayDate=date('Y-m-d');
+                $todayTime=date('H:i:s');
+                $today=strtolower(date('l'));
+                if($isPromoValid=$this->verifyPromocode($value, $orderid)) {
+                    $userData = $this->getUserById($userid);
+                    if($userData['restaurant_id']!=$isPromoValid['restaurant_id']) {
+                        return 'NOT_VALID_FOR_THIS_RESTAURANT';
+                    }
+
+                    if ($isPromoValid['valid_from']<=$todayDate && $isPromoValid['valid_to']>=$todayDate) {
+                        if ($isPromoValid['valid_from']==$todayDate && $isPromoValid['start_time']>=$todayTime) {
+                            return 'PROMO_NOT_STARTED';
+                        }
+
+                        if ($isPromoValid['valid_to']==$todayDate && $isPromoValid['end_time']<=$todayTime) {
+                            return 'PROMO_EXPIRED_TIME';
+                        }
+
+                        $weekDaysArr=explode(',', $isPromoValid['week_days']);
+                        if($isDayExist=in_array($today, $weekDaysArr)) {
+                            if($isPromoValid['discount_type']==0) {
+                                $subTotal=$orderData['subtotal'] - $isPromoValid['discount_value'];
+                                $tax= $subTotal * $orderData['tax'] / 100;
+                                $orderTotal= $subTotal + $tax;
+                                $fix_discount=$isPromoValid['discount_value'];
+                                $discount_value=$isPromoValid['discount_value'];
+                                $promocode=$value;
+                            } else {
+                                $discount_value=$orderData['subtotal'] / $isPromoValid['discount_value'];
+                                $subTotal=$orderData['subtotal'] - $discount_value;
+                                $tax= $subTotal * $orderData['tax'] / 100;
+                                $orderTotal= $subTotal + $tax;
+                                $percent_discount=$isPromoValid['discount_value'];
+                                $promocode=$value;
+                            }
+                        } else {
+                            return 'DAY_NOT_EXIST';
+                        }
+                    } else {
+                        return 'PROMO_EXPIRED_DATE';
+                    }
+                } else {
+                    return 'INVALID_PROMOCODE';
+                }              
+            }
+
+/*echo $orderData['subtotal'].'--';
+echo $subTotal.'--';
+                echo $tax.'--';
+                echo $orderTotal.'--';
+                echo $fix_discount.'--';
+                echo $discount_value.'--';
+
+exit;*/
+            $orderPrice_update = "update orders set tax_amount=$tax, subtotal=$subTotal, total=$orderTotal, promocode='$promocode', fix_discount='$fix_discount', discount_value='$discount_value', percent_discount='$percent_discount' where id=$orderid";
+            $orderPriceUpdate=mysql_query($orderPrice_update);
+
+            return $orderData['order_no'];
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
     
     /*------------------------------------------------- Called functions -----------------------------------------------*/
+
+    public function verifyPromocode($value, $orderid) {
+        //discounttype=0 then FIXED else Percent
+        $sel_promocode = "select * from promocodes where code='$value' and status='1'";
+        $promocode = mysql_query($sel_promocode);
+        if (mysql_num_rows($promocode) > 0) {
+            $data=mysql_fetch_assoc($promocode);
+            return $data;
+        }
+    }
     
     public function getOrderItemData($rowid) {
         $sel_order = "select * from order_items where id=$rowid";

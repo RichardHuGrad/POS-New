@@ -616,12 +616,132 @@ $app->post('/removeorderitem', 'authenticate', function() use ($app) {
     } else {
         $response["code"] = 0;
         $response["error"] = false;
-        $response["message"] = "Order successfully Saved";
+        $response["message"] = "Order successfully Updated";
         $response["data"] = $res;
         echoRespnse(201, $response);
     }
 });
 
+/**
+* Change Table
+* url - /changetable 
+* method - POST
+* params - tableno(mandatory), newtableno(mandatory), orderid(mandatory)
+* header Params - email (mandatory), password (mandatory)
+**/
+$app->post('/changetable', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'tableno', 'newtableno'));
+    $response = array();
+    // reading post params
+    $orderid = $app->request->post('orderid');
+    $tableno = $app->request->post('tableno');
+    $newtableno = $app->request->post('newtableno');
+    
+    $db = new DbHandler();
+    $res = $db->changeTable($user_id, $tableno, $newtableno, $orderid);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'TABLE_ALREADY_OCCUPIED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Table is already occupied";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Table no successfully updated";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Merging Table Data
+* url - /mergingtabledata/:orderid/:mergedorderids
+* mergedtablesno :- comma separated, if more than 1 merging table
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function($orderid, $mergedorderids) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->mergingTableData($user_id, $orderid, $mergedorderids);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Reseravtion list"; 
+        $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Apply Discount
+* url - /applydiscount
+* params - type(mandatory), value(mandatory), orderid(mandatory)
+* type :- P / F / PR , P -> Percent, F -> Fixed, PR -> Promocode
+* If type == PR then value = promocide
+* If type == P then value = percent to be apply
+* If type == F then value = value to be discount
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->post('/applydiscount', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('type', 'value', 'orderid'));
+    $response = array();
+    // reading post params
+    $type = $app->request->post('type');
+    $value = $app->request->post('value');
+    $orderid = $app->request->post('orderid');
+    
+    $db = new DbHandler();
+    $res = $db->applyDiscount($user_id, $type, $value, $orderid);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_PROMOCODE' || $res='PROMO_NOT_STARTED' || $res='NOT_VALID_FOR_THIS_RESTAURANT') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Please apply valid promocode";
+        echoRespnse(200, $response);
+    } else if ($res == 'PROMO_EXPIRED_DATE' || $res == 'PROMO_EXPIRED_TIME') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Promocode expired";
+        echoRespnse(200, $response);
+    } else if ($res == 'DAY_NOT_EXIST') {
+        $response["code"] = 4;
+        $response["error"] = true;
+        $response["message"] = "This offer is not valid for today";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Table no successfully updated";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
 
 /**
 * Get chat messages
