@@ -25,7 +25,7 @@ Password : 123456
     
 5.  All pending orders
     url - /pendingorders/:type/:tableno
-    type :- T / W , T-> Takeout, W -> Waiting
+    type :- T / W / D , T-> Takeout, W -> Waiting, D -> dineIn
     tableno :- default 0 when type= W / T
     method - GET
     header Params - username(mandatory), password(mandatory)
@@ -46,13 +46,13 @@ Password : 123456
    url - /reservation 
    method - POST
    params - name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
-   header Params - email (mandatory), password (mandatory)
+   header Params - email(mandatory), password(mandatory)
    
 9. Cancel reservation
    url - /cancelreservation 
    method - POST
    params - reservationid(mandatory), reason(optional)
-   header Params - email (mandatory), password (mandatory)
+   header Params - email(mandatory), password(mandatory)
    
 10. Get all reservation
     url - /reservations/:type
@@ -64,26 +64,28 @@ Password : 123456
     url - /updatereservation 
     method - POST
     params - reservationid(mandatory), name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
-    header Params - email (mandatory), password (mandatory)
+    header Params - email(mandatory), password(mandatory)
  
 12. Assign a table against reservation
     url - /reservetable 
     method - POST
     params - reservationid(mandatory), tableno(mandatory)
-    header Params - email (mandatory), password (mandatory)
+    header Params - email(mandatory), password(mandatory)
     
 13. Make Order For Dinein
     url - /makeorderdinein 
     method - POST
-    params - type(mandatory), itemdata(mandatory), tableno(optional)
+    params - type(mandatory), itemdata(mandatory), tableno(mandatory)
     type :- D-> Dinin
     itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
-	[{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
-			"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
-		"selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
-			"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+	[{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2"}, 
+	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5"}],
+   	"selectedextras": 
+	[{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg"},
+	 {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
 	}]
-    header Params - email (mandatory), password (mandatory)
+    header Params - email(mandatory), password(mandatory)
+
     
 14. Make Order
     url - /makeorderother
@@ -98,12 +100,13 @@ Password : 123456
     method - POST
     params - itemdata(mandatory), orderid(mandatory)
     itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
-	[{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
-			"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
-		"selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
-			"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+	[{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2"},
+	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5"}],
+        "selectedextras": 
+	[{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg"},
+         {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
 	}]
-    header Params - email (mandatory), password (mandatory)
+    header Params - email(mandatory), password(mandatory)
     
 16. Remove item from order
     url - /removeorderitem 
@@ -111,3 +114,11 @@ Password : 123456
     params - itemdata(mandatory), orderid(mandatory)
     itemdata = [{ "itemid": "68", "rowid":"153"}]
     header Params - email (mandatory), password (mandatory)
+
+17. Change Table
+    url - /changetable
+    method - POST
+    params - tableno(mandatory), newtableno(mandatory), orderid(mandatory)
+    header Params - email(mandatory), password(mandatory)
+
+
