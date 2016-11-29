@@ -652,7 +652,9 @@ class HomesController extends AppController {
 
         // save all 
         $this->Session->setFlash('Order successfully completed.', 'success');
+
         echo true;
+        exit; //Modified by Yishou Liao @ Nov 29 2016
     }
 
     public function makeavailable() {
@@ -1097,8 +1099,7 @@ class HomesController extends AppController {
         $data['Order']['id'] = $Order_detail['Order']['id'];
         $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['extras_amount'] + $extras_amount;
         $data['Order']['tax_amount'] = ($data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100);
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);//Modified by Yishou Liao @ Nov 28 2016
-
+        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']); //Modified by Yishou Liao @ Nov 28 2016
         // calculate discount if exists
         $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
         if ($Order_detail['Order']['percent_discount']) {
@@ -1190,23 +1191,22 @@ class HomesController extends AppController {
     public function add_discount() {
         $this->layout = false;
         $this->autoRender = NULL;
-       //Modified by Yishou Liao @ Nov 19 2016
-       $discount_type = -1;
-       $discount_value = -1;
-       //End
-
+        //Modified by Yishou Liao @ Nov 19 2016
+        $discount_type = -1;
+        $discount_value = -1;
+        //End
         // get all params
         $order_id = $this->data['order_id'];
-        $mainorder_id = isset($this->data['mainorder_id'])?$this->data['mainorder_id']:$order_id;
+        $mainorder_id = isset($this->data['mainorder_id']) ? $this->data['mainorder_id'] : $order_id;
         $fix_discount = $this->data['fix_discount'];
         $percent_discount = $this->data['discount_percent'];
         $promocode = $this->data['promocode'];
 
         //Modified by Yishou Liao @ Nov 18 2016
-        if (!empty($fix_discount)){
+        if (!empty($fix_discount)) {
             $order_id_tmp = explode(",", $order_id);
-            $order_id_arr=array($mainorder_id);
-        }else{
+            $order_id_arr = array($mainorder_id);
+        } else {
             $order_id_arr = explode(",", $order_id);
         };
 
@@ -1250,8 +1250,8 @@ class HomesController extends AppController {
                     $response = array(
                         'error' => false,
                         'message' => 'Discount successfully applied',
-                        'discount_type'=>$discount_type,
-                        'discount_value'=>$discount_value
+                        'discount_type' => $discount_type,
+                        'discount_value' => $discount_value
                     );
                 }
             } else if ($percent_discount) {
@@ -1277,8 +1277,8 @@ class HomesController extends AppController {
                     $response = array(
                         'error' => false,
                         'message' => 'Discount successfully applied',
-                        'discount_type'=>$discount_type,
-                        'discount_value'=>$discount_value
+                        'discount_type' => $discount_type,
+                        'discount_value' => $discount_value
                     );
                 }
             } else if ($promocode <> "") {
@@ -1309,7 +1309,6 @@ class HomesController extends AppController {
                         $discount_type = $promo_detail['Promocode']['discount_type'];
                         $discount_value = $promo_detail['Promocode']['discount_value'];
                         //End
-                        
                         // get promocode discount and validate here
                         if ($promo_detail['Promocode']['discount_type'] == 1) {
                             // calculate percentage here
@@ -1344,7 +1343,7 @@ class HomesController extends AppController {
                                 $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
                                 $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
                                 //End
-                            };//Modified by Yishou Liao @ Nov 18 2016 (if };)
+                            }; //Modified by Yishou Liao @ Nov 18 2016 (if };)
                         }
                         $data['Order']['promocode'] = $promocode;
 
@@ -1352,8 +1351,8 @@ class HomesController extends AppController {
                         $response = array(
                             'error' => false,
                             'message' => 'Discount successfully applied',
-                            'discount_type'=>$discount_type,
-                            'discount_value'=>$discount_value
+                            'discount_type' => $discount_type,
+                            'discount_value' => $discount_value
                         );
                     }
                 }
@@ -1643,7 +1642,7 @@ class HomesController extends AppController {
 
         $data['Order']['paid'] = $pay;
         $data['Order']['change'] = $change;
-        $data['Order']['discount'] = $this->data['discount'];//Modified by Yishou Liao @ Nov 19 2016
+        $data['Order']['discount'] = $this->data['discount']; //Modified by Yishou Liao @ Nov 19 2016
         $data['Order']['is_kitchen'] = 'Y';
 
 
@@ -1686,13 +1685,13 @@ class HomesController extends AppController {
             $data['Order']['table_no'] = $split_detail['Order']['table_no'];
             //Modified by Yishou Liao @ Nov 19 2016
             $data['Order']['subtotal'] = $data['Order']['paid'] - $data['Order']['change'];
-            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $data['Order']['tax']/100;
-            $data['Order']['total'] = $data['Order']['subtotal']+$data['Order']['tax_amount'];
+            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $data['Order']['tax'] / 100;
+            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
             /*
-            $data['Order']['total'] = round($data['Order']['paid'], 2) - round($data['Order']['change'], 2);
-            $data['Order']['tax_amount'] = round($data['Order']['total'], 2) / round($data['Order']['tax'], 2);
-            $data['Order']['subtotal'] = round($data['Order']['total'], 2) - round($data['Order']['tax_amount'], 2);
-            */
+              $data['Order']['total'] = round($data['Order']['paid'], 2) - round($data['Order']['change'], 2);
+              $data['Order']['tax_amount'] = round($data['Order']['total'], 2) / round($data['Order']['tax'], 2);
+              $data['Order']['subtotal'] = round($data['Order']['total'], 2) - round($data['Order']['tax_amount'], 2);
+             */
             //End
             $data['Order']['is_completed'] = 'Y';
             //$data['Order']['discount_value'] = $split_detail['Order']['discount_value'];
@@ -1724,156 +1723,158 @@ class HomesController extends AppController {
 
     //End.
     //Modified by Yishou Liao @ Nov 15 2016.
-    public function printTokitchen($print_zh = false,$splitItme=false) {
+    public function printTokitchen($print_zh = false, $splitItme = false) {
         //Modified by Yishou Liao @ Nov 28 2016
         if ($splitItme == false) {
             $Print_Item = $this->data['Print_Item'];
-        }else{
+        } else {
             $Print_Item_split = $this->data['Print_Item'];
             $Print_Item = array();
         };
         //End
-        for ($x=0;$x<(isset($Print_Item_split)?count($Print_Item_split):1);$x++){//Modified by Yishou Liao @ Nov 28 2016
-        if (isset($Print_Item_split)) { $Print_Item[0]=$Print_Item_split[$x]; };//Modified by Yishou Liao @ Nov 28 2016
-        $Printer = $this->data['Printer'];
-        $order_no = $this->data['order_no'];
-        $order_type = $this->data['order_type'];
-        $table_no = $this->data['table_no'];
-        $table = $this->data['table'];
+        for ($x = 0; $x < (isset($Print_Item_split) ? count($Print_Item_split) : 1); $x++) {//Modified by Yishou Liao @ Nov 28 2016
+            if (isset($Print_Item_split)) {
+                $Print_Item[0] = $Print_Item_split[$x];
+            }; //Modified by Yishou Liao @ Nov 28 2016
+            $Printer = $this->data['Printer'];
+            $order_no = $this->data['order_no'];
+            $order_type = $this->data['order_type'];
+            $table_no = $this->data['table_no'];
+            $table = $this->data['table'];
 
-        foreach (array_keys($Printer) as $key) {
-            $printer_name = $Printer[$key];
-            $printer_loca = $key;
+            foreach (array_keys($Printer) as $key) {
+                $printer_name = $Printer[$key];
+                $printer_loca = $key;
 
-            $check_print_flag = false;
-            for ($i = 0; $i < count($Print_Item); $i++) {
-                if ($Print_Item[$i][count($Print_Item[$i]) - 1] == $printer_loca) {
-                    $check_print_flag = true;
-                };
-            };
-
-            if ($check_print_flag) {
-
-                date_default_timezone_set("America/Toronto");
-                $date_time = date("l M d Y h:i:s A");
-
-                $handle = printer_open($printer_name);
-                printer_start_doc($handle, "my_Receipt");
-                printer_start_page($handle);
-
-                if ($print_zh == true) {
-                    $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-                    printer_select_font($handle, $font);
-                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
-                } else {
-                    $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-                    printer_select_font($handle, $font);
-                    printer_draw_text($handle, "Kitchen", 138, 20);
-                };
-
-
-                //Print order information
-                $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
-                printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
-                //End
-
-                $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-                printer_select_pen($handle, $pen);
-                printer_draw_line($handle, 21, 160, 600, 160);
-
-                //Print order items
-                $print_y = 180;
+                $check_print_flag = false;
                 for ($i = 0; $i < count($Print_Item); $i++) {
-                    if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
-                        if ($print_zh == true) {
-                            $font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-                        } else {
-                            $font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-                        };
+                    if ($Print_Item[$i][count($Print_Item[$i]) - 1] == $printer_loca) {
+                        $check_print_flag = true;
+                    };
+                };
+
+                if ($check_print_flag) {
+
+                    date_default_timezone_set("America/Toronto");
+                    $date_time = date("l M d Y h:i:s A");
+
+                    $handle = printer_open($printer_name);
+                    printer_start_doc($handle, "my_Receipt");
+                    printer_start_page($handle);
+
+                    if ($print_zh == true) {
+                        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
                         printer_select_font($handle, $font);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
+                    } else {
+                        $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+                        printer_select_font($handle, $font);
+                        printer_draw_text($handle, "Kitchen", 138, 20);
+                    };
 
-                        printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
 
-                        $print_str = $Print_Item[$i][3];
-                        $len = 0;
-                        while (strlen($print_str) != 0) {
-                            $print_str = substr($Print_Item[$i][3], $len, 16);
-                            printer_draw_text($handle, $print_str, 122, $print_y);
-                            $len+=16;
-                            if (strlen($print_str) != 0) {
-                                $print_y+=32;
+                    //Print order information
+                    $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    printer_select_font($handle, $font);
+                    printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
+                    printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
+                    //End
+
+                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+                    printer_select_pen($handle, $pen);
+                    printer_draw_line($handle, 21, 160, 600, 160);
+
+                    //Print order items
+                    $print_y = 180;
+                    for ($i = 0; $i < count($Print_Item); $i++) {
+                        if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
+                            if ($print_zh == true) {
+                                $font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+                            } else {
+                                $font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
                             };
-                        };
-                        $print_y-=32;
-
-                        if ($print_zh == true) {
-                            $print_y += 32;
-                            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
                             printer_select_font($handle, $font);
 
-                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
+                            printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
 
-
-                            if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
-                                printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 366, $print_y);
-                            };
-                            if ($Print_Item[$i][13] == "C") {
-                                printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
-                            };
-                        } else {
-                            if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
-                                printer_draw_text($handle, "(Takeout)", 366, $print_y);
-                            };
-                            if ($Print_Item[$i][13] == "C") {
-                                printer_draw_text($handle, "(Cancel)", 366, $print_y);
-                            };
-                        };
-                        if (strlen($Print_Item[$i][10]) > 0) {
-                            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
-                            printer_select_font($handle, $font);
-                            $print_str = $Print_Item[$i][10];
+                            $print_str = $Print_Item[$i][3];
                             $len = 0;
-                            $print_y+=32;
                             while (strlen($print_str) != 0) {
-                                $print_str = substr($Print_Item[$i][10], $len, 16);
-                                printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
+                                $print_str = substr($Print_Item[$i][3], $len, 16);
+                                printer_draw_text($handle, $print_str, 122, $print_y);
                                 $len+=16;
                                 if (strlen($print_str) != 0) {
                                     $print_y+=32;
                                 };
                             };
                             $print_y-=32;
+
+                            if ($print_zh == true) {
+                                $print_y += 32;
+                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
+                                printer_select_font($handle, $font);
+
+                                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
+
+
+                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 366, $print_y);
+                                };
+                                if ($Print_Item[$i][13] == "C") {
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
+                                };
+                            } else {
+                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
+                                    printer_draw_text($handle, "(Takeout)", 366, $print_y);
+                                };
+                                if ($Print_Item[$i][13] == "C") {
+                                    printer_draw_text($handle, "(Cancel)", 366, $print_y);
+                                };
+                            };
+                            if (strlen($Print_Item[$i][10]) > 0) {
+                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
+                                printer_select_font($handle, $font);
+                                $print_str = $Print_Item[$i][10];
+                                $len = 0;
+                                $print_y+=32;
+                                while (strlen($print_str) != 0) {
+                                    $print_str = substr($Print_Item[$i][10], $len, 16);
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
+                                    $len+=16;
+                                    if (strlen($print_str) != 0) {
+                                        $print_y+=32;
+                                    };
+                                };
+                                $print_y-=32;
+                            };
+                            $print_y += 46;
                         };
-                        $print_y += 46;
                     };
+                    //End.
+                    $print_y += 10;
+                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+                    printer_select_pen($handle, $pen);
+                    printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+                    $print_y += 10;
+                    $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    printer_select_font($handle, $font);
+                    printer_draw_text($handle, $date_time, 80, $print_y);
+
+                    printer_delete_font($font);
+
+                    printer_end_page($handle);
+                    printer_end_doc($handle);
+                    printer_close($handle);
                 };
-                //End.
-                $print_y += 10;
-                $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-                printer_select_pen($handle, $pen);
-                printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-                $print_y += 10;
-                $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, $date_time, 80, $print_y);
-
-                printer_delete_font($font);
-
-                printer_end_page($handle);
-                printer_end_doc($handle);
-                printer_close($handle);
             };
-        };
 
-        if (isset($_SESSION['DELEITEM_' . $table])) {
-            unset($_SESSION['DELEITEM_' . $table]);
-        };
+            if (isset($_SESSION['DELEITEM_' . $table])) {
+                unset($_SESSION['DELEITEM_' . $table]);
+            };
 
-        echo true;
-        };//End @ Nov 28 2016
+            echo true;
+        }; //End @ Nov 28 2016
         exit;
     }
 
@@ -1882,9 +1883,16 @@ class HomesController extends AppController {
         $Print_Item = $this->data['Print_Item'];
         $logo_name = $this->data['logo_name'];
         $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
-        $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0;
-        $tax = isset($this->data['tax']) ? $this->data['tax'] : 0;
-        $total = isset($this->data['total']) ? $this->data['total'] : 0;
+        $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0.00;
+        //Modified by Yishou Liao @ Nov 29 2016
+        $discount = isset($this->data['discount']) ? $this->data['discount'] : 0.00;
+        $after_discount = isset($this->data['after_discount']) ? $this->data['after_discount'] : 0.00;
+        $tax_Amount = isset($this->data['tax_Amount']) ? $this->data['tax_Amount'] : 0.00;
+        $paid = isset($this->data['paid']) ? $this->data['paid'] : 0.00;
+        $change = isset($this->data['change']) ? $this->data['change'] : 0.00;
+        //End
+        $tax = isset($this->data['tax']) ? $this->data['tax'] : 0.00;
+        $total = isset($this->data['total']) ? $this->data['total'] : 0.00;
         $split_no = isset($this->data['split_no']) ? "" . $this->data['split_no'] : "";
 
         date_default_timezone_set("America/Toronto");
@@ -1987,6 +1995,49 @@ class HomesController extends AppController {
         printer_select_font($handle, $font);
         printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($subtotal, 2)), 360, $print_y);
         //End.
+        //Modified by Yishou Liao @ Nov 29 2016
+        if ($discount > 0) {
+            //Print Discount
+            $print_y += 40;
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            if ($print_zh == true) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Discount"), 58, $print_y);
+            } else {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Discount :"), 58, $print_y);
+            };
+
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "折扣："), 148, $print_y);
+            };
+
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($discount, 2)), 360, $print_y);
+            //End.
+            //Print After_Discount
+            $print_y += 40;
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            if ($print_zh == true) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "After Discount"), 58, $print_y);
+            } else {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "After Discount :"), 58, $print_y);
+            };
+
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "折后价："), 148, $print_y);
+            };
+
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($after_discount, 2)), 360, $print_y);
+            //End.
+        };
         //Print Tax
         $print_y += 40;
         printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
@@ -2004,8 +2055,9 @@ class HomesController extends AppController {
         } else {
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%) :"), 100, $print_y);
         };
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format(($subtotal * $tax / 100), 2)), 360, $print_y);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($tax_Amount, 2)), 360, $print_y);
         //End.
+        //End @ Nov 29 2016
         //Print Total
         $print_y += 40;
         if ($print_zh == true) {
@@ -2030,17 +2082,63 @@ class HomesController extends AppController {
             $print_y += 40;
             printer_draw_text($handle, "Average", 58, $print_y);
 
-			if ($print_zh == true) {
-				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-				printer_select_font($handle, $font);
-				printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
-			};
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
+            };
 
             $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($memo, 2)), 360, $print_y);
             //End.
         };
+
+        //Modified by Yishou Liao @ Nov 29 2016
+        if ($paid > 0) {
+            $print_y += 50;
+            $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+            printer_select_pen($handle, $pen);
+            printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+            //Print Total
+            $print_y += 10;
+            if ($print_zh == true) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Paid"), 58, $print_y);
+            } else {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Paid :"), 58, $print_y);
+            };
+
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "付款："), 148, $print_y);
+            };
+
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($paid, 2)), 360, $print_y);
+            //End.
+            //Print Total
+            $print_y += 40;
+            if ($print_zh == true) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Change"), 58, $print_y);
+            } else {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Change :"), 58, $print_y);
+            };
+
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "找零："), 148, $print_y);
+            };
+
+            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($change, 2)), 360, $print_y);
+            //End.
+        }
+        //End
 
         $print_y += 40;
         printer_draw_text($handle, $date_time, 80, $print_y);

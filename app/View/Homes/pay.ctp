@@ -357,9 +357,19 @@ if (!empty($Order_detail['OrderItem'])) {
             method: "post",
             data: {
                 logo_name: "../webroot/img/logo.bmp",
-                Print_Item: Order_print,
-                subtotal:<?php echo $Order_detail['Order']['subtotal'] ?>,
+                Print_Item: Order_print,//!empty($Order_detail) and $Order_detail['Order']['discount_value']
+				//Modified by Yishou Liao @ Nov 29 2016
+                subtotal:<?php echo (!empty($Order_detail) and $Order_detail['Order']['discount_value'])?($Order_detail['Order']['subtotal']+$Order_detail['Order']['discount_value']):$Order_detail['Order']['subtotal'] ?>,
+				discount: <?php echo (!empty($Order_detail) and $Order_detail['Order']['discount_value'])?($Order_detail['Order']['discount_value']):0.00 ?>,
+				after_discount: <?php echo $Order_detail['Order']['subtotal'] ?>,
+				//End
                 tax:<?php echo $Order_detail['Order']['tax'] ?>,
+				//Modified by Yishou Liao @ Nov 29 2016
+				tax_Amount: <?php echo $Order_detail['Order']['tax_amount'] ?>,
+                //paid_by: $("#selected_card").val(),
+				paid: $(".received_price").attr("amount"),
+				change: $(".change_price").attr("amount"),
+				//End
                 total:<?php echo $Order_detail['Order']['total'] ?>,
             },
             success: function (html) {
