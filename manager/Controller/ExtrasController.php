@@ -162,11 +162,13 @@ class ExtrasController extends AppController {
      */
     public function admin_delete($id = '') {
 
+        $cousine_id = $this->params->query['id'];
+
         $id = base64_decode($id);
-        $this->Extra->updateAll(array('Extra.status' => "'D'"), array('Extra.id' => $id));
+        $this->Extra->delete($id);
 
         $this->Session->setFlash('Extra has been deleted successfully', 'success');
-        $this->redirect(array('plugin' => false, 'controller' => 'extras', 'action' => 'index', 'admin' => true));
+        $this->redirect(array('plugin' => false, 'controller' => 'extras', 'action' => 'index', 'admin' => true, '?'=>array('id'=>$cousine_id)));
 
     }
 

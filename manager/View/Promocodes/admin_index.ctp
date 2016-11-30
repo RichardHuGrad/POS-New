@@ -30,9 +30,6 @@ if($this->Session->check('cashier_search')){
     $search = $this->Session->read('cashier_search');
     $search_txt = $search['search'];
     $status = $search['status'];
-    // $is_verified = $search['is_verified'];
-    // $registered_from = $search['registered_from'];
-    // $registered_till = $search['registered_till'];
 }
 ?>
 
@@ -170,7 +167,12 @@ if($this->Session->check('cashier_search')){
 
                                                             echo $this->Html->link('<i class="fa fa-pencil"></i>',
                                                                 array('plugin' => false, 'controller' => 'promocodes', 'action' => 'add_edit', base64_encode($customer['Promocode']['id']), 'admin' => true),
-                                                                array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit customer details', 'escape' => false)
+                                                                array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit', 'escape' => false)
+                                                            );
+
+                                                            echo $this->Html->link('<i class="fa fa-trash"></i>',
+                                                                array('plugin' => false, 'controller' => 'promocodes', 'action' => 'delete', base64_encode($customer['Promocode']['id']), 'admin' => true),
+                                                                array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to delete', 'escape' => false, "onclick"=>"return confirm('Are you sure you want to delete?')")
                                                             );
 
                                                         ?>

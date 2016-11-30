@@ -661,37 +661,6 @@ $app->post('/changetable', 'authenticate', function() use ($app) {
 });
 
 /**
-* Merging Table Data
-* url - /mergingtabledata/:orderid/:mergedorderids
-* mergedtablesno :- comma separated, if more than 1 merging table
-* method - GET
-* header Params - username(mandatory), password(mandatory)
-**/
-$app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function($orderid, $mergedorderids) use ($app) {  
-    global $user_id;       
-    $response = array();
-    $db = new DbHandler();
-    $res = $db->mergingTableData($user_id, $orderid, $mergedorderids);   
-    if ($res=='NO_RECORD_FOUND') { 
-        $response['code'] = 1;
-        $response['error'] = true; 
-        $response['message'] = "No Record found"; 
-        echoRespnse(200, $response);
-    } else if ($res=='UNABLE_TO_PROCEED') {
-        $response['code'] = 2;
-        $response['error'] = true;
-        $response['message'] = "Unable to proceed";
-        echoRespnse(200, $response);
-    } else {
-        $response['code'] = 0;
-        $response['error'] = false;
-        $response['message'] = "Reseravtion list"; 
-        $response['data'] = $res;
-        echoRespnse(201, $response);
-    }
-});
-
-/**
 * Apply Discount
 * url - /applydiscount
 * params - type(mandatory), value(mandatory), orderid(mandatory)
@@ -699,7 +668,7 @@ $app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function
 * If type == PR then value = promocide
 * If type == P then value = percent to be apply
 * If type == F then value = value to be discount
-* method - GET
+* method - POST
 * header Params - username(mandatory), password(mandatory)
 **/
 $app->post('/applydiscount', 'authenticate', function() use ($app) {
@@ -739,6 +708,68 @@ $app->post('/applydiscount', 'authenticate', function() use ($app) {
         $response["error"] = false;
         $response["message"] = "Table no successfully updated";
         $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Remove Discount
+* url - /removediscount
+* params -  orderid(mandatory)
+* method - POST
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->post('/removediscount', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid'));
+    $response = array();
+    // reading post params
+     $orderid = $app->request->post('orderid');
+    
+    $db = new DbHandler();
+    $res = $db->removePromocode($orderid);
+    if ($res == 'INVALID_PROMOCODE') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Discount successfully removed";
+        //$response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Merging Table Data
+* url - /mergingtabledata/:orderid/:mergedorderids
+* mergedtablesno :- comma separated, if more than 1 merging table
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function($orderid, $mergedorderids) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->mergingTableData($user_id, $orderid, $mergedorderids);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Reseravtion list"; 
+        $response['data'] = $res;
         echoRespnse(201, $response);
     }
 });

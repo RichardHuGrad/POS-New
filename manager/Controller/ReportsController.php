@@ -54,7 +54,7 @@ class ReportsController extends AppController {
         $months = array(0,0,0,0,0,0,0,0,0,0,0,0);
         if(!empty($records)) {
             foreach ($records as $key => $value) {
-                $months[intval($value[0]['month'])] = round($value[0]['total'], 2);
+                $months[intval($value[0]['month'])-1] = round($value[0]['total'], 2);
             }
         }
         $months = implode(",", $months);

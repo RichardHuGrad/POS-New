@@ -80,9 +80,6 @@ class OrdersController extends AppController {
 
         $query = array(
             'conditions' => $conditions,
-            // 'fields' => array(
-            //      'Order.id', 'Order.firstname', 'Order.lastname', 'Order.email', 'Order.mobile_no', 'Order.status', 'Order.is_verified', 'Order.created'
-            // ),
             'order' => $order,
             'recursive'=>-1
         );
@@ -132,7 +129,7 @@ class OrdersController extends AppController {
                 }
             }
         else {
-            $this->Session->setFlash('Please select atleast one order.', 'error');
+            $this->Session->setFlash('Please select at least one order.', 'error');
             $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
         }
         $this->Session->setFlash('Order settings successfully updated.', 'success');

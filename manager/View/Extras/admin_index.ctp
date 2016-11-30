@@ -113,7 +113,11 @@ if($this->Session->check('Color_search')){
 
                                                         echo $this->Html->link('<i class="fa fa-pencil"></i>',
                                                             array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
-                                                            array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit category', 'escape' => false)
+                                                            array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit extra', 'escape' => false)
+                                                        );
+                                                        echo $this->Html->link('<i class="fa fa-trash"></i>',
+                                                            array('plugin' => false, 'controller' => 'extras', 'action' => 'delete', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
+                                                            array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit extra', 'escape' => false, "onclick"=>"return confirm('Are you sure you want to delete?')")
                                                         );
                                                     } ?>
                                                 </div>

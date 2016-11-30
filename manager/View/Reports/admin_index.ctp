@@ -260,7 +260,7 @@ $registered_till = @$search['registered_till'];
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">Select Cashier</label>
-                                <?php echo $this->Form->input('cashier', array('value' => $cashier, 'options'=>$cashiers, 'type' => 'select', 'class' =>'form-control', 'empty'=>'Please Select', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                <?php echo $this->Form->input('cashier', array('value' => $cashier, 'options'=>$cashiers, 'type' => 'select', 'class' =>'form-control reset-field', 'empty'=>'Please Select', 'div' => false, 'label' => false, 'required' => false)); ?>
                             </div>
                         </div>
 

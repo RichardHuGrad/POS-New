@@ -527,6 +527,121 @@ class DbHandler {
         }
     }
 
+    public function applyDiscount($userid, $type, $value, $orderid) {
+        $orderedat=date('Y-m-d H:i:s');
+        if($orderData=$this->isOrderExist($orderid)) {
+            if ($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            $promocode='';
+            $fix_discount='';
+            $percent_discount='';
+
+            if ($type=='F') {
+                $subTotal=$orderData['subtotal'] - $value;
+                $tax= $subTotal * $orderData['tax'] / 100;
+                $orderTotal= $subTotal + $tax;
+                $fix_discount=$value;
+                $discount_value=$value;
+            }
+
+            if ($type=='P') {
+                $discount_value=$orderData['subtotal'] / $value;
+                $subTotal=$orderData['subtotal'] - $discount_value;
+                $tax= $subTotal * $orderData['tax'] / 100;
+                $orderTotal= $subTotal + $tax;
+                $percent_discount=$value;
+            }
+
+            if ($type=='PR') {
+                $this->removePromocode($orderid, $value);
+                $todayDate=date('Y-m-d');
+                $todayTime=date('H:i:s');
+                $today=strtolower(date('l'));
+                if($isPromoValid=$this->verifyPromocode($value, $orderid)) {
+                    $userData = $this->getUserById($userid);
+                    if($userData['restaurant_id']!=$isPromoValid['restaurant_id']) {
+                        return 'NOT_VALID_FOR_THIS_RESTAURANT';
+                    }
+
+                    if ($isPromoValid['valid_from']<=$todayDate && $isPromoValid['valid_to']>=$todayDate) {
+                        if ($isPromoValid['valid_from']==$todayDate && $isPromoValid['start_time']>=$todayTime) {
+                            return 'PROMO_NOT_STARTED';
+                        }
+
+                        if ($isPromoValid['valid_to']==$todayDate && $isPromoValid['end_time']<=$todayTime) {
+                            return 'PROMO_EXPIRED_TIME';
+                        }
+
+                        $weekDaysArr=explode(',', $isPromoValid['week_days']);
+                        if($isDayExist=in_array($today, $weekDaysArr)) {
+                            if ($isPromoValid['category_id']==0) {
+                                if($isPromoValid['discount_type']==0) {
+                                    $subTotal=$orderData['subtotal'] - $isPromoValid['discount_value'];
+                                    $tax= $subTotal * $orderData['tax'] / 100;
+                                    $orderTotal= $subTotal + $tax;
+                                    $fix_discount=$isPromoValid['discount_value'];
+                                    $discount_value=$isPromoValid['discount_value'];
+                                    $promocode=$value;
+                                } else {
+                                    $discount_value=$orderData['subtotal'] / $isPromoValid['discount_value'];
+                                    $subTotal=$orderData['subtotal'] - $discount_value;
+                                    $tax= $subTotal * $orderData['tax'] / 100;
+                                    $orderTotal= $subTotal + $tax;
+                                    $percent_discount=$isPromoValid['discount_value'];
+                                    $promocode=$value;
+                                }
+                            } else {
+                                $promocode=$value;
+                                $orderItem=$this->getOrderItems($orderid);
+                                $count = 0;
+
+                                while ($itemArr = mysql_fetch_assoc($orderItem)) {
+                                    if ($isPromoValid['item_id']>0) {
+                                        if($orderItem['item_id']==$isPromoValid['item_id']) {
+                                            if($isPromoValid['discount_type']==0) {
+                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) - $isPromoValid['discount_value'];
+                                            } else {
+                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) * $isPromoValid['discount_value'] / 100;
+                                            }
+                                        }
+                                    } else {
+                                        if($orderItem['category_id']==$isPromoValid['category_id']) {
+                                            if($isPromoValid['discount_type']==0) {
+                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) - $isPromoValid['discount_value'];
+                                            } else {
+                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) * $isPromoValid['discount_value'] / 100;
+                                            }
+                                        }
+                                    }
+                                }
+                                $discount_value=array_sum($discount);
+                                $subTotal=$orderData['subtotal'] - $discount_value;
+                                $tax= $subTotal * $orderData['tax'] / 100;
+                                $orderTotal= $subTotal + $tax;
+                                $percent_discount=$isPromoValid['discount_value'];
+                                $promocode=$value;
+                            }
+                        } else {
+                            return 'DAY_NOT_EXIST';
+                        }
+                    } else {
+                        return 'PROMO_EXPIRED_DATE';
+                    }
+                } else {
+                    return 'INVALID_PROMOCODE';
+                }              
+            }
+
+            $orderPrice_update = "update orders set tax_amount=$tax, subtotal=$subTotal, total=$orderTotal, promocode='$promocode', fix_discount='$fix_discount', discount_value='$discount_value', percent_discount='$percent_discount' where id=$orderid";
+            $orderPriceUpdate=mysql_query($orderPrice_update);
+
+            return $orderData['order_no'];
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
+
     public function mergingTableData($userid, $type, $tableno) {
         $userData = $this->getUserById($userid);
         $order_row="select o.* from orders o where o.order_type='$type' and is_completed='N' and o.cashier_id='".$userData['restaurant_id']."'";
@@ -548,7 +663,6 @@ class DbHandler {
                     $output[$count]['subtotal'] = $arr['subtotal'];
                     $output[$count]['total'] = $arr['total'];
                     $output[$count]['created'] = $arr['created'];
-
                     $output[$count]['name'] = $arr['name'];
                     $output[$count]['noofperson'] = $arr['noofperson'];
                     $output[$count]['phoneno'] = $arr['phoneno'];
@@ -585,98 +699,26 @@ class DbHandler {
             return 'UNABLE_TO_PROCEED';
         }
     }
-
-    public function applyDiscount($userid, $type, $value, $orderid) {
-        $orderedat=date('Y-m-d H:i:s');
-        if($orderData=$this->isOrderExist($orderid)) {
-            if ($orderData['is_completed']=='Y') {
-                return 'ALREADY_COMPLETED';
-            }
-            $promocode='';
-            $fix_discount='';
-            $percent_discount='';
-
-            if ($type=='F') {
-                $subTotal=$orderData['subtotal'] - $value;
-                $tax= $subTotal * $orderData['tax'] / 100;
-                $orderTotal= $subTotal + $tax;
-                $fix_discount=$value;
-                $discount_value=$value;
-            }
-
-            if ($type=='P') {
-                $discount_value=$orderData['subtotal'] / $value;
-                $subTotal=$orderData['subtotal'] - $discount_value;
-                $tax= $subTotal * $orderData['tax'] / 100;
-                $orderTotal= $subTotal + $tax;
-                $percent_discount=$value;
-            }
-
-            if ($type=='PR') {
-                $todayDate=date('Y-m-d');
-                $todayTime=date('H:i:s');
-                $today=strtolower(date('l'));
-                if($isPromoValid=$this->verifyPromocode($value, $orderid)) {
-                    $userData = $this->getUserById($userid);
-                    if($userData['restaurant_id']!=$isPromoValid['restaurant_id']) {
-                        return 'NOT_VALID_FOR_THIS_RESTAURANT';
-                    }
-
-                    if ($isPromoValid['valid_from']<=$todayDate && $isPromoValid['valid_to']>=$todayDate) {
-                        if ($isPromoValid['valid_from']==$todayDate && $isPromoValid['start_time']>=$todayTime) {
-                            return 'PROMO_NOT_STARTED';
-                        }
-
-                        if ($isPromoValid['valid_to']==$todayDate && $isPromoValid['end_time']<=$todayTime) {
-                            return 'PROMO_EXPIRED_TIME';
-                        }
-
-                        $weekDaysArr=explode(',', $isPromoValid['week_days']);
-                        if($isDayExist=in_array($today, $weekDaysArr)) {
-                            if($isPromoValid['discount_type']==0) {
-                                $subTotal=$orderData['subtotal'] - $isPromoValid['discount_value'];
-                                $tax= $subTotal * $orderData['tax'] / 100;
-                                $orderTotal= $subTotal + $tax;
-                                $fix_discount=$isPromoValid['discount_value'];
-                                $discount_value=$isPromoValid['discount_value'];
-                                $promocode=$value;
-                            } else {
-                                $discount_value=$orderData['subtotal'] / $isPromoValid['discount_value'];
-                                $subTotal=$orderData['subtotal'] - $discount_value;
-                                $tax= $subTotal * $orderData['tax'] / 100;
-                                $orderTotal= $subTotal + $tax;
-                                $percent_discount=$isPromoValid['discount_value'];
-                                $promocode=$value;
-                            }
-                        } else {
-                            return 'DAY_NOT_EXIST';
-                        }
-                    } else {
-                        return 'PROMO_EXPIRED_DATE';
-                    }
-                } else {
-                    return 'INVALID_PROMOCODE';
-                }              
-            }
-
-/*echo $orderData['subtotal'].'--';
-echo $subTotal.'--';
-                echo $tax.'--';
-                echo $orderTotal.'--';
-                echo $fix_discount.'--';
-                echo $discount_value.'--';
-
-exit;*/
-            $orderPrice_update = "update orders set tax_amount=$tax, subtotal=$subTotal, total=$orderTotal, promocode='$promocode', fix_discount='$fix_discount', discount_value='$discount_value', percent_discount='$percent_discount' where id=$orderid";
-            $orderPriceUpdate=mysql_query($orderPrice_update);
-
-            return $orderData['order_no'];
-        } else {
-            return 'INVALID_ORDERID';
-        }
-    }
     
     /*------------------------------------------------- Called functions -----------------------------------------------*/
+
+    public function removePromocode($orderid, $promocode) {
+        $sel_order = "select * from orders where id=$orderid";
+        $order = mysql_query($sel_order);
+        if (mysql_num_rows($order) > 0) {
+            $data=mysql_fetch_assoc($order);
+
+            $subTotal=$data['discount_value'] + $data['subtotal'];
+            $tax= $subTotal * $data['tax'] / 100;
+            $total=$subTotal + $tax;
+            
+            $orderPrice_update = "update orders set tax_amount=$tax, subtotal=$subTotal, total=$total, promocode=NULL, fix_discount=NULL, discount_value=NULL, percent_discount=NULL where id=$orderid";
+            $orderPriceUpdate=mysql_query($orderPrice_update);
+            return 'SUCCESSFULLY_REMOVED';
+        } else {
+            return 'INVALID_PROMOCODE';
+        }
+    }
 
     public function verifyPromocode($value, $orderid) {
         //discounttype=0 then FIXED else Percent
@@ -687,7 +729,7 @@ exit;*/
             return $data;
         }
     }
-    
+  
     public function getOrderItemData($rowid) {
         $sel_order = "select * from order_items where id=$rowid";
         $order = mysql_query($sel_order);

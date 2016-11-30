@@ -233,7 +233,7 @@ class PromocodesController extends AppController {
 
         $this->checkAccess('Promocode', 'can_delete');
         $id = base64_decode($id);
-        $this->Promocode->updateAll(array('Promocode.status' => "'D'"), array('Promocode.id' => $id));
+        $this->Promocode->delete($id);
 
         $this->Session->setFlash('Promocode has been deleted successfully', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'index', 'admin' => true));
