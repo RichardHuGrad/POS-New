@@ -82,7 +82,7 @@ class DbHandler {
 
                     $dine_key = array_search($arr['table_no'], array_column($dinein, 'table_no'));
                     if ($dine_key>=0 && $arr['order_type']=='D') {
-                         $dinein[$dine_key]['order_id'] = $arr['id'];
+                        $dinein[$dine_key]['order_id'] = $arr['id'];
                         $dinein[$dine_key]['order_no'] = $arr['order_no'];
                         $dinein[$dine_key]['order_type'] = $arr['order_type'];
                         $dinein[$dine_key]['created'] = $arr['created'];
@@ -128,13 +128,16 @@ class DbHandler {
                     $output[$count]['subtotal'] = $arr['subtotal'];
                     $output[$count]['total'] = $arr['total'];
                     $output[$count]['created'] = $arr['created'];
-
                     $output[$count]['name'] = $arr['name'];
                     $output[$count]['noofperson'] = $arr['noofperson'];
                     $output[$count]['phoneno'] = $arr['phoneno'];
                     $output[$count]['takeout_date'] = $arr['takeout_date'];
                     $output[$count]['takeout_time'] = $arr['takeout_time'];
 
+                    $output[$count]['promocode'] = $arr['promocode'];
+                    $output[$count]['fix_discount'] = $arr['fix_discount'];
+                    $output[$count]['percent_discount'] = $arr['percent_discount'];
+                    $output[$count]['discount_value'] = $arr['discount_value'];
                     $orderItemsArr=$this->getOrderItems($arr['id']);
                     if (count($orderItemsArr)>0) {
                         $i=0;
@@ -147,6 +150,7 @@ class DbHandler {
                             $output[$count]['items'][$i]['qty']=$itemArr['qty'];
                             $output[$count]['items'][$i]['tax']=$itemArr['tax'];
                             $output[$count]['items'][$i]['tax_amount']=$itemArr['tax_amount'];
+                            $output[$count]['items'][$i]['discount']=$itemArr['discount'];
                             $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
                             $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
                             $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
@@ -528,14 +532,15 @@ class DbHandler {
     }
 
     public function applyDiscount($userid, $type, $value, $orderid) {
+        $this->removePromocode($orderid, $value);
         $orderedat=date('Y-m-d H:i:s');
         if($orderData=$this->isOrderExist($orderid)) {
             if ($orderData['is_completed']=='Y') {
                 return 'ALREADY_COMPLETED';
             }
             $promocode='';
-            $fix_discount='';
-            $percent_discount='';
+            $fix_discount=0;
+            $percent_discount=0;
 
             if ($type=='F') {
                 $subTotal=$orderData['subtotal'] - $value;
@@ -543,18 +548,13 @@ class DbHandler {
                 $orderTotal= $subTotal + $tax;
                 $fix_discount=$value;
                 $discount_value=$value;
-            }
-
-            if ($type=='P') {
-                $discount_value=$orderData['subtotal'] / $value;
-                $subTotal=$orderData['subtotal'] - $discount_value;
+            } else if ($type=='P') {
+                $discount_value = ($orderData['subtotal'] + $orderData['discount_value']) * $value / 100;
+                $subTotal= ($orderData['subtotal'] + $orderData['discount_value']) - $discount_value;
                 $tax= $subTotal * $orderData['tax'] / 100;
                 $orderTotal= $subTotal + $tax;
                 $percent_discount=$value;
-            }
-
-            if ($type=='PR') {
-                $this->removePromocode($orderid, $value);
+            } else {
                 $todayDate=date('Y-m-d');
                 $todayTime=date('H:i:s');
                 $today=strtolower(date('l'));
@@ -568,11 +568,9 @@ class DbHandler {
                         if ($isPromoValid['valid_from']==$todayDate && $isPromoValid['start_time']>=$todayTime) {
                             return 'PROMO_NOT_STARTED';
                         }
-
                         if ($isPromoValid['valid_to']==$todayDate && $isPromoValid['end_time']<=$todayTime) {
                             return 'PROMO_EXPIRED_TIME';
                         }
-
                         $weekDaysArr=explode(',', $isPromoValid['week_days']);
                         if($isDayExist=in_array($today, $weekDaysArr)) {
                             if ($isPromoValid['category_id']==0) {
@@ -595,27 +593,42 @@ class DbHandler {
                                 $promocode=$value;
                                 $orderItem=$this->getOrderItems($orderid);
                                 $count = 0;
-
                                 while ($itemArr = mysql_fetch_assoc($orderItem)) {
-                                    if ($isPromoValid['item_id']>0) {
-                                        if($orderItem['item_id']==$isPromoValid['item_id']) {
+                                    $discount=0;
+                                    if ($isPromoValid['item_id']>0) {            
+                                        if($itemArr['item_id']==$isPromoValid['item_id']) {
                                             if($isPromoValid['discount_type']==0) {
-                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) - $isPromoValid['discount_value'];
+                                                $itemTot=$itemArr['price'] + $itemArr['extra_amount'];
+                                                if($itemTot>=$isPromoValid['discount_value']) {
+                                                    $discount=$isPromoValid['discount_value'];
+                                                } else {
+                                                    $discount=$itemTot;
+                                                }
                                             } else {
-                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) * $isPromoValid['discount_value'] / 100;
+                                                $discount= ($itemArr['price'] + $itemArr['extra_amount']) * $isPromoValid['discount_value'] / 100;
                                             }
                                         }
                                     } else {
-                                        if($orderItem['category_id']==$isPromoValid['category_id']) {
+                                        if($itemArr['category_id']==$isPromoValid['category_id']) {
                                             if($isPromoValid['discount_type']==0) {
-                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) - $isPromoValid['discount_value'];
+                                                $itemTot=$itemArr['price'] + $itemArr['extra_amount'];
+                                                if($itemTot>=$isPromoValid['discount_value']) {
+                                                    $discount=$isPromoValid['discount_value'];
+                                                } else {
+                                                    $discount=$itemTot;
+                                                }
                                             } else {
-                                                $discountArr[]= ($orderItem['price'] + $orderItem['extra_amount']) * $isPromoValid['discount_value'] / 100;
+                                                $discount = ($itemArr['price'] + $itemArr['extra_amount']) * $isPromoValid['discount_value'] / 100;
                                             }
                                         }
                                     }
+                                    $discountArr[]=$discount;
+                                    if($discount>0) {
+                                        $orderItem_update = "update order_items set discount=$discount where id=".$itemArr['id'];
+                                        $orderItemUpdate=mysql_query($orderItem_update);
+                                    }
                                 }
-                                $discount_value=array_sum($discount);
+                                $discount_value=array_sum($discountArr);
                                 $subTotal=$orderData['subtotal'] - $discount_value;
                                 $tax= $subTotal * $orderData['tax'] / 100;
                                 $orderTotal= $subTotal + $tax;
@@ -632,10 +645,8 @@ class DbHandler {
                     return 'INVALID_PROMOCODE';
                 }              
             }
-
             $orderPrice_update = "update orders set tax_amount=$tax, subtotal=$subTotal, total=$orderTotal, promocode='$promocode', fix_discount='$fix_discount', discount_value='$discount_value', percent_discount='$percent_discount' where id=$orderid";
             $orderPriceUpdate=mysql_query($orderPrice_update);
-
             return $orderData['order_no'];
         } else {
             return 'INVALID_ORDERID';
@@ -714,6 +725,10 @@ class DbHandler {
             
             $orderPrice_update = "update orders set tax_amount=$tax, subtotal=$subTotal, total=$total, promocode=NULL, fix_discount=NULL, discount_value=NULL, percent_discount=NULL where id=$orderid";
             $orderPriceUpdate=mysql_query($orderPrice_update);
+
+            $orderItemDiscount = "update order_items set discount=0 where order_id=$orderid";
+            $orderItemDiscountUpdate=mysql_query($orderItemDiscount);
+
             return 'SUCCESSFULLY_REMOVED';
         } else {
             return 'INVALID_PROMOCODE';

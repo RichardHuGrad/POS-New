@@ -46,3 +46,6 @@ ADD COLUMN `item_id`  int(10) DEFAULT '0' AFTER `category_id`;
 ALTER table pos.extras 
 ADD COLUMN `type` ENUM('T','E')  DEFAULT 'E' COMMENT 'T => Topping, E => Extra' after `id`;
 
+-- DATE 01-12-2016 -----------------------------------------------------
+ALTER TABLE `order_items` ADD COLUMN `discount` FLOAT DEFAULT '0' AFTER `tax_amount`;
+

@@ -688,7 +688,7 @@ $app->post('/applydiscount', 'authenticate', function() use ($app) {
         $response["error"] = true;
         $response["message"] = "Unable to proceed";
         echoRespnse(200, $response);
-    } else if ($res == 'INVALID_PROMOCODE' || $res='PROMO_NOT_STARTED' || $res='NOT_VALID_FOR_THIS_RESTAURANT') {
+    } else if ($res == 'INVALID_PROMOCODE' || $res=='PROMO_NOT_STARTED' || $res=='NOT_VALID_FOR_THIS_RESTAURANT') {
         $response["code"] = 2;
         $response["error"] = true;
         $response["message"] = "Please apply valid promocode";

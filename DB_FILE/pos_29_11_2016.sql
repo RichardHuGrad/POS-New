@@ -1,5 +1,4 @@
--- DATE 25-11-2016 ---------------------------------
-
+-- DATE 25-11-2016 -----------------------------------------------------
 ALTER TABLE `cashiers` ADD COLUMN `ipad_deviceid` varchar(100) default '',
 ADD COLUMN `ipad_devicetoken` varchar(100) default '',
 ADD COLUMN `logintype` ENUM('W','M','NA') default 'NA' comment "W-> Web, M-> Mobile, NA-> Not Applicable";
@@ -35,10 +34,13 @@ ALTER TABLE `orders` ADD COLUMN `name` VARCHAR(100) NULL AFTER `reservation_id`,
 ADD COLUMN `noofperson` int(3) NULL, ADD COLUMN `phoneno` VARCHAR(20) NULL, 
 ADD COLUMN `takeout_date` date NULL, ADD COLUMN `takeout_time` time NULL;
 
--- DATE 29-11-2016 ----------------------------------------------------------
+-- DATE 29-11-2016 -----------------------------------------------------
 ALTER TABLE pos.promocodes ADD COLUMN `start_time` time null AFTER `valid_to`,
 ADD COLUMN `end_time` time null AFTER `start_time`,
 ADD COLUMN `week_days` varchar(200) null AFTER `end_time`,
 ADD COLUMN `category_id` int(10) DEFAULT '0' AFTER `restaurant_id`,
 ADD COLUMN `item_id`  int(10) DEFAULT '0' AFTER `category_id`;
+
+-- DATE 01-12-2016 -----------------------------------------------------
+ALTER TABLE `order_items` ADD COLUMN `discount` FLOAT DEFAULT '0' AFTER `tax_amount`;
 
