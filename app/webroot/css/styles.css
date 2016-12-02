@@ -813,3 +813,26 @@ li.already_done {
 .EntPassword{
 	width:210px;	
 }
+
+.tabSyle{
+	display: inline-block;
+    border: 1px solid #bbb;
+    padding: 7px 20px;
+    margin-bottom: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-top: -5px;
+    cursor: pointer;
+    background: #eee;
+    font-weight: 700;
+}
+
+.tabSyle.live{
+    background: #fff;
+
+}
+
+.tabSyle:hover{
+	box-shadow: #eee 0px 0px 5px 1px;
+	background: #fff;
+}

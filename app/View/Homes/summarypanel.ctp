@@ -54,21 +54,38 @@
 
                         if ($value['all_extras']) {
                             ?>
+
                             <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>">
+                            <div>
+                            <?php
+                                $flag_i=-1;
+                            foreach($extras as $ex) {
+                                    //Modified by Yishou Liao @ Nov 30 2016
+                                    if ($flag_i != $ex['category_id']) {
+                                    $flag_i = $ex['category_id'];
+                                ?>
+                                
+                                <div class="tabSyle" atab="<?php echo $ex['category_id'] ?>">Tap 1</div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                                <!--div class="tabSyle">Tap 2</div>
+                                <div class="tabSyle">Tap 3</div -->
+                            </div>
                                 <div class="menu-arrow"></div>
                                 <!-- Modified by Yishou Liao @ Nov 30 2016 -->
                                 <?php
-								$flag_i=0;
+								$flag_i=-1;
                                 foreach($extras as $ex) {
 									//Modified by Yishou Liao @ Nov 30 2016
 									if ($flag_i != $ex['category_id']) {
                                 ?>
-                                	ok ok ok ok
                                 <?php
 									}
 									//End
 								?>
-                                    <li>
+                                    <li class="addadish" adish="<?php echo $ex['category_id'] ?>">
                                         <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
                                             <?php 
                                                 echo "<span class='pull-left'><!-- ".$ex['name']."<br/ -->".$ex['name_zh']."</span>";
@@ -83,7 +100,6 @@
 								if ($flag_i != $ex['category_id']) {
 									$flag_i = $ex['category_id'];
                                 ?>
-                                	===================
                                 <?php
 									};
 								//End
@@ -92,6 +108,7 @@
                                 }
                                 ?>
                                 <!-- End -->
+                                
                                 <div class="show_extras" alt="<?php echo $value['id'] ?>" id="block<?php echo $value['id'] ?>">
                                     <?php
                                         if(!empty($selected_extras)) {
@@ -254,5 +271,29 @@ var orderStr = "";
 
 	$('#Order_Item').val(orderStr);
 <?php } ?>
+</script>
+<script type="text/javascript">
+    //for dish additional option tab switch
+    $(document).ready(function(){
+
+        $(".dropdown-menu div.tabSyle:first-child").addClass("live");
+        var defaultTab = $(".tabSyle").first().attr("atab");
+        $(".addadish[adish!='" + defaultTab + "']").hide();
+
+
+        $(".tabSyle").click(function(){
+            $(".addadish").show();
+            $("div.tabSyle").removeClass("live");
+            $(this).addClass("live");
+
+            var dichCat = $(this).attr("atab");
+
+            //console.log(dichCat);
+            //alert(dichCat);
+
+            $(".addadish[adish!='" + dichCat + "']").hide();
+
+        });
+    });
 </script>
 <!-- End. -->
