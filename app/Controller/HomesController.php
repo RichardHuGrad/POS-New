@@ -707,7 +707,7 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-
+        
         // get all params
         $item_id = $this->data['item_id'];
         $table = $this->data['table'];

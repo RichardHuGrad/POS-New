@@ -151,10 +151,14 @@ if($this->Session->check('cousine_search')){
                                                         array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit category', 'escape' => false)
                                                     );
 
-                                                    echo $this->Html->link('<i class="fa fa-cutlery"></i>',
+                                                    /*
+													Modified by Yishou Liao @ Dec 01 2016
+													echo $this->Html->link('<i class="fa fa-cutlery"></i>',
                                                         array('plugin' => false, 'controller' => 'extras', 'action' => 'admin_index', '?'=>array('id' => ($cat['Cousine']['id'])), 'admin' => true),
                                                         array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to add/edit extras', 'escape' => false)
                                                     );
+													End
+													*/
 
                                                     if (!$cat['Cousine']['no_of_orders']) 
                                                         echo $this->Html->link('<i class="fa fa-trash"></i>',

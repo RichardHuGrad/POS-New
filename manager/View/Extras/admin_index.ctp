@@ -55,7 +55,10 @@ if($this->Session->check('Color_search')){
                                 <?php
                                 if($this->Common->checkAccess($privilage_data, 'Extra', 'can_add')) {
                                     echo $this->Html->link('Add Extra <i class="fa fa-plus"></i>',
-                                        array('plugin' => false, '?'=>array('id' => $id), 'controller' => 'extras', 'action' => 'add_edit', 'admin' => true),
+									//Modified by Yishou Liao @ Dec 01 2016
+                                        //array('plugin' => false, '?'=>array('id' => $id), 'controller' => 'extras', 'action' => 'add_edit', 'admin' => true),
+										array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', 'admin' => true),
+										//End
                                         array('class' => 'btn btn-green', 'escape' => false)
                                     );
                                 } ?>
@@ -112,11 +115,17 @@ if($this->Session->check('Color_search')){
                                                         }
 
                                                         echo $this->Html->link('<i class="fa fa-pencil"></i>',
-                                                            array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
+														//Modified by Yishou Liao @ Dec 01 2016
+                                                            //array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
+															array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', 'admin' => true),
+															//End
                                                             array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit extra', 'escape' => false)
                                                         );
                                                         echo $this->Html->link('<i class="fa fa-trash"></i>',
-                                                            array('plugin' => false, 'controller' => 'extras', 'action' => 'delete', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
+														//Modified by Yishou Liao @ Dec 01 2016
+                                                            //array('plugin' => false, 'controller' => 'extras', 'action' => 'delete', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
+															array('plugin' => false, 'controller' => 'extras', 'action' => 'delete', 'admin' => true),
+															//End
                                                             array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit extra', 'escape' => false, "onclick"=>"return confirm('Are you sure you want to delete?')")
                                                         );
                                                     } ?>

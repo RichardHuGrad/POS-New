@@ -64,6 +64,33 @@
                     </a>
                 </li>
 
+				<!-- Modified by Yishou Liao @ Dec 01 2016 -->
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'extracate') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'extracate','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-list"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Extra Category Management</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'extra') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'extras','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-cutlery"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Extra Management</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <!-- End -->
+                
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'cashiers') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cashiers','action' => 'index', 'admin' => 'true')); ?>">
                         <div class="item-content">

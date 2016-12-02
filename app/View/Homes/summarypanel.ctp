@@ -56,9 +56,18 @@
                             ?>
                             <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>">
                                 <div class="menu-arrow"></div>
+                                <!-- Modified by Yishou Liao @ Nov 30 2016 -->
                                 <?php
+								$flag_i=0;
                                 foreach($extras as $ex) {
-                                    ?>
+									//Modified by Yishou Liao @ Nov 30 2016
+									if ($flag_i != $ex['category_id']) {
+                                ?>
+                                	ok ok ok ok
+                                <?php
+									}
+									//End
+								?>
                                     <li>
                                         <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
                                             <?php 
@@ -69,9 +78,20 @@
                                              ?>
                                         </a>
                                     </li>
-                                    <?php
+                                <?php
+								//Modified by Yishou Liao @ Nov 30 2016
+								if ($flag_i != $ex['category_id']) {
+									$flag_i = $ex['category_id'];
+                                ?>
+                                	===================
+                                <?php
+									};
+								//End
+								?>
+                                <?php
                                 }
                                 ?>
+                                <!-- End -->
                                 <div class="show_extras" alt="<?php echo $value['id'] ?>" id="block<?php echo $value['id'] ?>">
                                     <?php
                                         if(!empty($selected_extras)) {
