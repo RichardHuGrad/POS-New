@@ -20,7 +20,8 @@ class Cousine extends AppModel {
         'Extra' => array(
             'className' => 'Extra',
             'foreignKey' => false,
-            'conditions'=> array('status'=>'A')
+            'conditions'=> array('status'=>'A'),
+            'order' => array('category_id') //Modified by Yishou Liao @ Nov 30 2016
         )
     );
 
