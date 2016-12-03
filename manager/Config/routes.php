@@ -43,6 +43,14 @@
         )
     );
 
+    //Modified by Yishou Liao @ Dec 02 2016
+    Router::connect('/admin/extracate/add', array('controller' => 'extracate', 'action' => 'add_edit', 'admin' => true));
+    Router::connect('/admin/extracate/edit/:id', array('controller' => 'extracate', 'action' => 'add_edit', 'admin' => true),
+        array(
+            'pass' => array('id')
+        )
+    );
+    //End
 
     Router::connect('/admin/cuisines', array('controller' => 'cousines', 'action' => 'index', 'admin' => true));
     Router::connect('/admin/cuisines/add', array('controller' => 'cousines', 'action' => 'add_edit', 'admin' => true));

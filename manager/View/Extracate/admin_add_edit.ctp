@@ -16,7 +16,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                 <section id="page-title">
                     <div class="row">
                         <div class="col-sm-8">
-                            <h1 class="mainTitle"><?php echo ('' == $id) ? 'Add' : 'Edit'; ?> Category</h1>
+                            <h1 class="mainTitle"><?php echo ('' == $id) ? 'Add' : 'Edit'; ?> Extras Category</h1>
                         </div>                        
                     </div>
                 </section>
@@ -28,38 +28,29 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                 <div class="container-fluid container-fullw bg-white">
                     <div class="row">
                         <div class="col-md-12">   
-                            <?php echo $this->Form->create('Category', array('method' => 'post', 'class' => 'form', 'role' => 'form', 'autocomplete' => 'off', 'type' => 'file'));
+                            <?php echo $this->Form->create('Extrascategory', array('method' => 'post', 'class' => 'form', 'role' => 'form', 'autocomplete' => 'off', 'type' => 'file'));
                             echo $this->Form->input('id', array('type' => 'hidden', 'required' => false)); ?>
-                            <div class="row">
+                            
 
                                 <?php foreach ($languages as $key => $language){ ?>
-
+								<div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Category (<?php echo $language; ?>)<span class="symbol required"></span></label>
-                                            <?php echo $this->Form->input('CategoryLocale.' . $key . '.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
-                                            echo $this->Form->input('CategoryLocale.' . $key . '.id', array('type' => 'hidden', 'required' => false));
+                                            <?php //echo $this->Form->input('Extrascategory.' . $key . '.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            //echo $this->Form->input('Extrascategory.' . $key . '.id', array('type' => 'hidden', 'required' => false));
+											if ($key=='en'){
+											echo $this->Form->input('Extrascategory.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+											}else{
+											echo $this->Form->input('Extrascategory.name' . '_'.$key, array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+											}
+											echo $this->Form->input('Extrascategory.id', array('type' => 'hidden', 'required' => false));
                                             ?>
                                         </div>
                                     </div>
-
+								</div>
                                 <?php } ?>
-
-                                
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Receipt Printer</label>
-                                        <?php 
-
-                                        $printer = array(
-                                            'K'=>'Kitchen',
-                                            'C'=>'Cashier'
-                                            );
-                                        echo $this->Form->input('printer', array('options' => $printer, 'class' => 'form-control', 'empty' => "Select Printer", 'label' => false, 'div' => false)); ?>
-                                    </div>
-                                </div>
-                                
+                              <div class="row">  
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Status</label>
@@ -83,7 +74,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                     <?php echo $this->Form->button('Save <i class="fa fa-arrow-circle-right"></i>',array('class' => 'btn btn-primary btn-wide pull-left_form','type' => 'submit','id' => 'submit_button'));
 
                                     echo $this->Html->link('Cancel <i class="fa fa-times-circle"></i>',
-                                        array('plugin' => false,'controller' => 'categories','action' => 'index', 'admin' => true),
+                                        array('plugin' => false,'controller' => 'extracate','action' => 'index', 'admin' => true),
                                         array('class' => 'btn btn-primary btn-wide pull-right', 'escape' => false)
                                     );
                                     ?>
@@ -108,6 +99,6 @@ echo $this->Html->script(array('jquery.validationEngine-en', 'jquery.validationE
 ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#CategoryAdminAddEditForm").validationEngine();
+        $("#extrascategoryAdminAddEditForm").validationEngine();
     });
 </script>

@@ -55,7 +55,7 @@ if($this->Session->check('category_search')){
                             <h1 class="mainTitle pull-left">Extra Category List</h1>
                             <div class="row pull-right">
                                 <?php
-                                echo $this->Html->link('Add Category <i class="fa fa-plus"></i>',
+                                echo $this->Html->link('Add Extracategory <i class="fa fa-plus"></i>',
                                     array('plugin' => false, 'controller' => 'extracate', 'action' => 'add_edit', 'admin' => true),
                                     array('class' => 'btn btn-green', 'escape' => false)
                                 );
@@ -70,7 +70,7 @@ if($this->Session->check('category_search')){
 
                     <!-- start: SEARCH FORM START -->
                     <div class="border-around margin-bottom-15 padding-10">
-                        <?php echo $this->Form->create('Category', array(
+                        <?php echo $this->Form->create('Extracategory', array(
                                 'url' => array('controller' => 'extracate', 'action' => 'index', 'admin' => true), 'class' => 'form', 'role' => 'search', 'autocomplete' => 'off')
                         ); ?>
 

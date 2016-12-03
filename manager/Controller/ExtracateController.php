@@ -45,7 +45,6 @@ class ExtracateController extends AppController {
 
         if ($this->Session->check('extrascategory_search')) {
             $search = $this->Session->read('extrascategory_search');
-            // $order = $search['order_by'];
 
             if (!empty($search['search'])) {
                 $conditions['or'] = array(
@@ -71,8 +70,134 @@ class ExtracateController extends AppController {
             $this->paginate = $query;
             $extrascategory = $this->paginate('Extrascategory');
         };
-        
+
         $this->set(compact('extrascategory', 'limit', 'order', 'languages'));
     }
 
+     /**
+     * To add or edit extras category
+     * @param string $id
+     * @return mixed
+     */
+    function admin_add_edit($id = '') {
+
+        $this->layout = LAYOUT_ADMIN;
+        $id = base64_decode($id);
+        $languages = $this->Language->find('list', array('fields' => array('lang_code', 'language'), 'conditions' => array('status' => 'A')));
+
+        if (!empty($this->request->data)) {
+
+            $this->Extrascategory->set($this->request->data);
+
+            ###### custom validation start for CategoryLocale name ########
+            if('' != $id){
+                $conditions = array('Extracategory.id !=' => $id);
+            }
+            foreach ($this->data['Extracategory'] as $lang_code => $val){
+                if('' == $val['name']){
+                    $this->Extrascategory->validationErrors[$lang_code]['name'][] = 'Please Enter Category Name';
+                }else{
+                    $conditions['Extracategory.name'] = $val['name'];
+                    $check_unique = $this->Extrascategory->find('count', array('conditions' => $conditions, 'limit' => 1));
+                    if($check_unique > 0){
+                        $this->Extrascategory->validationErrors[$lang_code]['name'][] = 'Extra Category Name Already Exists';
+                    }
+                }
+            }
+            ###### custom validation end for CategoryLocale name ########
+
+            if ($this->Extrascategory->validates() && $this->Extrascategory->validates()) {
+                if ($this->Extrascategory->save($this->request->data, $validate = false)) {
+
+                    $last_id = $this->Extrascategory->id;
+                    foreach ($this->data['Extrascategory'] as $lang_code => $val){
+
+                        $locale_data['Extrascategory'] = array(
+                            'id' => $val['id'],
+                            'category_id' => $last_id,
+                            'name' => $val['name'],
+                            'lang_code' => $lang_code
+                        );
+                        $this->Extrascategory->save($locale_data, $validate = false);
+                    }
+
+                    if('' == $id){
+                        $this->Session->setFlash('Category has been added successfully', 'success');
+                    }else{
+                        $this->Session->setFlash('Category has been updated successfully', 'success');
+                    }
+                    $this->redirect(array('plugin' => false, 'controller' => 'categories', 'action' => 'index', 'admin' => true));
+                }
+            }
+        }
+
+        if('' != $id){
+
+            $result_data = $this->Extrascategory->find('first', array('conditions' => array('Extrascategory.id' => $id)));
+            if(empty($result_data)){
+                $this->Session->setFlash('Invalid Request !', 'error');
+                $this->redirect(array('plugin' => false, 'controller' => 'extracate', 'action' => 'index', 'admin' => true));
+            }
+
+            if (empty($this->request->data)) {
+                /*$tmp = array();
+                foreach ($result_data['Extrascategory'] as $d){
+                    $tmp['Extrascategory'][$d['lang_code']] = array(
+                        'name' => $d['name'],
+                        'id' => $d['id']
+                    );
+                }
+                $result_data = array_merge($result_data, $tmp);*/
+                //$this->request->data = $result_data['Extrascategory'];
+                $this->request->data = $result_data;
+            }
+
+        }
+        $this->set(compact('id', 'languages'));
+    }
+    
+    /**
+     * Change the status of the category
+     * @param string $id
+     * @param string $status
+     * @return null
+     */
+    public function admin_status($id = '', $status = '') {
+
+        $id = base64_decode($id);
+
+        $is_valid = true;
+        if('' == $id || '' == $status){
+            $is_valid = false;
+        }else{
+            $check_user_exists = $this->Extrascategory->Find('count', array('conditions' => array('Extrascategory.id' => $id), 'limit' => 1));
+            if (0 == $check_user_exists) {
+                $is_valid = false;
+            }
+        }
+
+        if(!$is_valid) {
+            $this->Session->setFlash('Invalid Request !', 'error');
+            $this->redirect(array('plugin' => false, 'controller' => 'categories', 'action' => 'index', 'admin' => true));
+        }
+
+        $this->Extrascategory->updateAll(array('Extrascategory.status' => "'" . $status . "'"), array('Extrascategory.id' => $id));
+
+        $this->Session->setFlash('Extras Category status has been changed successfully', 'success');
+        $this->redirect(Router::url( $this->referer(), true ));
+    }
+
+    /**
+     * Delete the category
+     * @param string $id
+     * @return null
+     */
+    public function admin_delete($id = '') {
+        $id = base64_decode($id);
+        $this->Extrascategory->delete($id);
+
+        $this->Session->setFlash('Extras Category has been deleted successfully', 'success');
+        $this->redirect(array('plugin' => false, 'controller' => 'extracate', 'action' => 'index', 'admin' => true));
+
+    }
 }
