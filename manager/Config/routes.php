@@ -51,6 +51,15 @@
         )
     );
     //End
+    
+    //Modified by Yishou Liao @ Dec 04 2016
+    Router::connect('/admin/extras/add', array('controller' => 'extras', 'action' => 'add_edit', 'admin' => true));
+    Router::connect('/admin/extras/edit/:id', array('controller' => 'extras', 'action' => 'add_edit', 'admin' => true),
+        array(
+            'pass' => array('id')
+        )
+    );
+    //End
 
     Router::connect('/admin/cuisines', array('controller' => 'cousines', 'action' => 'index', 'admin' => true));
     Router::connect('/admin/cuisines/add', array('controller' => 'cousines', 'action' => 'add_edit', 'admin' => true));

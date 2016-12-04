@@ -69,6 +69,44 @@ if($this->Session->check('Color_search')){
                 <?php echo $this->Session->flash(); ?>
 
                 <div class="container-fluid container-fullw bg-white">
+                	<!-- Modified by Yishou Liao @ Dec 04 2016 -->
+                    <!-- start: SEARCH FORM START -->
+                    <div class="border-around margin-bottom-15 padding-10">
+                        <?php echo $this->Form->create('Extras', array(
+                                'url' => array('controller' => 'extras', 'action' => 'index', 'admin' => true), 'class' => 'form', 'role' => 'search', 'autocomplete' => 'off')
+                        ); ?>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Search</label>
+                                <?php echo $this->Form->input('search', array('type' => 'text', 'value' => $search_txt, 'placeholder' => 'Search...', 'class' =>'form-control reset-field', 'div' => false, 'label' => false, 'required' => false)); ?>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Status</label>
+                                <?php echo $this->Form->input('status', array('options' => $option_status, 'value' => $status, 'class' => 'form-control reset-field', 'empty' => 'All', 'label' => false, 'div' => false, 'required' => false)); ?>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <?php echo $this->Form->button('Reset <i class="fa fa-times-circle"></i>',array('class' => 'btn btn-primary btn-wide pull-right','type' => 'button','id' => 'reset_button'));
+                            echo $this->Form->button('Search <i class="fa fa-arrow-circle-right"></i>',array('class' => 'btn btn-primary btn-wide pull-right margin-right-10','type' => 'submit','id' => 'submit_button')) ?>
+                        </div>
+
+                        <?php echo $this->Form->end(); ?>
+                        <div class="clearfix"></div>
+                    </div>
+                    <?php echo $this->Form->create('PageSize', array(
+                            'url' => array('controller' => 'extras', 'action' => 'index', 'admin' => true), 'class' => 'form', 'autocomplete' => 'off', 'id' => 'pageSizeForm')
+                    ); ?>
+                    <div class="form-group pull-left">
+                        <label class="control-label">Records Per Page</label>
+                        <?php echo $this->Form->input('records_per_page', array('options' => unserialize(PAGING_OPTIONS), 'value' => $limit, 'id' => 'records_per_page', 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                    </div>
+                    <?php echo $this->Form->end(); ?>
+                    <!-- End -->
 
                     
                     <div class="row">
@@ -80,6 +118,7 @@ if($this->Session->check('Color_search')){
                                     <th>Extra Name(EN)</th>
                                     <th>Extra Name(ZH)</th>
                                     <th>Price</th>
+                                    <th>Category</th>
                                     <th>Status</th>
                                     <th>Created On</th>
                                     <th>Action</th>
@@ -93,6 +132,7 @@ if($this->Session->check('Color_search')){
                                             <td><b><?php echo ucfirst($cat['Extra']['name']); ?></b></td>
                                             <td><b><?php echo ucfirst($cat['Extra']['name_zh']); ?></b></td>
                                             <td><b>$<?php echo number_format($cat['Extra']['price'], 2); ?></b></td>
+                                            <td><b><?php echo ucfirst($cat['Extrascategory']['name']).'('.ucfirst($cat['Extrascategory']['name_zh']).')'; ?></b></td>
                                             <td> <?php
                                                 if ($cat['Extra']['status'] == 'A') {
                                                     echo $this->Html->image('/img/test-pass-icon.png', array('border' => 0, 'alt' => 'Active', 'title' => 'Active'));
@@ -117,7 +157,7 @@ if($this->Session->check('Color_search')){
                                                         echo $this->Html->link('<i class="fa fa-pencil"></i>',
 														//Modified by Yishou Liao @ Dec 01 2016
                                                             //array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', base64_encode($cat['Extra']['id']),'?'=>array('id'=>$id), 'admin' => true),
-															array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', 'admin' => true),
+															array('plugin' => false, 'controller' => 'extras', 'action' => 'add_edit', 'id' => base64_encode($cat['Extra']['id']), 'admin' => true),
 															//End
                                                             array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to edit extra', 'escape' => false)
                                                         );

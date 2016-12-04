@@ -4,8 +4,7 @@
  * Class ExtrasController
  */
 class ExtrasController extends AppController {
-
-    public $uses = array('Extra');
+    public $uses = array('Extra','Extrascategory');
     public $components = array('Session', 'Paginator');
 
     /**
@@ -45,7 +44,7 @@ class ExtrasController extends AppController {
         if ($this->Session->check('page_size')) {
             $limit = $this->Session->read('page_size');
         }
-
+        xdebug_break();
         if ($this->Session->check('Color_search')) {
             $search = $this->Session->read('Color_search');
             $order = $search['order_by'];
@@ -75,7 +74,7 @@ class ExtrasController extends AppController {
         //Modified by Yishou Liao @ Dec 01 2016
         //$CousineLocal_data = $this->CousineLocal->find('first', array('fields'=>array('CousineLocal.name'), 'conditions' => array('CousineLocal.parent_id' => $id, 'lang_code'=>'en')));
         $CousineLocal_data = $this->CousineLocal->find('first', array('fields' => array('CousineLocal.name'), 'conditions' => array('lang_code' => 'en')));
-
+        
         //$this->set(compact('extras', 'limit', 'order', 'id', 'CousineLocal_data'));
         $this->set(compact('extras', 'limit', 'order', 'CousineLocal_data'));
         //End
@@ -87,7 +86,13 @@ class ExtrasController extends AppController {
      * @return mixed
      */
     function admin_add_edit($id = '') {
-        $cousine_id = $this->params->query['id'];
+        //$cousine_id = $this->params->query['id'];
+
+        //Modified by Yishou Liao @ Dec 04 2016
+        $id = base64_decode($id);
+        $cousine_id = $id;
+        //End @ Dec 04 2016
+
         $this->layout = 'admin';
 
         if (!empty($this->request->data)) {
@@ -108,7 +113,7 @@ class ExtrasController extends AppController {
         }
 
         if ('' != $id) {
-            $id = base64_decode($id);
+            //$id = base64_decode($id); //Modified by Yishou Liao @ Dec 04 2016
             $Color_data = $this->Extra->find('first', array('conditions' => array('Extra.id' => $id)));
             if (empty($Color_data)) {
                 $this->Session->setFlash('Invalid Request', 'error');
@@ -122,7 +127,11 @@ class ExtrasController extends AppController {
         $this->loadModel('Admin');
         $restaurants = $this->Admin->find('list', array('fields' => array('Admin.id', 'Admin.restaurant_name'), 'conditions' => array('Admin.status' => 'A', 'Admin.is_super_admin' => 'N'), 'order' => array('Admin.firstname' => 'ASC')));
 
-        $this->set(compact('id', 'restaurants', 'cousine_id'));
+         //Modified by Yishou Liao @ Dec 04 2016
+        $Extrascategory_data = $this->Extrascategory->find('all', array('fields' => array('Extrascategory.id,Extrascategory.name,Extrascategory.name_zh'), 'conditions' => array('status' => 'A')));
+        //End @ Dec 04 2016
+        
+        $this->set(compact('id', 'restaurants', 'cousine_id','Extrascategory_data'));
     }
 
     /**

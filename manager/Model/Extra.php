@@ -9,6 +9,11 @@ class Extra extends AppModel {
         'Cousine' => array(
             'className' => 'Cousine',
             'foreignKey' => 'cousine_id'
+        ),
+         'Extrascategory' => array(
+            'className' => 'Extrascategory',
+             'type' => 'inner',
+            'foreignKey' => 'category_id'
         )
     );
 	
