@@ -31,9 +31,9 @@ class ExtracateController extends AppController {
 
         if (!empty($this->request->data)) {
 
-            if (isset($this->request->data['extrascategory']) && !empty($this->request->data['extrascategory'])) {
-                $search_data = $this->request->data['extrascategory'];
-                $this->Session->write('extrascategory_search', $search_data);
+            if (isset($this->request->data['Extracategory']) && !empty($this->request->data['Extracategory'])) {
+                $search_data = $this->request->data['Extracategory'];
+                $this->Session->write('Extracategory_search', $search_data);
             }
 
             if (isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
@@ -45,8 +45,8 @@ class ExtracateController extends AppController {
             $limit = $this->Session->read('page_size');
         }
 
-        if ($this->Session->check('extrascategory_search')) {
-            $search = $this->Session->read('extrascategory_search');
+        if ($this->Session->check('Extracategory_search')) {
+            $search = $this->Session->read('Extracategory_search');
 
             if (!empty($search['search'])) {
                 $conditions['or'] = array(
@@ -56,7 +56,7 @@ class ExtracateController extends AppController {
             }
 
             if (!empty($search['status'])) {
-                $conditions['extrascategory.status'] = $search['status'];
+                $conditions['Extrascategory.status'] = $search['status'];
             }
         }
 

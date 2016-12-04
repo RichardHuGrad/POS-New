@@ -31,8 +31,8 @@ $search_txt = $status =  $search_lang = '';
 );
 */
 
-if($this->Session->check('category_search')){
-    $search = $this->Session->read('category_search');
+if($this->Session->check('Extracategory_search')){
+    $search = $this->Session->read('Extracategory_search');
     $search_txt = $search['search'];
     $status = $search['status'];
 }

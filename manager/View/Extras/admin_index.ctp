@@ -29,8 +29,8 @@ $option_order = array(
 );
 
 $search_txt = $status = '';
-if($this->Session->check('Color_search')){
-    $search = $this->Session->read('Color_search');
+if($this->Session->check('Extras_search')){
+    $search = $this->Session->read('Extras_search');
     $search_txt = $search['search'];
     $status = $search['status'];
 }

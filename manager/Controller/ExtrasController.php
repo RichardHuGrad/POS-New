@@ -31,9 +31,9 @@ class ExtrasController extends AppController {
 
         if (!empty($this->request->data)) {
 
-            if (isset($this->request->data['Extra']) && !empty($this->request->data['Extra'])) {
-                $search_data = $this->request->data['Extra'];
-                $this->Session->write('Color_search', $search_data);
+            if (isset($this->request->data['Extras']) && !empty($this->request->data['Extras'])) {
+                $search_data = $this->request->data['Extras'];
+                $this->Session->write('Extras_search', $search_data);
             }
 
             if (isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
@@ -44,9 +44,9 @@ class ExtrasController extends AppController {
         if ($this->Session->check('page_size')) {
             $limit = $this->Session->read('page_size');
         }
-        xdebug_break();
-        if ($this->Session->check('Color_search')) {
-            $search = $this->Session->read('Color_search');
+
+        if ($this->Session->check('Extras_search')) {
+            $search = $this->Session->read('Extras_search');
             $order = $search['order_by'];
 
             if (!empty($search['search'])) {
