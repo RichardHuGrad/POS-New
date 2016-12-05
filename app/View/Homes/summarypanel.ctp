@@ -58,25 +58,18 @@
                             <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>">
                             <div>
                             <?php
-                                $flag_i=-1;
                             foreach($extras_categories as $ex_category) {
-                                    //Modified by Yishou Liao @ Nov 30 2016
-                                    //if ($flag_i != $ex['category_id']) {
-                                    //$flag_i = $ex['category_id'];
                                 ?>
                                 
                                 <div class="tabSyle" atab="<?php echo $ex_category['extrascategories']['id'] ?>"> <?php echo $ex_category['extrascategories']['name'] . '(' . $ex_category['extrascategories']['name_zh'] . ')'; ?></div>
                                 <?php
-                                    //}
                                 }
                                 ?>
-                                <!--div class="tabSyle">Tap 2</div>
-                                <div class="tabSyle">Tap 3</div -->
                             </div>
                                 <div class="menu-arrow"></div>
                                 <!-- Modified by Yishou Liao @ Nov 30 2016 -->
                                 <?php
-								$flag_i=-1;
+								$flag_i=0;
                                 foreach($extras as $ex) {
 									//Modified by Yishou Liao @ Nov 30 2016
 									if ($flag_i != $ex['category_id']) {
