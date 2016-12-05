@@ -438,6 +438,10 @@ class DbHandler {
                     $itemPrice=$itemData['price'] * $itemdataArr[$i]->qty;
                     $itemTot= $itemPrice + $totextra;
                     $taxAmount= $itemTot / $userData['tax'];
+                    $discount=0;
+                    if($orderData['promocode']!='' || !is_null($orderData['promocode'])) {
+                        $discount=$this->getDiscountOnItem($itemdataArr[$i], $orderData['promocode']);
+                    }
 
                     $orderitem_insert = "insert into order_items set order_id='$orderid', item_id='".$itemdataArr[$i]->itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$itemdataArr[$i]->qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice'";
                     $items_added=mysql_query($orderitem_insert);
@@ -452,7 +456,6 @@ class DbHandler {
                 if ($orderData['percent_discount']>0) {
                     $subTotal= $orderTotal * $orderData['percent_discount'] / 100;
                 }
-
             } else {
                 $subTotal= $orderTotal;
             }
@@ -713,6 +716,65 @@ class DbHandler {
     
     /*------------------------------------------------- Called functions -----------------------------------------------*/
 
+    public function getDiscountOnItem($orderData, $promocode]) {
+        $isPromoValid=$this->verifyPromocode($promocode, $orderid);
+        $itemData=$this->getItemData($orderData->itemid);
+
+        $price=$itemData['price'] * $itemdataArr[$i]->qty;
+        $extraprice = 0;
+        foreach($itemdataArr[$i]->selectedextras as $num => $values) {
+           $extraprice += $values->price;
+        }
+        $totprice=$price + $extraprice;
+
+        if ($isPromoValid['category_id']==0) {
+            if($isPromoValid['discount_type']==0) {
+                $discount=0;
+            } else {
+                $discount= $totprice * $isPromoValid['discount_value'] / 100;
+            }
+        } else {
+            $orderItem=$this->getItemData($orderData->id);
+            $count = 0;
+            while ($itemArr = mysql_fetch_assoc($orderItem)) {
+                $discount=0;
+                if ($isPromoValid['item_id']>0) {            
+                    if($itemArr['id']==$isPromoValid['item_id']) {
+                        if($isPromoValid['discount_type']==0) {
+                            $itemTot=$itemArr['price'] + $itemArr['extra_amount'];
+                            if($itemTot>=$isPromoValid['discount_value']) {
+                                $discount=$isPromoValid['discount_value'];
+                            } else {
+                                $discount=$itemTot;
+                            }
+                        } else {
+                            $discount= ($itemArr['price'] + $itemArr['extra_amount']) * $isPromoValid['discount_value'] / 100;
+                        }
+                    }
+                } else {
+                    if($itemArr['category_id']==$isPromoValid['category_id']) {
+                        if($isPromoValid['discount_type']==0) {
+                            $itemTot=$itemArr['price'] + $itemArr['extra_amount'];
+                            if($itemTot>=$isPromoValid['discount_value']) {
+                                $discount=$isPromoValid['discount_value'];
+                            } else {
+                                $discount=$itemTot;
+                            }
+                        } else {
+                            $discount = ($itemArr['price'] + $itemArr['extra_amount']) * $isPromoValid['discount_value'] / 100;
+                        }
+                    }
+                }
+                $discountArr[]=$discount;
+                if($discount>0) {
+                    $orderItem_update = "update order_items set discount=$discount where id=".$itemArr['id'];
+                    $orderItemUpdate=mysql_query($orderItem_update);
+                }
+          
+            }
+        }
+    }
+
     public function removePromocode($orderid, $promocode) {
         $sel_order = "select * from orders where id=$orderid";
         $order = mysql_query($sel_order);
@@ -735,7 +797,7 @@ class DbHandler {
         }
     }
 
-    public function verifyPromocode($value, $orderid) {
+    public function verifyPromocode($value, $orderid=0) {
         //discounttype=0 then FIXED else Percent
         $sel_promocode = "select * from promocodes where code='$value' and status='1'";
         $promocode = mysql_query($sel_promocode);
