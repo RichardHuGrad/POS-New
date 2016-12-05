@@ -1556,10 +1556,11 @@ class HomesController extends AppController {
                 $data['Order']['paid'] = $table_detail['Order']['total'];
                 $data['Order']['change'] = 0;
 
-                $data['Order']['card_val'] = 0 - $main_order_id; //用负数代表此处为合单，去掉负号的那个数代表主桌的付款Order的Id号
-                $data['Order']['cash_val'] = 0 - $main_order_id; //用负数代表此处为合单，去掉负号的那个数代表主桌的付款Order的Id号
+                $data['Order']['card_val'] = 0;
+                $data['Order']['cash_val'] = 0;
                 $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
-                $data['Order']['tip'] = 0 - $main_order_id; //用负数代表此处为合单，去掉负号的那个数代表主桌的付款Order的Id号
+                $data['Order']['tip'] = 0;
+				$data['Order']['merge_id'] = $main_order_id; //用负数代表此处为合单，去掉负号的那个数代表主桌的付款Order的Id号
             };
 
             $this->Order->save($data, false);
