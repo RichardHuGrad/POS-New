@@ -182,9 +182,18 @@ class ExtracateController extends AppController {
      */
     public function admin_delete($id = '') {
         $id = base64_decode($id);
-        $this->Extrascategory->delete($id);
+        xdebug_break();
+        //Modified by Yishou Liao @ Dec 05 2016
+        $this->loadModel('Extra');
+        $check_record = $this->Extra->query("SELECT * FROM `extras` WHERE extras.status = 'A' and extras.category_id = " . $id);
 
-        $this->Session->setFlash('Extras Category has been deleted successfully', 'success');
+        if ($check_record > 0) {
+            $this->Session->setFlash('Extra Category Name Could Not be Deleted');
+        } else {
+            $this->Extrascategory->delete($id);
+            $this->Session->setFlash('Extras Category has been deleted successfully', 'success');
+        };
+
         $this->redirect(array('plugin' => false, 'controller' => 'extracate', 'action' => 'index', 'admin' => true));
     }
 
