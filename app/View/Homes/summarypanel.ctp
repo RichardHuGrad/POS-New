@@ -59,15 +59,15 @@
                             <div>
                             <?php
                                 $flag_i=-1;
-                            foreach($extras as $ex) {
+                            foreach($extras_categories as $ex_category) {
                                     //Modified by Yishou Liao @ Nov 30 2016
-                                    if ($flag_i != $ex['category_id']) {
-                                    $flag_i = $ex['category_id'];
+                                    //if ($flag_i != $ex['category_id']) {
+                                    //$flag_i = $ex['category_id'];
                                 ?>
                                 
-                                <div class="tabSyle" atab="<?php echo $ex['category_id'] ?>">Tap 1</div>
+                                <div class="tabSyle" atab="<?php echo $ex_category['extrascategories']['id'] ?>"> <?php echo $ex_category['extrascategories']['name'] . '(' . $ex_category['extrascategories']['name_zh'] . ')'; ?></div>
                                 <?php
-                                    }
+                                    //}
                                 }
                                 ?>
                                 <!--div class="tabSyle">Tap 2</div>
