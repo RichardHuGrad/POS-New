@@ -30,29 +30,29 @@ Password : 123456
     method - GET
     header Params - username(mandatory), password(mandatory)
     
-6. Get all items with category
-   url - /items/:categoryid
-   categoryid :- default 0  , If O then all items and categories will return
-   method - GET
-   header Params - username(mandatory), password(mandatory)
+6.  Get all items with category
+    url - /items/:categoryid
+    categoryid :- default 0  , If O then all items and categories will return
+    method - GET
+    header Params - username(mandatory), password(mandatory)
    
-7. Get extras list with type
-   url - /extras/:type
-   method - GET
-   type :- P / T
-   header Params - username(mandatory), password(mandatory)
+7.  Get extras list with type
+    url - /extras/:type
+    method - GET
+    type :- P / T
+    header Params - username(mandatory), password(mandatory)
 
-8. Make a reservation
-   url - /reservation 
-   method - POST
-   params - name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
-   header Params - email(mandatory), password(mandatory)
+8.  Make a reservation
+    url - /reservation 
+    method - POST
+    params - name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
+    header Params - email(mandatory), password(mandatory)
    
-9. Cancel reservation
-   url - /cancelreservation 
-   method - POST
-   params - reservationid(mandatory), reason(optional)
-   header Params - email(mandatory), password(mandatory)
+9.  Cancel reservation
+    url - /cancelreservation 
+    method - POST
+    params - reservationid(mandatory), reason(optional)
+    header Params - email(mandatory), password(mandatory)
    
 10. Get all reservation
     url - /reservations/:type
@@ -119,6 +119,30 @@ Password : 123456
     url - /changetable
     method - POST
     params - tableno(mandatory), newtableno(mandatory), orderid(mandatory)
+    header Params - email(mandatory), password(mandatory)
+
+18. Get order selected extras with item
+    url - /orderitemextras/:orderid/:rowid
+    method - GET
+    header Params - username(mandatory), password(mandatory)
+
+19. Order History (20 records per page)
+    url - /orderhistory/:type/:tableno/:pageno
+    type :- T / W , T-> Takeout, W -> Waiting
+    tableno :- default 0
+    pageno :- If 0 then all records else page data
+    method - GET
+    header Params - username(mandatory), password(mandatory)
+
+20. Update quantity + add / edit extras
+    url - /updateorderitem 
+    method - POST
+    params - orderid(mandatory), itemid(mandatory), rowid(mandatory), allextras(mandatory), selectedextras(optional), quantity(mandatory), specialinstruction(optional)
+    allextras= [{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2"},
+	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5"}]
+
+    selectedextras= [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg"},
+         {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
     header Params - email(mandatory), password(mandatory)
 
 

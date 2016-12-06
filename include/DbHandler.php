@@ -439,9 +439,9 @@ class DbHandler {
                     $itemTot= $itemPrice + $totextra;
                     $taxAmount= $itemTot / $userData['tax'];
                     $discount=0;
-                    if($orderData['promocode']!='' || !is_null($orderData['promocode'])) {
-                        $discount=$this->getDiscountOnItem($itemdataArr[$i], $orderData['promocode']);
-                    }
+                    // if($orderData['promocode']!='' || !is_null($orderData['promocode'])) {
+                    //     $discount=$this->getDiscountOnItem($itemdataArr[$i], $orderData['promocode']);
+                    // }
 
                     $orderitem_insert = "insert into order_items set order_id='$orderid', item_id='".$itemdataArr[$i]->itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$itemdataArr[$i]->qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice'";
                     $items_added=mysql_query($orderitem_insert);
@@ -656,6 +656,174 @@ class DbHandler {
         }
     }
 
+    public function orderItemExtras($user_id, $orderid, $rowid) {
+        $extras_row="select selected_extras from order_items where id=$rowid";
+        if ($extras_res = mysql_query($extras_row)) {
+            $num_rows = mysql_num_rows($extras_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                $jsonData = mysql_fetch_assoc($extras_res);
+                $extras=json_decode($jsonData['selected_extras']);
+
+                for ($i=0; $i < count($extras); $i++) {
+                    $output[$count]['id'] = $extras[$i]->id;
+                    $output[$count]['name_en'] = $extras[$i]->name;
+                    $output[$count]['name_zh'] = $extras[$i]->name_zh;
+                    $output[$count]['price'] = $extras[$i]->price;
+                    $count++;
+                }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function orderHistory($userid, $type, $tableno, $page) {
+        $offset = 20;
+        $limit = ($page - 1) * 20;
+        $userData = $this->getUserById($userid);
+        $order_row="select o.* from orders o where o.order_type='$type' and is_completed='Y' and o.cashier_id='".$userData['restaurant_id']."'";
+        if ($tableno>0)
+            $order_row.=" and o.table_no = '$tableno'";
+        $order_row.=" order by o.id desc";
+        if($page > 0)
+            $order_row .= " limit $limit, $offset";
+
+        if ($order_res = mysql_query($order_row)) {
+            $num_rows = mysql_num_rows($order_res);
+            if ($num_rows > 0) {
+                $output = array();
+                $count=0;
+                while ($arr = mysql_fetch_assoc($order_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $output[$count]['order_no'] = $arr['order_no'];
+                    $output[$count]['table_no'] = $arr['table_no'];
+                    $output[$count]['tax'] = $arr['tax'];
+                    $output[$count]['tax_amount'] = $arr['tax_amount'];
+                    $output[$count]['subtotal'] = $arr['subtotal'];
+                    $output[$count]['total'] = $arr['total'];
+                    $output[$count]['created'] = $arr['created'];
+                    $output[$count]['name'] = $arr['name'];
+                    $output[$count]['noofperson'] = $arr['noofperson'];
+                    $output[$count]['phoneno'] = $arr['phoneno'];
+                    $output[$count]['takeout_date'] = $arr['takeout_date'];
+                    $output[$count]['takeout_time'] = $arr['takeout_time'];
+
+                    $output[$count]['promocode'] = $arr['promocode'];
+                    $output[$count]['fix_discount'] = $arr['fix_discount'];
+                    $output[$count]['percent_discount'] = $arr['percent_discount'];
+                    $output[$count]['discount_value'] = $arr['discount_value'];
+                    $orderItemsArr=$this->getOrderItems($arr['id']);
+                    if (count($orderItemsArr)>0) {
+                        $i=0;
+                        while ($itemArr = mysql_fetch_assoc($orderItemsArr)) {
+                            $output[$count]['items'][$i]['id']=$itemArr['id'];
+                            $output[$count]['items'][$i]['item_id']=$itemArr['item_id'];
+                            $output[$count]['items'][$i]['name_en']=$itemArr['name_en'];
+                            $output[$count]['items'][$i]['name_zh']=$itemArr['name_xh'];
+                            $output[$count]['items'][$i]['price']=$itemArr['price'];
+                            $output[$count]['items'][$i]['qty']=$itemArr['qty'];
+                            $output[$count]['items'][$i]['tax']=$itemArr['tax'];
+                            $output[$count]['items'][$i]['tax_amount']=$itemArr['tax_amount'];
+                            $output[$count]['items'][$i]['discount']=$itemArr['discount'];
+                            $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
+                            $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
+                            $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
+                            $i++;
+                        }
+                    } else {
+                        $output[$count]['items']=array();
+                    }
+                    $count++;
+                }
+                return $output;
+            } else {
+                return 'NO_RECORD_FOUND';
+            }
+        } else {
+            return 'UNABLE_TO_PROCEED';
+        }
+    }
+
+    public function orderHistoryPages($userid, $type, $tableno) {
+        $userData = $this->getUserById($userid);
+        $query="select o.* from orders o where o.order_type='$type' and is_completed='Y' and o.cashier_id='".$userData['restaurant_id']."'";
+        if ($tableno>0)
+            $query.=" and o.table_no = '$tableno'";
+        $order_detail_res = mysql_query($query);
+        $num_rows = mysql_num_rows($order_detail_res);
+        $totrecords = $num_rows;
+        $totpages = ceil($totrecords / 20);
+        return $totpages;
+    }
+
+    public function updateOrderItem($userid, $orderid, $itemid, $rowid, $allextras, $quantity, $selectedextras, $specialinstruction) {
+        $orderedat=date('Y-m-d H:i:s');
+        if($orderData=$this->isOrderExist($orderid)) {
+            if ($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            $itemdataArr=json_decode($itemdata);
+            $userData = $this->getUserById($userid);
+
+            $totItems=count($itemdataArr);
+            $totprice=0;
+            $totextra=0;
+            if ($totItems>0) {
+                for ($i=0; $i<$totItems; $i++) {
+                    $selectedextras=json_encode($itemdataArr[$i]->selectedextras);
+                    $allextras=json_encode($itemdataArr[$i]->allextras);
+                    $itemData=$this->getItemData($itemdataArr[$i]->itemid);
+                    $itemnameArr=explode('----', $itemData['cousine']);
+                    $itemNameEn=$itemnameArr[0];
+                    $itemNameZh=$itemnameArr[1];
+                    
+                    $price=$itemData['price'] * $itemdataArr[$i]->qty;
+                    $extraprice = 0;
+                    foreach($itemdataArr[$i]->selectedextras as $num => $values) {
+                       $extraprice += $values->price;
+                    }
+
+                    $totprice += $price;
+                    $totextra += $extraprice;
+                    $itemPrice=$itemData['price'] * $itemdataArr[$i]->qty;
+                    $itemTot= $itemPrice + $totextra;
+                    $taxAmount= $itemTot / $userData['tax'];
+                    $discount=0;
+                    // if($orderData['promocode']!='' || !is_null($orderData['promocode'])) {
+                    //     $discount=$this->getDiscountOnItem($itemdataArr[$i], $orderData['promocode']);
+                    // }
+
+                    $orderitem_insert = "insert into order_items set order_id='$orderid', item_id='".$itemdataArr[$i]->itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$itemdataArr[$i]->qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice'";
+                    $items_added=mysql_query($orderitem_insert);
+                }
+            }
+            $orderTotal = $totprice + $totextra;
+
+            if ($orderData['fix_discount']>0 || $orderData['percent_discount']>0){
+                if ($orderData['fix_discount']>0) {
+                    $subTotal= $orderTotal - $orderData['fix_discount'];
+                }
+                if ($orderData['percent_discount']>0) {
+                    $subTotal= $orderTotal * $orderData['percent_discount'] / 100;
+                }
+            } else {
+                $subTotal= $orderTotal;
+            }
+            $tax = $subTotal * $userData['tax'] / 100;
+
+            $orderPrice_update = "update orders set tax_amount=tax_amount + $tax, subtotal=subtotal + $subTotal, total=total + $orderTotal where id=$orderid";
+            $orderPriceUpdate=mysql_query($orderPrice_update);
+            return $orderData['order_no'];
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
+
     public function mergingTableData($userid, $type, $tableno) {
         $userData = $this->getUserById($userid);
         $order_row="select o.* from orders o where o.order_type='$type' and is_completed='N' and o.cashier_id='".$userData['restaurant_id']."'";
@@ -716,7 +884,7 @@ class DbHandler {
     
     /*------------------------------------------------- Called functions -----------------------------------------------*/
 
-    public function getDiscountOnItem($orderData, $promocode]) {
+    /*public function getDiscountOnItem($orderData, $promocode]) {
         $isPromoValid=$this->verifyPromocode($promocode, $orderid);
         $itemData=$this->getItemData($orderData->itemid);
 
@@ -773,7 +941,7 @@ class DbHandler {
           
             }
         }
-    }
+    }*/
 
     public function removePromocode($orderid, $promocode) {
         $sel_order = "select * from orders where id=$orderid";

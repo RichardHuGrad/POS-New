@@ -233,6 +233,9 @@ $app->get('/extras/:type', 'authenticate', function($type) use ($app) {
     global $user_id;       
     $response = array();
     $db = new DbHandler();
+    if ($type=='P') {
+    	$type='E';
+    }
     $res = $db->extras($user_id, $type);   
     if ($res=='NO_RECORD_FOUND') { 
         $response['code'] = 1;
@@ -739,6 +742,127 @@ $app->post('/removediscount', 'authenticate', function() use ($app) {
         $response["error"] = false;
         $response["message"] = "Discount successfully removed";
         //$response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Get order selected extras with item
+* url - /orderitemextras/:orderid/:rowid
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/orderitemextras/:orderid/:rowid', 'authenticate', function($orderid, $rowid) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+
+    $res = $db->orderItemExtras($user_id, $orderid, $rowid);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Extras list"; 
+        $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Order History (20 records per page)
+* url - /orderhistory/:type/:tableno/:pageno
+* type :- T / W , T-> Takeout, W -> Waiting
+* tableno :- default 0
+* pageno :- If 0 then all records else page data
+* method - GET
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->get('/orderhistory/:type/:tableno/:page', 'authenticate', function($type, $tableno, $page) use ($app) {  
+    global $user_id;       
+    $response = array();
+    $db = new DbHandler();
+    $res = $db->orderHistory($user_id, $type, $tableno, $page);   
+    if ($res=='NO_RECORD_FOUND') { 
+        $response['code'] = 1;
+        $response['error'] = true; 
+        $response['message'] = "No Record found"; 
+        echoRespnse(200, $response);
+    } else if ($res=='UNABLE_TO_PROCEED') {
+        $response['code'] = 2;
+        $response['error'] = true;
+        $response['message'] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else {
+    	$totpages = $db->orderHistoryPages($user_id, $type, $tableno); 
+        $response['code'] = 0;
+        $response['error'] = false;
+        $response['message'] = "Order History"; 
+        $response['data'] = $res;
+        $response['pages'] = $totpages;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Update quantity + add / edit extras
+* url - /updateorderitem 
+* method - POST
+* params - orderid(mandatory), itemid(mandatory), rowid(mandatory), allextras(mandatory), selectedextras(optional), quantity(mandatory),
+specialinstruction(optional)
+* allextras= [{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2"},
+	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5"}]
+
+* selectedextras= [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg"},
+         {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+* specialinstruction : NO / LESS / MORE
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/updateorderitem', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'itemid', 'rowid', 'allextras', 'quantity'));
+    $response = array();
+    // reading post params
+    
+    $orderid = $app->request->post('orderid');
+    $itemid = $app->request->post('itemid');
+    $rowid = $app->request->post('rowid');
+    $allextras = $app->request->post('allextras');
+    $quantity = $app->request->post('quantity');
+    $selectedextras = $app->request->post('selectedextras');
+    $specialinstruction = $app->request->post('specialinstruction');
+    
+    $db = new DbHandler();
+    $res = $db->updateOrderItem($user_id, $orderid, $itemid, $rowid, $allextras, $quantity, $selectedextras, $specialinstruction);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Order successfully Saved";
+        $response["data"] = $res;
         echoRespnse(201, $response);
     }
 });
