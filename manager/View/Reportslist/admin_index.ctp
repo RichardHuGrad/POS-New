@@ -5,22 +5,22 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
 ?>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            endDate: '0d'
+    jQuery(document).ready(function () {
+        UINotifications.init();
+        TableData.init();
+
+        jQuery('#reset_button').click(function(){
+            jQuery('.reset-field').val('');
+            jQuery('#order_by').val('CategoryLocale.name ASC');
         });
 
-        $('#reset_button').click(function () {
-            $('.reset-field').val('');
-            $('#order_by').val('Order.created DESC');
+        jQuery('#records_per_page').change(function(){
+            jQuery('#pageSizeForm').submit();
         });
 
-        $('#records_per_page').change(function () {
-            $('#pageSizeForm').submit();
-        });
     });
 </script>
+
 
 <?php
 $search_txt = $status = $is_verified = $registered_from = $registered_till = '';
@@ -59,7 +59,7 @@ $registered_till = @$search['registered_till'];
                     <div class="border-around margin-bottom-15 padding-10">
                         <?php
                         echo $this->Form->create('Order', array(
-                            'url' => array('controller' => 'reports', 'action' => 'index', 'admin' => true), 'class' => 'form', 'role' => 'search', 'autocomplete' => 'off', 'type' => 'get')
+                            'url' => array('controller' => 'reportslist', 'action' => 'index', 'admin' => true), 'class' => 'form', 'role' => 'search', 'autocomplete' => 'off', 'type' => 'get')
                         );
                         ?>
 
@@ -72,8 +72,6 @@ $registered_till = @$search['registered_till'];
                         </div>
 
 
-
-
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label col-md-12">&nbsp;</label>
@@ -84,10 +82,66 @@ $registered_till = @$search['registered_till'];
                             </div>
                         </div>
 
-
 <?php echo $this->Form->end(); ?>
                         <div class="clearfix"></div>
                     </div>
+<!-- Modified by Yishou Liao @ Dec 06 2016 -->
+                    <?php echo $this->Form->create('PageSize', array(
+                            'url' => array('controller' => 'reportslist', 'action' => 'index', 'admin' => true), 'class' => 'form', 'autocomplete' => 'off', 'id' => 'pageSizeForm')
+                    ); ?>
+                    <div class="form-group pull-left">
+                        <label class="control-label">Records Per Page</label>
+                        <?php echo $this->Form->input('records_per_page', array('options' => unserialize(PAGING_OPTIONS), 'value' => $limit, 'id' => 'records_per_page', 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                    </div>
+                    <?php echo $this->Form->end(); ?>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-bordered table-hover table-full-width">
+                                <thead>
+                                <tr>
+                                    <th><?php echo @$this->Paginator->sort('order_no','Order #'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('table_no','Table #'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('subtotal','Subtotal'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('tax_amount','Tax Amount'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('total','Total'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('discount_value','Discount'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('created','Created On'); ?></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php if (!empty($records_today)) { ?>
+                                    <?php foreach ($records_today as $rc) { ?>
+                                        <tr>
+                                            <td><?php echo ucfirst($rc['Order']['order_no']); ?></td>
+                                            <td><?php echo ucfirst($rc['Order']['table_no']); ?></td>
+                                            <td>$<?php echo number_format($rc['Order']['subtotal'], 2); ?></td>
+                                            <td>$<?php echo number_format($rc['Order']['tax_amount'], 2); ?></td>
+                                            <td>$<?php echo number_format($rc['Order']['total'], 2); ?></td>
+                                            <td>$<?php echo number_format($rc['Order']['discount_value'], 2); ?></td>
+                                            <td><?php echo $rc['Order']['created']; ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    if('all' != $limit){ ?>
+                                        <tr>
+                                            <td colspan="10">
+                                                <?php echo $this->element('pagination'); ?>
+                                            </td>
+                                        </tr>
+                                    <?php }
+                                } else {
+                                    ?>
+                                    <tr>
+                                        <td colspan="10">No Order here.</td>
+                                    </tr>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+<!-- End @ Dec 06 -->
                 </div>
             </div>
         </div>
