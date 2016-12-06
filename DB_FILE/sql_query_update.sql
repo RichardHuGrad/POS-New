@@ -49,3 +49,6 @@ ADD COLUMN `type` ENUM('T','E')  DEFAULT 'E' COMMENT 'T => Topping, E => Extra' 
 -- DATE 01-12-2016 -----------------------------------------------------
 ALTER TABLE `order_items` ADD COLUMN `discount` FLOAT DEFAULT '0' AFTER `tax_amount`;
 
+-- DATE 06-12-2016 -----------------------------------------------------
+ALTER TABLE `order_items` ADD COLUMN `special_instructions` ENUM('', 'NO','MORE','LESS')  DEFAULT '' after `extras_amount`;
+
