@@ -19,6 +19,12 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
 </script>
 
 <?php $option_status = array('A' => 'Active', 'I' => 'Inactive');
+
+$option_categories = array();
+foreach ($extrascategories as $category) {
+	$option_categories[$category['Extrascategory']['id']] = $category['Extrascategory']['name'].'('.$category['Extrascategory']['name_zh'].')';
+};
+
 $option_order = array(
     'Extra.name ASC' => 'Name Ascending',
     'Extra.name DESC' => 'Name Descending',
@@ -28,11 +34,12 @@ $option_order = array(
     'Extra.created DESC' => 'Created On Descending',
 );
 
-$search_txt = $status = '';
+$search_txt = $status = $category = '';
 if($this->Session->check('Extras_search')){
     $search = $this->Session->read('Extras_search');
     $search_txt = $search['search'];
     $status = $search['status'];
+	$category = $search['Categories'];
 }
 ?>
 
@@ -89,6 +96,14 @@ if($this->Session->check('Extras_search')){
                                 <?php echo $this->Form->input('status', array('options' => $option_status, 'value' => $status, 'class' => 'form-control reset-field', 'empty' => 'All', 'label' => false, 'div' => false, 'required' => false)); ?>
                             </div>
                         </div>
+                        <!-- Modified by Yishou Liao @ Dec 07 2016 -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Categories</label>
+                                <?php echo $this->Form->input('Categories', array('options' => $option_categories, 'value' => $category, 'class' => 'form-control reset-field', 'empty' => 'All', 'label' => false, 'div' => false, 'required' => false)); ?>
+                            </div>
+                        </div>
+                        <!-- End -->
 
                         <div class="col-md-12">
                             <?php echo $this->Form->button('Reset <i class="fa fa-times-circle"></i>',array('class' => 'btn btn-primary btn-wide pull-right','type' => 'button','id' => 'reset_button'));
@@ -114,13 +129,12 @@ if($this->Session->check('Extras_search')){
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                 <tr>
-                                    <th>Cuisines Name</th>
-                                    <th>Extra Name(EN)</th>
-                                    <th>Extra Name(ZH)</th>
-                                    <th>Price</th>
-                                    <th>Category</th>
+                                    <th><?php echo @$this->Paginator->sort('name','Extra Name(EN)'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('name_zh','Extra Name(ZH)'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('price','Price'); ?></th>
+                                    <th><?php echo @$this->Paginator->sort('Extrascategory.name','Category'); ?></th>
                                     <th>Status</th>
-                                    <th>Created On</th>
+                                    <th><?php echo @$this->Paginator->sort('created','Created On'); ?></th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -128,7 +142,6 @@ if($this->Session->check('Extras_search')){
                                 <?php if (!empty($extras)) { ?>
                                     <?php foreach ($extras as $cat) { ?>
                                         <tr>
-                                            <td><b><?php echo ucfirst($CousineLocal_data['CousineLocal']['name']); ?></b></td>
                                             <td><b><?php echo ucfirst($cat['Extra']['name']); ?></b></td>
                                             <td><b><?php echo ucfirst($cat['Extra']['name_zh']); ?></b></td>
                                             <td><b>$<?php echo number_format($cat['Extra']['price'], 2); ?></b></td>

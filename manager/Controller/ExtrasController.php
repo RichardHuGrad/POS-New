@@ -43,19 +43,22 @@ class ExtrasController extends AppController {
 
         if ($this->Session->check('page_size')) {
             $limit = $this->Session->read('page_size');
-        }
+        };
 
         if ($this->Session->check('Extras_search')) {
             $search = $this->Session->read('Extras_search');
-            $order = $search['order_by'];
+            //$order = $search['order_by']; //Modified by Yishou Liao @ Dec 07 2016
 
             if (!empty($search['search'])) {
                 $conditions['Extra.name LIKE'] = '%' . $search['search'] . '%';
                 // $conditions['Admin.restaurant_name LIKE'] = '%' . $search['search'] . '%';
-            }
-
+            };
+            
             if (!empty($search['status'])) {
                 $conditions['Extra.status'] = $search['status'];
+            };
+            if (!empty($search['Categories'])) {
+                $conditions['Extra.category_id'] = $search['Categories'];
             }
         }
 
@@ -75,8 +78,10 @@ class ExtrasController extends AppController {
         //$CousineLocal_data = $this->CousineLocal->find('first', array('fields'=>array('CousineLocal.name'), 'conditions' => array('CousineLocal.parent_id' => $id, 'lang_code'=>'en')));
         $CousineLocal_data = $this->CousineLocal->find('first', array('fields' => array('CousineLocal.name'), 'conditions' => array('lang_code' => 'en')));
         
+        $extrascategories = $this->Extrascategory->find('all',array('fields' => array('Extrascategory.id','Extrascategory.name','Extrascategory.name_zh')));
+
         //$this->set(compact('extras', 'limit', 'order', 'id', 'CousineLocal_data'));
-        $this->set(compact('extras', 'limit', 'order', 'CousineLocal_data'));
+        $this->set(compact('extras', 'extrascategories', 'limit', 'order', 'CousineLocal_data'));
         //End
     }
 
