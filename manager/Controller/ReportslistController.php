@@ -42,7 +42,7 @@ class ReportslistController extends AppController {
         }
 
         $year = @$this->params->query['year'] ? @$this->params->query['year'] : date("Y");
-        $month = @$this->params->query['year'] ? @$this->params->query['date'] : date("m");
+        $month = @$this->params->query['year'] ? @$this->params->query['date'] : date("Y-m");
         $date = @$this->params->query['date'] ? @$this->params->query['date'] : date("Y-m-d");
         $cashier = @$this->params->query['cashier'];
 
