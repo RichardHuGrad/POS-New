@@ -781,7 +781,6 @@ $app->get('/orderitemextras/:orderid/:rowid', 'authenticate', function($orderid,
 * Order History (20 records per page)
 * url - /orderhistory/:type/:tableno/:pageno
 * type :- T / W , T-> Takeout, W -> Waiting
-* tableno :- default 0
 * pageno :- If 0 then all records else page data
 * method - GET
 * header Params - username(mandatory), password(mandatory)
@@ -813,6 +812,67 @@ $app->get('/orderhistory/:type/:tableno/:page', 'authenticate', function($type, 
 });
 
 /**
+* Make Tabel available
+* url - /makeavailable
+* params -  orderid(mandatory), tableno(mandatory), username(mandatory), password(mandatory)
+* method - POST
+* NOTE :- username + password must be used for manager / admin in params
+* username : restaurant@pos_v1.com , password : 123456
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->post('/makeavailable', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'tableno', 'username', 'password'));
+    $response = array();
+    // reading post params
+    $orderid = $app->request->post('orderid');
+    $tableno = $app->request->post('tableno');
+    $username = $app->request->post('username');
+    $password = $app->request->post('password');
+    
+    $db = new DbHandler();
+    $res = $db->makeAvailable($orderid, $tableno, $username, $password);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order id is not valid";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already marked as completed";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_USERNAME') {
+        $response["code"] = 4;
+        $response["error"] = true;
+        $response["message"] = "Username not exist";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_USERNAME_PASSWORD') {
+        $response["code"] = 5;
+        $response["error"] = true;
+        $response["message"] = "Please enter valid username password";
+        echoRespnse(200, $response);
+    } else if ($res == 'USER_ACCOUNT_DEACTVATED') {
+        $response["code"] = 6;
+        $response["error"] = true;
+        $response["message"] = "Manager account deactivated";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Table is available for new orders";
+        //$response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
 * Update quantity + add / edit extras
 * url - /updateorderitem 
 * method - POST
@@ -820,7 +880,6 @@ $app->get('/orderhistory/:type/:tableno/:page', 'authenticate', function($type, 
 specialinstruction(optional)
 * allextras= [{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2"},
 	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5"}]
-
 * selectedextras= [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg"},
          {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
 * specialinstruction : NO / LESS / MORE

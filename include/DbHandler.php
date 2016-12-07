@@ -683,12 +683,11 @@ class DbHandler {
     }
 
     public function orderHistory($userid, $type, $tableno, $page) {
+        $todayDate=date('Y-m-d');
         $offset = 20;
         $limit = ($page - 1) * 20;
         $userData = $this->getUserById($userid);
-        $order_row="select o.* from orders o where o.order_type='$type' and is_completed='Y' and o.cashier_id='".$userData['restaurant_id']."'";
-        if ($tableno>0)
-            $order_row.=" and o.table_no = '$tableno'";
+        $order_row="select o.* from orders o where o.order_type='$type' and table_no='$tableno' and DATE(created)='$todayDate'";
         $order_row.=" order by o.id desc";
         if($page > 0)
             $order_row .= " limit $limit, $offset";
@@ -712,6 +711,7 @@ class DbHandler {
                     $output[$count]['phoneno'] = $arr['phoneno'];
                     $output[$count]['takeout_date'] = $arr['takeout_date'];
                     $output[$count]['takeout_time'] = $arr['takeout_time'];
+                    $output[$count]['is_completed'] = $arr['is_completed'];
 
                     $output[$count]['promocode'] = $arr['promocode'];
                     $output[$count]['fix_discount'] = $arr['fix_discount'];
@@ -750,15 +750,36 @@ class DbHandler {
     }
 
     public function orderHistoryPages($userid, $type, $tableno) {
+        $todayDate=date('Y-m-d');
         $userData = $this->getUserById($userid);
-        $query="select o.* from orders o where o.order_type='$type' and is_completed='Y' and o.cashier_id='".$userData['restaurant_id']."'";
-        if ($tableno>0)
-            $query.=" and o.table_no = '$tableno'";
+        $order_row="select o.* from orders o where o.order_type='$type' and table_no='$tableno' and DATE(created)='$todayDate'";
         $order_detail_res = mysql_query($query);
         $num_rows = mysql_num_rows($order_detail_res);
         $totrecords = $num_rows;
         $totpages = ceil($totrecords / 20);
         return $totpages;
+    }
+
+    public function makeAvailable($orderid, $tableno, $username, $password) {
+        if($orderData=$this->isOrderExist($orderid)) {
+            if($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            $managerData=$this->isManager($username, $password);
+            if($managerData>0) {
+                $managerId=$managerData['id'];
+                $update_order = "update orders set is_completed='Y', manager_id=$managerId where id=$orderid";
+                if(mysql_query($update_order)) {
+                    return 'SUCCESSFULLY_UPDATED';
+                } else {
+                    return 'UNABLE_TO_PROCEED';
+                }            
+            } else {
+                return $managerData;
+            }
+        } else {
+            return 'INVALID_ORDERID';
+        }
     }
 
     public function updateOrderItem($userid, $orderid, $itemid, $rowid, $allextras, $quantity, $selectedextras, $specialinstruction) {
@@ -883,6 +904,25 @@ class DbHandler {
     }
     
     /*------------------------------------------------- Called functions -----------------------------------------------*/
+
+    public function isManager($username, $password) {
+        $sel_manager = "select id, password, status from admins where email='$username'";
+        $manager = mysql_query($sel_manager);
+        if (mysql_num_rows($manager) > 0) {
+            $data=mysql_fetch_assoc($manager);
+            if ($data['password']==md5($password)) {
+                if ($data['status']=='A') {
+                    return $data['id'];
+                } else {
+                    return 'USER_ACCOUNT_DEACTVATED';
+                }
+            } else {
+                return 'INVALID_USERNAME_PASSWORD';
+            }
+        } else {
+            return 'INVALID_USERNAME';
+        }
+    }
 
     /*public function getDiscountOnItem($orderData, $promocode]) {
         $isPromoValid=$this->verifyPromocode($promocode, $orderid);

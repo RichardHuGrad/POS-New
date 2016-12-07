@@ -52,3 +52,6 @@ ALTER TABLE `order_items` ADD COLUMN `discount` FLOAT DEFAULT '0' AFTER `tax_amo
 -- DATE 06-12-2016 -----------------------------------------------------
 ALTER TABLE `order_items` ADD COLUMN `special_instructions` ENUM('', 'NO','MORE','LESS')  DEFAULT '' after `extras_amount`;
 
+-- DATE 07-12-2016 -----------------------------------------------------
+ALTER TABLE `orders` ADD COLUMN `manager_id` INT(10)  DEFAULT 0 after `reservation_id`;
+
