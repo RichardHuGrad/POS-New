@@ -80,8 +80,8 @@ class ReportslistController extends AppController {
             'conditions' => $conditions,
             'fields' => array(
                 'sum(Order.change) as change_total', 'sum(Order.card_val) as card_val', 'sum(Order.cash_val) as cash_val', 'sum(Order.subtotal) as subtotal', 'sum(Order.tax_amount) as tax_amount', 'sum(Order.total) as total', 'DATE_FORMAT(Order.created, "%m") as month'
-            ),
-            'recursive' => -1
+            )//,
+            //'recursive' => -1
         );
 
         //Modified by Yishou Liao @ Dec 07 2016
