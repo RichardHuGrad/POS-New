@@ -66,7 +66,7 @@ class ReportslistController extends AppController {
         $query = array(
             'conditions' => $conditions,
         );
-
+        xdebug_break();
         if ('all' == $limit) {
             $records = $this->Order->find('all', $query);
         } else {
@@ -90,7 +90,7 @@ class ReportslistController extends AppController {
                 $query['group'] = 'DATE_FORMAT(Order.created, "%Y-%m-%d")';
                 break;
             case 1:
-                $query['group'] = 'DATE_FORMAT(Order.created, "%m-%d")';
+                $query['group'] = 'DATE_FORMAT(Order.created, "%Y-%m")';
                 break;
             case 2:
                 $query['group'] = 'DATE_FORMAT(Order.created, "%Y")';
