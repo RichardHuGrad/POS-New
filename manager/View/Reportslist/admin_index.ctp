@@ -18,31 +18,15 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
             jQuery('#pageSizeForm').submit();
         });
 		
-		//Modified by Yishou Liao @ Dec 07 2016
-		/*jQuery('#currentday').click(function(){
-            jQuery('#pageSizeForm').submit();
-        });
-		jQuery('#currentmonth').click(function(){
-            jQuery('#pageSizeForm').submit();
-        });
-		jQuery('#currentyear').click(function(){
-            jQuery('#pageSizeForm').submit();
-        });*/
-		//End @ Dec 07 2016
     });
 </script>
 
 
 <?php
-$search_txt = $status = $is_verified = $registered_from = $registered_till = '';
-$search = @$this->Session->read('order_search');
-$search_txt = @$search['search'];
-$table_status = @$search['table_status'];
-$paid_by = @$search['paid_by'];
-$cooking_status = @$search['cooking_status'];
-
-$registered_from = @$search['registered_from'];
-$registered_till = @$search['registered_till'];
+if($this->Session->check('order_search')){
+    $search = $this->Session->read('order_search');
+    $search_txt = $search['search'];
+}
 ?>
 
 <div id="app">
@@ -70,7 +54,7 @@ $registered_till = @$search['registered_till'];
                     <div class="border-around margin-bottom-15 padding-10">
                         <?php
                         echo $this->Form->create('Order', array(
-                            'url' => array('controller' => 'reportslist', 'action' => 'index', 'admin' => true), 'class' => 'form', 'role' => 'search', 'autocomplete' => 'off', 'type' => 'get')
+                            'url' => array('controller' => 'reportslist', 'action' => 'index', @$range, 'admin' => true), 'class' => 'form', 'role' => 'search', 'autocomplete' => 'off', 'type' => 'get')
                         );
                         ?>
 

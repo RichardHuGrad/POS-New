@@ -21,7 +21,7 @@ class ReportslistController extends AppController {
      * admin_index For listing of reports
      * @return mixed
      */
-    public function admin_index($range=0) {
+    public function admin_index($range = 0) {
 
         $this->checkAccess('Report', 'can_view');
         $this->loadModel("Order");
@@ -29,19 +29,7 @@ class ReportslistController extends AppController {
         $limit = DEFAULT_PAGE_SIZE;
         $order = 'order_no ASC';
         $conditions = array();
-        
-        if (!empty($this->request->data)) {
 
-            if (isset($this->request->data['Extracategory']) && !empty($this->request->data['Extracategory'])) {
-                $search_data = $this->request->data['Extracategory'];
-                $this->Session->write('Extracategory_search', $search_data);
-            }
-
-            if (isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
-                $this->Session->write('page_size', $this->request->data['PageSize']['records_per_page']);
-            }
-        }
-        
         if ($this->Session->check('page_size')) {
             $limit = $this->Session->read('page_size');
         }
@@ -71,7 +59,7 @@ class ReportslistController extends AppController {
                 break;
         };
         //End @ Dec 07 2016
-        
+
         if ($cashier)
             $conditions['Order.counter_id'] = $cashier;
 
@@ -91,15 +79,15 @@ class ReportslistController extends AppController {
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-               'sum(Order.change) as change_total','sum(Order.card_val) as card_val','sum(Order.cash_val) as cash_val','sum(Order.subtotal) as subtotal','sum(Order.tax_amount) as tax_amount','sum(Order.total) as total', 'DATE_FORMAT(Order.created, "%m") as month'
+                'sum(Order.change) as change_total', 'sum(Order.card_val) as card_val', 'sum(Order.cash_val) as cash_val', 'sum(Order.subtotal) as subtotal', 'sum(Order.tax_amount) as tax_amount', 'sum(Order.total) as total', 'DATE_FORMAT(Order.created, "%m") as month'
             ),
-            'recursive'=>-1
+            'recursive' => -1
         );
-        
+
         //Modified by Yishou Liao @ Dec 07 2016
         switch ($range) {
             case 0:
-                $query['group'] ='DATE_FORMAT(Order.created, "%Y-%m-%d")';
+                $query['group'] = 'DATE_FORMAT(Order.created, "%Y-%m-%d")';
                 break;
             case 1:
                 $query['group'] = 'DATE_FORMAT(Order.created, "%m-%d")';
@@ -109,10 +97,9 @@ class ReportslistController extends AppController {
                 break;
         };
         //End @ Dec 07 2016
-        //xdebug_break();
+
         $records_summaies = $this->Order->find('all', $query);
         //End @ Dec 07 2016
-
         // get all cashiers list        
         $this->loadModel('Cashier');
         $conditions = [];
@@ -120,7 +107,7 @@ class ReportslistController extends AppController {
             $conditions = array('restaurant_id' => $this->Session->read('Admin.id'));
 
         $cashiers = $this->Cashier->find('list', array('fields' => array('Cashier.id', 'Cashier.firstname'), 'conditions' => $conditions, 'order' => array('Cashier.firstname' => 'ASC')));
-        $this->set(compact('records', 'records_summaies', 'limit', 'is_super_admin', 'cashier', 'cashiers','range'));
+        $this->set(compact('records', 'records_summaies', 'limit', 'is_super_admin', 'cashier', 'cashiers', 'range'));
     }
 
 }
