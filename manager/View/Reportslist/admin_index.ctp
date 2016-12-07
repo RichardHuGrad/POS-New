@@ -17,7 +17,18 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
         jQuery('#records_per_page').change(function(){
             jQuery('#pageSizeForm').submit();
         });
-
+		
+		//Modified by Yishou Liao @ Dec 07 2016
+		/*jQuery('#currentday').click(function(){
+            jQuery('#pageSizeForm').submit();
+        });
+		jQuery('#currentmonth').click(function(){
+            jQuery('#pageSizeForm').submit();
+        });
+		jQuery('#currentyear').click(function(){
+            jQuery('#pageSizeForm').submit();
+        });*/
+		//End @ Dec 07 2016
     });
 </script>
 
@@ -87,14 +98,25 @@ $registered_till = @$search['registered_till'];
                     </div>
 <!-- Modified by Yishou Liao @ Dec 06 2016 -->
                     <?php echo $this->Form->create('PageSize', array(
-                            'url' => array('controller' => 'reportslist', 'action' => 'index', 'admin' => true), 'class' => 'form', 'autocomplete' => 'off', 'id' => 'pageSizeForm')
+                            'url' => array('controller' => 'reportslist', 'action' => 'index', @$range,'admin' => true), 'class' => 'form', 'autocomplete' => 'off', 'id' => 'pageSizeForm')
                     ); ?>
                     <div class="form-group pull-left">
                         <label class="control-label">Records Per Page</label>
                         <?php echo $this->Form->input('records_per_page', array('options' => unserialize(PAGING_OPTIONS), 'value' => $limit, 'id' => 'records_per_page', 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                     </div>
                     <?php echo $this->Form->end(); ?>
-                    
+                    <!-- Modified by Yishou Liao @ Dec 07 2016 -->
+                    <div class="row">
+    	                <div class="col-md-12">
+                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 0, 'admin' => 'true')); ?>">Current day</a>
+                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 1,'admin' => 'true')); ?>">Current month</a>
+                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 2,'admin' => 'true')); ?>">Current year</a>
+                            <!-- <button type="button" id="currentday"> Current day </button>
+                            <button type="button" id="currentmonth"> Current month </button>
+                            <button type="button" id="currentyear"> Current year </button> -->
+	                    </div>
+                    </div>
+                    <!-- End @ Dec 07 2016 -->
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-striped table-bordered table-hover table-full-width">
@@ -110,8 +132,8 @@ $registered_till = @$search['registered_till'];
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (!empty($records_today)) { ?>
-                                    <?php foreach ($records_today as $rc) { ?>
+                                <?php if (!empty($records)) { ?>
+                                    <?php foreach ($records as $rc) { ?>
                                         <tr>
                                             <td><?php echo ucfirst($rc['Order']['order_no']); ?></td>
                                             <td><?php echo ucfirst($rc['Order']['table_no']); ?></td>
@@ -142,6 +164,32 @@ $registered_till = @$search['registered_till'];
                     </div>
                     
 <!-- End @ Dec 06 -->
+
+<!-- Modified by Yishou Liao @ Dec 07 2016 -->
+					<div class="row">
+                        <div class="col-md-12">
+                        <label class="control-label"><b>Summaries</b></label>
+                        </div>
+                        <div class="col-md-12">
+                        <label class="control-label"><b>Subtotal:</b>$<?php echo isset($records_summaies[0][0]['subtotal'])?number_format($records_summaies[0][0]['subtotal'],2):'0.00' ?></label>
+                        </div>
+                        <div class="col-md-12">
+                        <label class="control-label"><b>Tax:</b>$<?php echo isset($records_summaies[0][0]['tax_amount'])?number_format($records_summaies[0][0]['tax_amount'],2):'0.00' ?></label>
+                        </div>
+                        <div class="col-md-12">
+                        <label class="control-label"><b>Total:</b>$<?php echo isset($records_summaies[0][0]['total'])?number_format($records_summaies[0][0]['total'],2):'0.00' ?></label>
+                        </div>
+                        <div class="col-md-12">
+                        <label class="control-label"><b>By Card:</b>$<?php echo isset($records_summaies[0][0]['card_val'])?number_format($records_summaies[0][0]['card_val'],2):'0.00' ?></label>
+                        </div>
+						<div class="col-md-12">
+                        <label class="control-label"><b>By Cash:</b>$<?php echo isset($records_summaies[0][0]['cash_val'])?number_format($records_summaies[0][0]['cash_val'],2):'0.00' ?></label>
+                        </div>
+                        <div class="col-md-12">
+                        <label class="control-label"><b>Change:</b>$<?php echo isset($records_summaies[0][0]['change_total'])?number_format($records_summaies[0][0]['change_total'],2):'0.00' ?></label>
+                        </div>
+                    </div>
+<!-- End @ Dec 07 2016 -->
                 </div>
             </div>
         </div>
