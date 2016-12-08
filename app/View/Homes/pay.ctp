@@ -556,7 +556,12 @@ if (!empty($Order_detail['OrderItem'])) {
                 $(".cash_price").html("Cash 现金: $00.00");
                 $("#cash_val").val(0);
 
-                var received_price = parseFloat($(".received_price").attr('amount'));
+				var received_price = parseFloat($(".received_price").attr('amount'));
+				//Modified by Yishou Liao @ Dec 08 2016
+				if (typeof($(".received_price").attr('amount')) == "undefined") {
+					received_price = 0;
+				};
+				//End @ Dec 08 2016
                 var remaining = received_price - amount;
 
                 $(".received_price").html("$" + remaining.toFixed(2));
@@ -576,6 +581,11 @@ if (!empty($Order_detail['OrderItem'])) {
                 $("#card_val").val(0);
 
                 var received_price = parseFloat($(".received_price").attr('amount'));
+				//Modified by Yishou Liao @ Dec 08 2016
+				if (typeof($(".received_price").attr('amount')) == "undefined") {
+					received_price = 0;
+				};
+				//End @ Dec 08 2016
                 var remaining = received_price - amount;
 
                 $(".received_price").html("$" + remaining.toFixed(2));
