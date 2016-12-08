@@ -66,7 +66,7 @@ class ReportslistController extends AppController {
         $query = array(
             'conditions' => $conditions,
         );
-        xdebug_break();
+        
         if ('all' == $limit) {
             $records = $this->Order->find('all', $query);
         } else {
