@@ -162,37 +162,40 @@ $(document).ready(function() {
                                 <!-- <h4 style="margin-left: 13px; margin-top: 28px;">
                                     Kitchen Printer Details
                                 </h4> -->
-
-                                <div class="col-md-6">
+                                <!-- Modified by Yishou Liao @ Dec 08 2016 -->
+                                <!--
+                                <div class="col-md-6">  
                                     <div class="form-group">
                                         <label class="control-label">Kitchen Printer IP </label> 
-                                        <?php echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                        <?php //echo $this->Form->input('printer_ip', array('type' => 'text',  'class' => 'form-control', 'label' => false, 'div' => false, 'required' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
+                                -->
+                                <!-- End @ Dec 08 2016 -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Kitchen Printer ID </label> 
-                                        <?php echo $this->Form->input('printer_device_id', array('type' => 'text',  'class' => 'form-control', 'label' => false, 'required' => false)); ?>
+                                        <?php echo $this->Form->input('kitchen_printer_device', array('type' => 'text',  'class' => 'form-control', 'label' => false, 'required' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
 
-                             <!--    <h4 style="margin-left: 13px; margin-top: 28px;">
-                                    Service Printer Details
-                                </h4> -->
-
+                                <!-- Modified by Yishou Liao @ Dec 08 2016 -->
+                                <!--
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Service Printer IP</label> 
-                                        <?php echo $this->Form->input('service_printer_ip', array('type' => 'text',  'class' => 'form-control ', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                        <?php //echo $this->Form->input('service_printer_ip', array('type' => 'text',  'class' => 'form-control ', 'label' => false, 'div' => false, 'required' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
+                                -->
+                                <!-- End @ Dec 08 2016 -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Service Printer ID </label> 
-                                        <?php echo $this->Form->input('service_printer_device_id', array('type' => 'text',  'class' => 'form-control ', 'label' => false, 'required' => false)); ?>
+                                        <?php echo $this->Form->input('service_printer_device', array('type' => 'text',  'class' => 'form-control ', 'label' => false, 'required' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
