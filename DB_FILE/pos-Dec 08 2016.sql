@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 08, 2016 at 06:14 PM
--- Server version: 10.1.8-MariaDB
--- PHP Version: 5.6.14
+-- Host: localhost
+-- Generation Time: Dec 08, 2016 at 07:38 PM
+-- Server version: 5.5.53-0ubuntu0.14.04.1-log
+-- PHP Version: 5.5.9-1ubuntu4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `pos`
@@ -26,8 +26,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `admins`
 --
 
-CREATE TABLE `admins` (
-  `id` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `admins` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `created_by_id` int(10) DEFAULT NULL COMMENT 'admin id who created this admin',
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(100) DEFAULT NULL,
@@ -51,16 +51,18 @@ CREATE TABLE `admins` (
   `is_verified` enum('Y','N') NOT NULL COMMENT 'Y-yes, N-no',
   `printer_ip` varchar(50) DEFAULT '192.168.192.168',
   `kitchen_printer_device` varchar(50) DEFAULT NULL,
-  `service_printer_device` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `service_printer_device` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `admins`
 --
 
 INSERT INTO `admins` (`id`, `created_by_id`, `firstname`, `lastname`, `email`, `password`, `is_super_admin`, `created`, `modified`, `status`, `mobile_no`, `address`, `restaurant_name`, `tax`, `no_of_tables`, `no_of_takeout_tables`, `no_of_waiting_tables`, `table_size`, `table_order`, `takeout_table_size`, `waiting_table_size`, `is_verified`, `printer_ip`, `kitchen_printer_device`, `service_printer_device`) VALUES
-(1, 0, 'POS', 'Admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'Y', '0000-00-00 00:00:00', '2016-07-13 19:24:51', 'A', NULL, NULL, '', 0, 0, NULL, NULL, '0', NULL, NULL, NULL, 'Y', NULL, NULL, ''),
-(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-12-08 17:03:39', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 19, 9, 9, '12,5,4,6,5,2,4,5,4,5,1,2,4,2,2,2,2,2,2', '["position: absolute; left: 63.9477%; top: 0%;","position: absolute; left: 63.9984%; top: 19.4453%;","position: absolute; left: 64.0927%; top: 39.1016%;","position: absolute; left: 64.1555%; top: 59.25%;","position: absolute; left: 64.4029%; top: 78.125%;","position: absolute; left: 11.8796%; top: 0%;","position: absolute; left: 11.8735%; top: 19.7917%;","position: absolute; left: 11.8867%; top: 39.1667%;","position: absolute; left: 12.0185%; top: 59.375%;","position: absolute; left: 38.382%; top: 0%;","position: absolute; left: 31.9597%; top: 10.2083%;","position: absolute; left: 38.1225%; top: 24.1953%;","position: absolute; left: 32.3824%; top: 36.6641%;","position: absolute; left: 37.94%; top: 48.3229%;","position: absolute; left: 32.2374%; top: 63.3281%;","position: absolute; left: 38.1438%; top: 78.125%;","position: absolute; left: 0%; top: 78.125%;","position: absolute; left: 8.12044%; top: 78.125%;","position: absolute; left: 17.0022%; top: 78.125%;"]', '1,2,5,7,8,9,5,4,2', '8,5,6,8,2,2,2,3,2', 'Y', '192.168.192.168', 'PRINTER1', 'PRINTER2');
+(1, 0, 'POS', 'Admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'Y', '0000-00-00 00:00:00', '2016-07-13 19:24:51', 'A', NULL, NULL, '', 0, 0, NULL, NULL, '0', NULL, NULL, NULL, 'Y', NULL, NULL, NULL),
+(5, 1, 'restaurant', 'panel', 'restaurant@pos_v1.com', 'e10adc3949ba59abbe56e057f20f883e', 'N', '2016-06-30 08:31:12', '2016-12-08 19:38:04', 'A', '213131321', 'yahoo hsshshsh', 'HeyNoodle', 13, 19, 9, 9, '12,5,4,6,5,2,4,5,4,5,1,2,4,2,2', '["position: absolute; left: 63.9477%; top: 0%;","position: absolute; left: 63.9984%; top: 19.4453%;","position: absolute; left: 64.0927%; top: 39.1016%;","position: absolute; left: 64.1555%; top: 59.25%;","position: absolute; left: 64.4029%; top: 78.125%;","position: absolute; left: 11.8796%; top: 0%;","position: absolute; left: 11.8735%; top: 19.7917%;","position: absolute; left: 11.8867%; top: 39.1667%;","position: absolute; left: 12.0185%; top: 59.375%;","position: absolute; left: 38.382%; top: 0%;","position: absolute; left: 31.9597%; top: 10.2083%;","position: absolute; left: 38.1225%; top: 24.1953%;","position: absolute; left: 32.3824%; top: 36.6641%;","position: absolute; left: 37.94%; top: 48.3229%;","position: absolute; left: 32.2374%; top: 63.3281%;","position: absolute; left: 38.1438%; top: 78.125%;","position: absolute; left: 0%; top: 78.125%;","position: absolute; left: 8.12044%; top: 78.125%;","position: absolute; left: 17.0022%; top: 78.125%;"]', '1,2,5,7,8,9,5,4,2', '8,5,6,8,2,2,2,3,2', 'Y', '192.168.192.168', 'PRINTER1', 'PRINTER2');
 
 -- --------------------------------------------------------
 
@@ -68,8 +70,8 @@ INSERT INTO `admins` (`id`, `created_by_id`, `firstname`, `lastname`, `email`, `
 -- Table structure for table `admin_privilages`
 --
 
-CREATE TABLE `admin_privilages` (
-  `id` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `admin_privilages` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `admin_id` int(10) NOT NULL DEFAULT '0',
   `module` varchar(100) NOT NULL COMMENT 'Name of section to apply rule',
   `can_view` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT 'Y=Yes, N=No',
@@ -78,8 +80,10 @@ CREATE TABLE `admin_privilages` (
   `can_delete` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT 'Y=Yes, N=No',
   `status` enum('A','I') NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
   `created` datetime NOT NULL,
-  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `FK1` (`admin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -87,8 +91,8 @@ CREATE TABLE `admin_privilages` (
 -- Table structure for table `cashiers`
 --
 
-CREATE TABLE `cashiers` (
-  `id` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `cashiers` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `restaurant_id` int(10) NOT NULL DEFAULT '0',
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(100) DEFAULT NULL,
@@ -101,8 +105,10 @@ CREATE TABLE `cashiers` (
   `created` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `printer_ip` varchar(50) DEFAULT NULL,
-  `printer_device_id` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+  `printer_device_id` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_cashiers_admins` (`restaurant_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `cashiers`
@@ -122,13 +128,14 @@ INSERT INTO `cashiers` (`id`, `restaurant_id`, `firstname`, `lastname`, `mobile_
 -- Table structure for table `categories`
 --
 
-CREATE TABLE `categories` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
   `created` int(11) NOT NULL,
   `modified` int(11) NOT NULL,
-  `printer` enum('C','K') DEFAULT 'K' COMMENT 'C-Cashier, K-kitchen'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `printer` enum('C','K') DEFAULT 'K' COMMENT 'C-Cashier, K-kitchen',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `categories`
@@ -147,14 +154,15 @@ INSERT INTO `categories` (`id`, `status`, `created`, `modified`, `printer`) VALU
 -- Table structure for table `category_locales`
 --
 
-CREATE TABLE `category_locales` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `category_locales` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `lang_code` char(2) NOT NULL DEFAULT 'en',
   `created` int(11) NOT NULL,
-  `modified` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `modified` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `category_locales`
@@ -178,8 +186,8 @@ INSERT INTO `category_locales` (`id`, `category_id`, `name`, `lang_code`, `creat
 -- Table structure for table `cooks`
 --
 
-CREATE TABLE `cooks` (
-  `id` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `cooks` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `restaurant_id` int(10) NOT NULL DEFAULT '0',
   `firstname` varchar(100) DEFAULT NULL,
   `lastname` varchar(100) DEFAULT NULL,
@@ -189,8 +197,9 @@ CREATE TABLE `cooks` (
   `is_verified` enum('Y','N') NOT NULL COMMENT 'Y-yes, N-no',
   `status` enum('A','I') NOT NULL DEFAULT 'A' COMMENT 'A-active, I-inactive',
   `created` datetime NOT NULL,
-  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `cooks`
@@ -206,8 +215,8 @@ INSERT INTO `cooks` (`id`, `restaurant_id`, `firstname`, `lastname`, `mobile_no`
 -- Table structure for table `cousines`
 --
 
-CREATE TABLE `cousines` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `cousines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` int(11) NOT NULL DEFAULT '0',
   `casier_id` int(11) NOT NULL DEFAULT '0',
   `price` float NOT NULL DEFAULT '0',
@@ -217,8 +226,9 @@ CREATE TABLE `cousines` (
   `created` int(11) NOT NULL,
   `popular` bigint(20) NOT NULL DEFAULT '0',
   `is_tax` enum('Y','N') DEFAULT 'Y',
-  `modified` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+  `modified` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=64 ;
 
 --
 -- Dumping data for table `cousines`
@@ -282,14 +292,15 @@ INSERT INTO `cousines` (`id`, `restaurant_id`, `casier_id`, `price`, `category_i
 -- Table structure for table `cousine_locals`
 --
 
-CREATE TABLE `cousine_locals` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `cousine_locals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `lang_code` char(2) NOT NULL DEFAULT 'en',
   `created` int(11) NOT NULL,
-  `modified` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+  `modified` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=123 ;
 
 --
 -- Dumping data for table `cousine_locals`
@@ -411,16 +422,18 @@ INSERT INTO `cousine_locals` (`id`, `parent_id`, `name`, `lang_code`, `created`,
 -- Table structure for table `extras`
 --
 
-CREATE TABLE `extras` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `extras` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cousine_id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `name_zh` varchar(100) DEFAULT NULL,
   `price` float DEFAULT NULL,
   `status` enum('A','I') DEFAULT 'A',
   `category_id` int(11) DEFAULT '1',
-  `created` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_extras_cousines` (`cousine_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
 
 --
 -- Dumping data for table `extras`
@@ -473,12 +486,13 @@ INSERT INTO `extras` (`id`, `cousine_id`, `name`, `name_zh`, `price`, `status`, 
 -- Table structure for table `extrascategories`
 --
 
-CREATE TABLE `extrascategories` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `extrascategories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   `name_zh` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
-  `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `extrascategories`
@@ -493,14 +507,15 @@ INSERT INTO `extrascategories` (`id`, `name`, `name_zh`, `status`) VALUES
 -- Table structure for table `global_settings`
 --
 
-CREATE TABLE `global_settings` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `global_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `delivery_charge` float NOT NULL,
   `from_email` varchar(255) NOT NULL COMMENT 'email id to show in send from email',
   `to_email` varchar(255) NOT NULL COMMENT 'email id to send to the admin',
   `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified` timestamp NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `modified` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `global_settings`
@@ -515,12 +530,14 @@ INSERT INTO `global_settings` (`id`, `delivery_charge`, `from_email`, `to_email`
 -- Table structure for table `languages`
 --
 
-CREATE TABLE `languages` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `languages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `language` varchar(100) NOT NULL,
   `lang_code` char(2) NOT NULL,
-  `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `lang_code` (`lang_code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `languages`
@@ -536,8 +553,8 @@ INSERT INTO `languages` (`id`, `language`, `lang_code`, `status`) VALUES
 -- Table structure for table `orders`
 --
 
-CREATE TABLE `orders` (
-  `id` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `order_no` varchar(10) NOT NULL DEFAULT '0',
   `reorder_no` varchar(10) DEFAULT '0',
   `hide_no` bigint(20) DEFAULT '0',
@@ -568,8 +585,9 @@ CREATE TABLE `orders` (
   `fix_discount` float DEFAULT NULL,
   `percent_discount` float DEFAULT NULL,
   `discount_value` float DEFAULT NULL,
-  `merge_id` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `merge_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=304 ;
 
 --
 -- Dumping data for table `orders`
@@ -658,8 +676,8 @@ INSERT INTO `orders` (`id`, `order_no`, `reorder_no`, `hide_no`, `cashier_id`, `
 -- Table structure for table `order_items`
 --
 
-CREATE TABLE `order_items` (
-  `id` int(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `order_id` int(10) DEFAULT NULL,
   `item_id` int(11) DEFAULT NULL,
   `name_en` varchar(100) DEFAULT NULL,
@@ -675,8 +693,10 @@ CREATE TABLE `order_items` (
   `is_done` enum('Y','N') NOT NULL DEFAULT 'N',
   `created` datetime DEFAULT NULL,
   `is_print` enum('N','Y') DEFAULT 'N',
-  `is_kitchen` enum('N','Y') DEFAULT 'N'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+  `is_kitchen` enum('N','Y') DEFAULT 'N',
+  PRIMARY KEY (`id`),
+  KEY `FK_orders_items_orders` (`order_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1293 ;
 
 --
 -- Dumping data for table `order_items`
@@ -878,15 +898,16 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_id`, `name_en`, `name_xh`, `c
 -- Table structure for table `pages`
 --
 
-CREATE TABLE `pages` (
-  `id` int(11) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `pages` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(105) COLLATE utf8_unicode_ci NOT NULL,
   `body` longtext COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(105) COLLATE utf8_unicode_ci NOT NULL,
   `status` enum('A','I') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
   `created` datetime NOT NULL,
-  `modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `pages`
@@ -902,9 +923,9 @@ INSERT INTO `pages` (`id`, `name`, `body`, `slug`, `status`, `created`, `modifie
 -- Table structure for table `promocodes`
 --
 
-CREATE TABLE `promocodes` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `restaurant_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+CREATE TABLE IF NOT EXISTS `promocodes` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `restaurant_id` int(11) unsigned NOT NULL DEFAULT '0',
   `code` varchar(255) NOT NULL DEFAULT '0',
   `valid_from` varchar(255) NOT NULL DEFAULT '0',
   `valid_to` varchar(255) NOT NULL DEFAULT '0',
@@ -913,8 +934,9 @@ CREATE TABLE `promocodes` (
   `is_multiple` tinyint(8) NOT NULL DEFAULT '0',
   `status` tinyint(8) NOT NULL DEFAULT '1',
   `created` int(11) NOT NULL,
-  `modified` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `modified` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `promocodes`
@@ -924,196 +946,6 @@ INSERT INTO `promocodes` (`id`, `restaurant_id`, `code`, `valid_from`, `valid_to
 (8, 5, '0new', '2016-11-14', '2016-11-24', 1, '10', 0, 1, 1479162310, 1479227170),
 (9, 5, 'TestPromoCode10%', '2016-11-30', '2016-12-30', 1, '10', 0, 1, 1480537434, 1480537434);
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `admins`
---
-ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `parent_id` (`created_by_id`);
-
---
--- Indexes for table `admin_privilages`
---
-ALTER TABLE `admin_privilages`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK1` (`admin_id`);
-
---
--- Indexes for table `cashiers`
---
-ALTER TABLE `cashiers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_cashiers_admins` (`restaurant_id`);
-
---
--- Indexes for table `categories`
---
-ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `category_locales`
---
-ALTER TABLE `category_locales`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cooks`
---
-ALTER TABLE `cooks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cousines`
---
-ALTER TABLE `cousines`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cousine_locals`
---
-ALTER TABLE `cousine_locals`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `extras`
---
-ALTER TABLE `extras`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_extras_cousines` (`cousine_id`);
-
---
--- Indexes for table `extrascategories`
---
-ALTER TABLE `extrascategories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `global_settings`
---
-ALTER TABLE `global_settings`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `languages`
---
-ALTER TABLE `languages`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `lang_code` (`lang_code`);
-
---
--- Indexes for table `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `order_items`
---
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_orders_items_orders` (`order_id`);
-
---
--- Indexes for table `pages`
---
-ALTER TABLE `pages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `promocodes`
---
-ALTER TABLE `promocodes`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `admins`
---
-ALTER TABLE `admins`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `admin_privilages`
---
-ALTER TABLE `admin_privilages`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `cashiers`
---
-ALTER TABLE `cashiers`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
---
--- AUTO_INCREMENT for table `categories`
---
-ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
---
--- AUTO_INCREMENT for table `category_locales`
---
-ALTER TABLE `category_locales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
---
--- AUTO_INCREMENT for table `cooks`
---
-ALTER TABLE `cooks`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `cousines`
---
-ALTER TABLE `cousines`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
---
--- AUTO_INCREMENT for table `cousine_locals`
---
-ALTER TABLE `cousine_locals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
---
--- AUTO_INCREMENT for table `extras`
---
-ALTER TABLE `extras`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
---
--- AUTO_INCREMENT for table `extrascategories`
---
-ALTER TABLE `extrascategories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `global_settings`
---
-ALTER TABLE `global_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `languages`
---
-ALTER TABLE `languages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `orders`
---
-ALTER TABLE `orders`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=304;
---
--- AUTO_INCREMENT for table `order_items`
---
-ALTER TABLE `order_items`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1293;
---
--- AUTO_INCREMENT for table `pages`
---
-ALTER TABLE `pages`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `promocodes`
---
-ALTER TABLE `promocodes`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- Constraints for dumped tables
 --
