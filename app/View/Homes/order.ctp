@@ -230,7 +230,7 @@ echo $this->fetch('script');
             method: "post",
             data: {
                 Print_Item: Order_Item_Printer,
-                Printer: {"K": "PRINTER1", "C": "PRINTER2"},
+                Printer: {"K": "<?php echo $cashier_detail['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $cashier_detail['Admin']['service_printer_device']; ?>"},
                 order_no: '<?php echo isset($Order_detail['Order']['order_no']) ? $Order_detail['Order']['order_no'] : "" ?>',
                 order_type: '<?php echo isset($Order_detail['Order']['order_type']) ? $Order_detail['Order']['order_type'] : "" ?>',
                 table_no: '<?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table ?>',

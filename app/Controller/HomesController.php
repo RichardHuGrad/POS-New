@@ -24,7 +24,7 @@ class HomesController extends AppController {
      * @return mixed
      */
     public function index() {
-        //$this->layout = false;
+
         if ($this->request->is('post')) {
             $this->loadModel("Cashier");
             if (isset($this->request->data['Cashier']['username']) && isset($this->request->data['Cashier']['password'])) {
@@ -444,7 +444,7 @@ class HomesController extends AppController {
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Cashier.restaurant_id', 'Admin.id'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Cashier.restaurant_id', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id')),
                 )
         );
@@ -509,7 +509,7 @@ class HomesController extends AppController {
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
@@ -1449,7 +1449,7 @@ class HomesController extends AppController {
         // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
@@ -1582,7 +1582,7 @@ class HomesController extends AppController {
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
