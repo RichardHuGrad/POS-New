@@ -154,6 +154,7 @@ class DbHandler {
                             $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
                             $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
                             $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
+                            $output[$count]['items'][$i]['delivery_type']=$itemArr['delivery_type'];
                             $i++;
                         }
                     } else {
@@ -733,6 +734,7 @@ class DbHandler {
                             $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
                             $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
                             $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
+                            $output[$count]['items'][$i]['delivery_type']=$itemArr['delivery_type'];
                             $i++;
                         }
                     } else {
@@ -777,6 +779,52 @@ class DbHandler {
             } else {
                 return $managerData;
             }
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
+
+    public function changeItemDeliveryType($orderid, $orderitemid, $tableno, $oldtype, $newtype) {
+        if($orderData=$this->isOrderExist($orderid)) {
+            if($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            /*if ($orderData['delivery_type']==$newtype) {
+                return 'ALREADY_UPDATED';
+            }
+            if ($orderData['delivery_type']==$oldtype) {
+                return 'OLD_DELIVERY_TYPE_NOT_MATCHED';
+            }*/
+            $update_order = "update order_items set delivery_type='$newtype' where id=$orderitemid";
+            if(mysql_query($update_order)) {
+                return 'SUCCESSFULLY_UPDATED';
+            } else {
+                return 'UNABLE_TO_PROCEED';
+            }            
+            
+        } else {
+            return 'INVALID_ORDERID';
+        }
+    }
+
+    public function changeOrderItemPrice($user_id, $orderid, $orderitemid, $tableno, $oldprice, $newprice) {
+        if($orderData=$this->isOrderExist($orderid)) {
+            if($orderData['is_completed']=='Y') {
+                return 'ALREADY_COMPLETED';
+            }
+            /*if ($orderData['price_changed_by']==$newprice) {
+                return 'ALREADY_UPDATED';
+            }
+            if ($orderData['delivery_type']==$oldtype) {
+                return 'OLD_DELIVERY_TYPE_NOT_MATCHED';
+            }*/
+            $update_order = "update order_items set order_unit_price='$newprice', price_changed_by=$user_id where id=$orderitemid";
+            if(mysql_query($update_order)) {
+                return 'SUCCESSFULLY_UPDATED';
+            } else {
+                return 'UNABLE_TO_PROCEED';
+            }            
+            
         } else {
             return 'INVALID_ORDERID';
         }

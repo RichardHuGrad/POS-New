@@ -873,6 +873,94 @@ $app->post('/makeavailable', 'authenticate', function() use ($app) {
 });
 
 /**
+* Change item delivery type
+* url - /changeitemdeliverytype
+* params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldtype(mandatory), newtype(mandatory)
+* method - POST
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->post('/changeitemdeliverytype', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'orderitemid', 'tableno', 'oldtype', 'newtype'));
+    $response = array();
+    // reading post params
+    $orderid = $app->request->post('orderid');
+    $orderitemid = $app->request->post('orderitemid');
+    $tableno = $app->request->post('tableno');
+    $oldtype = $app->request->post('oldtype');
+    $newtype = $app->request->post('newtype');
+    
+    $db = new DbHandler();
+    $res = $db->changeItemDeliveryType($orderid, $orderitemid, $tableno, $oldtype, $newtype);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order id is not valid";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already marked as completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Item delivery type successfully updated";
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Change item delivery type
+* url - /changeitemdeliverytype
+* params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldtype(mandatory), newtype(mandatory)
+* method - POST
+* header Params - username(mandatory), password(mandatory)
+**/
+$app->post('/changeorderitemprice', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'orderitemid', 'tableno', 'oldtype', 'newtype'));
+    $response = array();
+    // reading post params
+    $orderid = $app->request->post('orderid');
+    $orderitemid = $app->request->post('orderitemid');
+    $tableno = $app->request->post('tableno');
+    $oldtype = $app->request->post('oldtype');
+    $newtype = $app->request->post('newtype');
+    
+    $db = new DbHandler();
+    $res = $db->changeOrderItemPrice($orderid, $orderitemid, $tableno, $oldprice, $newprice);
+    if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order id is not valid";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already marked as completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Item price successfully updated";
+        echoRespnse(201, $response);
+    }
+});
+
+/**
 * Update quantity + add / edit extras
 * url - /updateorderitem 
 * method - POST
@@ -969,7 +1057,7 @@ $app->post('/pushnoti', function($eventid, $userid) use ($app) {
     $token = $app->request()->post('token');
     $response = array();
     $db = new DbHandler();
-    $message='test noti from nearyou';
+    $message='test noti from pos';
     //$token='APA91bGRClKUtgoZMswPqFaXJ-oCb_cz7mIb01m3bNUIFvSSEjMG0a-g4GUZj1cxISyi_k5Zdt1_Xd91jN9pusNVzZhTrlZzQg7XPDggdu10M681Yx8oHAjhrgM6odR6ESDyqhG4DjfH';
     $res = $db->pushNotification($token, $message);   
     
