@@ -23,8 +23,15 @@
                 foreach ($Order_detail['OrderItem'] as $key => $value) {
                     # code...
                     $selected_extras_name = [];
-                    if ($value['all_extras']) {
-                        $extras = json_decode($value['all_extras'], true);
+                    //Modified by Yishou Liao @ Dec 09 2016
+					//if ($value['all_extras']) {
+					if (count($all_extras)) {
+						//$extras = json_decode($value['all_extras'], true);
+						$extras = array();
+						foreach ($all_extras as $exts){
+							array_push($extras,$exts['extras']);
+						}
+					//End @ Dec 09 2016
                         $selected_extras = json_decode($value['selected_extras'], true);
 
                         // prepare extras string
@@ -52,7 +59,10 @@
                         </div>
                         <?php
 
-                        if ($value['all_extras']) {
+                        //Modified by Yishou Liao @ Dec 09 2016
+						//if ($value['all_extras']) {
+						if (count($all_extras)) {
+						//End @ Dec 09 2016
                             ?>
 
                             <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>">
@@ -69,14 +79,7 @@
                                 <div class="menu-arrow"></div>
                                 <!-- Modified by Yishou Liao @ Nov 30 2016 -->
                                 <?php
-								$flag_i=0;
                                 foreach($extras as $ex) {
-									//Modified by Yishou Liao @ Nov 30 2016
-									if ($flag_i != $ex['category_id']) {
-                                ?>
-                                <?php
-									}
-									//End
 								?>
                                     <li class="addadish" adish="<?php echo $ex['category_id'] ?>">
                                         <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
@@ -89,15 +92,6 @@
                                         </a>
                                     </li>
                                 <?php
-								//Modified by Yishou Liao @ Nov 30 2016
-								if ($flag_i != $ex['category_id']) {
-									$flag_i = $ex['category_id'];
-                                ?>
-                                <?php
-									};
-								//End
-								?>
-                                <?php
                                 }
                                 ?>
                                 <!-- End -->
@@ -106,6 +100,7 @@
                                     <?php
                                         if(!empty($selected_extras)) {
                                             foreach($selected_extras as $selected) {
+												if ($selected['name'] !=""){
                                                 ?>
                                                 <div class="extras_inner"  alt="<?php echo $selected['id'] ?>">
                                                     <?php 
@@ -117,6 +112,7 @@
                                                      ?>
                                                 </div>
                                                 <?php
+												}
                                             }
                                         }
                                      ?>

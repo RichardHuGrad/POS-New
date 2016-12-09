@@ -1031,8 +1031,10 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Dec 05 2016
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
         //End
-        
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
+        //Modified by Yishou Liao @ Dec 09 2016
+        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
+        //End
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','all_extras'));
         $this->render('summarypanel');
     }
 
@@ -1051,7 +1053,12 @@ class HomesController extends AppController {
         $table = $this->data['table'];
         $type = $this->data['type'];
         $extras = $this->data['extras']; #comma separated
-
+        
+        if (substr($extras,strlen($extras)-1,1)==",")
+        {
+            $extras =substr($extras,0,strlen($extras)-1);
+        };
+        
         $this->layout = false;
         // $this->autoRender = NULL;
         // get tax details        
@@ -1084,6 +1091,7 @@ class HomesController extends AppController {
                 }
             }
         }
+        
         // save data to items table        
         $update_orderitem['selected_extras'] = $selected_extras ? json_encode($selected_extras) : "";
         $update_orderitem['extras_amount'] = $extras_amount;
@@ -1142,7 +1150,10 @@ class HomesController extends AppController {
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
         //End
         
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
+        //Modified by Yishou Liao @ Dec 09 2016
+        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
+        //End
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','all_extras'));
         $this->render('summarypanel');
     }
 
@@ -1198,9 +1209,13 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Dec 04 2016
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
         //End
+        
+        //Modified by Yishou Liao @ Dec 09 2016
+        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
+        //End
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
-        //End.
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','all_extras'));
+        //End @ Dec 09 2016
     }
 
     // add discount function
