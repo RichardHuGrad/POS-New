@@ -917,23 +917,23 @@ $app->post('/changeitemdeliverytype', 'authenticate', function() use ($app) {
 });
 
 /**
-* Change item delivery type
-* url - /changeitemdeliverytype
-* params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldtype(mandatory), newtype(mandatory)
+* Change order item price
+* url - /changeorderitemprice
+* params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldprice(mandatory), newprice(mandatory)
 * method - POST
 * header Params - username(mandatory), password(mandatory)
 **/
 $app->post('/changeorderitemprice', 'authenticate', function() use ($app) {
     global $user_id;
     // check for required params
-    verifyRequiredParams(array('orderid', 'orderitemid', 'tableno', 'oldtype', 'newtype'));
+    verifyRequiredParams(array('orderid', 'orderitemid', 'tableno', 'oldprice', 'newprice'));
     $response = array();
     // reading post params
     $orderid = $app->request->post('orderid');
     $orderitemid = $app->request->post('orderitemid');
     $tableno = $app->request->post('tableno');
-    $oldtype = $app->request->post('oldtype');
-    $newtype = $app->request->post('newtype');
+    $oldprice = $app->request->post('oldprice');
+    $newprice = $app->request->post('newprice');
     
     $db = new DbHandler();
     $res = $db->changeOrderItemPrice($orderid, $orderitemid, $tableno, $oldprice, $newprice);

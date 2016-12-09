@@ -86,9 +86,14 @@ class DbHandler {
                         $dinein[$dine_key]['order_no'] = $arr['order_no'];
                         $dinein[$dine_key]['order_type'] = $arr['order_type'];
                         $dinein[$dine_key]['created'] = $arr['created'];
-                        $dinein[$dine_key]['table_color'] = 'OCCUPIED';
+                        if($arr['reservation_id']>0) {
+                            $dinein[$dine_key]['table_color'] = 'RESERVED';
+                        } else {
+                            $dinein[$dine_key]['table_color'] = 'OCCUPIED';
+                        }
                     }
 
+                   
                     /*$wait_key = array_search('T'.$arr['table_no'], array_column($waiting, 'table_no'));
                     if ($take_key>=0 && $arr['order_type']=='W') {
                         $waiting[$take_key]['order_no'] = $arr['order_no'];
@@ -133,6 +138,7 @@ class DbHandler {
                     $output[$count]['phoneno'] = $arr['phoneno'];
                     $output[$count]['takeout_date'] = $arr['takeout_date'];
                     $output[$count]['takeout_time'] = $arr['takeout_time'];
+                    $output[$count]['reservation_id'] = $arr['reservation_id'];
 
                     $output[$count]['promocode'] = $arr['promocode'];
                     $output[$count]['fix_discount'] = $arr['fix_discount'];
@@ -155,6 +161,9 @@ class DbHandler {
                             $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
                             $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
                             $output[$count]['items'][$i]['delivery_type']=$itemArr['delivery_type'];
+
+                            $output[$count]['items'][$i]['actual_unit_price']=$itemArr['actual_unit_price'];
+                            $output[$count]['items'][$i]['order_unit_price']=$itemArr['order_unit_price'];
                             $i++;
                         }
                     } else {
@@ -304,7 +313,7 @@ class DbHandler {
 
     public function reserveTable($userid, $reservationid, $tableno) {
         $reservedat=date('Y-m-d H:i:s');
-        if(!$this->isTableAvailable($tableno)) {
+        if($this->isTableAvailable($tableno)) {
             if($reserveData=$this->isValidReservationId($reservationid)) {
                 if ($reserveData['status']=='C') {
                     return 'ALREADY_CANCELLED';
@@ -315,7 +324,7 @@ class DbHandler {
                 $reserve_query = "update reservations set reservedby='$userid', reservedat='$reservedat', status='A' where id=$reservationid";
                 if(mysql_query($reserve_query)) {
                     $userData = $this->getUserById($userid);
-                    $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='$tableno', order_type='D', created='$reservedat', reservation_id='$reservationid', , tax='".$userData['tax']."'";
+                    $order_insert = "insert into orders set cashier_id='".$userData['restaurant_id']."', counter_id='$userid', table_no='$tableno', order_type='D', created='$reservedat', reservation_id='$reservationid', tax='".$userData['tax']."'";
                     $OrderInsert=mysql_query($order_insert);
                     $orderId = mysql_insert_id();
                     $order_no=str_pad($orderId, 5, rand(98753, 87563), STR_PAD_LEFT);
