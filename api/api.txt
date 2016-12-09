@@ -140,4 +140,16 @@ Password : 123456
     NOTE :- username + password must be used for manager / admin in params
     manager account details : username -> restaurant@pos_v1.com , password -> 123456
     header Params - username(mandatory), password(mandatory)
+    
+21. Change item delivery type
+    url - /changeitemdeliverytype
+    params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldtype(mandatory), newtype(mandatory)
+    method - POST
+    header Params - username(mandatory), password(mandatory)
+    
+22. Change order item price
+    url - /changeorderitemprice
+    params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldprice(mandatory), newprice(mandatory)
+    method - POST
+    header Params - username(mandatory), password(mandatory)
 
