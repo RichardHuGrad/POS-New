@@ -57,7 +57,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <div class="form-group">
                                             <label class="control-label">Extra Number</label>
                                             <?php
-                                            echo $this->Form->input('Extrascategory.extras_num', array('type' => 'text', 'value' =>0, 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            echo $this->Form->input('Extrascategory.extras_num', array('type' => 'text', 'default' =>0, 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
                                             ?>
                                         </div>
                                     </div>

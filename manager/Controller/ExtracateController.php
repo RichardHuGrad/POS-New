@@ -85,7 +85,7 @@ class ExtracateController extends AppController {
         $this->layout = LAYOUT_ADMIN;
         $id = base64_decode($id);
         $languages = $this->Language->find('list', array('fields' => array('lang_code', 'language'), 'conditions' => array('status' => 'A')));
-
+        
         if (!empty($this->request->data)) {
 
             $this->Extrascategory->set($this->request->data);
