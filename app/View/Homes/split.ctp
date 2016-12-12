@@ -477,7 +477,7 @@ echo $this->fetch('script');
 	
     //Modified by Yishou Liao @ Oct 21 2016.
     var addorder_menu = true;
-    if (checkCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+    if (<?php echo ($split_method == 1)?1:0 ?> && checkCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>)){ //Modified by Yishou liao @ Dec 12 2016 (add <?phpecho ($split_method == 1)?1:0?> &&)
     var orderarray = getCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>);
     var personarray = getCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
     $("#persons").val(getCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>));
