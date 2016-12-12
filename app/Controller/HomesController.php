@@ -133,7 +133,11 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-
+        
+        //Modified by Yishou Liao @ Dec 12 2016
+        $admin_passwd = $this->Cashier->query("SELECT Admins.password FROM Admins WHERE Admins.is_super_admin='Y' ");
+        //End @ Dec 12 2016
+        
         // get table availability
         $this->loadModel('Order');
         $dinein_tables_status = $this->Order->find("list", array(
@@ -174,7 +178,7 @@ class HomesController extends AppController {
             'V' => 'notpaidwrap',
         );
 
-        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no', 'orders_time'));
+        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no', 'orders_time','admin_passwd'));
     }
 
     public function allorders() {

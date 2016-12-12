@@ -447,13 +447,13 @@
 <span>Please Enter Your Password</span>
 <input type="password"  class="EntPassword"/>
 <input type="hidden" id="url" value="" />
-<input type="button" style="display:inline-block" value="Enter" onclick="checkPassword()"/>
+<input type="button" style="display:inline-block" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['Admins']['password']?>')"/>
 <input type="button" style="display:inline-block" value="Cancel" onclick="checkPasswordC()"/>
 </div>
 
    
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -567,10 +567,10 @@ echo $this->fetch('script');
 		$('#url').val(url);
 	}
 	
-	function checkPassword(){
+	function checkPassword(passwd){
 		$('#dialog').hide();
-        var pwd_makeavailable = $(".EntPassword").val();
-		if (pwd_makeavailable == "123456"){
+        var pwd_makeavailable = hex_md5($(".EntPassword").val());
+		if (pwd_makeavailable == passwd){
 			document.location = $('#url').val();;
 		} else {
 			alert("Your password is incorrect!");
