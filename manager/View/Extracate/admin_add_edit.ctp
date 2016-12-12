@@ -50,6 +50,20 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                     </div>
 								</div>
                                 <?php } ?>
+                                
+                                <!-- Modified by Yishou Liao @ Dec 12 2016 -->
+                                <div class="row">  
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Extra Number</label>
+                                            <?php
+                                            echo $this->Form->input('Extrascategory.extras_num', array('type' => 'text', 'value' =>0, 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            ?>
+                                        </div>
+                                    </div>
+                            	</div>
+                            <!-- End @ Dec 12 2016 -->
+                                
                               <div class="row">  
                                 <div class="col-md-6">
                                     <div class="form-group">

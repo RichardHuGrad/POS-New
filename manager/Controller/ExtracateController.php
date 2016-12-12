@@ -182,12 +182,12 @@ class ExtracateController extends AppController {
      */
     public function admin_delete($id = '') {
         $id = base64_decode($id);
-        xdebug_break();
+        
         //Modified by Yishou Liao @ Dec 05 2016
         $this->loadModel('Extra');
         $check_record = $this->Extra->query("SELECT * FROM `extras` WHERE extras.status = 'A' and extras.category_id = " . $id);
 
-        if ($check_record > 0) {
+        if (count($check_record) > 0) {
             $this->Session->setFlash('Extra Category Name Could Not be Deleted');
         } else {
             $this->Extrascategory->delete($id);
