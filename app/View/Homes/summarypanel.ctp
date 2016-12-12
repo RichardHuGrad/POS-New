@@ -244,7 +244,12 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     ?>" id="pay" alt="<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
     </div>
 </div>
+<!-- Modified by Yishou Liao -->
 <input type="hidden" name="Order_Item" id="Order_Item" value="" />
+<!-- End -->
+<!-- Modified by Yishou Liao @ Dec 12 2016 -->
+<input type="hidden" name="Order_no" id="Order_no" value="<?php echo @$Order_detail['Order']['order_no']; ?>" />
+<!-- End @ Dec 12 2016 -->
 
 <!-- Modified by Yishou Liao @ Oct 25 2016. -->
 <script type="text/javascript">

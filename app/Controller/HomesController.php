@@ -501,6 +501,11 @@ class HomesController extends AppController {
                 )
         );
 
+        //Modified by Yishou Liao @ Dec 09 2016
+        //$order_id = $this->Order->find('all',array('fields' => 'Max(id) as max_id'));
+        //$order_no = str_pad(($order_id[0][0]['max_id']+1), 5, rand(98753, 87563), STR_PAD_LEFT);
+        //End @ Dec 09 2016
+        
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail'));
     }
 
@@ -868,6 +873,7 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Dec 09 2016
         $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
         //End
+        
         $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','all_extras')); //Modified by Yishou Liao @ Oct 26 2016.
         $this->render('summarypanel');
     }

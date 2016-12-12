@@ -31,8 +31,10 @@
 
 <div class="clearfix cartwrap-wrap">      
     <div class="col-md-9 col-sm-8 col-xs-12 home-link">
-        <div class="cart-txt">
-            Order 订单号 #<?php echo @$Order_detail['Order']['order_no'] ?>, Table 桌 #<?php echo $table; ?>
+        <div class="cart-txt" id="order_no_display">
+        <!-- Modified by Yishou Liao @ Dec 09 2016 -->
+            Order 订单号 #<?php echo @$Order_detail['Order']['order_no']; ?>, Table 桌 #<?php echo $table; ?>
+        <!-- End -->
         </div>
     </div>
 
@@ -129,6 +131,10 @@ echo $this->fetch('script');
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $(".products-panel").removeClass('load1 csspinner');
+				// Modiied by Yishou Liao @ Dec 12 2016
+				$("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
+				// End @ Dec 12 2016
+				
                 // Modified by Yishou Liao @ Oct 27 2016.
 				Order_Item_Printer = Array();
 				
@@ -231,7 +237,7 @@ echo $this->fetch('script');
             data: {
                 Print_Item: Order_Item_Printer,
                 Printer: {"K": "<?php echo $cashier_detail['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $cashier_detail['Admin']['service_printer_device']; ?>"},
-                order_no: '<?php echo isset($Order_detail['Order']['order_no']) ? $Order_detail['Order']['order_no'] : "" ?>',
+                order_no: $("#Order_no").val(),//Modified by Yishou Liao @ Dec 12 2016
                 order_type: '<?php echo isset($Order_detail['Order']['order_type']) ? $Order_detail['Order']['order_type'] : "" ?>',
                 table_no: '<?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table ?>',
                 table: '<?php echo $table ?>',
