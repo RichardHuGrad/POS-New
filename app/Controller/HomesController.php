@@ -135,7 +135,7 @@ class HomesController extends AppController {
         );
         
         //Modified by Yishou Liao @ Dec 12 2016
-        $admin_passwd = $this->Cashier->query("SELECT Admins.password FROM Admins WHERE Admins.is_super_admin='Y' ");
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
         //End @ Dec 12 2016
         
         // get table availability
