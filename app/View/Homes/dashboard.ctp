@@ -447,7 +447,7 @@
 <span>Please Enter Your Password</span>
 <input type="password"  class="EntPassword"/>
 <input type="hidden" id="url" value="" />
-<input type="button" style="display:inline-block" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['Admins']['password']?>')"/>
+<input type="button" style="display:inline-block" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['admins']['password']?>')"/>
 <input type="button" style="display:inline-block" value="Cancel" onclick="checkPasswordC()"/>
 </div>
 
