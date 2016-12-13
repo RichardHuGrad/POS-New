@@ -45,7 +45,10 @@
                     }
                   ?>
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
-                        <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
+                    	<!-- Modified by Yishou Liao @ Dec 13 2016 -->
+                        <!-- <div class="row  <?php //if ($value['all_extras']) { ?>dropdown-toggle<?php //}?>" data-toggle="dropdown"> -->
+                        <div class="row  <?php if (count($all_extras)) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
+                        <!-- End -->
                             <div class="col-md-8 col-sm-8 col-xs-7">
                                 <div class="pull-left titlebox">
                                     <!-- to show name of item -->
@@ -57,8 +60,8 @@
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-5 price-txt paddinT5">$<?php echo ($value['price']+$value['extras_amount']); ?><?php echo $value['qty']>1?"x".$value['qty']:"" ?></div>
                         </div>
-                        <?php
 
+                        <?php
                         //Modified by Yishou Liao @ Dec 09 2016
 						//if ($value['all_extras']) {
 						if (count($all_extras)) {

@@ -776,7 +776,7 @@ class HomesController extends AppController {
             'price' => $item_detail['Cousine']['price'],
             'category_id' => $item_detail['Category']['id'],
             'created' => date('Y-m-d H:i:s'),
-            'all_extras' => !empty($item_detail['Extra']) ? json_encode($item_detail['Extra']) : "",
+            'all_extras' =>"", //!empty($item_detail['Extra']) ? json_encode($item_detail['Extra']) : "", //Modified by Yishou Liao @ Dec 13 2016
             'tax' => $tax_detail['Admin']['tax'],
             'tax_amount' => ($item_detail['Cousine']['is_tax'] == 'Y' ? ($tax_detail['Admin']['tax'] * $item_detail['Cousine']['price'] / 100) : 0),
         );
@@ -1086,7 +1086,7 @@ class HomesController extends AppController {
         $selected_extras = "";
         if ($extras) {
             $extras = explode(",", $extras);
-            $all_extras = json_decode($item_detail['OrderItem']['all_extras'], true);
+            $all_extras = ""; //json_decode($item_detail['OrderItem']['all_extras'], true); Modified by Yishou Liao @ Dec 13 2016
 
             $new_all_extras = array();
             foreach ($all_extras as $key => $value) {
@@ -1225,7 +1225,7 @@ class HomesController extends AppController {
         //Modified by Yishou Liao @ Dec 09 2016
         $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
         //End
-
+        
         $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','all_extras'));
         //End @ Dec 09 2016
     }
