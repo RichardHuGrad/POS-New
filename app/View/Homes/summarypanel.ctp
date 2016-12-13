@@ -23,14 +23,9 @@
                 foreach ($Order_detail['OrderItem'] as $key => $value) {
                     # code...
                     $selected_extras_name = [];
-                    //Modified by Yishou Liao @ Dec 09 2016
+                    //Modified by Yishou Liao @ Dec 13 2016
 					//if ($value['all_extras']) {
-					if (count($all_extras)) {
-						//$extras = json_decode($value['all_extras'], true);
-						$extras = array();
-						foreach ($all_extras as $exts){
-							array_push($extras,$exts['extras']);
-						}
+					if (count($extras)) {
 					//End @ Dec 09 2016
                         $selected_extras = json_decode($value['selected_extras'], true);
 
@@ -47,7 +42,7 @@
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
                     	<!-- Modified by Yishou Liao @ Dec 13 2016 -->
                         <!-- <div class="row  <?php //if ($value['all_extras']) { ?>dropdown-toggle<?php //}?>" data-toggle="dropdown"> -->
-                        <div class="row  <?php if (count($all_extras)) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
+                        <div class="row  <?php if (count($extras)) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
                         <!-- End -->
                             <div class="col-md-8 col-sm-8 col-xs-7">
                                 <div class="pull-left titlebox">
@@ -64,7 +59,7 @@
                         <?php
                         //Modified by Yishou Liao @ Dec 09 2016
 						//if ($value['all_extras']) {
-						if (count($all_extras)) {
+						if (count($extras)) {
 						//End @ Dec 09 2016
                             ?>
 
