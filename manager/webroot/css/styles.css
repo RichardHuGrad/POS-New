@@ -11408,4 +11408,6 @@ div.msg_success{width:98%; padding: 5px 4px; font-size:13px; color:#fff;backgrou
     background-color: #007AFF;
     border: 1px solid #dddddd;
     border-bottom-color: transparent;
+    border-top-right-radius: 1em;
+    border-top-left-radius: 1em;
 } 
