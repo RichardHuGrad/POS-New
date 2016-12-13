@@ -5,7 +5,7 @@
  */
 class CousinesController extends AppController {
 
-    public $uses = array('Cousine', 'CousineLocal', 'Language');
+    public $uses = array('Cousine', 'CousineLocal', 'Language','Extrascategory');
     public $components = array('Session', 'Paginator');
 
     /**
@@ -116,6 +116,14 @@ class CousinesController extends AppController {
             }
         }
 
+        //Modified by Yishou Liao @ Dec 13 2016
+        $comb_detail_tmp = $this->Extrascategory->query("SELECT * FROM extrascategories WHERE status='A' AND extras_num>0");
+        $option_comb = array('0' => 'No comb');
+        foreach ($comb_detail_tmp as $comb) {
+            $option_comb[$comb['extrascategories']['id']] = $comb['extrascategories']['name'] . '(' . $comb['extrascategories']['name_zh'] . ')';
+        }
+        //End @ Dec 13 2016
+        
         $this->loadModel('CategoryLocale');
         $categories = $this->CategoryLocale->find('list',
             array(
@@ -230,7 +238,7 @@ class CousinesController extends AppController {
             }
 
         }
-        $this->set(compact('id', 'languages', 'categories', 'restaurants', 'cashiers'));
+        $this->set(compact('id', 'languages', 'categories', 'restaurants', 'cashiers','option_comb'));
     }
 
     /**

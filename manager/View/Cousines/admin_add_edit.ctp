@@ -102,6 +102,15 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                                     </div>
                                 </div>
+                                
+                                <!-- Modified by Yishou Liao @ Dec 13 2016-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Comb Num <span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('comb_num', array('options' => $option_comb, 'class' =>'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                    </div>
+                                </div>
+                                <!-- End -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
