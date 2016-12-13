@@ -21,6 +21,20 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
     });
 </script>
 
+<script>
+    $(document).ready(function() {
+        var index = "<?php echo $range ?>";
+        if (index == '0') {
+            $('#tab0').addClass('active');
+        } else if (index == '1') {
+            $('#tab1').addClass('active');
+        } else if (index == '2') {
+            $('#tab2').addClass('active');
+        } 
+    });
+    
+</script>
+
 
 <?php
 if($this->Session->check('order_search')){
@@ -92,9 +106,18 @@ if($this->Session->check('order_search')){
                     <!-- Modified by Yishou Liao @ Dec 07 2016 -->
                     <div class="row">
     	                <div class="col-md-12">
-                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 0, 'admin' => 'true')); ?>">Current day</a>
-                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 1,'admin' => 'true')); ?>">Current month</a>
-                        <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 2,'admin' => 'true')); ?>">Current year</a>
+                        <!-- modified by Yu Dec 13 2016 -->
+                        <ul class="nav nav-tabs">
+                            <li id="tab0">
+                                <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 0, 'admin' => 'true')); ?>">Current day</a>
+                            </li>
+                            <li id="tab1">
+                                <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 1,'admin' => 'true')); ?>">Current month</a>
+                            </li>
+                            <li id="tab2">
+                                <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 2,'admin' => 'true')); ?>">Current year</a>
+                            </li>
+                        </ul>
                             <!-- <button type="button" id="currentday"> Current day </button>
                             <button type="button" id="currentmonth"> Current month </button>
                             <button type="button" id="currentyear"> Current year </button> -->

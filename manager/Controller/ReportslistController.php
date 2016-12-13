@@ -98,6 +98,9 @@ class ReportslistController extends AppController {
         };
         //End @ Dec 07 2016
 
+        // modified by Yu Dec 13, 2016
+        $this->set('range', $range);
+
         $records_summaies = $this->Order->find('all', $query);
         //End @ Dec 07 2016
         // get all cashiers list        
