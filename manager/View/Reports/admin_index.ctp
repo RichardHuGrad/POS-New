@@ -228,6 +228,7 @@ $registered_till = @$search['registered_till'];
 }
 </style>
 
+
 <div id="app">
     <!-- sidebar -->
     <?php echo $this->element('sidebar'); ?>
@@ -247,6 +248,13 @@ $registered_till = @$search['registered_till'];
                     </div>
                 </section>
                 <?php echo $this->Session->flash(); ?>
+
+                <div>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'index', 0, 'admin' => 'true')); ?>">Graph</a></li>
+                        <li><a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 0, 'admin' => 'true')); ?>">Table</a></li>
+                    </ul>
+                </div>
 
                 <div class="container-fluid container-fullw bg-white">
                     <!-- start: SEARCH FORM START -->

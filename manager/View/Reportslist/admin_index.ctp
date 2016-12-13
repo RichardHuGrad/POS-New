@@ -61,7 +61,14 @@ if($this->Session->check('order_search')){
                         </div>                        
                     </div>
                 </section>
-<?php echo $this->Session->flash(); ?>
+                <?php echo $this->Session->flash(); ?>
+
+                <div>
+                    <ul class="nav nav-tabs">
+                        <li><a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'index', 0, 'admin' => 'true')); ?>">Graph</a></li>
+                        <li class="active"><a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 0, 'admin' => 'true')); ?>">Table</a></li>
+                    </ul>
+                </div>
 
                 <div class="container-fluid container-fullw bg-white">
                     <!-- start: SEARCH FORM START -->

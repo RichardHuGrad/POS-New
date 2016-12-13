@@ -14,7 +14,7 @@ class ReportslistController extends AppController {
      */
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->set('tab_open', 'reportslist');
+        $this->set('tab_open', 'reports');
     }
 
     /**

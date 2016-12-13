@@ -163,19 +163,22 @@
                         </div>
                     </a>
                 </li>
+
+                <!-- comment out by Ty Dec 13 2016 -->
                 <!-- Modified by Yishou Liao @ Dec 06 2016 -->
+               <!-- 
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'reportslist') ? 'active open' : '' ?>">
-                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 'admin' => 'true')); ?>">
-                        <div class="item-content">
-                            <div class="item-media">
-                                <i class="fa fa-reorder"></i>
-                            </div>
-                            <div class="item-inner">
-                                <span class="title">Sales Report List</span>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                   <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reportslist','action' => 'index', 'admin' => 'true')); ?>">
+                       <div class="item-content">
+                           <div class="item-media">
+                               <i class="fa fa-reorder"></i>
+                           </div>
+                           <div class="item-inner">
+                               <span class="title">Sales Report List</span>
+                           </div>
+                       </div>
+                   </a>
+               </li> -->
                 <!-- End -->
             </ul>                
         </nav>
