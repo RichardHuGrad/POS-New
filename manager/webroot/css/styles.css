@@ -11399,3 +11399,13 @@ div.msg_success{width:98%; padding: 5px 4px; font-size:13px; color:#fff;backgrou
   font-size: 17px;
   border-top: 1px solid #ccc;
 }
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: white;
+    cursor: default;
+    background-color: #007AFF;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+} 
