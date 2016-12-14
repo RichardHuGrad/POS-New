@@ -503,6 +503,19 @@ echo $this->fetch('script');
     });
 </script>
 
+<script>
+/*    var touchmoved;
+    $(".order-summary-indent").on('touchend', function(e){
+    if(touchmoved != true){
+        $(this).prev('input').val("");
+    }
+    }).on('touchmove', function(e){
+        touchmoved = true;
+    }).on('touchstart', function(){
+        touchmoved = false;
+    });*/
+</script>
+
 <style type="text/css">
     .dropdown-menu{
         position:fixed;
