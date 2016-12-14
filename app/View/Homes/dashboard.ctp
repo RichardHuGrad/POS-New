@@ -12,6 +12,7 @@
             }
         });
     </script>
+
     <header class="home-header text-center">        
         <div class="home-logo">
             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
@@ -22,6 +23,7 @@
                 <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
             </div>					
         </div>
+
         <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
 
         <div class="sublistingwrap clearfix text-center">
@@ -586,5 +588,14 @@ echo $this->fetch('script');
 <!-- End. -->
 
 <script>
-    $('body').kinetic();
+    $(document).ready(function() {
+        $('body').kinetic({
+            filterTarget: function(target, e){
+                if (!/down|start/.test(e.type)){
+                    return !(/area|a|input/i.test(target.tagName));
+                }
+            }
+        });
+    });
+    
 </script>
