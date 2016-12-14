@@ -74,14 +74,27 @@
 									$cate_disp[] = $ex['category_id'];
 								};
 							};
+							
+							$comb_flag = 0;
+							foreach($extras_categories as $ex_category) {
+								if (in_array($ex_category['extrascategories']['id'],$cate_disp)==true){
+									if ($ex_category['extrascategories']['extras_num'] > 0){
+										$comb_flag = 1;
+									};
+								};
+							};
+							$tab_disp = array();
 							//End @ Dec 14 2016
 							
                             foreach($extras_categories as $ex_category) {
 								if (in_array($ex_category['extrascategories']['id'],$cate_disp)==true){ //Modified by Yishou Liao @ Dec 14 2016
+									if ((!empty($selected_extras) && $comb_flag==1) || $comb_flag==0 || $ex_category['extrascategories']['extras_num'] > 0) {
+										$tab_disp[] = $ex_category['extrascategories']['id'];//Modified by Yishou Liao @ Dec 14 2016
                                 ?>
                                 
                                 <div class="tabSyle" atab="<?php echo $ex_category['extrascategories']['id'] ?>"> <?php echo $ex_category['extrascategories']['name'] . '(' . $ex_category['extrascategories']['name_zh'] . ')'; ?></div>
                                 <?php
+									};
 								}; //End @ Dec 14 2016
                              };
                                 ?>
@@ -90,6 +103,7 @@
                                 <!-- Modified by Yishou Liao @ Nov 30 2016 -->
                                 <?php
                                 foreach($extras as $ex) {
+									if (in_array($ex['category_id'],$tab_disp)==true){ //Modified by Yishou Liao @ Dec 14 2016
 								?>
                                     <li class="addadish" adish="<?php echo $ex['category_id'] ?>">
                                         <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
@@ -102,6 +116,7 @@
                                         </a>
                                     </li>
                                 <?php
+									};//End @ Dec 14 2016
                                 }
                                 ?>
                                 <!-- End -->
