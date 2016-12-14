@@ -767,6 +767,24 @@ class HomesController extends AppController {
             $order_id = $Order_detail['Order']['id'];
         }
 
+         //Modified by Yishou Liao @ Dec 13 2016
+        $this->loadModel('Cousine');
+        $query_str = "SELECT comb_num FROM cousines WHERE id = " . $item_id;
+        $comb_num = $this->Cousine->query($query_str);
+        $query_str = "SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A'";
+        $extras_categories = $this->Order->query($query_str);
+        if ($comb_num[0]['cousines']['comb_num'] == 0) {
+        $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND extrascategories.extras_num = 0 ";
+        }else{
+        $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND (extrascategories.extras_num = 0 " . " OR extrascategories.id = " . $comb_num[0]['cousines']['comb_num'] . ")";
+        };
+        $all_extras = $this->Order->query($query_str);
+        $extras = array();
+        foreach ($all_extras as $exts){
+                array_push($extras,$exts['extras']);
+        }
+        //End
+        
         // add items to order items db table
         $insert_data = array(
             'order_id' => $order_id,
@@ -776,7 +794,7 @@ class HomesController extends AppController {
             'price' => $item_detail['Cousine']['price'],
             'category_id' => $item_detail['Category']['id'],
             'created' => date('Y-m-d H:i:s'),
-            'all_extras' =>"", //!empty($item_detail['Extra']) ? json_encode($item_detail['Extra']) : "", //Modified by Yishou Liao @ Dec 13 2016
+            'all_extras' =>!empty($extras) ? json_encode($extras) : "", //!empty($item_detail['Extra']) ? json_encode($item_detail['Extra']) : "", //Modified by Yishou Liao @ Dec 13 2016
             'tax' => $tax_detail['Admin']['tax'],
             'tax_amount' => ($item_detail['Cousine']['is_tax'] == 'Y' ? ($tax_detail['Admin']['tax'] * $item_detail['Cousine']['price'] / 100) : 0),
         );
@@ -871,18 +889,7 @@ class HomesController extends AppController {
                 )
         );
 
-        //Modified by Yishou Liao @ Dec 05 2016
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
-        //Modified by Yishou Liao @ Dec 13 2016
-        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }
-        //End
-        
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','extras')); //Modified by Yishou Liao @ Dec 13 2016.
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016.
         $this->render('summarypanel');
     }
 
@@ -1048,13 +1055,13 @@ class HomesController extends AppController {
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
         //End
         //Modified by Yishou Liao @ Dec 13 2016
-        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
+        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
         $extras = array();
         foreach ($all_extras as $exts){
                 array_push($extras,$exts['extras']);
-        }
+        }*/
         //End
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','extras'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
         $this->render('summarypanel');
     }
 
@@ -1181,13 +1188,13 @@ class HomesController extends AppController {
         //End
         
         //Modified by Yishou Liao @ Dec 13 2016
-        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
+        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
         $extras = array();
         foreach ($all_extras as $exts){
                 array_push($extras,$exts['extras']);
-        }
+        }*/
         //End
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','extras'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
         $this->render('summarypanel');
     }
 
@@ -1245,14 +1252,14 @@ class HomesController extends AppController {
         //End
         
         //Modified by Yishou Liao @ Dec 09 & Dec 13 2016
-        $all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
+        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
         $extras = array();
         foreach ($all_extras as $exts){
                 array_push($extras,$exts['extras']);
-        }
+        }*/
         //End @ Dec 13 2016
         
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','extras'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
         //End @ Dec 09 2016
     }
 

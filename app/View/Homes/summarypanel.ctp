@@ -24,9 +24,10 @@
                     # code...
                     $selected_extras_name = [];
                     //Modified by Yishou Liao @ Dec 13 2016
-					//if ($value['all_extras']) {
-					if (count($extras)) {
+					if ($value['all_extras']) {
+					//if (count($extras)) {
 					//End @ Dec 09 2016
+						$extras = json_decode($value['all_extras'], true);
                         $selected_extras = json_decode($value['selected_extras'], true);
 
                         // prepare extras string
@@ -41,8 +42,8 @@
                   ?>
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
                     	<!-- Modified by Yishou Liao @ Dec 13 2016 -->
-                        <!-- <div class="row  <?php //if ($value['all_extras']) { ?>dropdown-toggle<?php //}?>" data-toggle="dropdown"> -->
-                        <div class="row  <?php if (count($extras)) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
+                        <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
+                        <!-- <div class="row  <?php //if (count($extras)) { ?>dropdown-toggle<?php //}?>" data-toggle="dropdown"> -->
                         <!-- End -->
                             <div class="col-md-8 col-sm-8 col-xs-7">
                                 <div class="pull-left titlebox">
@@ -58,20 +59,31 @@
 
                         <?php
                         //Modified by Yishou Liao @ Dec 09 2016
-						//if ($value['all_extras']) {
-						if (count($extras)) {
+						if ($value['all_extras']) {
+						//if (count($extras)) {
 						//End @ Dec 09 2016
                             ?>
 
                             <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>">
                             <div>
                             <?php
+							//Modified by Yishou Liao @ Dec 14 2016
+							$cate_disp = array();
+							foreach($extras as $ex) {
+								if (in_array($ex['category_id'],$cate_disp)==false){
+									$cate_disp[] = $ex['category_id'];
+								};
+							};
+							//End @ Dec 14 2016
+							
                             foreach($extras_categories as $ex_category) {
+								if (in_array($ex_category['extrascategories']['id'],$cate_disp)==true){ //Modified by Yishou Liao @ Dec 14 2016
                                 ?>
                                 
                                 <div class="tabSyle" atab="<?php echo $ex_category['extrascategories']['id'] ?>"> <?php echo $ex_category['extrascategories']['name'] . '(' . $ex_category['extrascategories']['name_zh'] . ')'; ?></div>
                                 <?php
-                                }
+								}; //End @ Dec 14 2016
+                             };
                                 ?>
                             </div>
                                 <div class="menu-arrow"></div>
