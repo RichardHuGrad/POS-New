@@ -503,18 +503,6 @@ echo $this->fetch('script');
     });
 </script>
 
-<script>
-/*    var touchmoved;
-    $(".order-summary-indent").on('touchend', function(e){
-    if(touchmoved != true){
-        $(this).prev('input').val("");
-    }
-    }).on('touchmove', function(e){
-        touchmoved = true;
-    }).on('touchstart', function(){
-        touchmoved = false;
-    });*/
-</script>
 
 <style type="text/css">
     .dropdown-menu{
@@ -545,4 +533,66 @@ echo $this->fetch('script');
         color: #23527c;
         font-size: 19px;
     }
+
+    .name-title {
+        margin-top:30px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    ::-webkit-scrollbar {
+        width: 3em;
+        height: 3em;
+        overflow: visible;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgb(0,0,0);
+        border: 15px solid transparent;
+        background-clip: content-box;   /* THIS IS IMPORTANT */
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #D1D0D0;
+        /*width: 3em;*/
+        border-radius: 50px;
+        height: 10px;
+        /*border: 1px solid rgb(0,0,0);*/
+        -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
+    }​
+
+
+
 </style>
+
+<script>
+/*    var touchmoved;
+    $(".order-summary-indent").on('touchend', function(e){
+    if(touchmoved != true){
+        $(this).prev('input').val("");
+    }
+    }).on('touchmove', function(e){
+        touchmoved = true;
+    }).on('touchstart', function(){
+        touchmoved = false;
+    });*/
+
+    // $(".order-summary-indent").on("taphold", function (e) {
+    //     $(this).hide();
+    // })
+    // $(".summary_box ul").hide();
+
+    // $(document).ready(function () {
+    //     // $(".order-summary-indent").on("taphold", function (e) {
+    //     //     $(this).hide();
+    //     // })
+    //     $(".order-summary-indent").hide();
+    //     console.log("test");
+    // });
+    $(document).ready(function() {
+        // $(".products-panel").hide();
+        $(".products-panel").on("taphold", function (e) {
+            // $(this).hide();
+            console.log("test");
+        });
+    });
+    
+</script>
