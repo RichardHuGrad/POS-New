@@ -546,7 +546,7 @@ echo $this->fetch('script');
     }
 
     ::-webkit-scrollbar-track {
-        background: rgb(0,0,0);
+       
         border: 15px solid transparent;
         background-clip: content-box;   /* THIS IS IMPORTANT */
     }
