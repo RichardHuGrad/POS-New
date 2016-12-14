@@ -112,7 +112,7 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js'));
 echo $this->fetch('script');
 ?>
 <script type="text/javascript">
@@ -546,7 +546,6 @@ echo $this->fetch('script');
     }
 
     ::-webkit-scrollbar-track {
-       
         border: 15px solid transparent;
         background-clip: content-box;   /* THIS IS IMPORTANT */
     }

@@ -455,7 +455,7 @@
 
    
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js','jquery.kinetic.min.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -584,3 +584,7 @@ echo $this->fetch('script');
 	//End.
 </script>
 <!-- End. -->
+
+<script>
+    $('body').kinetic();
+</script>
