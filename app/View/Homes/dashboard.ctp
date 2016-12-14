@@ -13,86 +13,205 @@
         });
     </script>
 
-    <header class="home-header text-center">        
-        <div class="home-logo">
-            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+    <style>
+        #custom-bootstrap-menu.navbar-default .navbar-brand {
+            color: rgba(250, 249, 247, 1);
+        }
+        #custom-bootstrap-menu.navbar-default {
+            font-size: 26px;
+            background-color: rgba(195, 14, 35, 1);
+            /*border-bottom-width: 1px;*/
+            border-width: 4px;
+            border-radius: 6px;
+            padding-top: 15px;
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-nav>li>a {
+            color: rgba(250, 249, 247, 1);
+            background-color: rgba(248, 248, 248, 0);
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-nav>li>a:hover,
+        #custom-bootstrap-menu.navbar-default .navbar-nav>li>a:focus {
+            color: rgba(51, 51, 51, 1);
+            background-color: rgba(248, 248, 248, 0);
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-nav>.active>a,
+        #custom-bootstrap-menu.navbar-default .navbar-nav>.active>a:hover,
+        #custom-bootstrap-menu.navbar-default .navbar-nav>.active>a:focus {
+            color: rgba(85, 85, 85, 1);
+            background-color: rgba(231, 231, 231, 1);
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-toggle {
+            border-color: #ddd;
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:hover,
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:focus {
+            background-color: #ddd;
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-toggle .icon-bar {
+            background-color: #888;
+        }
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:hover .icon-bar,
+        #custom-bootstrap-menu.navbar-default .navbar-toggle:focus .icon-bar {
+            background-color: #c30e23;
+        }
+
+
+        .navbar {
+            height:100px !important
+        }
+
+    </style>
+    
+    <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid ">
+            <!-- brand -->
+            <div class="navbar-header">
+                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
                 <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS", 'class' => 'logo-img')); ?>
-            </a>					
-            <div class="HomeText text-left">
-                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
-                <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-            </div>					
-        </div>
+                </a>                
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse navbar-menubuilder">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
+                    </li>
+                    <li><a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">More
+        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
 
-        <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
-
-        <div class="sublistingwrap clearfix text-center">
-            <div class="container">
-                <div class="col-md-8 clearfix col-sm-6 col-sm-offset-2 col-md-offset-0 dashboard-btn-list">
-
-                    <ul>
-
-
-                        <li class="clearfix">
-                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'inquiry')) ?>">
-                                <div class="inquery-brn clearfix">
-                                    <span class="doc-order"><?php echo $this->Html->image('inquery-icon.png', array('alt' => 'Inquiry', 'title' => 'Inquiry')); ?></span>
-                                    <span class="inquiry-txt">Order Search 查询</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li class="clearfix">
-                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'cookings')) ?>">
-                                <div class="inquery-brn clearfix" style="display:none"> <!--Modified by Yishou Liao @ Nov 14 2016 -->
-                                    <span class="doc-order"><?php echo $this->Html->image('cooking.png', array('alt' => 'Cooking', 'title' => 'Cooking')); ?></span>
-                                    <span class="inquiry-txt">Kitchen Status</span>
-                                    <span class="inquiry-txt">烹饪</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li class="clearfix">
-                            <!-- <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'allorders')) ?>"> Modified by Yishou Liao @ Nov 14 2016 -->
-                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
-                                <div class="inquery-brn clearfix">
-                                    <span class="doc-order"><?php echo $this->Html->image('order-list.png', array('alt' => 'Order', 'title' => 'Order')); ?></span>
-                                    <span class="order-txt">Order</span>
-                                    <span class="order-txt">点餐</span>
-                                </div>
-                            </a>
-                        </li>
+                            <li>
+                                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'inquiry')) ?>">
+                                    <div class="inquery-brn clearfix">
+                                        <span class="doc-order"><?php echo $this->Html->image('inquery-icon.png', array('alt' => 'Inquiry', 'title' => 'Inquiry')); ?></span>
+                                        <span class="inquiry-txt">Order Search 查询</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+                                    <div class="inquery-brn clearfix">
+                                        <span class="doc-order"><?php echo $this->Html->image('order-list.png', array('alt' => 'Order', 'title' => 'Order')); ?></span>
+                                        <span class="order-txt">Order</span>
+                                        <span class="order-txt">点餐</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
 
 
-                    </ul>
+                    
+                </ul>
 
-                </div>
-
-
-
-
-                <div class="col-md-4 clearfix col-sm-4">
-                    <div class="table-colors">
-                        <!-- <div class="clearfix marginB5">
-                            <div class="pull-left paidb"></div>
-                            <div class="pull-left paid-txt">Paid 已付费</div>
-                        </div> -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
                         <div class="clearfix marginB15">
                             <div class="pull-left notpaid"></div>
                             <div class="pull-left paid-txt">On-going 未支付</div>
+                            
                         </div>
                         <div class="clearfix marginB15">
                             <div class="pull-left availableb"></div>
                             <div class="pull-left paid-txt">Available 可用的</div>
                         </div>
-                    </div>
+                    </li>
+                    <li>
+                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a>
+                    </li>
 
-
-                </div>
+                </ul>
 
             </div>
-        </div>	
-    </header>
+        </div>
+    </div>
+
+<!--     <header class="home-header text-center">        
+    <div class="home-logo">
+        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+            <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS", 'class' => 'logo-img')); ?>
+        </a>                    
+        <div class="HomeText text-left">
+            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
+            <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
+        </div>                    
+    </div>
+
+    <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
+
+    <div class="sublistingwrap clearfix text-center">
+        <div class="container">
+            <div class="col-md-8 clearfix col-sm-6 col-sm-offset-2 col-md-offset-0 dashboard-btn-list">
+
+                <ul>
+
+
+                    <li class="clearfix">
+                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'inquiry')) ?>">
+                            <div class="inquery-brn clearfix">
+                                <span class="doc-order"><?php echo $this->Html->image('inquery-icon.png', array('alt' => 'Inquiry', 'title' => 'Inquiry')); ?></span>
+                                <span class="inquiry-txt">Order Search 查询</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="clearfix">
+                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'cookings')) ?>">
+                            <div class="inquery-brn clearfix" style="display:none"> Modified by Yishou Liao @ Nov 14 2016
+                                <span class="doc-order"><?php echo $this->Html->image('cooking.png', array('alt' => 'Cooking', 'title' => 'Cooking')); ?></span>
+                                <span class="inquiry-txt">Kitchen Status</span>
+                                <span class="inquiry-txt">烹饪</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="clearfix">
+                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'allorders')) ?>"> Modified by Yishou Liao @ Nov 14 2016
+                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+                            <div class="inquery-brn clearfix">
+                                <span class="doc-order"><?php echo $this->Html->image('order-list.png', array('alt' => 'Order', 'title' => 'Order')); ?></span>
+                                <span class="order-txt">Order</span>
+                                <span class="order-txt">点餐</span>
+                            </div>
+                        </a>
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+
+
+
+            <div class="col-md-4 clearfix col-sm-4">
+                <div class="table-colors">
+                    <div class="clearfix marginB5">
+                        <div class="pull-left paidb"></div>
+                        <div class="pull-left paid-txt">Paid 已付费</div>
+                    </div>
+                    <div class="clearfix marginB15">
+                        <div class="pull-left notpaid"></div>
+                        <div class="pull-left paid-txt">On-going 未支付</div>
+                    </div>
+                    <div class="clearfix marginB15">
+                        <div class="pull-left availableb"></div>
+                        <div class="pull-left paid-txt">Available 可用的</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>    
+</header> -->
         <div class="clearfix homepage">
             <?php echo $this->Session->flash(); ?>
             <!--<div class="clearfix dine-box">
@@ -599,3 +718,7 @@ echo $this->fetch('script');
     });
     
 </script>
+
+<style>
+
+</style>
