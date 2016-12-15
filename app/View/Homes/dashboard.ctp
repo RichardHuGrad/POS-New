@@ -59,7 +59,10 @@
         .navbar {
             height:100px !important
         }
-
+        /*#dialog {
+            width: 400px;
+        }
+*/
     </style>
     <header>
         <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -568,17 +571,30 @@
                 <a href="#" class="scrollUp">Up</a>
                 <a href="#" class="scrollDown">Down</a>
             </div>
+
+
 <div id="dialog" title="Please Enter Password" style="display:none" class="popPassword">
-<span>Please Enter Your Password</span>
-<input type="password"  class="EntPassword"/>
-<input type="hidden" id="url" value="" />
-<input type="button" style="display:inline-block" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['admins']['password']?>')"/>
-<input type="button" style="display:inline-block" value="Cancel" onclick="checkPasswordC()"/>
+    <!-- <span>Please Enter Your Password</span> -->
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-lock"></i></span>
+        <input id="login-password" type="password"  class="EntPassword form-control" placeholder="password" aria-describedby="sizing-addon1"/>
+    </div>
+    
+    <input type="hidden" id="url" value="" />
+    <div class="form-group">
+        <div class="col-sm-12 controls">
+            <input class="btn btn-primary btn-lg enter" type="button" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['admins']['password']?>')"/>
+        <input class="btn btn-secondary btn-lg cancel" type="button" value="Cancel" onclick="checkPasswordC()"/>
+        </div>
+        
+    </div>
 </div>
+
+
 
    
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js','jquery.kinetic.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js','jquery.kinetic.min.js', 'notify.min.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -691,14 +707,19 @@ echo $this->fetch('script');
 		$(".EntPassword").val("");
 		$('#url').val(url);
 	}
-	
+	// modified by Yu Dec 15, 2016
+    // move hide() inside
 	function checkPassword(passwd){
-		$('#dialog').hide();
+		// $('#dialog').hide();
         var pwd_makeavailable = hex_md5($(".EntPassword").val());
 		if (pwd_makeavailable == passwd){
+            $('#dialog').hide();
 			document.location = $('#url').val();;
 		} else {
-			alert("Your password is incorrect!");
+			// alert("Your password is incorrect!");
+            $('.popPassword .input-group-addon').notify("Your password is incorrect!", {position: "top",
+                className: "error"}
+            );
 		};
     }
 	function checkPasswordC(){
