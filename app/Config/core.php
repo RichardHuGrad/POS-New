@@ -397,7 +397,7 @@ if('192.168.1.253:81' == $_SERVER['HTTP_HOST']){
 
 $db_host = 'localhost';
 $db_username = 'root';
-$db_password = '';
+$db_password = '123456';
 $db_database = 'pos';
 
 if('m.brsoftech.net' == $_SERVER['HTTP_HOST']){

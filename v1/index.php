@@ -964,19 +964,18 @@ $app->post('/changeorderitemprice', 'authenticate', function() use ($app) {
 * Update quantity + add / edit extras
 * url - /updateorderitem 
 * method - POST
-* params - orderid(mandatory), itemid(mandatory), rowid(mandatory), allextras(mandatory), selectedextras(optional), quantity(mandatory),
-specialinstruction(optional)
-* allextras= [{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2"},
-	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5"}]
-* selectedextras= [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg"},
-         {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+* params - orderid(mandatory), itemid(mandatory), rowid(mandatory), allextras(mandatory), selectedextras(optional), quantity(mandatory), specialinstruction(optional)
+* allextras= [{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2", "type":"T"},
+	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5", "type":"P"}]
+* selectedextras= [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg", "type":"T"},
+         {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu", "type":"P"}]
 * specialinstruction : NO / LESS / MORE
 * header Params - email(mandatory), password(mandatory)
 **/
 $app->post('/updateorderitem', 'authenticate', function() use ($app) {
     global $user_id;
     // check for required params
-    verifyRequiredParams(array('orderid', 'itemid', 'rowid', 'allextras', 'quantity'));
+    verifyRequiredParams(array('orderid', 'itemid', 'rowid', 'allextras', 'quantity', 'selectedextras'));
     $response = array();
     // reading post params
     
@@ -1039,8 +1038,56 @@ $app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function
     } else {
         $response['code'] = 0;
         $response['error'] = false;
-        $response['message'] = "Reseravtion list"; 
+        $response['message'] = "Merging Table Data"; 
         $response['data'] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Make Payment
+* url - /makepayment 
+* method - POST
+* params - orderid(mandatory), mergedorderids(mandatory), tip(mandatory), paymenttype(mandatory)
+* tip : default 0
+* paymenttype :- CARD / CASH
+
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/makepaymentmerge', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'mergedorderids', 'tip', 'paymenttype'));
+    $response = array();
+    // reading post params
+    
+    $orderid = $app->request->post('orderid');
+    $mergedorderids = $app->request->post('mergedorderids');
+    $tip = $app->request->post('tip');
+    $paymenttype = $app->request->post('paymenttype');
+
+    $db = new DbHandler();
+    $res = $db->makePaymentMerge($user_id, $orderid, $mergedorderids, $tip, $paymenttype);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully made payment";
+        $response["data"] = $res;
         echoRespnse(201, $response);
     }
 });
