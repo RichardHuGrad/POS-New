@@ -1049,7 +1049,7 @@ if (!empty($Order_detail['OrderItem'])) {
 					subTotal -= parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>));
 				};
 				//End
-				subTotal -= subTotal*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100;
+
 			};
 			//End
 		<?php }; ?>
