@@ -320,11 +320,11 @@ if ($Order_detail['Order']['table_status'] == 'P') {
                                         <div class="col-md-8 tip-paid-by text-center">
                                             
                                                 
-                                                    <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
+                                                    <input disabled id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
                                                     <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label>
                                                
                                                 
-                                                    <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
+                                                    <input disabled id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
                                                     <label for="tip-cash" class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?><div>Cash 现金</div></label>
                                             
                                         </div>
@@ -371,7 +371,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
                     
                     
                     <div class="tip-group">
-                        <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
+                        <button disabled type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
 
                         <button type="button" class="btn btn-success"  id="submit" disabled ><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
                     </div>
@@ -496,6 +496,9 @@ if (!empty($Order_detail['OrderItem'])) {
                     $('#tip').click();
                     $('#next').prop("disabled", true);
                     $('#next').removeClass('card-ok');
+                    $('#tip').prop("disabled", false);
+                    $('#tip-cash').prop("disabled", false);
+                    $('#tip-card').prop("disabled", false);
                 }
                 else {
                     alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
@@ -547,6 +550,9 @@ if (!empty($Order_detail['OrderItem'])) {
                                 }
                             })
                         }
+                    } else {
+                        alert("Please input tip amount 请选择小费金额. ");
+                            return false;
                     }
 
                     
