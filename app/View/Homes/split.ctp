@@ -1079,7 +1079,7 @@ if (!empty($Order_detail['OrderItem'])) {
         split_accounting_str += '<input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode"></div></div>';
         split_accounting_str += '<div class="col-md-3"><div class="form-group"><label for="AdminTableSize" style="width:100%">&nbsp;</label>';
         split_accounting_str += '<a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a></div></div></div></li>';
-<?php };};//Modified by Yishou Liao @ Nof 28 2016 (Add }; ) ?>
+<?php };};//Modified by Yishou Liao @ Nov 28 2016 (Add }; ) ?>
 
 <?php if ($Order_detail['Order']['discount_value']) { ?>
 		//Modified by Yishou Liao @ Nov 19 2016
@@ -1222,12 +1222,16 @@ var discount=0;
 			discount = parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
 		};
 		if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-			discount = (parseFloat(keepsubTotal)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+			//Modified by Yishou Liao @ Dec 15 2016
+			discount = (parseFloat(<?php echo @$keepsubtotal; ?>)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+			//End Yishou Liao @ Dec 15 2016
 		};
 		if (getCookie("promocode_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
 			//Modified by Yishou Liao @ Nov 19 2016
 			if (getCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>)==1) {
-				discount = (parseFloat(keepsubTotal)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+				//Modified by Yishou Liao @ Dec 15 2016
+				discount = (parseFloat(<?php echo @$keepsubtotal; ?>)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+				//End Yishou Liao @ Dec 15 2016
 			} else {
 				discount = parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
 			};
