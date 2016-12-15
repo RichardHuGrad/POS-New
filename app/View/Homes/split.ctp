@@ -1223,14 +1223,14 @@ var discount=0;
 		};
 		if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
 			//Modified by Yishou Liao @ Dec 15 2016
-			discount = (parseFloat(<?php echo @$keepsubtotal; ?>)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+			discount = (parseFloat(sub_total)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
 			//End Yishou Liao @ Dec 15 2016
 		};
 		if (getCookie("promocode_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
 			//Modified by Yishou Liao @ Nov 19 2016
 			if (getCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>)==1) {
 				//Modified by Yishou Liao @ Dec 15 2016
-				discount = (parseFloat(<?php echo @$keepsubtotal; ?>)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
+				discount = (parseFloat(sub_total)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
 				//End Yishou Liao @ Dec 15 2016
 			} else {
 				discount = parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);

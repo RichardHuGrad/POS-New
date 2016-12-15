@@ -1710,7 +1710,7 @@ class HomesController extends AppController {
     public function averdonepayment() {
         $this->layout = false;
         $this->autoRender = NULL;
-        xdebug_break();
+
         // pr($this->data); die;
         // get all params
         $order_id = $this->data['order_id'];
@@ -1763,7 +1763,7 @@ class HomesController extends AppController {
             $order_detail = explode(",", $this->data['order_detail']);
             $this->loadModel('Order');
             $split_detail = $this->Order->find("first", array('fields' => array('Order.order_no', 'Order.table_no', 'Order.total', 'Order.tax', 'Order.reorder_no', 'Order.hide_no', 'Order.cashier_id', 'Order.counter_id', 'Order.promocode', 'Order.message', 'Order.reason', 'Order.order_type', 'Order.cooking_status', 'Order.is_hide', 'Order.discount_value'), 'conditions' => array('Order.id' => $order_id), 'recursive' => false));
-
+            
             $max_id = $this->Order->find("first", array('fields' => array('MAX(Order.ID) as maxid')));
             $new_orderno = $split_detail['Order']['order_no'] . "_" . ((int) $max_id[0]['maxid'] + 1);
 
@@ -1777,7 +1777,7 @@ class HomesController extends AppController {
             //Modified by Yishou Liao @ Nov 29 2016
             $data['Order']['total'] = $data['Order']['paid'] - $data['Order']['change'];
             $data['Order']['subtotal'] = $data['Order']['total'] / ($data['Order']['tax']/100+1);
-            $keepsubtotal = $data['Order']['subtotal']; //Modified by Yishou Liao @ Dec 15 2016
+
             $data['Order']['tax_amount'] = $data['Order']['total'] - $data['Order']['subtotal'];
             /*
               $data['Order']['total'] = round($data['Order']['paid'], 2) - round($data['Order']['change'], 2);
@@ -1809,7 +1809,7 @@ class HomesController extends AppController {
             if (($sumsubtotal1[0][0]['sumsubtotal'] + $sumsubtotal1[0][0]['discount_value']) >= $sumsubtotal2[0]['orders']['subtotal']) {
                 $this->Order->query("DELETE FROM `orders` WHERE id =  " . $order_id);
             };
-            $this->set(compact('keepsubtotal')); //Modified by Yishou Liao @ Dec 15 2016
+
             echo true;
         };
         
