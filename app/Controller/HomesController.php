@@ -1710,7 +1710,7 @@ class HomesController extends AppController {
     public function averdonepayment() {
         $this->layout = false;
         $this->autoRender = NULL;
-
+        xdebug_break();
         // pr($this->data); die;
         // get all params
         $order_id = $this->data['order_id'];
@@ -1777,6 +1777,7 @@ class HomesController extends AppController {
             //Modified by Yishou Liao @ Nov 29 2016
             $data['Order']['total'] = $data['Order']['paid'] - $data['Order']['change'];
             $data['Order']['subtotal'] = $data['Order']['total'] / ($data['Order']['tax']/100+1);
+            $keepsubtotal = $data['Order']['subtotal']; //Modified by Yishou Liao @ Dec 15 2016
             $data['Order']['tax_amount'] = $data['Order']['total'] - $data['Order']['subtotal'];
             /*
               $data['Order']['total'] = round($data['Order']['paid'], 2) - round($data['Order']['change'], 2);
@@ -1804,12 +1805,15 @@ class HomesController extends AppController {
             };
 
             $sumsubtotal2 = $this->Order->query("SELECT `subtotal` FROM `orders` WHERE `order_no` = '" . $split_detail['Order']['order_no'] . "'");
-
+            
             if (($sumsubtotal1[0][0]['sumsubtotal'] + $sumsubtotal1[0][0]['discount_value']) >= $sumsubtotal2[0]['orders']['subtotal']) {
                 $this->Order->query("DELETE FROM `orders` WHERE id =  " . $order_id);
             };
+            $this->set(compact('keepsubtotal')); //Modified by Yishou Liao @ Dec 15 2016
             echo true;
         };
+        
+        exit;
     }
 
     //End.
