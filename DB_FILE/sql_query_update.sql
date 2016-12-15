@@ -62,5 +62,5 @@ ADD COLUMN `order_unit_price` FLOAT DEFAULT 0 after `actual_unit_price`, -- for 
 ADD COLUMN `delivery_type` ENUM('', 'T', 'D', 'W')  DEFAULT '' COMMENT 'T => Take out, D => DineIn, W->Waiting' after `discount`; -- for savig order type item wise
 
 
-ALTER TABLE `order_items` ADD COLUMN `price_changed_by` INT(10) DEFAULT 0 after `is_kitchen`; -- for tracking who has chnaged the price
+ALTER TABLE `order_items` ADD COLUMN `price_changed_by` INT(10) DEFAULT 0 after `is_kitchen`; -- for trackinh who has chnaged the price
 

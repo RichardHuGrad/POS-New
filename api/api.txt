@@ -152,29 +152,4 @@ Password : 123456
     params -  orderid(mandatory), orderitemid(mandatory), tableno(mandatory), oldprice(mandatory), newprice(mandatory)
     method - POST
     header Params - username(mandatory), password(mandatory)
-    
-23. Update quantity + add / edit extras
-    url - /updateorderitem 
-    method - POST
-    params - orderid(mandatory), itemid(mandatory), rowid(mandatory), allextras(mandatory), selectedextras(optional), quantity(mandatory), specialinstruction(optional)
-    allextras= [{"id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2", "type":"T"},
-	 {"id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5", "type":"P"}]
-    selectedextras= [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg", "type":"T"},
-         {"id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu", "type":"P"}]
-    specialinstruction : NO / LESS / MORE 
-    header Params - email(mandatory), password(mandatory)
-    
-24. Merging Table Data
-    url - /mergingtabledata/:orderid/:mergedorderids
-    mergedorderids :- comma separated, if more than 1 merging table
-    method - GET
-    header Params - username(mandatory), password(mandatory)
 
-25. Make Payment
-    url - /makepayment 
-    method - POST
-    params - orderid(mandatory), mergedorderids(mandatory), tip(mandatory), paymenttype(mandatory)
-    mergedorderids :- comma separated, if more than 1 merging table
-    tip : default 0
-    paymenttype :- CARD / CASH
-    header Params - email(mandatory), password(mandatory)

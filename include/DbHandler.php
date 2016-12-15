@@ -839,43 +839,47 @@ class DbHandler {
         }
     }
 
-    public function updateOrderItem($userid, $orderid, $itemid, $rowid, $allextras, $qty, $selectedextras, $specialinstruction){
+    public function updateOrderItem($userid, $orderid, $itemid, $rowid, $allextras, $quantity, $selectedextras, $specialinstruction) {
         $orderedat=date('Y-m-d H:i:s');
         if($orderData=$this->isOrderExist($orderid)) {
             if ($orderData['is_completed']=='Y') {
                 return 'ALREADY_COMPLETED';
             }
+            $itemdataArr=json_decode($itemdata);
             $userData = $this->getUserById($userid);
 
+            $totItems=count($itemdataArr);
             $totprice=0;
             $totextra=0;
+            if ($totItems>0) {
+                for ($i=0; $i<$totItems; $i++) {
+                    $selectedextras=json_encode($itemdataArr[$i]->selectedextras);
+                    $allextras=json_encode($itemdataArr[$i]->allextras);
+                    $itemData=$this->getItemData($itemdataArr[$i]->itemid);
+                    $itemnameArr=explode('----', $itemData['cousine']);
+                    $itemNameEn=$itemnameArr[0];
+                    $itemNameZh=$itemnameArr[1];
+                    
+                    $price=$itemData['price'] * $itemdataArr[$i]->qty;
+                    $extraprice = 0;
+                    foreach($itemdataArr[$i]->selectedextras as $num => $values) {
+                       $extraprice += $values->price;
+                    }
 
-            //$selectedextras=json_encode($itemdataArr[$i]->selectedextras);
-            //$allextras=json_encode($itemdataArr[$i]->allextras);
-            $itemData=$this->getItemData($itemid);
-            $itemnameArr=explode('----', $itemData['cousine']);
-            $itemNameEn=$itemnameArr[0];
-            $itemNameZh=$itemnameArr[1];
-            
-            $price=$itemData['price'] * $qty;
-            $extraprice = 0;
-            foreach($itemdataArr[$i]->selectedextras as $num => $values) {
-               $extraprice += $values->price;
+                    $totprice += $price;
+                    $totextra += $extraprice;
+                    $itemPrice=$itemData['price'] * $itemdataArr[$i]->qty;
+                    $itemTot= $itemPrice + $totextra;
+                    $taxAmount= $itemTot / $userData['tax'];
+                    $discount=0;
+                    // if($orderData['promocode']!='' || !is_null($orderData['promocode'])) {
+                    //     $discount=$this->getDiscountOnItem($itemdataArr[$i], $orderData['promocode']);
+                    // }
+
+                    $orderitem_insert = "insert into order_items set order_id='$orderid', item_id='".$itemdataArr[$i]->itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$itemdataArr[$i]->qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice'";
+                    $items_added=mysql_query($orderitem_insert);
+                }
             }
-
-            $totprice += $price;
-            $totextra += $extraprice;
-            $itemPrice=$itemData['price'] * $qty;
-            $itemTot= $itemPrice + $totextra;
-            $taxAmount= $itemTot / $userData['tax'];
-            $discount=0;
-            // if($orderData['promocode']!='' || !is_null($orderData['promocode'])) {
-            //     $discount=$this->getDiscountOnItem($itemdataArr[$i], $orderData['promocode']);
-            // }
-
-            $orderitem_update = "update order_items set order_id='$orderid', item_id='".$itemid."', name_en='$itemNameEn', name_xh='$itemNameZh', category_id='".$itemData['category_id']."', price='$price', qty='".$qty."', tax='".$userData['tax']."', tax_amount='$taxAmount', selected_extras='$selectedextras', all_extras='$allextras', extras_amount='$extraprice', special_instructions='$specialinstruction' where id=$rowid";
-            $orderitem_updated=mysql_query($orderitem_update);
-            
             $orderTotal = $totprice + $totextra;
 
             if ($orderData['fix_discount']>0 || $orderData['percent_discount']>0){
@@ -898,30 +902,54 @@ class DbHandler {
         }
     }
 
-    public function mergingTableData($userid, $orderid, $mergedorderids) {
-        $allIds=$orderid.','.$mergedorderids;
-        $order_row="select sum(tax_amount) as tax_amount, sum(subtotal) as subtotal, sum(total) as total, sum(discount_value) as discount,(select group_concat(concat(name_en, '---',name_xh,'---', qty,'---',price, '---', table_no) SEPARATOR '-+-') from order_items oi JOIN orders o ON o.id=oi.order_id and order_id IN($allIds)) as orderdata from orders where id IN ($allIds)";
+    public function mergingTableData($userid, $type, $tableno) {
+        $userData = $this->getUserById($userid);
+        $order_row="select o.* from orders o where o.order_type='$type' and is_completed='N' and o.cashier_id='".$userData['restaurant_id']."'";
+        if ($tableno>0)
+            $order_row.=" and o.table_no = '$tableno'";
+        $order_row.=" order by o.id desc";
+
         if ($order_res = mysql_query($order_row)) {
             $num_rows = mysql_num_rows($order_res);
             if ($num_rows > 0) {
                 $output = array();
                 $count=0;
-                $arr = mysql_fetch_assoc($order_res);
-                $output[$count]['tax_amount'] = $arr['tax_amount'];
-                $output[$count]['subtotal'] = $arr['subtotal'];
-                $output[$count]['total'] = $arr['total'];
-                $output[$count]['discount'] = $arr['discount'];
-               
-                $itemsData=explode('-+-',$arr['orderdata']);
-                if(count($itemsData)>0) {
-                    for($i=0; $i<count($itemsData); $i++) {
-                        $itemData=explode('---',$itemsData[$i]);
-                        $output[$count]['items'][$i]['name_en']=$itemData[0];
-                        $output[$count]['items'][$i]['name_zh']=$itemData[1];
-                        $output[$count]['items'][$i]['qty']=$itemData[2];
-                        $output[$count]['items'][$i]['price']=$itemData[3];
-                        $output[$count]['items'][$i]['price']=$itemData[4];
+                while ($arr = mysql_fetch_assoc($order_res)) {
+                    $output[$count]['id'] = $arr['id'];
+                    $output[$count]['order_no'] = $arr['order_no'];
+                    $output[$count]['table_no'] = $arr['table_no'];
+                    $output[$count]['tax'] = $arr['tax'];
+                    $output[$count]['tax_amount'] = $arr['tax_amount'];
+                    $output[$count]['subtotal'] = $arr['subtotal'];
+                    $output[$count]['total'] = $arr['total'];
+                    $output[$count]['created'] = $arr['created'];
+                    $output[$count]['name'] = $arr['name'];
+                    $output[$count]['noofperson'] = $arr['noofperson'];
+                    $output[$count]['phoneno'] = $arr['phoneno'];
+                    $output[$count]['takeout_date'] = $arr['takeout_date'];
+                    $output[$count]['takeout_time'] = $arr['takeout_time'];
+
+                    $orderItemsArr=$this->getOrderItems($arr['id']);
+                    if (count($orderItemsArr)>0) {
+                        $i=0;
+                        while ($itemArr = mysql_fetch_assoc($orderItemsArr)) {
+                            $output[$count]['items'][$i]['id']=$itemArr['id'];
+                            $output[$count]['items'][$i]['item_id']=$itemArr['item_id'];
+                            $output[$count]['items'][$i]['name_en']=$itemArr['name_en'];
+                            $output[$count]['items'][$i]['name_zh']=$itemArr['name_xh'];
+                            $output[$count]['items'][$i]['price']=$itemArr['price'];
+                            $output[$count]['items'][$i]['qty']=$itemArr['qty'];
+                            $output[$count]['items'][$i]['tax']=$itemArr['tax'];
+                            $output[$count]['items'][$i]['tax_amount']=$itemArr['tax_amount'];
+                            $output[$count]['items'][$i]['selected_extras']=$itemArr['selected_extras'];
+                            $output[$count]['items'][$i]['all_extras']=$itemArr['all_extras'];
+                            $output[$count]['items'][$i]['extras_amount']=$itemArr['extras_amount'];
+                            $i++;
+                        }
+                    } else {
+                        $output[$count]['items']=array();
                     }
+                    $count++;
                 }
                 return $output;
             } else {
@@ -929,33 +957,6 @@ class DbHandler {
             }
         } else {
             return 'UNABLE_TO_PROCEED';
-        }
-    }
-
-    public function makePaymentMerge($user_id, $orderid, $mergedorderids, $tip, $paymenttype, $totamount) {
-        $orderedat=date('Y-m-d H:i:s');
-        if($orderData=$this->isOrderExist($orderid)) {
-            if ($orderData['is_completed']=='Y') {
-                return 'ALREADY_COMPLETED';
-            }
-
-            if($paymenttype=='CARD') {
-                $subquery=", card_val='$totamount'";
-            } else {
-                $subquery=", cash_val='$totamount'";
-            }
-           
-            $orderPrice_update = "update orders set $subquery, tip='$tip', paid=total, is_completed='Y', paid_by='$paymenttype', merge_id=$orderid where id=$orderid";
-            $orderPriceUpdate=mysql_query($orderPrice_update);
-
-            $mergedorderidArr=explode(',', $mergedorderids);
-            for ($i=0; $i<count($mergedorderidArr); $i++) {
-                $orderPrice_update2 = "update orders set paid=total, is_completed='Y', paid_by='$paymenttype', merge_id=$orderid where id=".$mergedorderidArr[$i];
-                $orderPriceUpdate=mysql_query($orderPrice_update2);
-            }
-            return 'SUCCESSFULLY_DONE';
-        } else {
-            return 'INVALID_ORDERID';
         }
     }
     
