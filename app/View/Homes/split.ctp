@@ -1316,18 +1316,18 @@ var discount=0;
     var strarray = Array();
     var restr = "";
     for (var i = 0; i < c_array.length; i++){
-    strarray.push(c_array[i].join("*"));
+    strarray.push(c_array[i].join("~"));
     };
-    restr = strarray.join(",");
+    restr = strarray.join("^");
     return restr;
     }
 
     function strtoarr(c_string){//将字符串转换为二维数组。
     var strarray;
     var rearr = Array();
-    strarray = c_string.split(",");
+    strarray = c_string.split("^");
     for (var i = 0; i < strarray.length; i++){
-    rearr.push(strarray[i].split("*"));
+    rearr.push(strarray[i].split("~"));
     };
     return rearr;
     }
