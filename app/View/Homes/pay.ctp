@@ -24,12 +24,40 @@
         .tip-group {
 
         }
+        
+        .tip-paid-by input[type="radio"] {
+            display: inline-block;
+            /*margin: 10px;*/
+            vertical-align: middle;
+            margin-right: 3%;
+            visibility:hidden;
+        }
+
         .tip-paid-by img {
-            background-color: red;
+            background-color: #F8DCDC;
+            width: 20px;
         }
-        .tip-paid-by input {
-            margin: 10px;
+        .tip-paid-by label {
+            display: inline-block;
+            width: 80px;
+            height: 50px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+
+            background-color: #F8DCDC;
+            color: #FFFFFF;
+            vertical-align: middle;
+            margin-right: 3%;
         }
+
+        .tip-paid-by input[type="radio"]:checked+label{
+            background: #C9302C;
+        }
+        .tip-paid-by input[type="radio"]:checked+label img{
+            background: #C9302C;
+        }
+
     </style>
 
 </header>
@@ -289,10 +317,16 @@ if ($Order_detail['Order']['table_status'] == 'P') {
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div class="control-label col-md-4 sub-txt">Paid by:</div>
-                                        <div class="col-md-8 tip-paid-by">
+                                        <div class="col-md-8 tip-paid-by text-center">
                                             
-                                            <label class="control-label"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?>Card 卡<input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>
-                                            <label class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?>Cash 现金 <input name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio"></label>
+                                                
+                                                    <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
+                                                    <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label>
+                                               
+                                                
+                                                    <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
+                                                    <label for="tip-cash" class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?><div>Cash 现金</div></label>
+                                            
                                         </div>
                                     </div>
                                 </div>
