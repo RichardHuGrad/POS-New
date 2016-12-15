@@ -797,17 +797,33 @@ li.already_done {
 	top:45%;
 	left:50%;
 	z-index:9999;	
-	background:#f6f6f6;
-	border:2px solid red;
+	background:linear-gradient(#C30E23, #D75E6C);
+	;
+	border:2px solid #D75E6C;
 	border-radius:20px;
-	width:240px;
+	width:340px;
+	/*height: 200px;*/
 	margin-left: -120px;
+	padding:20px;
+}
+.popPassword .enter{
+	display: block;
+	float: left;
+}
+
+.popPassword .cancel{
+	display: block;
+	float: right;
+}
+
+.popPassword .form-group {
+	margin-top:20px;
 }
 
 .popPassword *{
-	margin:10px;
-	display:block;	
-	font-size:16px;
+	/*margin:10px;*/
+	/*display:block;	*/
+	/*font-size:16px;*/
 }
 
 .EntPassword{
