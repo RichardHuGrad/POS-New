@@ -722,14 +722,24 @@ class HomesController extends AppController {
         $table = $this->data['table'];
         $type = $this->data['type'];
 
-
         // get item details        
         $this->loadModel('Cousine');
         $item_detail = $this->Cousine->find("first", array(
-            'fields' => array('Cousine.price', 'Category.id', 'Cousine.is_tax'),
+            'fields' => array('Cousine.price', 'Category.id', 'Cousine.is_tax,Cousine.comb_num'),
             'conditions' => array('Cousine.id' => $item_id)
                 )
         );
+        
+        //Modified by Yishou Liao @ Dec 15 2016
+        $get_comb_flag = $this->Cousine->query("SELECT extras_num FROM extrascategories WHERE id = " . $item_detail['Cousine']['comb_num']);
+        $show_extras_flag = false;
+        if (count($get_comb_flag)>0){
+            if ($get_comb_flag[0]['extrascategories']['extras_num']>0){
+                $show_extras_flag = true;
+            }
+        };
+        //End @ Dec 15 2016
+        
         // check the item already exists or not
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
@@ -889,7 +899,7 @@ class HomesController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016.
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','show_extras_flag')); //Modified by Yishou Liao @ Dec 13 2016.
         $this->render('summarypanel');
     }
 

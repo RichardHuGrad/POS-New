@@ -275,6 +275,10 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 <!-- Modified by Yishou Liao @ Dec 12 2016 -->
 <input type="hidden" name="Order_no" id="Order_no" value="<?php echo @$Order_detail['Order']['order_no']; ?>" />
 <!-- End @ Dec 12 2016 -->
+<!-- Modified by Yishou Liao @ Dec 15 2016 -->
+<input type="hidden" name="show_extras_flag" id="show_extras_flag" value="<?php echo @$show_extras_flag; ?>" />
+<!-- End @ Dec 12 2016 -->
+
 
 <!-- Modified by Yishou Liao @ Oct 25 2016. -->
 <script type="text/javascript">

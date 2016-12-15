@@ -148,6 +148,12 @@ echo $this->fetch('script');
                 }
                 ;
                 //End.
+				
+				//Modified by Yishou Liao @ Dec 15 2016
+				if ($("#show_extras_flag").val() ==  true) {
+					$(".dropdown-toggle").trigger("click");
+				};
+				//End @ Dec 15 2016
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
