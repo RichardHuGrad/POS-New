@@ -24,6 +24,12 @@
         .tip-group {
 
         }
+        .tip-paid-by img {
+            background-color: red;
+        }
+        .tip-paid-by input {
+            margin: 10px;
+        }
     </style>
 
 </header>
@@ -284,8 +290,9 @@ if ($Order_detail['Order']['table_status'] == 'P') {
                                     <div class="form-group">
                                         <div class="control-label col-md-4 sub-txt">Paid by:</div>
                                         <div class="col-md-8 tip-paid-by">
-                                            <label class="control-label">Card  卡 <input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>
-                                            <label class="control-label">Cash 现金 <input name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio"></label>
+                                            
+                                            <label class="control-label"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?>Card 卡<input name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio"></label>
+                                            <label class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?>Cash 现金 <input name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -465,6 +472,8 @@ if (!empty($Order_detail['OrderItem'])) {
                 return false;
             }
         });
+
+
 
 
         $("#submit").click(function () {
