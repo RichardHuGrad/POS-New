@@ -1125,7 +1125,7 @@ class HomesController extends AppController {
 
             $new_all_extras = array();
             foreach ($all_extras as $key => $value) {
-                $new_all_extras[$value['id']] = array('id' => $value['id'], 'price' => $value['price'], 'name' => $value['name_zh']);
+                $new_all_extras[$value['id']] = array('id' => $value['id'], 'price' => $value['price'], 'name' => $value['name_zh'],'category_id' => $value['category_id']); //Modified by Yishou Liao @ Dec 15 2016
             }
 
             foreach ($extras as $value) {
@@ -1134,7 +1134,7 @@ class HomesController extends AppController {
                     $extras_amount += $new_all_extras[$value]['price'];
                     $selected_extras[] = $new_all_extras[$value];
                 } else {
-                    $selected_extras[] = array('id' => "", 'price' => '0', 'name' => $value);
+                    $selected_extras[] = array('id' => "", 'price' => '0', 'name' => $value, 'category_id'=> '0');
                 }
             }
         }

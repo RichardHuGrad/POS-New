@@ -1,5 +1,5 @@
 <?php
-
+$numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
  ?><div class="clearfix marginB15 cashierbox" style="display:none">
     <div class="pull-left marginR5">
         <?php if ($cashier_detail['Cashier']['image']) { ?>
@@ -80,6 +80,7 @@
 								if (in_array($ex_category['extrascategories']['id'],$cate_disp)==true){
 									if ($ex_category['extrascategories']['extras_num'] > 0){
 										$comb_flag = 1;
+										$numofcomb = $ex_category['extrascategories']['id'] . "," . $ex_category['extrascategories']['extras_num']; //Modified by Yishou Liao @ Dec 15 2016
 									};
 								};
 							};
@@ -106,7 +107,7 @@
 									if (in_array($ex['category_id'],$tab_disp)==true){ //Modified by Yishou Liao @ Dec 14 2016
 								?>
                                     <li class="addadish" adish="<?php echo $ex['category_id'] ?>">
-                                        <a class="clearfix add_extras"  item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
+                                        <a class="clearfix add_extras" category_id="<?php echo $ex['category_id'] ?>" item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
                                             <?php 
                                                 echo "<span class='pull-left'><!-- ".$ex['name']."<br/ -->".$ex['name_zh']."</span>";
                                                 if($ex['price']>0){
@@ -127,7 +128,7 @@
                                             foreach($selected_extras as $selected) {
 												if ($selected['name'] !=""){
                                                 ?>
-                                                <div class="extras_inner"  alt="<?php echo $selected['id'] ?>">
+                                                <div class="extras_inner" category_id="<?php echo $selected['category_id'] ?>" alt="<?php echo $selected['id'] ?>">
                                                     <?php 
                                                         echo "<span>".$selected['name']."</span>";
                                                         if($selected['price']>0){
@@ -277,7 +278,10 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 <!-- End @ Dec 12 2016 -->
 <!-- Modified by Yishou Liao @ Dec 15 2016 -->
 <input type="hidden" name="show_extras_flag" id="show_extras_flag" value="<?php echo @$show_extras_flag; ?>" />
-<!-- End @ Dec 12 2016 -->
+<!-- End @ Dec 15 2016 -->
+<!-- Modified by Yishou Liao @ Dec 15 2016 -->
+<input type="hidden" name="numofcomb" id="numofcomb" value="<?php echo $numofcomb; ?>" />
+<!-- End @ Dec 15 2016 -->
 
 
 <!-- Modified by Yishou Liao @ Oct 25 2016. -->

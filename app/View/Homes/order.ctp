@@ -197,10 +197,24 @@ echo $this->fetch('script');
         var price = $(this).attr("price");
         var name = $(this).attr("name");
         var extra_id = $(this).attr("alt");
+		//MOdified by Yishou Liao @ Dec 15 2016
+		var category_id = $(this).attr("category_id");
 
-        var html = '<div class="extras_inner" alt="' + extra_id + '"><span>' + name + '</span><span>' + (price != 0 ? price : "") + '</span><a class="fa fa-times remove_extra" href="javascript:void(0)"> </a></div>';
+		var numcomb = $("#numofcomb").val().split(",");
+		var str_search = $("#block" + item_id).html();
+		var current_num = 0;
+		var count_num=0;
+		while (current_num != -1){
+			current_num = str_search.indexOf('category_id=\"'+numcomb[0]+'\"',(current_num+1));
+			if (current_num!=-1){count_num++;};
+		};
+		if (count_num<parseInt(numcomb[1])||category_id!=numcomb[0]) {
+		//End @ Dec 15 2016
+		
+        var html = '<div class="extras_inner" category_id="' + category_id + '" alt="' + extra_id + '"><span>' + name + '</span><span>' + (price != 0 ? price : "") + '</span><a class="fa fa-times remove_extra" href="javascript:void(0)"> </a></div>';
 
         $("#block" + item_id).append(html);
+		};//MOdified by Yishou Liao @ Dec 15 2016
 
     })
 
