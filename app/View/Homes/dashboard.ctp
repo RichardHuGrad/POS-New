@@ -252,7 +252,8 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
                                                     if (!@$orders_no[$t]['D'] and $t <> $i) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['D'])); ?>"><?php echo $t; ?></a></div>
+
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['D'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -262,7 +263,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                     if (!@$orders_no[$t]['T']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['D'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['D'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -270,7 +271,7 @@
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
                                                 <?php for($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                 if(!@$orders_no[$t]['W']){  ?>
-                                                   <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['D']));?>"><?php echo $t; ?></a></div>
+                                                   <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['D']));?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                 <?php } }?>
                                                 </div>
 	                                        </ul>
@@ -336,8 +337,8 @@
                                                 <div class="clearfix">
                                                     <a class="close-btn" href="javascript:void(0)">X</a>
                                                     <div class="left-arrow"></div>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>">Avg. Split</a></div>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1')); ?>">Cust. Split</a></div>
+                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Avg. Split AA分单</div></a>
+                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Cust. Split 自定义分单</div></a>
                                                 </div>
                                             </ul>
                                     <?php
