@@ -328,11 +328,11 @@ if ($Order_detail['Order']['table_status'] == 'P') {
                                         <div class="col-md-8 tip-paid-by text-center">
                                             
                                                 
-                                                    <input disabled id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
+                                                    <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
                                                     <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label>
                                                
                                                 
-                                                    <input disabled id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
+                                                    <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
                                                     <label for="tip-cash" class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?><div>Cash 现金</div></label>
                                             
                                         </div>
@@ -532,7 +532,7 @@ if (!empty($Order_detail['OrderItem'])) {
                     // check tip type(card/cash) if exists
                     if (parseFloat($("#tip_val").val())) {
                         if (!$("#tip_paid_by").val()) {
-                            $("#submit").notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
+                            $("#submit").notify("Please select tip payment method card or cash \n 请选择提示付款方式卡或现金. ", {
                                 position: "top center", 
                                 className:"warn"
                             });
