@@ -415,7 +415,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
                                                     if (!@$orders_no[$t]['D']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['T'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -425,7 +425,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                     if (!@$orders_no[$t]['T'] and $t <> $i) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['T'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -435,7 +435,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                     if (!@$orders_no[$t]['W']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['T'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -518,7 +518,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
                                                     if (!@$orders_no[$t]['D']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['W'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -528,7 +528,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                     if (!@$orders_no[$t]['T']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['W'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -538,7 +538,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                     if (!@$orders_no[$t]['W'] and $t <> $i) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['W'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
