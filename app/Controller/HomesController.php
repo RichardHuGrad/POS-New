@@ -2003,9 +2003,12 @@ class HomesController extends AppController {
         //Print title
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
+        /*printer_draw_text($handle, "2038 Yonge St.", 156, 130);
         printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
-        printer_draw_text($handle, "416-792-4476", 156, 206);
+        printer_draw_text($handle, "416-792-4476", 156, 206);*/
+		printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
+        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
+        printer_draw_text($handle, "647-352-5333", 156, 206);
 
         $print_y = 244;
         if ($print_zh == true) {
@@ -2279,9 +2282,12 @@ class HomesController extends AppController {
         //Print title
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
+        /*printer_draw_text($handle, "2038 Yonge St.", 156, 130);
         printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
-        printer_draw_text($handle, "416-792-4476", 156, 206);
+        printer_draw_text($handle, "416-792-4476", 156, 206);*/
+		printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
+        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
+        printer_draw_text($handle, "647-352-5333", 156, 206);
 
         $print_y = 244;
         if ($print_zh == true) {
