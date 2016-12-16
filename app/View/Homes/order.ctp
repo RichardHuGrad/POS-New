@@ -264,7 +264,7 @@ echo $this->fetch('script');
 
         //Modified by Yishou Liao @ Nov 01 2016.
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTokitchen',0,0)); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTokitchen',1,0)); ?>",
             method: "post",
             data: {
                 Print_Item: Order_Item_Printer,
