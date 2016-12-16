@@ -271,7 +271,14 @@ echo $this->fetch('script');
 					}//End.
 					curtmp = parseInt(person_menu[i][0]);
 				};
-				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$" + person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
+				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
+				//MOdified by Yishou Liao @ Dec 16 2016
+				if (person_menu[i][6]!="") {
+				 	addpersonStr += parseFloat(person_menu[i][5],2) + parseFloat(person_menu[i][6],2) + person_menu[i][7] + "</div></div></li>";
+				}else{
+					addpersonStr += person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
+				};
+				//End @ Dec 16 2016
 			};
 			$('#splitmenu').html(addpersonStr);
 			order_menu.splice(item_no, 1);
@@ -364,7 +371,14 @@ echo $this->fetch('script');
 					};
 					curtmp = parseInt(person_menu[i][0]);
 				};
-				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$" + person_menu[i][4] + person_menu[i][5] + person_menu[i][6] + "</div></div></li>";
+				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
+				//MOdified by Yishou Liao @ Dec 16 2016
+				if (person_menu[i][6]!="") {
+				 	addpersonStr += parseFloat(person_menu[i][5],2) + parseFloat(person_menu[i][6],2) + person_menu[i][7] + "</div></div></li>";
+				}else{
+					addpersonStr += person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
+				};
+				//End @ Dec 16 2016
 			};
 			$('#splitmenu').html(addpersonStr);
 			
@@ -465,7 +479,13 @@ echo $this->fetch('script');
     outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( ' + i + ',"' + order_menu[i][1] + '", "' + order_menu[i][2] + '", "' + order_menu[i][3] + '","' + order_menu[i][4] + '","' + order_menu[i][5] + '","' + order_menu[i][6] + '","' + order_menu[i][7] + '",' + order_menu[i][0] + ',' + order_menu[i][8] + ' );\'>';
     outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left titlebox1">';
     outhtml_str += '<div class="less-title">' + order_menu[i][2] + '<br/>' + order_menu[i][3] + '</div><div class="less-txt">' + order_menu[i][4] + '</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
-    outhtml_str += order_menu[i][5] + order_menu[i][6] + order_menu[i][7] + '</div></div></li>'
+		//Modified by Yishou Liao @ Dec 16 2016
+		if (order_menu[i][6]!=""){
+			outhtml_str += (parseFloat(order_menu[i][5],2) + parseFloat(order_menu[i][6],2)) + order_menu[i][7] + '</div></div></li>'
+		}else{
+			outhtml_str += order_menu[i][5] + order_menu[i][6] + order_menu[i][7] + '</div></div></li>'
+		};
+		//End @ Dec 16 2016
     };
     outhtml_str += "</ul>";
     $('#orderitem').html(outhtml_str);
@@ -612,7 +632,14 @@ if (!empty($Order_detail['OrderItem'])) {
     };
     curtmp = parseInt(person_menu[i][0]);
     };
-    addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$" + person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
+    addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
+	//MOdified by Yishou Liao @ Dec 16 2016
+	if (person_menu[i][6]!="") {
+		addpersonStr += parseFloat(person_menu[i][5],2) + parseFloat(person_menu[i][6],2) + person_menu[i][7] + "</div></div></li>";
+	}else{
+		addpersonStr += person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
+	};
+	//End @ Dec 16 2016
     };
     $('#splitmenu').html(addpersonStr);
     //End.
@@ -1029,8 +1056,13 @@ if (!empty($Order_detail['OrderItem'])) {
     <?php } else{ ?>
 		for (var i = 0; i < person_menu.length; i++){
 			if (person_menu[i][0] == radio_click){
-				keepsubTotal +=parseFloat(person_menu[i][5]);
-				subTotal += parseFloat(person_menu[i][5]);
+				if (person_menu[i][6]!=""){
+					keepsubTotal +=parseFloat(person_menu[i][5])+parseFloat(person_menu[i][6]);
+					subTotal += parseFloat(person_menu[i][5])+parseFloat(person_menu[i][6]);
+				}else{
+					keepsubTotal +=parseFloat(person_menu[i][5]);
+					subTotal += parseFloat(person_menu[i][5]);
+				};
 			};
 		};
 		<?php if ($Order_detail['Order']['discount_value']) { ?>
