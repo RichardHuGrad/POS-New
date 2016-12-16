@@ -198,6 +198,10 @@ header { background: #c30e23; height: 75px; }
 	border: 1px solid grey;
 	margin-top: 10px;
 }
+
+.timetable-title {
+	/*background-color: black;*/
+}
 .dine-wrap li .dropdown-submenu .dropdown-menu .left-arrow { position: absolute; top: 141px; left: -10px; background: url(../img/left-arrow.png) left top no-repeat; width: 10px; height: 21px; }
 .dine-wrap li .dropdown-submenu.bottom-submenu .sub-open .left-arrow { top: 30px; }
 .takeout-txt { font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 55px; line-height: 45px; }
@@ -874,3 +878,4 @@ li.already_done {
 input[type="checkbox"] {
 	transform: scale(1.8);
 }
+

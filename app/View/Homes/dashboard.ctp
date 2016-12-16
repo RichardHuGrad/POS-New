@@ -297,7 +297,7 @@
                                             <div class="clearfix">
                                                 <a class="close-btn" href="javascript:void(0)">X</a>
                                                 <div class="left-arrow"></div>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Merge Bill 合单</div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable timetable-title">Merge Bill 合单</div>
                                                 <?php
                                                 $dinein_tables_keys = array_keys($dinein_tables_status);
                                                 for ($t = 0; $t < count(@$dinein_tables_status); $t++) {
@@ -308,7 +308,8 @@
                                                     }
                                                 }
                                                 ?>
-                                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable">
+                                                <!-- <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"> -->
+                                                <!-- modified by Yu Dec 16, 2016 -->
                                                     <input type="button" onclick="mergebill(<?php echo $i ?>,'<?php
                                                     //Modified by Yishou Liao @ Oct 16 2016.
                                                      if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V'){
@@ -317,8 +318,8 @@
                                                          echo "javascript:void(0)";
                                                      };
                                                     //End.
-                                                    ?>');" name="mergebill" id="mergebill" value="Okay">
-                                                </div>
+                                                    ?>');" name="mergebill" id="mergebill" value="Okay" class="btn btn-primary btn-lg" style="margin-top:10px">
+                                                <!-- </div> -->
                                             </div>
                                         </ul>
                                     <?php } ?>
