@@ -371,18 +371,12 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
                 </div>
 
                 <div class="card-bot clearfix text-center">
-                    <div class="payment-group">
-                        <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> Card 卡</button>
-                        <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> Cash 现金</button>
-                        <button type="button" class="btn btn-success card-ok" id="next"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Next 下一步</button>
-                    </div>
-                    
-                    
-                    <div class="tip-group">
-                        <button disabled type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
+                    <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> Card 卡</button>
+                    <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> Cash 现金</button>
 
-                        <button type="button" class="btn btn-success"  id="submit" disabled ><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
-                    </div>
+                    <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
+
+                    <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
                     
                     <input type="hidden" id="selected_card" value="" />
                     <input type="hidden" id="card_val" name="card_val" value="" />
@@ -493,7 +487,9 @@ if (!empty($Order_detail['OrderItem'])) {
         })
 
         // modified by Yu 15 Dev, 2016
-        $('#next').click(function () {
+
+
+        /*$('#next').click(function () {
             if ($("#selected_card").val()) {
                 if (parseFloat($(".change_price").attr("amount")) >= 0) {
                     
@@ -524,7 +520,7 @@ if (!empty($Order_detail['OrderItem'])) {
                 // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
                 return false;
             }
-        });
+        });*/
 
 
 
@@ -536,56 +532,55 @@ if (!empty($Order_detail['OrderItem'])) {
                     // check tip type(card/cash) if exists
                     if (parseFloat($("#tip_val").val())) {
                         if (!$("#tip_paid_by").val()) {
-                            $('#submit').notify("Please select tip payment method card or cash 请选择小费付款方式:卡或现金. ",  { 
+                            $("#submit").notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
                                 position: "top center", 
-                                className:"warn",
+                                className:"warn"
                             });
-                            // alert("Please select tip payment method card or cash 请选择小费付款方式:卡或现金. ");
+                            // alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
                             return false;
-                        } else {
-                            // submit form for complete payment process
-                            $.ajax({
-                                url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'donepayment', $table, $type)); ?>",
-                                method: "post",
-                                data: {
-                                    pay: $(".received_price").attr("amount"),
-                                    paid_by: $("#selected_card").val(),
-                                    change: $(".change_price").attr("amount"),
-                                    table: "<?php echo $table ?>",
-                                    type: "<?php echo $type ?>",
-                                    order_id: "<?php echo $Order_detail['Order']['id'] ?>",
-                                    card_val: $("#card_val").val(),
-                                    cash_val: $("#cash_val").val(),
-                                    tip_val: $("#tip_val").val(),
-                                    tip_paid_by: $("#tip_paid_by").val(),
-                                },
-                                success: function (html) {
-                                    $(".alert-warning").hide();
-                                    $(".reprint").trigger("click");
-                                    window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
-                                },
-                                beforeSend: function () {
-                                    $(".RIGHT-SECTION").addClass('load1 csspinner');
-                                    $(".alert-warning").show();
-                                }
-                            })
                         }
-                    } else {
-                        $('#submit').notify("Please input tip amount 请选择小费金额. ",  { 
-                            position: "top center", 
-                            className:"warn",
-                        });
-                        // alert("Please input tip amount 请选择小费金额. ");
-                        return false;
                     }
 
-                    
+                    // submit form for complete payment process
+                    $.ajax({
+                        url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'donepayment', $table, $type)); ?>",
+                        method: "post",
+                        data: {
+                            pay: $(".received_price").attr("amount"),
+                            paid_by: $("#selected_card").val(),
+                            change: $(".change_price").attr("amount"),
+                            table: "<?php echo $table ?>",
+                            type: "<?php echo $type ?>",
+                            order_id: "<?php echo $Order_detail['Order']['id'] ?>",
+                            card_val: $("#card_val").val(),
+                            cash_val: $("#cash_val").val(),
+                            tip_val: $("#tip_val").val(),
+                            tip_paid_by: $("#tip_paid_by").val(),
+                        },
+                        success: function (html) {
+                            $(".alert-warning").hide();
+                            $(".reprint").trigger("click");
+                            window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                        },
+                        beforeSend: function () {
+                            $(".RIGHT-SECTION").addClass('load1 csspinner');
+                            $(".alert-warning").show();
+                        }
+                    })
                 } else {
-                    alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
+                    $("#submit").notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
+                        position: "top center", 
+                        className:"warn"
+                    })
+                    // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
                     return false;
                 }
             } else {
-                alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
+                $("#submit").notify("Please select card or cash payment method 请选择卡或现金付款方式. ", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+                // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
                 return false;
             }
         })
