@@ -1,0 +1,20 @@
+.sub-items {
+	/*height:500px; */
+	/*overflow-y: scroll;*/
+}
+
+.addadish-items {
+	/*height: 30px;*/
+	/*text-align: center;*/
+	/*margin: 5px;*/
+	/*padding:5px;*/
+}
+
+input[name="ext_memo"] {
+	font-size:20px;
+	margin-bottom: 20px;
+}
+
+.show_extras label{
+	font-size: 20px;
+}

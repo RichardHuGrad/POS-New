@@ -745,5 +745,4 @@ echo $this->fetch('script');
 </script>
 
 <style>
-
 </style>

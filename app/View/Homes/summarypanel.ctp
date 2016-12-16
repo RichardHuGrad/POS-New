@@ -1,3 +1,7 @@
+<?php 
+    echo $this->Html->css('summarypanel.css');
+?>
+
 <?php
 $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
  ?><div class="clearfix marginB15 cashierbox" style="display:none">
@@ -108,12 +112,16 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
 								?>
                                     <li class="addadish" adish="<?php echo $ex['category_id'] ?>">
                                         <a class="clearfix add_extras" category_id="<?php echo $ex['category_id'] ?>" item_id="<?php echo $value['id']; ?>" price="<?php echo $ex['price']>0?$ex['price']:"" ?>"  name="<?php echo $ex['name_zh'] ?>" alt="<?php echo $ex['id'] ?>" href="javascript:void(0)">
-                                            <?php 
-                                                echo "<span class='pull-left'><!-- ".$ex['name']."<br/ -->".$ex['name_zh']."</span>";
-                                                if($ex['price']>0){
-                                                    echo "<span class='pull-right'>".$ex['price']."</span>";
-                                                }
-                                             ?>
+
+                                            <div class="addadish-items">
+                                                <?php 
+                                                    echo "<span class='pull-left'><!-- ".$ex['name']."<br/ -->".$ex['name_zh']."</span>";
+                                                    if($ex['price']>0){
+                                                        echo "<span class='pull-right'>".$ex['price']."</span>";
+                                                    }
+                                                 ?>
+                                            </div>
+                                            
                                         </a>
                                     </li>
                                 <?php
@@ -143,11 +151,20 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
                                         }
                                      ?>
                                 </div>
-                                <div class="show_extras"><label>Special Instructions:&nbsp;&nbsp;</label><input type="text" name="ext_memo" id="ext_memo<?php echo $value['id']; ?>" placeholder="e.g. no onions, no mayo" size="30" value="" />&nbsp;&nbsp;&nbsp;<button type="button" id="clearbtn" name="clearbtn" class="clearbtn"  alt="<?php echo $value['id'] ?>">Clear 清除</button></div>
-                                <button type="button" id="extnobtn" class="extbtn"  alt="<?php echo $value['id'] ?>" style="display:none">No</button>
-                                <button type="button" id="extmorebtn" class="extbtn"  alt="<?php echo $value['id'] ?>" style="display:none">More</button>
-                                <button type="button" id="extlessbtn" class="extbtn"  alt="<?php echo $value['id'] ?>" style="display:none">Less</button>
-                                <button type="button" class="savebtn"  alt="<?php echo $value['id'] ?>">Save 保存</button>
+                                <div class="show_extras"><label>Special Instructions:&nbsp;&nbsp;</label><input type="text" name="ext_memo" id="ext_memo<?php echo $value['id']; ?>" placeholder="e.g. no onions, no mayo" size="30" value="" />&nbsp;&nbsp;&nbsp;
+
+                                <div>
+                                    <button type="button" id="extnobtn" class="extbtn"  alt="<?php echo $value['id'] ?>" style="display:none">No</button> 
+                                    <button type="button" id="extmorebtn" class="extbtn"  alt="<?php echo $value['id'] ?>" style="display:none">More</button> 
+                                    <button type="button" id="extlessbtn" class="extbtn"  alt="<?php echo $value['id'] ?>" style="display:none">Less</button> 
+                                </div>
+                                <div>
+                                    <button type="button" id="clearbtn" name="clearbtn" class="clearbtn btn-lg btn-warning"  alt="<?php echo $value['id'] ?>">Clear 清除</button></div>
+                                    <button type="button" class="savebtn btn-lg btn-success"  alt="<?php echo $value['id'] ?>">Save 保存</button>
+                                </div>
+
+                                
+                                
                             </ul>
                         <?php }?>
                         <a href="javascript:void(0)" alt="<?php echo $value['id'] ?>" order_id="<?php echo $Order_detail['Order']['id'] ?>" class="fa fa-times pull-right close-link" aria-hidden="true"></a>

@@ -110,7 +110,7 @@ header { background: #c30e23; height: 75px; }
 .order-left .order-summary { margin-bottom: 15px; -webkit-border-radius: 10px/11px; -moz-border-radius: 10px/11px; border-radius: 10px/11px; background-color: #fff; -webkit-box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); -moz-box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); box-shadow: 0 0 7px rgba(0,0,0,.16), inset -2px 5px 51px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9); padding: 10px; }
 .order-summary h3 { text-align: center; margin-bottom: 10px; padding-bottom: 10px; text-align: center; font-size: 21px; font-weight: 600; }
 .order-summary-indent { position: relative; overflow-y: scroll; overflow-x: hidden; max-height: 250px; }
-.order-summary-indent li { border-top: 1px solid #ccc; padding: 15px 0; }
+.order-summary-indent li { border-top: 1px solid #ccc; /*padding: 15px 0;*/ }
 .order-summary-indent .less-title { font-size: 14px; font-weight: 600; color: #292929; line-height: 15px; padding-left: 10px;}
 .order-summary-indent .less-txt { font-size: 11px; color: #6d6d6d; padding-left: 10px; }
 .order-summary-indent .price-txt { font-size: 14px; color: #000; font-weight: 600; line-height: 14px; padding-top: 10px; padding-left: 0}
@@ -228,21 +228,40 @@ header { background: #c30e23; height: 75px; }
 .cashierbox { min-height: 70px; background-color: #fff; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.12); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.12); box-shadow: -2px 5px 5px rgba(0,0,0,.12); padding: 10px 15px; }
 .cashierbox .dropdown-toggle { cursor: pointer; }
 .cashierbox .dropdown-menu { left: 105%; top: 0; border: 2px solid #c30e23; background: #fff; width: 800px; padding: 10px; border-radius: 15px; }
-.cashierbox .dropdown-menu > li > a { padding: 3px 10px 4px; }
-.cashierbox .dropdown-menu li { padding: 2px 10px; border: 0px; float:left; width:20%; border-bottom:1px solid #eee; border-right:1px solid #eee;}
+.cashierbox .dropdown-menu > li > a { 
+	/*padding: 3px 10px 4px; */
+	padding: 5px;
+	height: 50px;
+	width:70px;
+}
+.cashierbox .dropdown-menu li { 
+	background-color: #ECE7E7;
+	margin:5px; 
+	/*padding: 2px 10px; */
+	border: 0px; 
+	float:left; 
+	/*width:20%; */
+	border-bottom:1px solid #eee; 
+	border-right:1px solid #eee;
+	border-radius: 10px;
+}
 .cashierbox .dropdown-menu li:nth-child(6) { border-right:0px;}
 .cashierbox .dropdown-menu li:nth-child(11) { border-right:0px;}
 .cashierbox .dropdown-menu li:nth-child(16) { border-right:0px;}
 
 .cashierbox .dropdown-menu li:hover, .cashierbox .dropdown-menu li < a.active {
-background:#c30e23;
+	background:#c30e23;
+	/*border-radius: 10px;*/
+
 }
-.cashierbox .dropdown-menu > li > a:hover/*, .cashierbox .dropdown-menu > li > a:focus*/, .cashierbox .dropdown-menu > li > a.active { background: #c30e23; color: #fff; }
+.cashierbox .dropdown-menu > li > a:hover/*, .cashierbox .dropdown-menu > li > a:focus*/, .cashierbox .dropdown-menu > li > a.active { background: #c30e23; color: #fff; border-radius: 10px; }
 .cashierbox .menu-arrow { position: absolute; top: 5%; left: -10px; /*background: url(../img/left-arrow.png) left top no-repeat; */width: 10px; height: 21px; }
-.cashierbox .dropdown-menu .savebtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+.cashierbox .dropdown-menu .savebtn{ /*background-color:#228917;*/ color:#fff; margin:5px; /*padding: 10px 0 5px;*/ height: 40px; /*width: 30%; */text-align: center; font-size: 18px; border-radius: 10px;
+ border: 0px; /*background: none;*/ margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
 
 /* Modified by Yishou Liao @ Nov 10 2016 */
-.cashierbox .dropdown-menu .clearbtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
+.cashierbox .dropdown-menu .clearbtn{ background-color:#c44343; color:#fff; margin: 5px; /*padding: 10px 0 5px;*/ /*width: 30%;*/ text-align: center; font-size: 18px; border-radius: 10px;
+	border: 0px; /*background: none;*/ margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
 
 .cashierbox .dropdown-menu .extbtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
 /* End */
@@ -275,10 +294,17 @@ background:#c30e23;
 #product li { border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding-top: 15x; }
 .products-panel {padding-left: 0;}
 .productbox { width: 100%; height: 500px; position: relative; overflow-y: auto; overflow-x: hidden; margin: 0; }
+
 .name-title { /*overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;*/ padding:0 0 0 5px; }
 .productbox li { cursor: pointer; float:left; display:inline-block; vertical-align:top; }
 .productbox li:hover { background: #f9f9f9; }
-.productbox li .item-wrapper { padding-left: 5px; margin: 5px 2px; background: white; box-shadow: -2px 5px 5px rgba(0,0,0,.12); }
+.productbox li .item-wrapper { 
+	padding-left: 5px; 
+	margin: 5px 2px; 
+	background: white; 
+	box-shadow: -2px 5px 5px rgba(0,0,0,.12); 
+	height:150px;
+}
 .cartwrap-wrap { padding: 5px 0; }
 .cart-txt { font-size: 20px; color: #151515; font-weight: 600; padding-top: 5px; }
 .cartwrap-wrap .searchwrap { position: relative; width: 100%; float: right; }
@@ -592,8 +618,8 @@ header{ background:#c30e23; height:100px;}
 .cashierbox .dropdown-toggle{ cursor:pointer;}
 .cashierbox .dropdown-menu{ left:105%; top:0; border:2px solid #c30e23; background:#fff; width:220px; padding:10px; border-radius:15px;}
 .cashierbox .dropdown-menu > li > a{ padding:3px 10px 4px;}
-.cashierbox .dropdown-menu li{ padding:2px 10px; border:0px; border-radius:20px;}
-.cashierbox .dropdown-menu li:hover,.cashierbox .dropdown-menu li < a.active{ background:#c30e23;}
+.cashierbox .dropdown-menu li{ /*padding:2px 10px; */border:0px; border-radius:20px;}
+.cashierbox .dropdown-menu li:hover,.cashierbox .dropdown-menu li < a.active{ background:#c30e23; border-radius: 10px;}
 .cashierbox .dropdown-menu > li > a:hover/*, .cashierbox .dropdown-menu > li > a:focus*/, .cashierbox .dropdown-menu > li > a.active {background:#c30e23; color:#fff;}
 .cashierbox .menu-arrow{ position:absolute; top:5%; left:-10px; background:url(../img/left-arrow.png) left top no-repeat; width:10px; height:21px;}
 .cashierbox .dropdown-menu .savebtn{ padding:10px 0 5px; width:100%; text-align:center; font-size:18px; border:0px; background:none; margin-top:30px; border-top:1px solid #e0e0e0; font-weight:600; font-size:18px;}

@@ -83,11 +83,11 @@
                                         <?php
                                         foreach ($category['Cousine'] as $items) {
                                             ?>
-                                            <li class="col-md-4 col-sm-6 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
+                                            <li class="col-md-3 col-sm-6 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
                                                 <div class="item-wrapper">
                                                     <div class="clearfix padding10 row">
-                                                        <div class="dish-title txt13 pull-left col-md-9 col-sm-7 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name'] . "<br/>" . $items['zh_name']; ?></strong></div></div>
-                                                        <div class="dish-price pull-right txt14 col-md-3 col-sm-5 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
+                                                        <div class="dish-title txt13 pull-left col-md-9 col-sm-9 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name'] . "<br/>" . $items['zh_name']; ?></strong></div></div>
+                                                        <div class="dish-price pull-right txt14 col-md-3 col-sm-3 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
                                                     </div>
                                                 </div>
                                             </li>
@@ -527,12 +527,15 @@ echo $this->fetch('script');
         }
         dropDownFixPosition($(this), $(".dropdown-menu"));
     });
+
+    // notice
+    // change style, should be move to style.css in the future
     function dropDownFixPosition(button, dropdown) {
         var dropDownTop = button.position().top;
         var left = $(document).width() - dropdown.width();
         var top = $(document).height() - dropdown.height();
         dropdown.css('left', left / 2 + "px");
-        dropdown.css('top', "30%");
+        dropdown.css('top', "20%");
     }
 
 
