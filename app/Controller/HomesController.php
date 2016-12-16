@@ -2347,7 +2347,7 @@ class HomesController extends AppController {
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
         printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
+        
         //Print Subtotal
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
