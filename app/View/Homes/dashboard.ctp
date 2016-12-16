@@ -338,8 +338,8 @@
                                                 <div class="clearfix">
                                                     <a class="close-btn" href="javascript:void(0)">X</a>
                                                     <div class="left-arrow"></div>
-                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Avg. Split AA分单</div></a>
-                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Cust. Split 自定义分单</div></a>
+                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Avg. Split 平均分单</div></a>
+                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Cust. Split 按人分单</div></a>
                                                 </div>
                                             </ul>
                                     <?php

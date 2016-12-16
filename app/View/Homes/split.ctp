@@ -151,7 +151,7 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js"));
 echo $this->fetch('script');
 ?>
 <script>
@@ -680,7 +680,11 @@ if (!empty($Order_detail['OrderItem'])) {
     //Modified by Yishou Liao @ Nov 10 2016
 <?php if ($split_method != 0) { ?>
         if (order_menu.length > 0) {
-        alert("请将所有订单分单完毕以后再付账。");
+        	$.notify("请将所有订单分单完毕以后再付账。", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+        // alert("请将所有订单分单完毕以后再付账。");
         return false;
         };
 <?php } ?>
@@ -692,7 +696,11 @@ if (!empty($Order_detail['OrderItem'])) {
     // check tip type(card/cash) if exists
     if (parseFloat($("#tip_val").val())) {
     if (!$("#tip_paid_by").val()) {
-    alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
+    	$.notify("Please select tip payment method card or cash \n 请选择提示付款方式卡或现金. ", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+    // alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
     return false;
     }
     };
@@ -786,18 +794,30 @@ if (!empty($Order_detail['OrderItem'])) {
             }
     })
     } else {
-    alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
+    	$.notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+    // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
     return false;
     }
     } else {
-    alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
+    	$.notify("Please select card or cash payment method 请选择卡或现金付款方式. ", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+    // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
     return false;
     }
     })
 
             $(".card-indent li").click(function () {
     if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
-    alert("Please select payment type cash/card or select tip.");
+    	$.notify("Please select payment type cash/card or select tip.", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+    // alert("Please select payment type cash/card or select tip.");
     return false;
     }
 
@@ -817,7 +837,11 @@ if (!empty($Order_detail['OrderItem'])) {
 
             $("#Enter").click(function () {
     if (!$("#selected_card").val()) {
-    alert("Please select payment type card/cash.");
+    	$.notify("Please select payment type card/cash.", {
+                        position: "top center", 
+                        className:"warn"
+                    });
+    // alert("Please select payment type card/cash.");
     return false;
     }
     var amount = $("#screen").val() ? parseFloat($("#screen").val()) : 0;
@@ -963,7 +987,11 @@ if (!empty($Order_detail['OrderItem'])) {
 					data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php echo $Order_detail['Order']['id'] ?>"},
 					success: function (html) {
 						if (html.error) {
-							alert(html.message);
+							$.notify(html.message, {
+		                        position: "top center", 
+		                        className:"warn"
+		                    });
+							// alert(html.message);
 							$(".discount_section").val("").removeAttr("disabled");
 							$(".RIGHT-SECTION").removeClass('load1 csspinner');
 							return false;
@@ -986,7 +1014,11 @@ if (!empty($Order_detail['OrderItem'])) {
 					}
 			})
 		} else {
-			alert("Please add discount first.");
+			$.notify("Please add discount first.", {
+                position: "top center", 
+                className:"warn"
+            });
+			// alert("Please add discount first.");
 			return false;
 		}
     })

@@ -571,7 +571,7 @@ if (!empty($Order_detail['OrderItem'])) {
                     $("#submit").notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
                         position: "top center", 
                         className:"warn"
-                    })
+                    });
                     // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
                     return false;
                 }

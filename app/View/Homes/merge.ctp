@@ -434,7 +434,7 @@ if ($table_status <> 'P') {
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'notify.min.js'));
 echo $this->fetch('script');
 ?>
 
@@ -637,11 +637,19 @@ echo $order_id;
                     }
             })
             } else {
-            alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
+                $.notify("Invalid amount, please check and verfy again \n 金额无效，请检查并再次验证.", {
+                                position: "top center", 
+                                className:"warn"
+                            });
+            // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
                     return false;
             }
             } else {
-            alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
+                $.notify("Please select card or cash payment method \n 请选择卡或现金付款方式. ", {
+                                position: "top center", 
+                                className:"warn"
+                            });
+            // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
                     return false;
             }
             })
@@ -649,7 +657,11 @@ echo $order_id;
 
                     $(".card-indent li").click(function () {
             if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
-            alert("Please select payment type cash/card or select tip.");
+                $.notify("Please select payment type cash/card or select tip.", {
+                                position: "top center", 
+                                className:"warn"
+                            });
+            // alert("Please select payment type cash/card or select tip.");
                     return false;
             }
 
@@ -668,7 +680,11 @@ echo $order_id;
             })
                     $("#Enter").click(function () {
             if (!$("#selected_card").val()) {
-            alert("Please select payment type card/cash.");
+                $.notify("Please select payment type card/cash.", {
+                                position: "top center", 
+                                className:"warn"
+                            });
+            // alert("Please select payment type card/cash.");
                     return false;
             }
             var amount = $("#screen").val() ? parseFloat($("#screen").val()) : 0;
@@ -819,7 +835,11 @@ echo $order_id;
 },
                     success: function (html) {
                     if (html.error) {
-                    alert(html.message);
+                    // alert(html.message);
+                    $.notify(html.message, {
+                                position: "top center", 
+                                className:"warn"
+                            });
                             $(".discount_section").val("").removeAttr("disabled");
                             $(".RIGHT-SECTION").removeClass('load1 csspinner');
                             return false;
@@ -832,7 +852,11 @@ echo $order_id;
                     }
             })
             } else {
-            alert("Please add discount first.");
+                $.notify("Please add discount first.", {
+                                position: "top center", 
+                                className:"warn"
+                            });
+            // alert("Please add discount first.");
                     return false;
             }
             })
