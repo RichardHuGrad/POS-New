@@ -130,6 +130,18 @@ echo $this->fetch('script');
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
+
+                // add touch move function
+                // modified by Yu Dec 16, 2016
+                $('.order-summary-indent').kinetic({
+                    filterTarget: function(target, e){
+                        if (!/down|start/.test(e.type)){
+                            return !(/area|a|input/i.test(target.tagName));
+                        }
+                    }
+                });
+
+
                 $(".products-panel").removeClass('load1 csspinner');
 				// Modiied by Yishou Liao @ Dec 12 2016
 				$("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
@@ -414,6 +426,16 @@ echo $this->fetch('script');
 				};//Modified by Yishou Liao @ Nov 28 2016
                 //End.
 
+                // add touch move function
+                // modified By yu Dec 16, 2016
+                $('.order-summary-indent').kinetic({
+                    filterTarget: function(target, e){
+                        if (!/down|start/.test(e.type)){
+                            return !(/area|a|input/i.test(target.tagName));
+                        }
+                    }
+                });
+
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
@@ -559,59 +581,44 @@ echo $this->fetch('script');
         margin-bottom: 30px;
         text-align: center;
     }
-    ::-webkit-scrollbar {
-        width: 3em;
-        height: 3em;
-        overflow: visible;
-    }
+/*     ::-webkit-scrollbar {
+    width: 3em;
+    height: 3em;
+    overflow: visible;
+}
 
-    ::-webkit-scrollbar-track {
-        border: 15px solid transparent;
-        background-clip: content-box;   /* THIS IS IMPORTANT */
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #D1D0D0;
-        /*width: 3em;*/
-        border-radius: 50px;
-        height: 10px;
-        /*border: 1px solid rgb(0,0,0);*/
-        -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
-    }​
+::-webkit-scrollbar-track {
+    border: 15px solid transparent;
+    background-clip: content-box;   THIS IS IMPORTANT
+}
+::-webkit-scrollbar-thumb {
+    background: #D1D0D0;
+    width: 3em;
+    border-radius: 50px;
+    height: 10px;
+    border: 1px solid rgb(0,0,0);
+    -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
+}​ */
 
 
 
 </style>
 
 <script>
-/*    var touchmoved;
-    $(".order-summary-indent").on('touchend', function(e){
-    if(touchmoved != true){
-        $(this).prev('input').val("");
-    }
-    }).on('touchmove', function(e){
-        touchmoved = true;
-    }).on('touchstart', function(){
-        touchmoved = false;
-    });*/
+// touch move
+// modified by Yu Dec 16, 2016
 
-    // $(".order-summary-indent").on("taphold", function (e) {
-    //     $(this).hide();
-    // })
-    // $(".summary_box ul").hide();
-
-    // $(document).ready(function () {
-    //     // $(".order-summary-indent").on("taphold", function (e) {
-    //     //     $(this).hide();
-    //     // })
-    //     $(".order-summary-indent").hide();
-    //     console.log("test");
-    // });
-    $(document).ready(function() {
-        // $(".products-panel").hide();
-        $(".products-panel").on("taphold", function (e) {
-            // $(this).hide();
-            console.log("test");
-        });
+$(document).ready(function () {
+    $('.productbox').kinetic({
+        filterTarget: function(target, e){
+            if (!/down|start/.test(e.type)){
+                return !(/area|a|input/i.test(target.tagName));
+            }
+        }
     });
+
     
+});
+
+
 </script>

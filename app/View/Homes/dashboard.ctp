@@ -297,7 +297,7 @@
                                             <div class="clearfix">
                                                 <a class="close-btn" href="javascript:void(0)">X</a>
                                                 <div class="left-arrow"></div>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Merge Bill 合单</div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable timetable-title">Merge Bill 合单</div>
                                                 <?php
                                                 $dinein_tables_keys = array_keys($dinein_tables_status);
                                                 for ($t = 0; $t < count(@$dinein_tables_status); $t++) {
@@ -308,7 +308,8 @@
                                                     }
                                                 }
                                                 ?>
-                                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable">
+                                                <!-- <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"> -->
+                                                <!-- modified by Yu Dec 16, 2016 -->
                                                     <input type="button" onclick="mergebill(<?php echo $i ?>,'<?php
                                                     //Modified by Yishou Liao @ Oct 16 2016.
                                                      if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V'){
@@ -317,8 +318,8 @@
                                                          echo "javascript:void(0)";
                                                      };
                                                     //End.
-                                                    ?>');" name="mergebill" id="mergebill" value="Okay">
-                                                </div>
+                                                    ?>');" name="mergebill" id="mergebill" value="Okay" class="btn btn-primary btn-lg" style="margin-top:10px">
+                                                <!-- </div> -->
                                             </div>
                                         </ul>
                                     <?php } ?>
@@ -414,7 +415,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
                                                     if (!@$orders_no[$t]['D']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['T'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -424,7 +425,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                     if (!@$orders_no[$t]['T'] and $t <> $i) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['T'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -434,7 +435,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                     if (!@$orders_no[$t]['W']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['T'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -517,7 +518,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
                                                     if (!@$orders_no[$t]['D']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['W'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -527,7 +528,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
                                                     if (!@$orders_no[$t]['T']) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['W'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
@@ -537,7 +538,7 @@
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                     if (!@$orders_no[$t]['W'] and $t <> $i) {
                                                         ?>
-                                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['W'])); ?>"><?php echo $t; ?></a></div>
+                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                         <?php
                                                     }
                                                 }
