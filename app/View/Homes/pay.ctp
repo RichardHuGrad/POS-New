@@ -568,7 +568,7 @@ if (!empty($Order_detail['OrderItem'])) {
                         }
                     })
                 } else {
-                    $("#submit").notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
+                    $.notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
                         position: "top center", 
                         className:"warn"
                     });
@@ -576,7 +576,7 @@ if (!empty($Order_detail['OrderItem'])) {
                     return false;
                 }
             } else {
-                $("#submit").notify("Please select card or cash payment method 请选择卡或现金付款方式. ", {
+                $.notify("Please select card or cash payment method 请选择卡或现金付款方式. ", {
                         position: "top center", 
                         className:"warn"
                     });
@@ -588,7 +588,7 @@ if (!empty($Order_detail['OrderItem'])) {
         $(".card-indent li").click(function () {
             if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
                 // alert("Please select payment type cash/card or select tip.");
-                $(".card-indent").notify("Please select payment type card/cash.",  { 
+                $.notify("Please select payment type card/cash.",  { 
                     position: "top center", 
                     className:"warn",
                 });
@@ -613,7 +613,7 @@ if (!empty($Order_detail['OrderItem'])) {
 
         $("#Enter").click(function () {
             if (!$("#selected_card").val()) {
-                $("#Enter").notify("Please select payment type card/cash.",  { 
+                $.notify("Please select payment type card/cash.",  { 
                     position: "top center", 
                     className:"warn",
                 });
@@ -768,7 +768,7 @@ if (!empty($Order_detail['OrderItem'])) {
                 data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php echo $Order_detail['Order']['id'] ?>"},
                 success: function (html) {
                     if (html.error) {
-                        $("#apply-discount").notify(html.message,  { 
+                        $.notify(html.message,  { 
                             position: "top center", 
                             className:"warn",
                         });
@@ -787,7 +787,7 @@ if (!empty($Order_detail['OrderItem'])) {
 
 
         } else {
-            $("#apply-discount").notify("Please add discount first.",  { 
+            $.notify("Please add discount first.",  { 
                 position: "top center", 
                 className:"warn",
             });
