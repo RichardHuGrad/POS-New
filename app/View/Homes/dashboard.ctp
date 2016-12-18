@@ -732,7 +732,7 @@ echo $this->fetch('script');
 <!-- End. -->
 
 <script>
-    $(document).ready(function() {
+/*    $(document).ready(function() {
         $('body').kinetic({
             filterTarget: function(target, e){
                 if (!/down|start/.test(e.type)){
@@ -740,7 +740,7 @@ echo $this->fetch('script');
                 }
             }
         });
-    });
+    });*/
     
 </script>
 

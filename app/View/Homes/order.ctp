@@ -133,13 +133,13 @@ echo $this->fetch('script');
 
                 // add touch move function
                 // modified by Yu Dec 16, 2016
-                $('.order-summary-indent').kinetic({
+/*                $('.order-summary-indent').kinetic({
                     filterTarget: function(target, e){
                         if (!/down|start/.test(e.type)){
                             return !(/area|a|input/i.test(target.tagName));
                         }
                     }
-                });
+                });*/
 
 
                 $(".products-panel").removeClass('load1 csspinner');
@@ -428,13 +428,13 @@ echo $this->fetch('script');
 
                 // add touch move function
                 // modified By yu Dec 16, 2016
-                $('.order-summary-indent').kinetic({
+/*                $('.order-summary-indent').kinetic({
                     filterTarget: function(target, e){
                         if (!/down|start/.test(e.type)){
                             return !(/area|a|input/i.test(target.tagName));
                         }
                     }
-                });
+                });*/
 
             },
             beforeSend: function () {
@@ -584,7 +584,7 @@ echo $this->fetch('script');
         margin-bottom: 30px;
         text-align: center;
     }
-/*     ::-webkit-scrollbar {
+     ::-webkit-scrollbar {
     width: 3em;
     height: 3em;
     overflow: visible;
@@ -601,7 +601,7 @@ echo $this->fetch('script');
     height: 10px;
     border: 1px solid rgb(0,0,0);
     -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
-}​ */
+}​ 
 
 
 
@@ -611,7 +611,7 @@ echo $this->fetch('script');
 // touch move
 // modified by Yu Dec 16, 2016
 
-$(document).ready(function () {
+/*$(document).ready(function () {
     $('.productbox').kinetic({
         filterTarget: function(target, e){
             if (!/down|start/.test(e.type)){
@@ -621,7 +621,7 @@ $(document).ready(function () {
     });
 
     
-});
+});*/
 
 
 </script>

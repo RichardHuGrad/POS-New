@@ -821,8 +821,8 @@ if (!empty($Order_detail['OrderItem'])) {
     });
 
     // modified by Yu Dec 15, 2016
-    $(document).ready(function() {
+/*    $(document).ready(function() {
         $('.order-summary-indent').kinetic();
     });
-
+*/
 </script>
