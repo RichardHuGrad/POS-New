@@ -141,6 +141,13 @@ echo $this->fetch('script');
                     }
                 });*/
 
+                /*$('.less-title').flowtype({
+                    // fontRatio : 15,
+                    // minimum: 500,
+                    minFont: 13,
+                    maxFont: 20
+                });*/
+
 
                 $(".products-panel").removeClass('load1 csspinner');
 				// Modiied by Yishou Liao @ Dec 12 2016
@@ -435,6 +442,13 @@ echo $this->fetch('script');
                         }
                     }
                 });*/
+                // responsive font size
+                /*$('.less-title').flowtype({
+                    // fontRatio : 15,
+                    // minimum: 500,
+                    minFont: 13,
+                    maxFont: 20
+                })*/
 
             },
             beforeSend: function () {
