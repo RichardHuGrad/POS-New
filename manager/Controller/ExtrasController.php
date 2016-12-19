@@ -176,7 +176,7 @@ class ExtrasController extends AppController {
      * @return null
      */
     public function admin_delete($id = '') {
-
+        
         $cousine_id = $this->params->query['id'];
 
         $id = base64_decode($id);
