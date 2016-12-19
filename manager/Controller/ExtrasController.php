@@ -92,10 +92,10 @@ class ExtrasController extends AppController {
      */
     function admin_add_edit($id = '') {
         //$cousine_id = $this->params->query['id'];
-
+        
         //Modified by Yishou Liao @ Dec 04 2016
         $id = base64_decode($id);
-        $cousine_id = $id;
+        $cousine_id = ($id==NULL)?0:$id;
         //End @ Dec 04 2016
 
         $this->layout = 'admin';
