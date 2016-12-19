@@ -112,7 +112,7 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js'));
 echo $this->fetch('script');
 ?>
 <script type="text/javascript">
@@ -584,26 +584,24 @@ echo $this->fetch('script');
         margin-bottom: 30px;
         text-align: center;
     }
-     ::-webkit-scrollbar {
-    width: 3em;
-    height: 3em;
-    overflow: visible;
-}
+    ::-webkit-scrollbar {
+        width: 30px;
+        height: 30px;
+        overflow: visible;
+    }
 
-::-webkit-scrollbar-track {
-    border: 15px solid transparent;
-    background-clip: content-box;   THIS IS IMPORTANT
-}
-::-webkit-scrollbar-thumb {
-    background: #D1D0D0;
-    width: 3em;
-    border-radius: 50px;
-    height: 10px;
-    border: 1px solid rgb(0,0,0);
-    -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
-}​ 
-
-
+    ::-webkit-scrollbar-track {
+        border: 15px solid transparent;
+        background-clip: content-box;   THIS IS IMPORTANT
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #D1D0D0;
+        width: 30px;
+        border-radius: 50px;
+        height: 10px;
+        border: 1px solid rgb(0,0,0);
+        -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
+    }​ 
 
 </style>
 
@@ -622,6 +620,17 @@ echo $this->fetch('script');
 
     
 });*/
+    $(document).ready(function () {
+        $('.txt13').flowtype({
+            fontRatio : 15,
+            // minimum: 500,
+            minFont: 13,
+            maxFont: 20
+        });
 
+
+        $('.dish-title br').after('<br/>')
+
+    });
 
 </script>

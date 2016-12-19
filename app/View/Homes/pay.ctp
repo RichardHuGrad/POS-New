@@ -391,7 +391,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js', 'flowtype.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -825,4 +825,12 @@ if (!empty($Order_detail['OrderItem'])) {
         $('.order-summary-indent').kinetic();
     });
 */
+
+    // $(document).ready(function () {
+    //     $('body').flowtype({
+    //         minimum: 500,
+    //         minFont: 12,
+    //         maxFont: 40
+    //     });
+    // });
 </script>

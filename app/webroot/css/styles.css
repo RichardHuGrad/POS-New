@@ -38,10 +38,15 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .padding15 { padding: 15px !important; }
 .padding10 { padding: 10px !important; }
 /* Fonts */
-.txt12 { font-size: 12px !important; }
+/*.txt12 { font-size: 12px !important; }
 .txt13 { font-size: 13px !important; }
 .txt15 { font-size: 15px !important; }
-.txt16 { font-size: 16px !important; line-height: normal; }
+.txt16 { font-size: 16px !important; line-height: normal; }*/
+
+.txt12 { font-size: 12px; }
+.txt13 { font-size: 13px; }
+.txt15 { font-size: 15px; }
+.txt16 { font-size: 16px; line-height: normal; }
 .whitecolor { color: #fff; }
 .lightcolor { color: #727272; }
 /* Checkbox and Radio Button css */
@@ -905,3 +910,8 @@ input[type="checkbox"] {
 	transform: scale(1.8);
 }
 
+/* @media only screen and (max-width: 320px) {
+
+   body { font-size: 2em; }
+
+} */
