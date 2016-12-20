@@ -553,7 +553,7 @@ echo $this->fetch('script');
     }
 
 
-    $(document).on('click', "body", function () {
+    $(document).on('click', "html", function () {
         $(".clearfix.cart-wrap").removeClass("csspinner");
     });
 
@@ -564,6 +564,11 @@ echo $this->fetch('script');
 
 
 <style type="text/css">
+    html {
+        position: relative;
+        min-height: 100%;
+        margin: 0;
+    }
     .dropdown-menu{
         position:fixed;
     }
