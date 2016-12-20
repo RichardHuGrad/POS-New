@@ -1,3 +1,28 @@
+//  initialize
+// order_no = <?php echo $Order_detail['Order']['order_no'] ?>
+
+/*if (checkCookie("person_menu_" + order_no) ) {
+	var orderarray = getCookie("order_menu" + order_no);
+	var personarray = getCookie("person_menu_" + order_no);
+	if (orderarray != ""){
+	    order_menu = strtoarr(orderarray);
+    };
+
+    if (personarray != "") {
+	    person_menu = strtoarr(personarray);
+    }
+    console.log("avgSplit");
+    console.log(order_menu);
+    console.log("avgSplit");
+
+    console.log(person_menu);
+}
+*/
+
+
+
+
+
 // write by Yu Dec 19, 2016
 // rely on jquery
 
