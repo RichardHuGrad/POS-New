@@ -69,7 +69,7 @@
                 <div class="order-summary-indent clearfix" name="orderitem" id="orderitem">
                     <!-- Modified by Yishou Liao @ Oct 18 2016. -->
                 </div>
-
+				<button class="btn btn-lg btn-primary" onclick="avgSplit()">Avg. Split</button>
             </div>
 
             <!-- Modified by Yishou Liao @ Oct 18 2016. -->
@@ -151,7 +151,7 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js"));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'avgsplit.js'));
 echo $this->fetch('script');
 ?>
 <script>
