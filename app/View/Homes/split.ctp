@@ -156,12 +156,18 @@ echo $this->fetch('script');
 ?>
 <script>
     //Modified by Yishou Liao @ Oct 18 2016.
-    var person_No = 0;
+    var person_No = 0; // only addPerson and deletePerson can modify this variable
     var current_person = 0;
     var person_menu = new Array();
     var order_menu = new Array();
 	var discount = 0;
-    $(document).on('click', '#addperson', function () {
+	var split_method = parseInt(<?php echo $split_method ?>);
+	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+
+	// console.log(order_no);
+
+
+    $('#addperson').on('click', function () {
 		//Modifed by Yishou Liao @ Nov 10 2016
 		//if (person_No < $('#persons').val()){
 		$("#person_details").css("display", "block");
@@ -178,12 +184,19 @@ echo $this->fetch('script');
 
 		
 		var addpersonStr = $('#splitmenu').html();
+		// var totalPersonArray = $('#splitmenu .person-label');
+		console.log("line 187");
+		console.log(addpersonStr);
 		
 		//Modified by Yishou Liao @ Nov 14 2016
 		var selepersonstr = "";
-		if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-			selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+		if (checkCookie("persons_sele_" + order_no)){
+			selepersonstr = getCookie("persons_sele_" + order_no);
 		};
+
+		console.log("line 194");
+		console.log(selepersonstr);
+
 	
 		var person_tab_Str = "";
 		for (var i = 0; i < person_No; i++){
@@ -212,8 +225,15 @@ echo $this->fetch('script');
 				
 		$('#splitmenu').html(addpersonStr);
 		current_person = person_No;
+
+		//  To be deleted
+		// meaningless code
 		var sele_person = "account_no_" + (current_person - 1);
 		document.getElementById(sele_person).checked = true;
+
+
+		// important 
+		// trigger the calculation of order details
 		showAcountingDetails()
 		
 		//Modified by Yishou Liao @ Nov 10 2016
@@ -235,13 +255,15 @@ echo $this->fetch('script');
 		//Modified by Yishou Liao @ Oct 19 2016.
 		var sele_person = "account_no_" + (current_person - 1);
 		document.getElementById(sele_person).checked = true;
+
+
+		// calculate order details
 		showAcountingDetails();
 		//End.
 	
 		$('#customer-select-alert').alert();
 		$('#customer-select-alert #customer-number').html(current_person);
-		$('#customer-select-alert').fadeTo(500, 500).fadeOut(500, function() {
-		});
+		$('#customer-select-alert').fadeTo(500, 500).fadeOut(500, function() {});
     }
 
     function addMenuItem(item_no, image, name_en, name_xh, selected_extras_name, price, extras_amount, qty, item_id, order_item_id){
@@ -286,8 +308,8 @@ echo $this->fetch('script');
 		
 			//Modified by Yishou Liao @ Nov 14 2016
 			var selepersonstr = "";
-			if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-				selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+			if (checkCookie("persons_sele_" + order_no)){
+				selepersonstr = getCookie("persons_sele_" + order_no);
 			};
 			
 			//Modified by Yishou Liao @ Nov 16 2016
@@ -474,100 +496,101 @@ echo $this->fetch('script');
     });
     //Modified by Yishou Liao @ Oct 18 2016.
     function addOrderItem(orderitem_no = null){
-    var outhtml_str = "<ul>";
-    for (var i = 0; i < order_menu.length; i++){
-    outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( ' + i + ',"' + order_menu[i][1] + '", "' + order_menu[i][2] + '", "' + order_menu[i][3] + '","' + order_menu[i][4] + '","' + order_menu[i][5] + '","' + order_menu[i][6] + '","' + order_menu[i][7] + '",' + order_menu[i][0] + ',' + order_menu[i][8] + ' );\'>';
-    outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left titlebox1">';
-    outhtml_str += '<div class="less-title">' + order_menu[i][2] + '<br/>' + order_menu[i][3] + '</div><div class="less-txt">' + order_menu[i][4] + '</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
-		//Modified by Yishou Liao @ Dec 16 2016
-		if (order_menu[i][6]!=""){
-			outhtml_str += (parseFloat(order_menu[i][5],2) + parseFloat(order_menu[i][6],2)) + order_menu[i][7] + '</div></div></li>'
-		}else{
-			outhtml_str += order_menu[i][5] + order_menu[i][6] + order_menu[i][7] + '</div></div></li>'
-		};
-		//End @ Dec 16 2016
-    };
-    outhtml_str += "</ul>";
-    $('#orderitem').html(outhtml_str);
+	    var outhtml_str = "<ul>";
+	    for (var i = 0; i < order_menu.length; i++){
+	    outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( ' + i + ',"' + order_menu[i][1] + '", "' + order_menu[i][2] + '", "' + order_menu[i][3] + '","' + order_menu[i][4] + '","' + order_menu[i][5] + '","' + order_menu[i][6] + '","' + order_menu[i][7] + '",' + order_menu[i][0] + ',' + order_menu[i][8] + ' );\'>';
+	    outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left titlebox1">';
+	    outhtml_str += '<div class="less-title">' + order_menu[i][2] + '<br/>' + order_menu[i][3] + '</div><div class="less-txt">' + order_menu[i][4] + '</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
+			//Modified by Yishou Liao @ Dec 16 2016
+			if (order_menu[i][6]!=""){
+				outhtml_str += (parseFloat(order_menu[i][5],2) + parseFloat(order_menu[i][6],2)) + order_menu[i][7] + '</div></div></li>'
+			}else{
+				outhtml_str += order_menu[i][5] + order_menu[i][6] + order_menu[i][7] + '</div></div></li>'
+			};
+			//End @ Dec 16 2016
+	    };
+	    outhtml_str += "</ul>";
+	    $('#orderitem').html(outhtml_str);
     }
     //End.
 
     $(document).ready(function () {
-    $('#customer-select-alert').hide();
-	
-    //Modified by Yishou Liao @ Oct 21 2016.
-    var addorder_menu = true;
-    if (<?php echo ($split_method == 1)?1:0 ?> && checkCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>)){ //Modified by Yishou liao @ Dec 12 2016 (add <?phpecho ($split_method == 1)?1:0?> &&)
-    var orderarray = getCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>);
-    var personarray = getCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-    $("#persons").val(getCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>));
-    if (orderarray != ""){
-    order_menu = strtoarr(orderarray);
-    };
-    if (personarray != "") {
-    person_menu = strtoarr(personarray);
-    }
+	    $('#customer-select-alert').hide();
+		
+	    //Modified by Yishou Liao @ Oct 21 2016.
+	    var addorder_menu = true;
+	    if ( split_method == 1 ? 1:0 && checkCookie("person_menu_" + <?php echo $Order_detail['Order']['order_no'] ?>)){ //Modified by Yishou liao @ Dec 12 2016 (add <?phpecho ($split_method == 1)?1:0?> &&)
+	    var orderarray = getCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>);
+	    var personarray = getCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+	    $("#persons").val(getCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>));
+	    if (orderarray != ""){
+	    order_menu = strtoarr(orderarray);
+	    };
+	    if (personarray != "") {
+	    person_menu = strtoarr(personarray);
+	    }
 
-    var order_detail_length = <?php echo count($Order_detail['OrderItem']); ?>;
-    if (person_menu.length == order_detail_length){
-    addorder_menu = false;
-    };
-    };
-    //End.
+	    var order_detail_length = <?php echo count($Order_detail['OrderItem']); ?>;
+	    if (person_menu.length == order_detail_length){
+	    addorder_menu = false;
+	    };
+	    };
+	    //End.
 
-	//Modified by Yishou Liao @ Nov 16 2016
-	if (person_menu.length !=0) {
-		person_No = person_menu[person_menu.length-1][0];
-	}else{
-		person_No = 0;
-	};
-	//End
-			
-	if (person_No !=0) {
-		$("#person_details").css("display","block");
-	}
-	//End
+		//Modified by Yishou Liao @ Nov 16 2016
+		if (person_menu.length !=0) {
+			person_No = person_menu[person_menu.length-1][0];
+		}else{
+			person_No = 0;
+		};
+		//End
+				
+		if (person_No !=0) {
+			$("#person_details").css("display","block");
+		}
+		//End
 	
     //Modified by Yishou Liao @ Oct 18 2016.
-<?php
-if (!empty($Order_detail['OrderItem'])) {
-    $i = 0;
-    foreach ($Order_detail['OrderItem'] as $key => $value) {
-        # code...
-        $selected_extras_name = [];
-        if ($value['all_extras']) {
-            $extras = json_decode($value['all_extras'], true);
-            $selected_extras = json_decode($value['selected_extras'], true);
+		<?php
+		if (!empty($Order_detail['OrderItem'])) {
+		    $i = 0;
+		    foreach ($Order_detail['OrderItem'] as $key => $value) {
+		        # code...
+		        $selected_extras_name = [];
+		        if ($value['all_extras']) {
+		            $extras = json_decode($value['all_extras'], true);
+		            $selected_extras = json_decode($value['selected_extras'], true);
 
-            // prepare extras string
-            $selected_extras_id = [];
-            if (!empty($selected_extras)) {
-                foreach ($selected_extras as $k => $v) {
-                    $selected_extras_name[] = $v['name'];
-                    $selected_extras_id[] = $v['id'];
-                }
-            }
-        }
+		            // prepare extras string
+		            $selected_extras_id = [];
+		            if (!empty($selected_extras)) {
+		                foreach ($selected_extras as $k => $v) {
+		                    $selected_extras_name[] = $v['name'];
+		                    $selected_extras_id[] = $v['id'];
+		                }
+		            }
+		        }
         ?>
 
             if (addorder_menu) {//Modified by Yishou Liao @ Oct 21 2016.
-            var order_id = <?php echo $value['id'] ?>;
-            var addmenu = true;
-            for (var j = 0; j < person_menu.length; j++){
-            if (person_menu[j][9] == order_id){ addmenu = false; }
-            };
-            for (var j = 0; j < order_menu.length; j++){
-            if (order_menu[j][8] == order_id){ addmenu = false; }
-            };
-            if (addmenu){
-            order_menu.push(Array(<?php echo $i ?>, '<?php
-        if ($value['image']) {
-            echo $value['image'];
-        } else {
-            echo 'no_image.jpg';
-        };
-        ?>', '<?php echo $value['name_en']; ?>', '<?php echo $value['name_xh']; ?>', '<?php echo implode(",", $selected_extras_name); ?>', '<?php echo $value['price'] ?>', '<?php echo $value['extras_amount'] ?>', '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',<?php echo $value['id'] ?>)); //Modified by Yishou Liao @ Oct 20 2016. Added $value['id']. 
-            };
+	            var order_id = <?php echo $value['id'] ?>;
+	            var addmenu = true;
+	            for (var j = 0; j < person_menu.length; j++) {
+		            if (person_menu[j][9] == order_id){ addmenu = false; }
+	            }
+
+	            for (var j = 0; j < order_menu.length; j++) {
+		            if (order_menu[j][8] == order_id){ addmenu = false; }
+	            }
+	            if (addmenu){
+		            order_menu.push(Array(<?php echo $i ?>, '<?php
+		        if ($value['image']) {
+		            echo $value['image'];
+		        } else {
+		            echo 'no_image.jpg';
+		        };
+		        ?>', '<?php echo $value['name_en']; ?>', '<?php echo $value['name_xh']; ?>', '<?php echo implode(",", $selected_extras_name); ?>', '<?php echo $value['price'] ?>', '<?php echo $value['extras_amount'] ?>', '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',<?php echo $value['id'] ?>)); //Modified by Yishou Liao @ Oct 20 2016. Added $value['id']. 
+	            }
             }; //End.
 
         <?php
@@ -1307,93 +1330,92 @@ var discount=0;
     var tax_amount = ((sub_total-discount) * Tax / 100).toFixed(2);
     var total = (parseFloat(sub_total-discount) + parseFloat(tax_amount)).toFixed(2);
     //Modified by Yishou Liao @ Nov 08 2016.
-    $.ajax({
-    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
-            method:"post",
-            data:{
-            logo_name:"../webroot/img/logo.bmp",
-                    Print_Item:person_menu_print,
-                    subtotal:sub_total,
-					discount:discount,
-					after_discount: (sub_total-discount),
-                    tax:Tax,
-					//Modified by Yishou Liao @ Nov 29 2016
-					tax_Amount: tax_amount,
-					//paid_by: $("#selected_card").val(),
-					paid: $(".received_price").attr("amount"),
-					change: $(".change_price").attr("amount"),
-					//End
-                    total:total,
-                    split_no:radio_click,
-<?php if ($split_method == 0) { ?>
-                memo:$("#aver_total").val(),
-<?php } ?>
-            },
-            success:function(html) {
+	    $.ajax({
+		    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
+	        method:"post",
+	        data:{
+		        logo_name:"../webroot/img/logo.bmp",
+	            Print_Item:person_menu_print,
+	            subtotal:sub_total,
+				discount:discount,
+				after_discount: (sub_total-discount),
+	            tax:Tax,
+				//Modified by Yishou Liao @ Nov 29 2016
+				tax_Amount: tax_amount,
+				//paid_by: $("#selected_card").val(),
+				paid: $(".received_price").attr("amount"),
+				change: $(".change_price").attr("amount"),
+				//End
+	            total:total,
+	            split_no:radio_click,
 
-            }
-    })
+
+				<?php if ($split_method == 0) { ?>
+	                memo:$("#aver_total").val(),
+				<?php } ?>
+	        },
+	        success:function(html) {
+
+	        }
+	    });
             //End.
 
     }
     //End.
 
     //Modified by Yishou Liao @ Oct 21 2016.
-    function setCookie(c_name, value, expiredays)
-    {
-    var exdate = new Date()
-            exdate.setDate(exdate.getDate() + expiredays)
-            document.cookie = c_name + "=" + escape(value) +
-            ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+    function setCookie(c_name, value, expiredays) {
+	    var exdate = new Date()
+        exdate.setDate(exdate.getDate() + expiredays)
+        document.cookie = c_name + "=" + escape(value) +
+        ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
     }
 
-    function getCookie(c_name)
-    {
-    if (document.cookie.length > 0)
-    {
-    c_start = document.cookie.indexOf(c_name + "=")
-            if (c_start != - 1)
-    {
-    c_start = c_start + c_name.length + 1
-            c_end = document.cookie.indexOf(";", c_start)
-            if (c_end == - 1) c_end = document.cookie.length
-            return unescape(document.cookie.substring(c_start, c_end))
-    }
-    }
-    return ""
+    function getCookie(c_name) {
+	    if (document.cookie.length > 0) {
+		    c_start = document.cookie.indexOf(c_name + "=")
+            if (c_start != - 1) {
+			    c_start = c_start + c_name.length + 1
+	            c_end = document.cookie.indexOf(";", c_start)
+	            if (c_end == - 1) c_end = document.cookie.length
+	            
+	            return unescape(document.cookie.substring(c_start, c_end))
+		    }
+	    }
+	    return ""
     }
 
-    function checkCookie(c_name)
-    {
-    if (getCookie(c_name) != null && getCookie(c_name) != "")
-    {return true; }
-    else
-    {return false; }
+    function checkCookie(c_name) {
+	    if (getCookie(c_name) != null && getCookie(c_name) != ""){
+	    	return true; 
+	    }
+	    else {
+	    	return false; 
+	    }
     }
 
-    function deleteCookie(c_name)
-    {
-    setCookie(c_name, "", - 1);
+    function deleteCookie(c_name) {
+    	setCookie(c_name, "", - 1);
     }
 
     function arrtostr(c_array){//将二维数组转换为字符串。
-    var strarray = Array();
-    var restr = "";
-    for (var i = 0; i < c_array.length; i++){
-    strarray.push(c_array[i].join("~"));
-    };
-    restr = strarray.join("^");
-    return restr;
+	    var strarray = Array();
+	    var restr = "";
+	    for (var i = 0; i < c_array.length; i++){
+		    strarray.push(c_array[i].join("~"));
+	    };
+	    restr = strarray.join("^");
+	    return restr;
     }
 
     function strtoarr(c_string){//将字符串转换为二维数组。
-    var strarray;
-    var rearr = Array();
-    strarray = c_string.split("^");
-    for (var i = 0; i < strarray.length; i++){
-    rearr.push(strarray[i].split("~"));
-    };
-    return rearr;
+	    var strarray;
+	    var rearr = Array();
+	    strarray = c_string.split("^");
+	    for (var i = 0; i < strarray.length; i++){
+		    rearr.push(strarray[i].split("~"));
+	    };
+	    return rearr;
     }
     //End.
 </script>
