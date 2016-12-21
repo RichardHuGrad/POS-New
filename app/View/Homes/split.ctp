@@ -166,9 +166,13 @@ echo $this->fetch('script');
 	var split_method = parseInt(<?php echo $split_method ?>);
 	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
 
+	console.log("order_no");
+	console.log(order_no);
 	// load data from cookie
-	if (checkCookie("persons_" + order_no)) {
+	if (checkCookie("persons_" + order_no) && getCookie("persons_" + order_no) != "undefined") {
+		console.log("line 171");
 		person_No = getCookie("persons_" + order_no);
+		console.log(person_No);
 	}
 
 	if (checkCookie("order_menu" + order_no)) {
@@ -232,7 +236,109 @@ echo $this->fetch('script');
 		}
 	}
 
-	
+	// judge whether orer is paid by person_sele_ cookie
+	// TODO
+	function isOrderPaid () {
+		var selepersonstr = "";
+		if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+			selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+		};
+
+		if (selepersonstr != "" && selepersonstr != "undefined") {
+			return true
+		}
+		else {
+			return false;
+		}
+		/*if (selepersonstr.indexOf(currentPerson) != - 1){
+			return;
+		};*/
+	}
+
+	// build order summary by order_menu
+	function buildOrderSummary () {
+	    var outhtml_str = "<ul>";
+	    for (var i = 0; i < order_menu.length; i++) {
+		    outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( ' + i + ',"' + order_menu[i][1] + '", "' + order_menu[i][2] + '", "' + order_menu[i][3] + '","' + order_menu[i][4] + '","' + order_menu[i][5] + '","' + order_menu[i][6] + '","' + order_menu[i][7] + '",' + order_menu[i][0] + ',' + order_menu[i][8] + ' );\'>';
+		    outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left titlebox1">';
+		    outhtml_str += '<div class="less-title">' + order_menu[i][2] + '<br/>' + order_menu[i][3] + '</div><div class="less-txt">' + order_menu[i][4] + '</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
+			//Modified by Yishou Liao @ Dec 16 2016
+			if (order_menu[i][6]!=""){
+				outhtml_str += (parseFloat(order_menu[i][5],2) + parseFloat(order_menu[i][6],2)) + order_menu[i][7] + '</div></div></li>'
+			}else{
+				outhtml_str += order_menu[i][5] + order_menu[i][6] + order_menu[i][7] + '</div></div></li>'
+			}
+			//End @ Dec 16 2016
+	    }
+	    outhtml_str += "</ul>";
+	    $('#orderitem').html(outhtml_str);
+	} 
+
+	// build person no. list by person_No
+	function buildPersonNoList () {
+		for (var i = 1; i <= person_No; ++i) {
+		    $('#splitmenu').append("<br /><label class='person-label' id='person-label" + i + "'" + " onclick='javascript:setCurrentPerson(" + i + ");'>Customer # " + i + "</label><ul>"); // TODO
+	    }
+	}
+
+	// build person no. tab by person_No and acountingDetail
+	function buildPersonOrderDetail() {
+
+	}
+
+	// build person summary by person_menu
+	function buildPersonSummary () {
+	    for (var i = 0; i < person_menu.length; i++) {
+
+	    	var personId = person_menu[i][0];
+	    	console.log(personId);
+
+	    	addpersonStr = "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
+	    	
+	    	if (person_menu[i][6]!="") {
+	    		addpersonStr += parseFloat(person_menu[i][5],2) + parseFloat(person_menu[i][6],2) + person_menu[i][7] + "</div></div></li>";
+    		}else{
+				addpersonStr += person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
+			}
+
+			// console.log(addpersonStr);
+
+			$('#person-label' + personId).next('ul').append(addpersonStr);
+		}
+	}
+	// addPerson: ++person_No, rebuild person no. list add all person_menu items
+
+	// deletePerson: --person_No, rebuild person no. list, remove items in person_menu equals to last person id
+
+	// addMenuItem: push array of item to person_menu with current_person id, remove item from order_menu
+	// rebuild all
+
+	// deleteMenuItem: remove item from person_menu and add item to order_menu
+	// rebuild all
+
+	// addAvgMenuItem: push array of item to person_menu of all person_id, remove item from order_menu
+	// use flag to tag whether item is shared
+	// rebuild all
+
+	// deleteMenuItem: remove all shared item from person_menu by flag, add item to order_menu
+	// rebuild all
+
+
+	// delete item from order_menu
+	// todo
+	function deleteItemFromOrderMenu (item_no){
+		// delete item by item_no in order_menu
+		order_menu.splice(item_no, 1);
+
+	}
+	// important
+	// when doing add delete operation, should reset cookie
+
+
+
+
+
+
 	console.log("initailize person_No");
 	console.log(person_No);
 
@@ -382,6 +488,8 @@ echo $this->fetch('script');
 		$('#customer-select-alert').fadeTo(500, 500).fadeOut(500, function() {});
     }
 
+
+    // add item to current person id
     function addMenuItem(item_no, image, name_en, name_xh, selected_extras_name, price, extras_amount, qty, item_id, order_item_id){
 		//Modified by Yishou Liao @ Oct 21 2016..
 		var selepersonstr = "";
@@ -409,6 +517,7 @@ echo $this->fetch('script');
 					}//End.
 					curtmp = parseInt(person_menu[i][0]);
 				};
+
 				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
 				//MOdified by Yishou Liao @ Dec 16 2016
 				if (person_menu[i][6]!="") {
@@ -419,7 +528,10 @@ echo $this->fetch('script');
 				//End @ Dec 16 2016
 			};
 			$('#splitmenu').html(addpersonStr);
+
+			// delete item by item_no in order_menu
 			order_menu.splice(item_no, 1);
+
 			addOrderItem();
 		
 			//Modified by Yishou Liao @ Nov 14 2016
@@ -429,11 +541,11 @@ echo $this->fetch('script');
 			};
 			
 			//Modified by Yishou Liao @ Nov 16 2016
-			if (person_menu.length !=0) {
+			/*if (person_menu.length !=0) {
 				person_No = person_menu[person_menu.length-1][0];
 			}else{
 				person_No = 0;
-			};
+			};*/
 			//End
 			var cur_per;//Modified by Yishou Liao @ Nov 16 2016
 			var person_tab_Str = "";
