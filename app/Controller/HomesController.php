@@ -953,20 +953,20 @@ class HomesController extends AppController {
             // }
         }
         $this->OrderItem->save($insert_data, false);
-
+        
         // update order amount        
         $data = array();
         $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + $item_detail['Cousine']['price'];
+        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + @$Order_detail['Order']['discount_value'] + $item_detail['Cousine']['price']; //Modified by Yishou Liao @ Dec 21 2016
         $data['Order']['tax'] = $tax_detail['Admin']['tax'];
-        $data['Order']['tax_amount'] = (@$Order_detail['Order']['tax_amount'] + $insert_data['tax_amount']);
+        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); //Modified by Yishou Liao @ Dec 21 2016
         $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
 
         // calculate discount if exists
         if (!empty($Order_detail)) {
             $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
             if ($Order_detail['Order']['percent_discount']) {
-                $data['Order']['discount_value'] = $data['Order']['total'] * $Order_detail['Order']['percent_discount'] / 100;
+                $data['Order']['discount_value'] = $data['Order']['subtotal'] * $Order_detail['Order']['percent_discount'] / 100;//Modified by Yishou Liao @ Dec 21 2016
             } else if ($Order_detail['Order']['fix_discount']) {
                 if ($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
                     $data['Order']['discount_value'] = $data['Order']['total'];
@@ -975,7 +975,11 @@ class HomesController extends AppController {
                 }
             }
             //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-            $data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
+            //Modified by Yishou Liao @ Dec 21 2016
+            $data['Order']['subtotal'] = $data['Order']['subtotal'] - $data['Order']['discount_value']; 
+            $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); 
+            $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+            //End @ Dec 21 2016
         } else {
             //$data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']); // Modified by Yishou Liao @ Nov 15 2016
             $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
@@ -1123,7 +1127,7 @@ class HomesController extends AppController {
         // check the item already exists or not
         $this->loadModel('Order');
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount','discount_value'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
                 'Order.table_no' => $table,
                 'Order.is_completed' => 'N',
@@ -1131,17 +1135,18 @@ class HomesController extends AppController {
             )
                 )
         );
-        // update order amount        
+        // update order amount
         $data = array();
         $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail[0]['order_items']['price'] - $item_detail[0]['order_items']['extras_amount'];
-        $data['Order']['tax_amount'] = ($Order_detail['Order']['tax_amount'] - $item_detail[0]['order_items']['tax_amount'] - ($item_detail[0]['order_items']['extras_amount'] * $Order_detail['Order']['tax'] / 100)); //Modified by Yishou Liao @ Nov 17 2016
+        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + @$Order_detail['Order']['discount_value'] - $item_detail[0]['order_items']['price']; //Modified by Yishou Liao @ Dec 21 2016
+        $data['Order']['tax'] = $Order_detail['Order']['tax'];
+        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); //Modified by Yishou Liao @ Dec 21 2016
         $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
-
+        
         // calculate discount if exists
         $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
         if ($Order_detail['Order']['percent_discount']) {
-            $data['Order']['discount_value'] = $data['Order']['total'] * $Order_detail['Order']['percent_discount'] / 100;
+            $data['Order']['discount_value'] = $data['Order']['subtotal'] * $Order_detail['Order']['percent_discount'] / 100;//Modified by Yishou Liao @ Dec 21 2016
         } else if ($Order_detail['Order']['fix_discount']) {
             if ($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
                 $data['Order']['discount_value'] = $data['Order']['total'];
@@ -1150,7 +1155,12 @@ class HomesController extends AppController {
             }
         }
         //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-        $data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
+        //$data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
+        //Modified by Yishou Liao @ Dec 21 2016
+        $data['Order']['subtotal'] = $data['Order']['subtotal'] - $data['Order']['discount_value']; 
+        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); 
+        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+        //End @ Dec 21 2016
 
 
         $this->Order->save($data, false);
@@ -1653,7 +1663,7 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-
+        
         $order_no = @$this->params['url']['order_no'];
 
         // get all params
@@ -1699,7 +1709,6 @@ class HomesController extends AppController {
             'recursive' => false
                 )
         );
-
 
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'tablemerge', 'orders_no'));
     }
