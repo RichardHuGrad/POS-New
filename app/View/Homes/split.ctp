@@ -70,21 +70,23 @@
                     <!-- Modified by Yishou Liao @ Oct 18 2016. -->
                 </div>
 				<button class="btn btn-lg btn-primary avoid-this" id="avgSplit">Avg. Split</button>
-				<button class="btn btn-lg btn-danger avoid-this" id="revokeAvgSplit">Revoke Avg. Split</button>
             </div>
 
             <!-- Modified by Yishou Liao @ Oct 18 2016. -->
-            <?php if ($split_method == 1) { ?>
-                <div id="addperson" class="avoid-this text-center addperson"><button type="button" class="submitbtn">Add Person 增加人</button></div>
-                <div id="deleteperson" class="avoid-this text-center addperson">
-                	<button class="btn btn-primary btn-lg" onclick="deletePerson()">Delete Person 删除人</button>
-                </div>
+				<div>
+					<div id="addperson" class="avoid-this text-center addperson ">
+	                	<button type="button" class="btn btn-primary btn-lg">Add Person 增加人</button>
+	                </div>
+	                <div id="deleteperson" class="avoid-this text-center deleteperson">
+	                	<button class="btn btn-danger btn-lg" onclick="deletePerson()">Delete Person 删除人</button>
+	                </div>
+				</div>
+               
                 <div id="person_details" class="order-summary addperson" style="display:none"> <!-- Modified by Yishou Liao @ Nov 10 2016 -->
                     <h3>Split Details 分单明细</h3>
                     <div class="order-summary-indent addperson clearfix" name="splitmenu" id="splitmenu"></div>
                 </div>
             </div>
-        <?php } ?>
         <!-- End. -->
     </div>
 
@@ -159,6 +161,7 @@ echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCus
 echo $this->fetch('script');
 ?>
 <script>
+	$('#customer-select-alert').hide();
     //Modified by Yishou Liao @ Oct 18 2016.
     var person_No = 0; // only addPerson and deletePerson can modify this variable
     //  initialize
@@ -174,6 +177,9 @@ echo $this->fetch('script');
 	console.log("order_no");
 	console.log(order_no);
 	// load data from cookie
+
+
+
 	if (checkCookie("persons_" + order_no) && getCookie("persons_" + order_no) != "undefined") {
 		console.log("line 171");
 		person_No = getCookie("persons_" + order_no);
@@ -191,6 +197,7 @@ echo $this->fetch('script');
 
 
 	// load order_menu
+	// if order changed, all other cookie record will be deleted
 	if (checkCookie("order_menu" + order_no)) {
 		var orderarray = getCookie("order_menu" + order_no);
 		if (orderarray != ""){
@@ -214,17 +221,23 @@ echo $this->fetch('script');
 		setCookie("order_menu" + order_no, arrtostr(order_menu), 1);
 	}
 
+
+	
+	drawAllPage();
 	
 
 	if (checkCookie("persons_sele_" + order_no) && getCookie("persons_sele_" + order_no) != "undefined") {
-		var temp = getCookie("persons_sele_" + order_no);
-		person_paid = temp.split(",")
+		person_paid = getPaidPerson();
+		if (person_paid.length > 0) {
+			disableSubOrderModify();
+		}
 	}
+
 	console.log("person paid");
 	console.log(person_paid);
 
 
-	drawAllPage();
+
 
 
 	function drawAllPage() {
@@ -245,21 +258,19 @@ echo $this->fetch('script');
 	// judge whether orer is paid by person_sele_ cookie
 	// TODO
 	// if part of order is paid disable all other buttons
-	function isOrderPaid () {
-		var selepersonstr = "";
-		if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-			selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
+	function getPaidPerson () {
+		var paidPerson = new Array();
+
+		var paidPersonStr = "";
+		if (checkCookie("persons_sele_" + order_no)){
+			paidPersonStr = getCookie("persons_sele_" + order_no);
 		};
 
-		if (selepersonstr != "" && selepersonstr != "undefined") {
-			return true
+		if (paidPersonStr != "" && paidPersonStr != "undefined") {
+			paidPerson = paidPersonStr.split(',')
 		}
-		else {
-			return false;
-		}
-		/*if (selepersonstr.indexOf(currentPerson) != - 1){
-			return;
-		};*/
+		
+		return paidPerson; // ['1', '2', '3']
 	}
 
 	// build order summary by order_menu
@@ -349,7 +360,7 @@ echo $this->fetch('script');
 
 	    	var personId = person_menu[i][10];
 	    	var itemId = person_menu[i][0];
-	    	console.log(personId);
+	    	// console.log(personId);
 
 	    	addpersonStr = "<li class='clearfix' onclick='javascript:delMenuItem(" + itemId + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
 	    	
@@ -364,18 +375,38 @@ echo $this->fetch('script');
 			$('#person-label' + personId).next('ul').append(addpersonStr);
 		}
 	}
+
+	function countAvailableOrderMenu () {
+		var cnt = 0;
+		for (var i = 0; i < order_menu.length; ++i) {
+			if (order_menu[i][9] == "keep") {
+				++cnt;
+			}
+		}
+		console.log(cnt);
+		return cnt;
+	}
+
 	// addPerson: ++person_No, rebuild person no. list add all person_menu items
 	function addPerson () {
+
 		$("#person_details").css("display", "block");
 		console.log("line 365");
 
-		++person_No;
 
-		setCurrentPerson(String(person_No));
+		if (countAvailableOrderMenu() > 0) {
+			++person_No;
 
-		drawAllPage();
+			setCurrentPerson(String(person_No));
 
-		setCookie("persons_" + order_no, person_No, 1);
+			drawAllPage();
+
+			setCookie("persons_" + order_no, person_No, 1);
+		} else {
+			alert("There is no avaliable item in order summary.")
+		}
+
+		
 	}
 
 	// deletePerson: --person_No, rebuild person no. list, remove items in person_menu equals to last person id
@@ -616,6 +647,15 @@ echo $this->fetch('script');
 	}
 
 
+	function disableSubOrderModify() {
+		$('#avgSplit').prop('disabled', true);
+		$('#addperson').prop('disabled', true);
+		$('#deleteperson').prop('disabled', true);
+		$('.person-label').removeAttr('onclick');
+		$('.person-label + ul li').removeAttr('onclick');
+	}
+
+
 	console.log("initailize person_No");
 	console.log(person_No);
 
@@ -642,30 +682,34 @@ echo $this->fetch('script');
 		//  order_menu
 		//  person_No
 		// person_No = $('#splitmenu .person-label').length;
+		if (person_No > 1 && countAvailableOrderMenu() > 0) {
+			for (var i = 0; i < order_menu.length; ++i) {
+				var current_menu = order_menu[i]
+
+				var item_id = current_menu[0];
+				setOrderMenuState(item_id, 'share');
+				
+				
+				for (var j = 1; j <= person_No; ++j) {
+					current_person = String(j);
+					var avg_price = (current_menu[5] / person_No).toFixed(2);
+					var avg_name_en = current_menu[2] + ' /' + person_No;
+					var avg_name_zh = current_menu[3] + ' /' + person_No;
+
+					console.log(avg_price);
+					console.log(avg_name_en);
+					console.log(avg_name_zh);
 
 
-		for (var i = 0; i < order_menu.length; ++i) {
-			var current_menu = order_menu[i]
-
-			var item_id = current_menu[0];
-			setOrderMenuState(item_id, 'share');
-			
-			
-			for (var j = 1; j <= person_No; ++j) {
-				current_person = String(j);
-				var avg_price = (current_menu[5] / person_No).toFixed(2);
-				var avg_name_en = current_menu[2] + ' /' + person_No;
-				var avg_name_zh = current_menu[3] + ' /' + person_No;
-
-				console.log(avg_price);
-				console.log(avg_name_en);
-				console.log(avg_name_zh);
-
-
-				addMenuItem(item_id, current_menu[1], avg_name_en, avg_name_zh, current_menu[4], avg_price ,current_menu[6], current_menu[7], current_menu[8], 'share', current_person);
+					addMenuItem(item_id, current_menu[1], avg_name_en, avg_name_zh, current_menu[4], avg_price ,current_menu[6], current_menu[7], current_menu[8], 'share', current_person);
+				}
+				
 			}
-			
+		} else {
+			alert("Please make sure you have more than two people to share, or more than one item to be shared.");
 		}
+
+		
 	});
 
 
@@ -678,83 +722,6 @@ echo $this->fetch('script');
 	$('#addperson').on('click', function () {
 		addPerson();
 	});
-    /*$('#addperson').on('click', function () {
-		//Modifed by Yishou Liao @ Nov 10 2016
-		//if (person_No < $('#persons').val()){
-		$("#person_details").css("display", "block");
-		//End
-
-		//Modified by Yishou Liao @ Nov 11 2016
-		// if (person_menu.length == 0 && person_No == 0) {
-		// 	person_No++;
-		// } else {
-		// 	person_menu.sort(function(x, y){return x[0] - y[0]}); //二维数组排序
-		// 	person_No = parseInt(person_menu[person_menu.length-1][0])+1;
-		// };
-		person_No++;
-		//End
-
-		updatePersonNumList();
-
-		
-		var addpersonStr = $('#splitmenu').html();
-		// var totalPersonArray = $('#splitmenu .person-label');
-		console.log("line 187");
-		console.log(addpersonStr);
-		
-		//Modified by Yishou Liao @ Nov 14 2016
-		var selepersonstr = "";
-		if (checkCookie("persons_sele_" + order_no)){
-			selepersonstr = getCookie("persons_sele_" + order_no);
-		};
-
-		console.log("line 194");
-		console.log(selepersonstr);
-
-	
-		var person_tab_Str = "";
-		for (var i = 0; i < person_No; i++) {
-			if (i == 0) {
-				if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
-
-				}else{
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');" class="active"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
-				};
-			} else{
-				if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
-				}else{
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
-				};
-			};
-		};
-		
-		$('#person-tab').html(person_tab_Str);
-
-		if (addpersonStr.indexOf("Customer # " + person_No) == -1) {
-			addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson(" + person_No + ");'>Customer # " + person_No + "</label>";
-		}
-		//End
-				
-		$('#splitmenu').html(addpersonStr);
-		current_person = person_No;
-
-		//  To be deleted
-		// meaningless code
-		var sele_person = "account_no_" + (current_person - 1);
-		document.getElementById(sele_person).checked = true;
-
-
-		// important 
-		// trigger the calculation of order details
-		showAcountingDetails();
-		setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, person_No, 1);
-		
-		//Modified by Yishou Liao @ Nov 10 2016
-		//};
-		//End
-    }); */
 
 	function setCurrentPerson (currentPerson) {
 		current_person = currentPerson;
@@ -789,123 +756,6 @@ echo $this->fetch('script');
 		$('#customer-select-alert').fadeTo(500, 500).fadeOut(500, function() {});
     }
 
-    // add item to current person id
-    function addMenuItem2(item_id, image, name_en, name_xh, selected_extras_name, price, extras_amount, qty, order_item_id, state) {
-
-    	if (current_person != 0) {
-    		person_menu.push(Array(item_id, image, name_en, name_xh, selected_extras_name, price, extras_amount, qty, order_item_id, state, current_person));
-    		person_menu.sort(function(x, y){return x[10] - y[10]}); //二维数组排序
-    	}
-
-    	setOrderMenuState(item_id, "assigned");
-
-    	drawAllPage();
-
-    	deleteCookie("order_menu" + order_no);
-		deleteCookie("person_menu_" + order_no);
-		setCookie("order_menu" + order_no, arrtostr(order_menu), 1);
-		setCookie("person_menu_" + order_no, arrtostr(person_menu), 1);
-		setCookie("persons_" + order_no, person_No, 1);
-    }
-
-
-    // add item to current person id
-    function addMenuItem1(item_no, image, name_en, name_xh, selected_extras_name, price, extras_amount, qty, item_id, order_item_id){
-		//Modified by Yishou Liao @ Oct 21 2016..
-		var selepersonstr = "";
-		if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-			selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-		};
-		if (selepersonstr.indexOf(current_person) != - 1){
-			return;
-		};
-		//End.
-	
-		if (current_person != 0){
-			person_menu.push(Array(current_person, image, name_en, name_xh, selected_extras_name, price, extras_amount, qty, item_id, order_item_id));
-			person_menu.sort(function(x, y){return x[0] - y[0]}); //二维数组排序
-	
-			var addpersonStr = "";
-			var curtmp = 0;
-			for (var i = 0; i < person_menu.length; i++){
-				if (curtmp != parseInt(person_menu[i][0])){
-					if (curtmp != 0){addpersonStr += "</ul>"; };
-					//Modified by Yishou Liao @ 19 2016l
-					for (curtmp; curtmp < person_menu[i][0]; curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
-						tmpNo = curtmp + 1;
-						addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson(" + tmpNo + ");'>Customer # " + tmpNo + "</label><ul>";
-					}//End.
-					curtmp = parseInt(person_menu[i][0]);
-				};
-
-				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
-				//MOdified by Yishou Liao @ Dec 16 2016
-				if (person_menu[i][6]!="") {
-				 	addpersonStr += parseFloat(person_menu[i][5],2) + parseFloat(person_menu[i][6],2) + person_menu[i][7] + "</div></div></li>";
-				}else{
-					addpersonStr += person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
-				};
-				//End @ Dec 16 2016
-			};
-			$('#splitmenu').html(addpersonStr);
-
-			// delete item by item_no in order_menu
-			order_menu.splice(item_no, 1);
-
-			addOrderItem();
-		
-			//Modified by Yishou Liao @ Nov 14 2016
-			var selepersonstr = "";
-			if (checkCookie("persons_sele_" + order_no)){
-				selepersonstr = getCookie("persons_sele_" + order_no);
-			};
-			
-			//Modified by Yishou Liao @ Nov 16 2016
-			/*if (person_menu.length !=0) {
-				person_No = person_menu[person_menu.length-1][0];
-			}else{
-				person_No = 0;
-			};*/
-			//End
-			var cur_per;//Modified by Yishou Liao @ Nov 16 2016
-			var person_tab_Str = "";
-			for (var i = 0; i < person_menu.length; i++){
-				if (cur_per != person_menu[i][0]) {//Modified by Yishou Liao @ Nov 16 2016
-					cur_per=person_menu[i][0];//Modified by Yishou Liao @ Nov 16 2016
-					if (i == 0) {
-						if (selepersonstr.indexOf(i + 1) != - 1){
-							person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
-						}else{
-							person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="active"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
-						}
-					} else{
-						if (selepersonstr.indexOf(i + 1) != - 1){
-							person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
-						}else{
-							person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
-						};
-					};
-				};//Modified by Yishou Liao @ Nov 16 2016
-			};
-		
-			$('#person-tab').html(person_tab_Str);
-			//End
-		
-			//Modified by Yishou Liao @ Oct 19 2016.
-			showAcountingDetails();
-			//End.
-		
-			//Modified by Yishou Liao @ Oct 21 2016.
-			deleteCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>);
-			deleteCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-			setCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(order_menu), 1);
-			setCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(person_menu), 1);
-			// setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, $("#persons").val(), 1);
-			setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, person_No, 1);
-			//End.
-		};
-    }
-
     function delMenuItem(item_id, order_item_id) {
     	$('#confirm #dish-to-be-deleted').html(person_menu[item_id][2]);
     	$('#confirm').modal('show').one('click', '#delete', function() {
@@ -918,114 +768,6 @@ echo $this->fetch('script');
 
     }
 
-    function delMenuItem1(item_no, orderitem_no){
-		//Modified by Yishou Liao @ Oct 21 2016.
-		var selepersonstr = "";
-		if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-			selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-		};
-		if (selepersonstr.indexOf(person_menu[item_no][0]) != - 1){
-			return;
-		};
-		//End.
-	
-		$('#confirm #dish-to-be-deleted').html(person_menu[item_no][2]);
-		$('#confirm').modal('show').one('click', '#delete', function() {
-			person_menu[item_no].splice(8, 1);
-			order_menu.push(person_menu[item_no]);
-			order_menu[order_menu.length - 1][0] = orderitem_no;
-			order_menu.sort(function(x, y){return x[0] - y[0]}); //二维数组排序
-			addOrderItem(orderitem_no);
-			person_menu.splice(item_no, 1);
-			person_menu.sort(function(x, y){return x[0] - y[0]}); //二维数组排序
-		
-			//Modified by Yisho Liao @ Oct 22 2016.
-			if (person_menu.length == 0) { person_No = 0; };
-			//End.
-		
-			var addpersonStr = "";
-			var curtmp = 0;
-			for (var i = 0; i < person_menu.length; i++){
-				if (curtmp != parseInt(person_menu[i][0])){
-					if (curtmp != 0){addpersonStr += "</ul>"; };
-					for (curtmp; curtmp < person_menu[i][0]; curtmp++){//Modified by Yishou Liao @ Oct 21 2016.
-						tmpNo = curtmp + 1;
-						addpersonStr += "<br /><label class='person-label' onclick='javascript:setCurrentPerson(" + tmpNo + ");'>Customer # " + tmpNo + "</label><ul>";
-					};
-					curtmp = parseInt(person_menu[i][0]);
-				};
-				addpersonStr += "<li class='clearfix' onclick='javascript:delMenuItem(" + i + "," + person_menu[i][8] + ");'><div class='row'><div class='col-md-9 col-sm-8 col-xs-8'><div class='pull-left titlebox1'><div class='less-title'>" + person_menu[i][2] + "<br />" + person_menu[i][3] + "</div><div class='less-txt'> </div></div></div><div class='col-md-3 col-sm-4 col-xs-4 text-right price-txt'>$";
-				//MOdified by Yishou Liao @ Dec 16 2016
-				if (person_menu[i][6]!="") {
-				 	addpersonStr += parseFloat(person_menu[i][5],2) + parseFloat(person_menu[i][6],2) + person_menu[i][7] + "</div></div></li>";
-				}else{
-					addpersonStr += person_menu[i][5] + person_menu[i][6] + person_menu[i][7] + "</div></div></li>";
-				};
-				//End @ Dec 16 2016
-			};
-			$('#splitmenu').html(addpersonStr);
-			
-			//Modified by Yishou Liao @ Nov 14 2016
-			var selepersonstr = "";
-			if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-				selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-			};
-			
-			//Modified by Yishou Liao @ Nov 16 2016
-			if (person_menu.length !=0) {
-				person_No = person_menu[person_menu.length-1][0];
-			}else{
-				person_No = 0;
-			};
-			//End
-			var cur_per;//Modified by Yishou Liao @ Nov 16 2016
-			var person_tab_Str = "";
-			for (var i = 0; i < person_menu.length; i++){
-				if (cur_per != person_menu[i][0]) {//Modified by Yishou Liao @ Nov 16 2016
-					cur_per=person_menu[i][0];//Modified by Yishou Liao @ Nov 16 2016
-					if (i == 0) {
-						if (selepersonstr.indexOf(i + 1) != - 1){
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
-						}else{
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');" class="active"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
-						};
-					} else{
-						if (selepersonstr.indexOf(i + 1) != - 1){
-							person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + person_menu[i][0] + '</a></li>';
-						}else{
-							person_tab_Str += '<li name="account_no[]" data-tabIdx="' + person_menu[i][0] + '" id="account_no_' + i + '" onclick="tabSelected(' + person_menu[i][0] + ');"><a data-toggle="tab"># ' + person_menu[i][0] + '</a></li>';
-						};
-					};
-				};//Modified by Yishou Liao @ Nov 16 2016
-			};
-			
-			$('#person-tab').html(person_tab_Str);
-			//End
-			
-			showAcountingDetails(); //Modified by Yishou Liao @ Oct 19 2016.
-		
-			//Modified by Yishou Liao @ Nov 10 2016
-			if (person_menu.length == 0) {
-				person_No = person_menu.length;
-				$("#person_details").css("display","none");
-				current_person = 0;
-				
-				var person_tab_Str = "";
-				for (var i = 0; i < person_No; i++){
-					if (i == 0) {
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');" class="active"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
-					} else{
-						person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
-					};
-				};
-				$('#person-tab').html(person_tab_Str);
-			};
-			//End
-		
-			updateAllCookies();
-		})
-	};
-	//End.
 
     $(document).on('click', '.reprint', function () {
     	print_receipt(); //Modified by Yishou @ Nov 08 2016.
@@ -1049,31 +791,12 @@ echo $this->fetch('script');
             // append : "<br/>Buh Bye!"
     });
     });
-    //Modified by Yishou Liao @ Oct 18 2016.
-    function addOrderItem(orderitem_no = null){
-	    var outhtml_str = "<ul>";
-	    for (var i = 0; i < order_menu.length; i++) {
-		    outhtml_str += '<li class="clearfix" onclick=\'javascript:addMenuItem( ' + i + ',"' + order_menu[i][1] + '", "' + order_menu[i][2] + '", "' + order_menu[i][3] + '","' + order_menu[i][4] + '","' + order_menu[i][5] + '","' + order_menu[i][6] + '","' + order_menu[i][7] + '",' + order_menu[i][0] + ',' + order_menu[i][8] + ' );\'>';
-		    outhtml_str += '<div class="row"><div class="col-md-9 col-sm-8 col-xs-8"><div class="pull-left titlebox1">';
-		    outhtml_str += '<div class="less-title">' + order_menu[i][2] + '<br/>' + order_menu[i][3] + '</div><div class="less-txt">' + order_menu[i][4] + '</div></div></div><div class="col-md-3 col-sm-4 col-xs-4 text-right price-txt">$';
-			//Modified by Yishou Liao @ Dec 16 2016
-			if (order_menu[i][6]!=""){
-				outhtml_str += (parseFloat(order_menu[i][5],2) + parseFloat(order_menu[i][6],2)) + order_menu[i][7] + '</div></div></li>'
-			}else{
-				outhtml_str += order_menu[i][5] + order_menu[i][6] + order_menu[i][7] + '</div></div></li>'
-			}
-			//End @ Dec 16 2016
-	    }
-	    outhtml_str += "</ul>";
-	    $('#orderitem').html(outhtml_str);
-    }
-    //End.
 
     $(document).ready(function () {
     	
     	// var order_item = <?php echo json_encode($Order_detail['OrderItem']); ?>;
 
-	    $('#customer-select-alert').hide();
+	    /*$('#customer-select-alert').hide();
 		
 	    //Modified by Yishou Liao @ Oct 21 2016.
 	    var addorder_menu = true;
@@ -1095,7 +818,7 @@ echo $this->fetch('script');
 		    if (person_menu.length == order_detail_length){
 			    addorder_menu = false;
 		    };
-	    };
+	    };*/
 	    //End.
 
 		//Modified by Yishou Liao @ Nov 16 2016
@@ -1107,9 +830,9 @@ echo $this->fetch('script');
 		//End
 
 				
-		if (person_No !=0) {
+		/*if (person_No !=0) {
 			$("#person_details").css("display","block");
-		}
+		}*/
 		//End
 	
     //Modified by Yishou Liao @ Oct 18 2016.
@@ -1172,10 +895,10 @@ echo $this->fetch('script');
     //Modified by Yishou Liao @ Oct 21 2016.
 
     //  add tab
-    var selepersonstr = "";
+    /*var selepersonstr = "";
     if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
 	    selepersonstr = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-    };
+    };*/
 
 /*
     var person_tab_Str = "";
@@ -1275,46 +998,47 @@ echo $this->fetch('script');
 
 
     $("#submit").click(function () {
-    //Modified by Yishou Liao @ Nov 10 2016
-	<?php if ($split_method != 0) { ?>
-	        if (order_menu.length > 0) {
-	        	$.notify("请将所有订单分单完毕以后再付账。", {
-	                        position: "top center", 
-	                        className:"warn"
-	                    });
-	        // alert("请将所有订单分单完毕以后再付账。");
-	        return false;
-	        };
-	<?php } ?>
-    //End
+    	
+
+
+	    //Modified by Yishou Liao @ Nov 10 2016
+		<?php if ($split_method != 0) { ?>
+		    if (countAvailableOrderMenu() > 0) {
+	    		$.notify("请将所有订单分单完毕以后再付账。", {
+		                        position: "top center", 
+		                        className:"warn"
+		                    });
+	    		return false;
+	    	}
+		<?php } ?>
+	    //End
 
     if ($("#selected_card").val()) {
     if (parseFloat($(".change_price").attr("amount")) >= 0) {
 
-    // check tip type(card/cash) if exists
-    if (parseFloat($("#tip_val").val())) {
-    if (!$("#tip_paid_by").val()) {
-    	$.notify("Please select tip payment method card or cash \n 请选择提示付款方式卡或现金. ", {
-                        position: "top center", 
-                        className:"warn"
-                    });
-    // alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
-    return false;
-    }
-    };
-    //Modified by Yishou Liao @ Oct 19 2016.
-    var radio_click = 0;
-    radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
-    //End.
+	    // check tip type(card/cash) if exists
+	    if (parseFloat($("#tip_val").val())) {
+		    if (!$("#tip_paid_by").val()) {
+		    	$.notify("Please select tip payment method card or cash \n 请选择提示付款方式卡或现金. ", {
+		                        position: "top center", 
+		                        className:"warn"
+		                    });
+			    return false;
+		    }
+	    }
+	    //Modified by Yishou Liao @ Oct 19 2016.
+	    var radio_click = 0;
+	    radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
+	    //End.
 
-    //Modified by Yishou Liao @ Oct 21 2016.
-    if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-    var seletmp = "" + getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>) + "," + radio_click;
-    } else{
-    var seletmp = "" + radio_click;
-    };
-    setCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>, seletmp, 1);
-    //End.
+	    //Modified by Yishou Liao @ Oct 21 2016.
+	    if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
+	    var seletmp = "" + getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>) + "," + radio_click;
+	    } else{
+	    var seletmp = "" + radio_click;
+	    };
+	    setCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>, seletmp, 1);
+	    //End.
 
     //Modified by Yishou Liao @ Oct 20 2016.
     var item_detail_id = "";
@@ -1350,19 +1074,13 @@ echo $this->fetch('script');
             $(".alert-warning").hide();
             $(".reprint").trigger("click");
             //Modified by Yishou Liao @ Oct 20 2016.
-<?php if ($split_method == 0) { ?>
-                //Modified by Yishou Liao @ Oct 21 2016.
-                deleteCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>);
-                deleteCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-                deleteCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-                deleteCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-                //End.
-                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
-<?php } else { ?>
+            /*
                 //Modified by Yishou Liao @ Oct 21 2016.
                 setCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(order_menu), 1);
                 setCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(person_menu), 1);
                 setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, $("#persons").val(), 1);
+
+                
                 if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
                 var seletmp = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
                 };
@@ -1382,8 +1100,8 @@ echo $this->fetch('script');
                 window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
                 } else{//Modified by Yishou Liao @ Oct 21 2016.
                 window.location.reload();
-                }; //End.
-<?php } ?>
+                }; //End.*/
+
             //End.
             },
             beforeSend: function () {
