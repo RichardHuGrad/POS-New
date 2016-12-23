@@ -2,9 +2,15 @@
 
 
 // assign item to suborder
-function assignItem(suborder_no, item_id) {
+// notice deepcopy or shallowcopy
+function assignItem(order, item_id, suborders, suborder_no) {
 	var item = order.getItem(item_id);
+	var suborder = suborders.getSuborder(suborder_no);
+	
+	item.state = "assigned";
+	suborder.addItem(item, "assigned");
 
+	return suborder;
 }
 
 // share item to all existed suborder
@@ -26,6 +32,8 @@ function addSuborder() {
 function deleteSuborder() {
 
 }
+
+console.log("hello")
 
 
 
@@ -57,6 +65,7 @@ class Order {
 	}
 
 
+
 	getItem(item_id) {
 		for (var i = 0; i < this.items.length; ++i) {
 			if (item_id == this.items[i]["item_id"]) {
@@ -65,12 +74,11 @@ class Order {
 		}
 	}
 
-	get items() {
-		return this.items;
-	}
-
-	get order_no() {
-		return this.order_no;
+	get json() {
+		return {
+			"items": this.items,
+			"order_no": this.order_no
+		}
 	}
 
 }
@@ -80,10 +88,6 @@ class Suborders {
 		this.suborders = suborders;
 	}
 
-	get suborders() {
-		return this.suborders;
-	}
-
 	getSuborder(suborder_no) {
 		for (var i = 0; i < this.suborders.length; ++i) {
 			if (suborder_no == this.suborders[i].suborder_no) {
@@ -91,6 +95,8 @@ class Suborders {
 			}
 		}
 	}
+
+
 }
 
 
@@ -99,21 +105,18 @@ class Suborder {
 		this.items = [];
 		this.suborder_no = suborder_no;
 	}
-	
 
-	get suborder_no() {
-		return suborder_no;
-	}
 
-	get items() {
-		return items;
-	}
-
-	get suborder() {
+	get json() {
 		return {
 			'items': this.items,
 			'suborder_no': this.suborder_no
 		}
+	}
+
+	addItem(item, state) {
+		item.setState(state);
+		this.suborder.push(item) 
 	}
 }
 
@@ -126,12 +129,12 @@ class Item {
 		this.selected_extras_name = selected_extras_name;
 		this.price = price;
 		this.extras_amount = extras_amount;
-		this.quantity: quantity;
+		this.quantity= quantity;
 		this.order_item_id = order_item_id;
 		this.state = state ;
 	}
 
-	get item () {
+	get json() {
 		return {
 			"item_id": this.item_id,
 			"image": this.image,
@@ -146,7 +149,7 @@ class Item {
 		}
 	}
 
-	set state(state) {
+	setState(state) {
 		// state should be keep, assigned, share
 		var stateList = Array("keep", "assigned", "share");
 		if (stateList.indexOf(state) != -1) {
@@ -155,44 +158,5 @@ class Item {
 			alert("State Errors: No existed state");
 			return false;
 		}
-	}
-
-	get item_id() {
-		return this.item_id;
-	} 
-	get image() {
-		return this.image;
-	}
-
-	get name_en() {
-		return this.name_en;
-	}
-
-	get name_zh() {
-		return this.name_zh;
-	}
-
-	get selected_extras_name() {
-		return this.selected_extras_name;
-	}
-
-	get price() {
-		return this.price;
-	}
-
-	get extras_amount() {
-		return this.extras_amount;
-	}
-
-	get quantity() {
-		return this.quantity;
-	}
-
-	get order_item_id() {
-		return this.order_item_id;
-	}
-
-	get state() {
-		return this.state;
 	}
 }

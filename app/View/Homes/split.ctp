@@ -183,6 +183,9 @@ echo $this->fetch('script');
 	var paid_info = new Array();
 
 	var order = new Order(order_no);
+	var suborder = new Suborder('1');
+	var suborders = new Suborders([suborder]);
+	order = loadOrder(order_no);
 
 	console.log("order_no");
 	console.log(order_no);
@@ -191,7 +194,7 @@ echo $this->fetch('script');
 	// Cookies.set(order_no + "_split", {foo: 'bar', text: 'test'});
 
 	// cookie name; order_no + "_split"
-
+	/*
 
 	if (checkCookie("persons_" + order_no) && getCookie("persons_" + order_no) != "undefined") {
 		person_No = getCookie("persons_" + order_no);
@@ -254,10 +257,10 @@ echo $this->fetch('script');
 	console.log("person paid");
 	console.log(person_paid);
 
+*/
 
-
-	function loadOrder(order, order_no) {
-		var order = new Order(order_no);
+	function loadOrder(order_no) {
+		var tempOrder = new Order(order_no);
 
 		<?php
 			if (!empty($Order_detail['OrderItem'])) {
@@ -291,7 +294,7 @@ echo $this->fetch('script');
 	        			order_item_id = '<?php echo $value['id'] ?>',
 	        			state = "keep");
 
-	        		order.addItem(temp_item);
+	        		tempOrder.addItem(temp_item);
 
 		    <?php
 				   	$i++;
@@ -301,7 +304,7 @@ echo $this->fetch('script');
 	    <?php 
 			} // line 561 if  
 		?>
-		return order;
+		return tempOrder;
 	}
 
 	// to be improved as more robust
