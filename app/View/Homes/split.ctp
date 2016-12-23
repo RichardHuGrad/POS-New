@@ -211,8 +211,12 @@ echo $this->fetch('script');
 	}
 
 	// share item to all existed suborder
-	function shareItem(item_id) {
-		
+	function shareItem(order, item_id, suborders, suborder_no) {
+		var availableItems = order.availableItems;
+
+		for (var i = 0; i < availableItems.length; ++i) {
+			
+		}
 	}
 
 	// return item to order

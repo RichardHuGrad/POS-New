@@ -61,6 +61,18 @@ class Order {
 		return cnt;
 	}
 
+	get availableItems() {
+		var temp_items = this.items;
+		var availableItems = [];
+		for (var i = 0; i < temp_items.length; ++i) {
+			if(temp_items[i]["state"] == "keep") { 
+				availableItems.push(temp_items[i]);
+			}
+		}
+
+		return availableItems;
+	}
+
 	get assignedItemsNum() {
 		var temp_items = this.items;
 		var cnt = 0;
@@ -346,7 +358,9 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	var suborderId = suborder.suborder_no;
 
 	// var suborderTab = $('');
-	var suborderDetailComponent = $('<div> class="suborder-detail"');
+	var suborderDetailComponent = $('<div class="suborder-detail">').attr("id", suborderId);
+	// var suborderTabCompoenent = $('<a class="suborder-tab">');
+	var subtotalComponent = $('<>');
 
 
 }
@@ -362,13 +376,18 @@ var SubordersListComponent = function (suborders, cfg) {
 	var temp_suborders = suborders.suborders;
 
 	for (var i = 0; i < temp_suborders.length; ++i) {
-		console.log(SuborderListComponent(temp_suborders[i]));
+		// console.log(SuborderListComponent(temp_suborders[i]));
 		subordersListComponent.append(SuborderListComponent(temp_suborders[i]));
 	}
 
 
 	return subordersListComponent;
 }
+
+var SubordersDetailComponent = function (suborders, cfg) {
+	var cfg = cfg || {};
+
+} 
 
 
 
