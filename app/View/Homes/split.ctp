@@ -35,20 +35,9 @@
                 <!-- Modified by Yishou Liao @ Oct 17 2016. -->
 
                 <div class="table-box dropdown">
-                    <!-- Modified by Yishou Liao @ Nov 10 2016 -->
-                    <?php
-                    if ($split_method == 0) {
-                        ?>
-                        <a href="" class="split dropdown-toggle"  data-toggle="dropdown">Split 平均分单 <input type="text" class="text-center" readonly="readonly" id="av_persons" name="av_persons" value="1" size="2"> 人</a>
-                        <?php
-                    } else {
-                        ?>
-                        <a class="split dropdown-toggle">Split 按人分单</a>
-                        <?php
-                    }
-                    ?>
-                    <!-- End -->
-
+  
+                    <a class="split dropdown-toggle">Split 按人分单</a>
+     
                     <ul class="dropdown-menu">
                         <div class="customchangemenu clearfix">
                             <div class="left-arrow"></div>
@@ -64,25 +53,34 @@
             <?php } ?>
 
             <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
-            <div class="order-summary <?php if ($split_method == 0) echo 'avg'; ?>">
+            <div class="order-summary">
                 <h3>Order Summary 订单摘要</h3>
-                <div class="order-summary-indent clearfix" name="orderitem" id="orderitem">
-                    <!-- Modified by Yishou Liao @ Oct 18 2016. -->
-                </div>
-				<button class="btn btn-lg btn-primary avoid-this" id="avgSplit">Avg. Split</button>
+				<div class="order-summary-indent clearfix" id="order-summary">
+					
+				</div>
+
+				<button id="avg-split" class="btn btn-lg btn-primary">Avg. Split</button>
+
+                <!--<div class="order-summary-indent clearfix" name="orderitem" id="orderitem">
+
+            	</div>-->
+                    <!-- Modified by Yishou Liao @ Oct 19 2016. -->
+                
             </div>
 
             <!-- Modified by Yishou Liao @ Oct 18 2016. -->
 				<div>
-					<div id="addperson" class="avoid-this text-center addperson ">
+					<div id="add-person" class="avoid-this text-center addperson ">
 	                	<button type="button" class="btn btn-primary btn-lg">Add Person 增加人</button>
 	                </div>
-	                <div id="deleteperson" class="avoid-this text-center deleteperson">
-	                	<button class="btn btn-danger btn-lg" onclick="deletePerson()">Delete Person 删除人</button>
+	                <div id="delete-person" class="avoid-this text-center deleteperson">
+	                	<button class="btn btn-danger btn-lg">Delete Person 删除人</button>
 	                </div>
 				</div>
                
-                <div id="person_details" class="order-summary addperson" style="display:none"> <!-- Modified by Yishou Liao @ Nov 10 2016 -->
+                <!-- <div id="person_details" class="order-summary addperson" style="display:none">--> 
+                    
+					<div id="person_details" class="order-summary addperson" style="display:block">
                     <h3>Split Details 分单明细</h3>
                     <div class="order-summary-indent addperson clearfix" name="splitmenu" id="splitmenu"></div>
                 </div>
@@ -183,9 +181,117 @@ echo $this->fetch('script');
 	var paid_info = new Array();
 
 	var order = new Order(order_no);
-	var suborder = new Suborder('1');
-	var suborders = new Suborders([suborder]);
+	// var suborder = new Suborder('1');
+	var suborders = new Suborders();
+	var current_suborder = 0;
 	order = loadOrder(order_no);
+
+	drawOrder();
+	
+
+	// assign item to suborder
+	// notice deepcopy or shallowcopy
+	// assign item by item_id from order to suborders
+	// here change state use reference
+	function assignItem(order, item_id, suborders, suborder_no) {
+		if (suborder_no != 0) {
+			var item = order.getItem(item_id);
+			var suborder = suborders.getSuborder(suborder_no);
+			
+			// item.state = "assigned";
+			suborder.addItem(item, "assigned");
+
+
+			drawOrder();
+			drawSubOrdersList();
+			// return suborder;
+		} else {
+			alert("Please indicate suborder id");
+		}
+	}
+
+	$("#add-person").on('click', function () {
+		addPerson();
+	});
+
+	$("#delete-person").on('click', function () {
+		deletePerson(suborders);
+	});
+
+
+	// todo !!!
+	$("#avg-split").on('click', function () {
+		if (suborders.length > 1 && order.availableItemsNum > 0) {
+			/*for (var i = 0; i < order_menu.length; ++i) {
+				var current_menu = order_menu[i];
+				if (current_menu[9] == 'keep') {
+					var item_id = current_menu[0];
+					setOrderMenuState(item_id, 'share');
+					
+					
+					for (var j = 1; j <= person_No; ++j) {
+						current_person = String(j);
+						var avg_price = (current_menu[5] / person_No).toFixed(2);
+						var avg_name_en = current_menu[2] + ' /' + person_No;
+						var avg_name_zh = current_menu[3] + ' /' + person_No;
+
+						console.log(avg_price);
+						console.log(avg_name_en);
+						console.log(avg_name_zh);
+
+
+						addMenuItem(item_id, current_menu[1], avg_name_en, avg_name_zh, current_menu[4], avg_price ,current_menu[6], current_menu[7], current_menu[8], 'share', current_person);
+					}
+				}
+			}*/
+		} else {
+			alert("Please make sure you have more than two people to share, or more than one item to be shared.");
+		}
+	});
+
+
+	// add suborder to the end of suborders
+	function addPerson() {
+		// suborders.length;
+		suborders.pushEmptySuborder();
+
+		drawSubOrdersList()
+	}
+
+	// delete the last suborder of suborders
+	// todo think about share item
+	function deletePerson(suborders) {
+
+		if (suborders.length > 0) {
+			// var n = suborders.length;
+			var deletedSuborder = suborders.popSuborder();
+
+			// move items back to order
+			for (var i = 0; i < deletedSuborder.items.length; ++i) {
+				var item_id = deletedSuborder.items[i]["item_id"];
+				order.setItemState(item_id, "keep");
+			}
+
+			drawOrder();
+			drawSubOrdersList();
+
+			return deletedSuborder;
+		} else {
+			alert("No person to be deleted");
+		}
+		
+	}
+
+	function drawOrder() {
+		$("#order-summary").empty();
+		$("#order-summary").append(OrderComponent(order));
+	}
+
+	function drawSubOrdersList() {
+		$("#splitmenu").empty();
+		$("#splitmenu").append(SubordersListComponent(suborders));
+	}
+
 
 	console.log("order_no");
 	console.log(order_no);
@@ -387,6 +493,8 @@ echo $this->fetch('script');
 	    $('#orderitem').html(outhtml_str);
 	} 
 
+
+
 	// build person no. list by person_No
 	function drawPersonNumList () {
 		$('#person_details').css('display', 'block');
@@ -479,7 +587,7 @@ echo $this->fetch('script');
 	}
 
 	// addPerson: ++person_No, rebuild person no. list add all person_menu items
-	function addPerson () {
+	function addPerson1 () {
 
 		$("#person_details").css("display", "block");
 		console.log("line 365");
@@ -502,7 +610,7 @@ echo $this->fetch('script');
 
 	// deletePerson: --person_No, rebuild person no. list, remove items in person_menu equals to last person id
 
-	function deletePerson () {
+	function deletePerson1 () {
 		if (person_No > 0) {
 			$("#person_details").css("display", "block");
 
@@ -1704,7 +1812,5 @@ echo $this->fetch('script');
     }
     //End.
 
-    function round2(number) {
-    	return Math.round(number * 100) / 100
-    }
+
 </script>
