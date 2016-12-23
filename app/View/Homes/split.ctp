@@ -30,7 +30,7 @@
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
             <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?></h2>
             <?php
-            if ($Order_detail['Order']['table_status'] <> 'P') {
+            if ($Order_detail['Order']['table_status'] != 'P') {
                 ?>
                 <!-- Modified by Yishou Liao @ Oct 17 2016. -->
 
@@ -99,7 +99,7 @@
 	    </div>
 
         <?php
-        if ($Order_detail['Order']['table_status'] <> 'P') {
+        if ($Order_detail['Order']['table_status'] != 'P') {
             ?>
             <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13"></div>
             <div class="card-indent clearfix">
@@ -160,10 +160,12 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'avgsplit.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
 echo $this->fetch('script');
 ?>
 <script>
+
+
 	$('#customer-select-alert').hide();
     //Modified by Yishou Liao @ Oct 18 2016.
     var person_No = 0; // only addPerson and deletePerson can modify this variable
@@ -180,14 +182,18 @@ echo $this->fetch('script');
 	var suborder_detail = new Array();
 	var paid_info = new Array();
 
+	var order = new Order(order_no);
+
 	console.log("order_no");
 	console.log(order_no);
 	// load data from cookie
 
+	// Cookies.set(order_no + "_split", {foo: 'bar', text: 'test'});
+
+	// cookie name; order_no + "_split"
 
 
 	if (checkCookie("persons_" + order_no) && getCookie("persons_" + order_no) != "undefined") {
-		console.log("line 171");
 		person_No = getCookie("persons_" + order_no);
 		console.log(person_No);
 	}
@@ -250,6 +256,74 @@ echo $this->fetch('script');
 
 
 
+	function loadOrder(order, order_no) {
+		var order = new Order(order_no);
+
+		<?php
+			if (!empty($Order_detail['OrderItem'])) {
+			    $i = 0;
+			    foreach ($Order_detail['OrderItem'] as $key => $value) {
+
+			        $selected_extras_name = [];
+			        if ($value['all_extras']) {
+			            $extras = json_decode($value['all_extras'], true);
+			            $selected_extras = json_decode($value['selected_extras'], true);
+
+			            // prepare extras string
+			            $selected_extras_id = [];
+			            if (!empty($selected_extras)) {
+			                foreach ($selected_extras as $k => $v) {
+			                    $selected_extras_name[] = $v['name'];
+			                    $selected_extras_id[] = $v['id'];
+			                }
+			            }
+			        }
+	        ?>
+
+	        		var temp_item = new Item(item_id = '<?php echo $i ?>',
+	        			image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
+	        			name_en = '<?php echo $value['name_en']; ?>',
+	        			name_zh = '<?php echo $value['name_xh']; ?>',
+	        			selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
+	        			price = '<?php echo $value['price'] ?>',
+	        			extras_amount = '<?php echo $value['extras_amount'] ?>',
+	        			quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
+	        			order_item_id = '<?php echo $value['id'] ?>',
+	        			state = "keep");
+
+	        		order.addItem(temp_item);
+
+		    <?php
+				   	$i++;
+			 	} // line 563 foreach
+		    ?>
+
+	    <?php 
+			} // line 561 if  
+		?>
+		return order;
+	}
+
+	// to be improved as more robust
+	function isOrderChanged () {
+		var changed = false;
+		var temp_order = loadOrderMenu();
+
+		if (temp_order['items'].length != order['items'].length) {
+			return true;
+		} else {
+			for (var i = 0; i < temp_order['items'].length; ++i) {
+				if (temp_order['items'][i]['order_item_id'] != temp_menu[i]['order_item_id']) {
+					changed = true
+				}
+			}
+		}
+
+		return changed;
+	}
+
+
+
 
 
 	function drawAllPage() {
@@ -284,6 +358,8 @@ echo $this->fetch('script');
 		
 		return paidPerson; // ['1', '2', '3']
 	}
+
+
 
 	// build order summary by order_menu
 	function drawOrderSummary () {
@@ -539,75 +615,6 @@ echo $this->fetch('script');
 		}
 	}
 
-	function loadOrderMenu() {
-		var temp_menu = new Array();
-
-		<?php
-		if (!empty($Order_detail['OrderItem'])) {
-		    $i = 0;
-		    foreach ($Order_detail['OrderItem'] as $key => $value) {
-		        # code...
-		        $selected_extras_name = [];
-		        if ($value['all_extras']) {
-		            $extras = json_decode($value['all_extras'], true);
-		            $selected_extras = json_decode($value['selected_extras'], true);
-
-		            // prepare extras string
-		            $selected_extras_id = [];
-		            if (!empty($selected_extras)) {
-		                foreach ($selected_extras as $k => $v) {
-		                    $selected_extras_name[] = $v['name'];
-		                    $selected_extras_id[] = $v['id'];
-		                }
-		            }
-		        }
-        ?>
-
-	            temp_menu.push(Array(
-	            	'<?php echo $i ?>', //0
-		            '<?php
-				        if ($value['image']) {
-				            echo $value['image'];
-				        } else {
-				            echo 'no_image.jpg';
-				        };
-				    ?>',  //1
-				    '<?php echo $value['name_en']; ?>', //2 
-				    '<?php echo $value['name_xh']; ?>', //3
-				    '<?php echo implode(",", $selected_extras_name); ?>', //4 
-				    '<?php echo $value['price'] ?>', //5
-				    '<?php echo $value['extras_amount'] ?>', //6
-				    '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>', //7
-				    '<?php echo $value['id'] ?>', //8
-				    'keep' //9
-			    ));
-	    <?php
-			   	$i++;
-		 	} // line 563 foreach
-	    ?>
-
-    <?php 
-		} // line 561 if  
-	?>
-		return temp_menu;
-	}
-
-	function isOrderChanged () {
-		var changed = false;
-		var temp_menu = loadOrderMenu();
-
-		if (temp_menu.length != order_menu.length) {
-			return true;
-		} else {
-			for (var i = 0; i < temp_menu.length; ++i) {
-				if (order_menu[i][8] != temp_menu[i][8]) {
-					changed = true
-				}
-			}
-		}
-
-		return changed;
-	}
 
 	// to be changed
 	function setOrderMenuState (item_id, state) {
@@ -618,6 +625,14 @@ echo $this->fetch('script');
 			alert("State Errors: No existed state");
 		}
 		
+	}
+
+	function assignToSubOrder (item) {
+		item['state'] = "assign";
+
+		suborder['items'].push(item);
+
+		drawAllPage();
 	}
 
 
