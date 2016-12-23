@@ -210,6 +210,16 @@ echo $this->fetch('script');
 		}
 	}
 
+	// share item to all existed suborder
+	function shareItem(item_id) {
+		
+	}
+
+	// return item to order
+	function returnItem(item_id) {
+
+	}
+
 	$("#add-person").on('click', function () {
 		addPerson();
 	});
@@ -254,6 +264,7 @@ echo $this->fetch('script');
 	function addPerson() {
 		// suborders.length;
 		suborders.pushEmptySuborder();
+		current_suborder = suborders.length;
 
 		drawSubOrdersList()
 	}
@@ -271,6 +282,9 @@ echo $this->fetch('script');
 				var item_id = deletedSuborder.items[i]["item_id"];
 				order.setItemState(item_id, "keep");
 			}
+
+
+			current_suborder = suborders.length;
 
 			drawOrder();
 			drawSubOrdersList();

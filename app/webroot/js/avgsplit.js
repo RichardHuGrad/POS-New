@@ -2,24 +2,6 @@
 
 
 
-
-// share item to all existed suborder
-function shareItem(item_id) {
-
-}
-
-// return item to order
-function returnItem(item_id) {
-
-}
-
-
-
-// console.log("hello")
-
-
-
-
 function areOrdersSame(order1, order2) {
 	var same = false;
 	var items1 = order1.items;
@@ -57,7 +39,7 @@ class Order {
 	}
 
 	setItemState(item_id, state) {
-		getItem(item_id).state = state;
+		this.getItem(item_id).state = state;
 	}
 
 	get json() {
@@ -340,17 +322,20 @@ var SuborderListComponent = function(suborder, cfg) {
 
 
 	// to be concised
+	//  in the compoenent, cannot use selector to select item
 	suborderLabel.on("click", function () {
 		// set current person
 		current_suborder = suborderId;
 		$(".suborder-label").css("background-color", "white");
 		$(this).css("background-color", "red");
 	});
-
 	// set label css
-	if (current_suborder > 0) {
-		$('#suborder-label-' + String(current_suborder)).css("background-color", "red");
+	if (current_suborder == suborderId) {
+
+		// console.log('#suborder-label-' + String(current_suborder));
+		suborderLabel.css("background-color", "red");
 	}
+
 
 
 	return suborderListComponent; 
@@ -377,11 +362,30 @@ var SubordersListComponent = function (suborders, cfg) {
 	var temp_suborders = suborders.suborders;
 
 	for (var i = 0; i < temp_suborders.length; ++i) {
+		console.log(SuborderListComponent(temp_suborders[i]));
 		subordersListComponent.append(SuborderListComponent(temp_suborders[i]));
 	}
 
 
 	return subordersListComponent;
+}
+
+
+
+var NumberKeyComponent = function (cfg) {
+	var cfg = cfg || {};
+
+	var numberKeyComponent = $('<div id="number-key">');
+	var keyComponent = $('<ul>');
+	var screenComponent = $('<div><input type="text" id="number-screen" buffer="0" maxlength="13"></div>')
+	var clearButton = $('<button id="number-clear">');
+	var enterButton = $('<button id="number-enter">');
+
+	for (var i = 1; i <= 9; ++i){
+		keyComponent.append('<li>' + i + '</li>' );
+	}
+
+	keyComponent.append(clearButton).append('<li>0</li>').append(enterButton);
 }
 
 
