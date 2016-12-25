@@ -61,12 +61,13 @@ class Order {
 		return cnt;
 	}
 
+	// return not a reference
 	get availableItems() {
-		var temp_items = this.items;
+		// var temp_items = this.items;
 		var availableItems = [];
-		for (var i = 0; i < temp_items.length; ++i) {
-			if(temp_items[i]["state"] == "keep") { 
-				availableItems.push(temp_items[i]);
+		for (var i = 0; i < this.items.length; ++i) {
+			if(this.items[i]["state"] == "keep") { 
+				availableItems.push(this.items[i]);
 			}
 		}
 
@@ -127,6 +128,13 @@ class Suborders {
 		}
 	}
 
+	// remove all items whose state is "keep"
+	refreshSuborders() {
+		for (var i = 0; i < this.suborders.length; ++i) {
+			this.suborders[i].refreshItems();
+		}
+	}
+
 	get length() {
 		// this._length = this.suborders.length;
 		return this.suborders.length;
@@ -163,9 +171,28 @@ class Suborder {
 		}
 	}
 
-	addItem(item, state) {
-		item.state = state;
+	addItem(item) {
 		this.items.push(item) 
+	}
+
+	deleteItem(item_id) {
+		for (var i = 0; i < this.items.length; ++i) {
+			if (this.items[i].item_id == item_id) {
+				this.items.splice(i, 1);
+
+				return ;
+			}
+		}
+	}
+
+	// remove all item whose state is "keep"
+	// iterator from the back to the front
+	refreshItems() {
+		for (var i = this.items.length - 1; i >= 0 ; --i) {
+			if (this.items[i].state == "keep") {
+				this.items.splice(i, 1);
+			}
+		}
 	}
 
 	// return float with 2 percision
@@ -207,15 +234,15 @@ class Item {
 	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state) {
 		this.item_id = item_id;
 		this.image = image;
-		this.name_en = name_en;
-		this.name_zh = name_zh;
+		this._name_en = name_en;
+		this._name_zh = name_zh;
 		this.selected_extras_name = selected_extras_name;
-		this.price = price;
+		this._price = price;
 		this.extras_amount = extras_amount;
 		this.quantity= quantity;
 		this.order_item_id = order_item_id;
 		this._state = state ;
-		this.shared_num = 0;
+		this.shared_suborders = [];
 	}
 
 	get json() {
@@ -230,14 +257,19 @@ class Item {
 			"quantity": this.quantity,
 			"order_item_id": this.order_item_id,
 			"state": this._state,
-			"shared": this.shared
+			"shared_suborders": this.shared_suborders
 		}
 	}
 
+	// if state is set to "keep"
+	// the shared_suborders should be clear
 	set state(state) {
 		// state should be keep, assigned, share
 		var stateList = Array("keep", "assigned", "share");
 		if (stateList.indexOf(state) != -1) {
+			if (state == "keep") {
+				this.shared_suborders = [];
+			}
 			this._state = state;
 		} else {
 			alert("State Errors: No existed state");
@@ -247,6 +279,40 @@ class Item {
 
 	get state() {
 		return this._state;
+	}
+
+	get price() {
+		if (this.state == "share" && this.shared_suborders.length > 1) {
+			return round2(this._price / this.shared_suborders.length)
+		} else {
+			return this._price;
+		}
+	}
+
+	get name_en() {
+		if (this.state == "share" && this.shared_suborders.length > 1) {
+			var tempStr = this._name_en + ' shared by';
+			for (var i = 0; i < this.shared_suborders.length; ++i) {
+				tempStr += " " + String(this.shared_suborders[i])
+			}
+
+			return tempStr;
+		} else {
+			return this._name_en;
+		}
+	}
+
+	get name_zh() {
+		if (this.state == "share" && this.shared_suborders.length > 1) {
+			var tempStr = this._name_zh + ' shared by';
+			for (var i = 0; i < this.shared_suborders.length; ++i) {
+				tempStr += " " + String(this.shared_suborders[i])
+			}
+
+			return tempStr;
+		} else {
+			return this._name_zh;
+		}
 	}
 }
 
