@@ -158,7 +158,7 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'watch.min.js', 'avgsplit.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -176,6 +176,8 @@ echo $this->fetch('script');
 	var discount = 0;
 	var split_method = parseInt(<?php echo $split_method ?>);
 	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+	var orderCookie = order_no + '_split_order';
+	var suborderCookie = order_no + '_split_suborder';
 	var person_paid = new Array(); // person who have paid money
 	var suborder_detail = new Array();
 	var paid_info = new Array();
@@ -187,7 +189,33 @@ echo $this->fetch('script');
 	order = loadOrder(order_no);
 
 	drawOrder();
-	
+
+	// cookie name; order_no + "_split"
+
+	if (Cookies.get(orderCookie) && Cookies.get(orderCookie) != 'undefined') {
+		var tempOrderJson = Cookies.getJSON(orderCookie);
+
+	}
+
+	if (Cookies.get(suborderCookie) && Cookies.get(suborderCookie) != 'undefined') {
+		var tempOrderJson = Cookies.getJSON(suborderCookie);
+
+	}
+
+	// construct suborders by order
+	function restoreFromCookie() {
+		var tempOrder = Cookies.getJSON(orderCookie);
+		order = Order.fromJSON(tempOrder);
+		suborders = new Suborders();
+		for (var i = 0; i < order.items.length; ++i) {
+			if (order.items.state == 'keep') {
+				continue;
+			} else {
+
+			}
+		}
+	}	
+
 
 	// assign item to suborder
 	// notice deepcopy or shallowcopy
@@ -199,6 +227,7 @@ echo $this->fetch('script');
 			var suborder = suborders.getSuborder(suborder_no);
 			
 			item.state = "assigned";
+			item.assigned_suborder = suborder_no;
 			suborder.addItem(item);
 
 
@@ -221,7 +250,11 @@ echo $this->fetch('script');
 
 	// return item to order
 	function returnItem(item_id) {
+		order.setItemState(item_id, "keep");
+		suborders.refreshSuborders();
 
+		drawOrder();
+		drawSubOrdersList();
 	}
 
 	$("#add-person").on('click', function () {
@@ -256,6 +289,11 @@ echo $this->fetch('script');
 	});
 
 
+	$(".suborder-item").on('click', function () {
+
+	});
+
+
 	// add suborder to the end of suborders
 	function addPerson() {
 		// suborders.length;
@@ -282,6 +320,7 @@ echo $this->fetch('script');
 
 			current_suborder = suborders.length;
 
+			// remove all items from suborders whose state is "keep"
 			suborders.refreshSuborders();
 
 			drawOrder();
