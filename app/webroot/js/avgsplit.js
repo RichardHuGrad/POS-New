@@ -24,6 +24,26 @@ class Order {
 		this.order_no = order_no;
 	}
 
+	toJSON() {
+		return {
+			"items": this.items,
+			"order_no": this.order_no
+		}
+	}
+
+	static fromJSON(obj) {
+		if (typeof obj == "string") obj = JSON.parse(obj);
+		var instance = new Order(obj.order_no);
+		for (var i = 0; i < obj.items.length; ++i) {
+			var tempItem = Item.fromJSON(obj.items[i]);
+			instance.items.push(tempItem);
+		}
+
+		return instance;
+	}
+
+
+
 	addItem(item) {
 		this.items.push(item);
 	}
@@ -41,6 +61,7 @@ class Order {
 	setItemState(item_id, state) {
 		this.getItem(item_id).state = state;
 	}
+
 
 	get json() {
 		return {
@@ -106,6 +127,30 @@ class Suborders {
 		// this._length = this.suborders.length;
 	}
 
+	toJSON() {
+		return {
+			"suborders": this.suborders
+		}
+	}
+
+	// restore from cookie first,
+	// then bind the item with order items
+	static fromJSON(order, obj) {
+		if (!(order instanceof Order)) {
+			return false;
+		}
+		if (typeof obj == "string") obj = JSON.parse(obj);
+		/*var instance = new Suborders();
+		for (var i = 0; i < obj.suborders.length; ++i) {
+			// var tempItem = Item.fromJSON(obj.items[i]);
+			var tempSuborder = Suborder.fromJSON(order, obj.suborders[i]);
+			instance.suborders.push(tempSuborder);
+		}
+
+		return instance;*/
+	}
+
+
 	getSuborder(suborder_no) {
 		for (var i = 0; i < this.suborders.length; ++i) {
 			if (suborder_no == this.suborders[i].suborder_no) {
@@ -141,12 +186,15 @@ class Suborders {
 	}
 }
 
-
+// constructor and fromJSON should be done 
+// when the suborder detail finish
 class Suborder {
 	constructor(suborder_no) {
 		this.items = [];
 		this.suborder_no = suborder_no;
 		this._state = "unpaid";
+		this._tax_rate = 0.13;
+
 		this._received = {
 			"cash": 0,
 			"card": 0,
@@ -160,30 +208,41 @@ class Suborder {
 			"type": "unknown", // fixed or rate
 			"amount": 0
 		};
-		this._tax_rate = 0.13;
+		
 	}
 
 
-	get json() {
+	toJSON() {
 		return {
 			'items': this.items,
-			'suborder_no': this.suborder_no
+			'suborder_no': this.suborder_no,
+			'state': this._state,
 		}
+	}
+
+	// the items should come from Order instance
+	// other information comes from obj
+		// restore from cookie first,
+	// then bind the item with order items
+	static fromJSON(order, obj) {
+		if (!(order instanceof Order)) {
+			return false;
+		}
+		if (typeof obj == "string") obj = JSON.parse(obj);
+		/*
+		var instance = new Suborder(obj.suborder_no);
+		for (var i = 0; i < obj.items.length; ++i) {
+			var tempItem = Item.fromJSON(obj.items[i]);
+			instance.items.push(tempItem);
+		}
+
+		return instance;*/
 	}
 
 	addItem(item) {
 		this.items.push(item) 
 	}
 
-	deleteItem(item_id) {
-		for (var i = 0; i < this.items.length; ++i) {
-			if (this.items[i].item_id == item_id) {
-				this.items.splice(i, 1);
-
-				return ;
-			}
-		}
-	}
 
 	// remove all item whose state is "keep"
 	// iterator from the back to the front
@@ -213,7 +272,10 @@ class Suborder {
 
 	// return float with 2 precision
 	get tax() {
-		return round2(subtotal * this._tax_rate);
+		return {
+			"tax": this._tax_rate,
+			"amount": round2(subtotal * this._tax_rate)
+		}
 	}
 
 	get total() {
@@ -231,7 +293,7 @@ class Suborder {
 }
 
 class Item {
-	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state) {
+	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder) {
 		this.item_id = item_id;
 		this.image = image;
 		this._name_en = name_en;
@@ -242,23 +304,31 @@ class Item {
 		this.quantity= quantity;
 		this.order_item_id = order_item_id;
 		this._state = state ;
-		this.shared_suborders = [];
+		this.shared_suborders = shared_suborders || [];
+		this.assigned_suborder = assigned_suborder || 0;
 	}
 
-	get json() {
+	toJSON() {
 		return {
 			"item_id": this.item_id,
 			"image": this.image,
-			"name_en": this.name_en,
-			"name_zh": this.name_zh,
+			"name_en": this._name_en,
+			"name_zh": this._name_zh,
 			"selected_extras_name": this.selected_extras_name,
-			"price": this.price,
+			"price": this._price,
 			"extras_amount": this.extras_amount,
 			"quantity": this.quantity,
 			"order_item_id": this.order_item_id,
 			"state": this._state,
-			"shared_suborders": this.shared_suborders
+			"shared_suborders": this.shared_suborders,
+			"assigned_suborder": this.assigned_suborder
 		}
+	}
+
+	static fromJSON(obj) {
+		if (typeof obj == "string") obj = JSON.parse(obj);
+		var instance = new Item(obj.item_id, obj.image, obj.name_en, obj.name_zh, obj.selected_extras_name, obj.price, obj.extras_amount, obj.quantity, obj.order_item_id, obj.state, obj.shared_suborders, obj.assigned_suborder);
+		return instance;
 	}
 
 	// if state is set to "keep"
@@ -269,6 +339,11 @@ class Item {
 		if (stateList.indexOf(state) != -1) {
 			if (state == "keep") {
 				this.shared_suborders = [];
+				this.assigned_suborder = 0;
+			} else if (state == "assigned") {
+				this.shared_suborders = [];
+			} else if (state == "share") {
+				this.assigned_suborder = 0;
 			}
 			this._state = state;
 		} else {
@@ -367,18 +442,18 @@ var SuborderItemComponent = function (item, cfg) {
 	var cfg = cfg || {};
 	var item_id = item["item_id"];
 
-	var SuborderItemComponent = $('<li class="suborder-item" id="suborder-item-' + item_id + '">');
+	var suborderItemComponent = $('<li class="suborder-item" id="suborder-item-' + item_id + '" data-itemId="' + item_id + '">');
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4">').text('$' + item["price"]);
 
-	SuborderItemComponent.append(nameDiv).append(priceDiv);
+	suborderItemComponent.append(nameDiv).append(priceDiv);
 
-	SuborderItemComponent.on("click", function() {
-		// assignItem(item_id);
-		alert("delete item");
+	suborderItemComponent.on('click', function() {
+		returnItem(item_id);
 	});
 
-	return SuborderItemComponent;
+
+	return suborderItemComponent;
 }
 
 
@@ -392,7 +467,10 @@ var SuborderListComponent = function(suborder, cfg) {
 	var suborderUl = $('<ul>');
 
 	var items = suborder.items;
-	for (var i = 0; i < items.length; ++i) {
+
+	// in for loop can't pass variable to listener correctly
+	// otherwise use $.each() async method
+	for (var i = 0; i < items.length; ++i) {	
 		suborderUl.append(SuborderItemComponent(items[i]));
 	}
 	
@@ -401,11 +479,11 @@ var SuborderListComponent = function(suborder, cfg) {
 
 	// to be concised
 	//  in the compoenent, cannot use selector to select item
-	suborderLabel.on("click", function () {
+	suborderListComponent.on("click", function () {
 		// set current person
 		current_suborder = suborderId;
 		$(".suborder-label").css("background-color", "white");
-		$(this).css("background-color", "red");
+		$(this).find("label").css("background-color", "red");
 	});
 	// set label css
 	if (current_suborder == suborderId) {
