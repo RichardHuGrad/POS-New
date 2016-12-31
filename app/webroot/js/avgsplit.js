@@ -613,6 +613,9 @@ var DiscountComponent = function (cfg) {
 }
 
 
+
+// get val of $('#screen')
+// get type by whether button is active
 var NumberKeyComponent = function (cfg) {
 	var cfg = cfg || {};
 
