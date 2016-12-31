@@ -158,7 +158,7 @@
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'watch.min.js', 'avgsplit.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -186,9 +186,15 @@ echo $this->fetch('script');
 	// var suborder = new Suborder('1');
 	var suborders = new Suborders();
 	var current_suborder = 0;
-	order = loadOrder(order_no);
+	// order = loadOrder(order_no);
 
-	drawOrder();
+	restoreFromCookie();
+	if (isOrderChanged()) {
+		order = loadOrder(order_no);
+		suborders = new Suborders();
+	}
+
+	drawUI();
 
 	// cookie name; order_no + "_split"
 
@@ -207,14 +213,29 @@ echo $this->fetch('script');
 		var tempOrder = Cookies.getJSON(orderCookie);
 		order = Order.fromJSON(tempOrder);
 		suborders = new Suborders();
-		for (var i = 0; i < order.items.length; ++i) {
-			if (order.items.state == 'keep') {
-				continue;
-			} else {
+		// construct suborder
 
+		for (var i = 0; i < order.suborderNum; ++i) {
+			suborders.pushEmptySuborder();
+		}
+
+		// restore suborder from order
+		for (var i = 0; i < order.items.length; ++i) {
+			if (order.items[i].state == 'keep') {
+				continue;
+			} else if (order.items[i].state == 'assigned') { // restore based on assigned_suborder
+				suborders.getSuborder(order.items[i].assigned_suborder).addItem(order.items[i])
+			} else if (order.items[i].state == 'share') { //restore based on shared_suborders
+				for (var j = 0; j < order.items[i].shared_suborders.length; ++j) {
+					suborders.getSuborder(order.items[i].shared_suborders[j]).addItem(order.items[i]);
+				}
 			}
 		}
 	}	
+
+	function persistentOrder() {
+		Cookies.set(orderCookie, order);
+	}
 
 
 	// assign item to suborder
@@ -231,8 +252,9 @@ echo $this->fetch('script');
 			suborder.addItem(item);
 
 
-			drawOrder();
-			drawSubOrdersList();
+			persistentOrder();
+			// should be moved outside
+			drawUI();
 			// return suborder;
 		} else {
 			alert("Please indicate suborder id");
@@ -253,8 +275,7 @@ echo $this->fetch('script');
 		order.setItemState(item_id, "keep");
 		suborders.refreshSuborders();
 
-		drawOrder();
-		drawSubOrdersList();
+		drawUI();
 	}
 
 	$("#add-person").on('click', function () {
@@ -281,8 +302,8 @@ echo $this->fetch('script');
 				}
 			}
 
-			drawOrder();
-			drawSubOrdersList();
+			persistentOrder();
+			drawUI();
 		} else {
 			alert("Please make sure you have more than two people to share, or more than one item to be shared.");
 		}
@@ -300,7 +321,10 @@ echo $this->fetch('script');
 		suborders.pushEmptySuborder();
 		current_suborder = suborders.length;
 
-		drawSubOrdersList()
+		++order.suborderNum;
+
+		persistentOrder();
+		drawUI()
 	}
 
 	// delete the last suborder of suborders
@@ -308,6 +332,8 @@ echo $this->fetch('script');
 	function deletePerson(suborders) {
 
 		if (suborders.length > 0) {
+			--order.suborderNum;
+
 			// var n = suborders.length;
 			var deletedSuborder = suborders.popSuborder();
 
@@ -323,8 +349,8 @@ echo $this->fetch('script');
 			// remove all items from suborders whose state is "keep"
 			suborders.refreshSuborders();
 
-			drawOrder();
-			drawSubOrdersList();
+			persistentOrder();
+			drawUI();
 
 			return deletedSuborder;
 		} else {
@@ -332,6 +358,13 @@ echo $this->fetch('script');
 		}
 		
 	}
+
+	function drawUI() {
+		drawOrder();
+		drawSubOrdersList();
+		drawSubordersDetail();
+	}
+
 
 	function drawOrder() {
 		$("#order-summary").empty();
@@ -343,78 +376,20 @@ echo $this->fetch('script');
 		$("#splitmenu").append(SubordersListComponent(suborders));
 	}
 
-
-	console.log("order_no");
-	console.log(order_no);
-	// load data from cookie
-
-	// Cookies.set(order_no + "_split", {foo: 'bar', text: 'test'});
-
-	// cookie name; order_no + "_split"
-	/*
-
-	if (checkCookie("persons_" + order_no) && getCookie("persons_" + order_no) != "undefined") {
-		person_No = getCookie("persons_" + order_no);
-		console.log(person_No);
-	}
-
-	if (checkCookie("person_menu_" + order_no) ) {
+	function drawSubordersDetail() {
+		$("#split_accounting_details").empty();
+		$("#split_accounting_details").append(SubordersDetailComponent(suborders));
 		
-		var personarray = getCookie("person_menu_" + order_no);
-		
-	    if (personarray != "") {
-		    person_menu = strtoarr(personarray);
-	    }
-	}
-
-
-	// load order_menu
-	// if order changed, all other cookie record will be deleted
-	if (checkCookie("order_menu" + order_no)) {
-		var orderarray = getCookie("order_menu" + order_no);
-		if (orderarray != ""){
-		    order_menu = strtoarr(orderarray);
-	    }
-
-	    // if order changed, clear all the cookie 
-	    if (isOrderChanged()) {
-	    	order_menu = loadOrderMenu();
-	    	person_menu = new Array();
-	    	person_No = 0;
-
-	    	deleteCookie("person_menu_" + order_no);
-	    	deleteCookie("persons_" + order_no);
-	    	deleteCookie("order_menu" + order_no);
-
-	    	setCookie("order_menu" + order_no, arrtostr(order_menu), 1);
-	    }
-	} else {
-		order_menu = loadOrderMenu();
-		setCookie("order_menu" + order_no, arrtostr(order_menu), 1);
-	}
-
-
-	
-	drawAllPage();
-	
-	// $('#split_accounting_details').props("background", "url('https://dummyimage.com/600x200/ffffff/bfb0bf.png&text=Paid')");
-	// check paid person and paid info
-	if (checkCookie("persons_sele_" + order_no) && getCookie("persons_sele_" + order_no) != "undefined") {
-		person_paid = getPaidPerson();
-		if (person_paid.length > 0) {
-			disableSubOrderModify();
-			console.log("line 240");
-			if (checkCookie("paid_info_" + order_no) && getCookie("paid_info_" + order_no) != "undefined") {
-				console.log("line 242");
-				paid_info = strtoarr(getCookie("paid_info_" + order_no));
-			}
+		// TODO
+		if (order.suborderNum > 0) {
+			$('#suborder-tab-1').trigger('click');
 		}
 	}
 
-	console.log("person paid");
-	console.log(person_paid);
 
-*/
+	console.log("order_no");
+	console.log(order_no);
+
 
 	function loadOrder(order_no) {
 		var tempOrder = new Order(order_no);
@@ -467,13 +442,13 @@ echo $this->fetch('script');
 	// to be improved as more robust
 	function isOrderChanged () {
 		var changed = false;
-		var temp_order = loadOrderMenu();
+		var temp_order = loadOrder();
 
 		if (temp_order['items'].length != order['items'].length) {
 			return true;
 		} else {
 			for (var i = 0; i < temp_order['items'].length; ++i) {
-				if (temp_order['items'][i]['order_item_id'] != temp_menu[i]['order_item_id']) {
+				if (temp_order['items'][i]['order_item_id'] != order['items'][i]['order_item_id']) {
 					changed = true
 				}
 			}
@@ -571,27 +546,6 @@ echo $this->fetch('script');
 		}
 
 		$('#person-tab').html(person_tab_Str);
-
-
-
-		/*for (var i = 0; i < person_No; i++) {
-			if (i == 0) {
-				if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
-
-				}else{
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');" class="active"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
-				};
-			} else{
-				if (selepersonstr.indexOf(i + 1) != - 1){
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" class="disabled"><a data-toggle="tab" class="disabled"># ' + (i + 1) + '</a></li>';
-				}else{
-					person_tab_Str += '<li name="account_no[]" data-tabIdx="' + (i + 1) + '" id="account_no_' + i + '" onclick="tabSelected(' + (i + 1) + ');"><a data-toggle="tab"># ' + (i + 1) + '</a></li>';
-				};
-			};
-		};
-		
-		$('#person-tab').html(person_tab_Str);*/
 
 	}
 
@@ -888,63 +842,11 @@ echo $this->fetch('script');
     console.log(person_menu);
 
 
-	// console.log(order_no);
-
-	// order_menu
-	// 0: id
-	// 1: img
-	// 2: en name
-	// 3: zh name
-	// 4:
-	// 5: price
-	// 6
-	// 7
-	// 8
-	$('#avgSplit').on('click', function() {
-		//  order_menu
-		//  person_No
-		// person_No = $('#splitmenu .person-label').length;
-		if (person_No > 1 && countAvailableOrderMenu() > 0) {
-			for (var i = 0; i < order_menu.length; ++i) {
-				var current_menu = order_menu[i];
-				if (current_menu[9] == 'keep') {
-					var item_id = current_menu[0];
-					setOrderMenuState(item_id, 'share');
-					
-					
-					for (var j = 1; j <= person_No; ++j) {
-						current_person = String(j);
-						var avg_price = (current_menu[5] / person_No).toFixed(2);
-						var avg_name_en = current_menu[2] + ' /' + person_No;
-						var avg_name_zh = current_menu[3] + ' /' + person_No;
-
-						console.log(avg_price);
-						console.log(avg_name_en);
-						console.log(avg_name_zh);
 
 
-						addMenuItem(item_id, current_menu[1], avg_name_en, avg_name_zh, current_menu[4], avg_price ,current_menu[6], current_menu[7], current_menu[8], 'share', current_person);
-					}
-				}
-			}
-		} else {
-			alert("Please make sure you have more than two people to share, or more than one item to be shared.");
-		}
-
-		
-	});
 
 
-	$('#revokeAvgSplit').on('click', function () {
-		for (var i = 0; i < person_menu.length; ++i) {
-			item_id = person_menu[i][0];
-		}
-	});
-
-	$('#addperson').on('click', function () {
-		addPerson();
-	});
-
+	
 	function setCurrentPerson (currentPerson) {
 		current_person = currentPerson;
 		

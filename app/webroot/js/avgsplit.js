@@ -19,21 +19,24 @@ function areOrdersSame(order1, order2) {
 }
 
 class Order {
-	constructor(order_no, items=[]) {
+	constructor(order_no, items=[], suborderNum=0) {
 		this.items = items;
 		this.order_no = order_no;
+		this.suborderNum = suborderNum;
 	}
 
 	toJSON() {
 		return {
 			"items": this.items,
-			"order_no": this.order_no
+			"order_no": this.order_no,
+			"suborderNum": this.suborderNum
 		}
 	}
 
 	static fromJSON(obj) {
 		if (typeof obj == "string") obj = JSON.parse(obj);
 		var instance = new Order(obj.order_no);
+		instance.suborderNum = obj.suborderNum;
 		for (var i = 0; i < obj.items.length; ++i) {
 			var tempItem = Item.fromJSON(obj.items[i]);
 			instance.items.push(tempItem);
@@ -208,6 +211,10 @@ class Suborder {
 			"type": "unknown", // fixed or rate
 			"amount": 0
 		};
+
+		this.change = 0;
+		this.remaining = 0;
+		// this._subtotal = 0;
 		
 	}
 
@@ -259,6 +266,7 @@ class Suborder {
 		var subtotal = 0;
 		for (var i = 0; i < this.items.length; ++i) {
 			var temp_item = this.items[i];
+
 			subtotal += parseFloat(temp_item["price"]) + parseFloat(temp_item["extras_amount"]);
 		}
 
@@ -274,12 +282,12 @@ class Suborder {
 	get tax() {
 		return {
 			"tax": this._tax_rate,
-			"amount": round2(subtotal * this._tax_rate)
+			"amount": round2(this.subtotal * this._tax_rate)
 		}
 	}
 
 	get total() {
-		return round2(this.subtotal + this.tax - this.discount);
+		return round2(this.subtotal + this.tax.amount - this.discount.amount);
 	}
 
 	get received() {
@@ -300,7 +308,7 @@ class Item {
 		this._name_zh = name_zh;
 		this.selected_extras_name = selected_extras_name;
 		this._price = price;
-		this.extras_amount = extras_amount;
+		this.extras_amount = extras_amount || 0;
 		this.quantity= quantity;
 		this.order_item_id = order_item_id;
 		this._state = state ;
@@ -497,16 +505,38 @@ var SuborderListComponent = function(suborder, cfg) {
 	return suborderListComponent; 
 }
 
+// should add discounts
 var SuborderDetailComponent = function (suborder, cfg) {
 	var cfg = cfg || {};
 	var suborderId = suborder.suborder_no;
 
 	// var suborderTab = $('');
-	var suborderDetailComponent = $('<div class="suborder-detail">').attr("id", suborderId);
+	var suborderDetailComponent = $('<ul class="suborder-detail">').attr("id", "suborder-detail-" + suborderId);
 	// var suborderTabCompoenent = $('<a class="suborder-tab">');
-	var subtotalComponent = $('<>');
+	var titleComponent = $('<li class="suborder-title">').text("Suborder #" + order_no + '-' + suborder.suborder_no);
 
+	var subtotalComponent = $('<li class="suborder-subtotal">').text("Subtotal 小计:" + suborder.subtotal);
 
+	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
+
+	//  var discountComponent
+
+	var totalComponent = $('<li class="suborder-total">').text("Total 总: " + suborder.total);
+
+	var receivedComponent = $('<li class="suborder-received">').text("Received 收到: " + suborder.received.total + " Cash 现金: " + suborder.received.cash + " Card 卡: " + suborder.received.card);
+
+	var remainComponenet = $('<li class="suborder-remain">').text("Remaining 其余: " + suborder.remaining);
+
+	var changeComponent = $('<li class="suborder-change">').text("Change 找零: " + suborder.change);
+
+	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Type:" + suborder.tip.type);
+
+	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
+
+	// set css
+	suborderDetailComponent.css("background-image", "url(https://dummyimage.com/600x200/ffffff/b4b5bf.png&text=Paid)")
+
+	return suborderDetailComponent;
 }
 
 
@@ -531,8 +561,56 @@ var SubordersListComponent = function (suborders, cfg) {
 var SubordersDetailComponent = function (suborders, cfg) {
 	var cfg = cfg || {};
 
+	var tabCfg = {
+		"display": "inline",
+		"margin": "2px",
+		"padding": "5px",
+		// "background-color": "red",
+		"border-top-left-radius": 10,
+		"border-top-right-radius": 10,
+	};
+
+
+	var subordersDetailComponent = $('<div>');
+	var subordersComponent = $('<div>');
+	var tabComponent = $('<ul>');
+
+
+	for (var i = 0; i < suborders.suborders.length; ++i) {
+		var curSuborder = suborders.suborders[i];
+
+		var tab = $('<li class="suborder-tab">')
+			.attr("id", "suborder-tab-" + curSuborder.suborder_no)
+			.attr("data-index", curSuborder.suborder_no)
+			.text("tab #" + curSuborder.suborder_no)
+			.css(tabCfg)
+			.on('click', function() {
+					$(".suborder-detail").css("display", "none");
+					var index = $(this).attr("data-index");
+					$("#suborder-detail-" + index).css("display", "block")
+
+					$('.suborder-tab').each(function () {
+						if ($(this).hasClass('active')) {
+							$(this).removeClass('active');
+						}
+					});
+
+					$(this).addClass('active');
+				});
+
+		tabComponent.append(tab);
+	
+		subordersComponent.append(SuborderDetailComponent(curSuborder).css("display", "none"));
+	}
+
+	subordersDetailComponent.append(tabComponent).append(subordersComponent);
+
+	return subordersDetailComponent;
 } 
 
+var DiscountComponent = function (cfg) {
+
+}
 
 
 var NumberKeyComponent = function (cfg) {
