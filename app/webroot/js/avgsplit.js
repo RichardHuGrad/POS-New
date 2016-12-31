@@ -19,10 +19,10 @@ function areOrdersSame(order1, order2) {
 }
 
 class Order {
-	constructor(order_no, items=[], suborderNum=0) {
-		this.items = items;
+	constructor(order_no, items, suborderNum) {
+		this.items = items || [];
 		this.order_no = order_no;
-		this.suborderNum = suborderNum;
+		this.suborderNum = suborderNum || 0;
 	}
 
 	toJSON() {
@@ -34,6 +34,7 @@ class Order {
 	}
 
 	static fromJSON(obj) {
+
 		if (typeof obj == "string") obj = JSON.parse(obj);
 		var instance = new Order(obj.order_no);
 		instance.suborderNum = obj.suborderNum;
@@ -616,20 +617,116 @@ var DiscountComponent = function (cfg) {
 
 // get val of $('#screen')
 // get type by whether button is active
-var NumberKeyComponent = function (cfg) {
+var KeypadComponent = function (cfg) {
 	var cfg = cfg || {};
 
-	var numberKeyComponent = $('<div id="number-key">');
-	var keyComponent = $('<ul>');
-	var screenComponent = $('<div><input type="text" id="number-screen" buffer="0" maxlength="13"></div>')
-	var clearButton = $('<button id="number-clear">');
-	var enterButton = $('<button id="number-enter">');
+	var inputScreenCss = {
+			"width": "100%",
+			"border-radius": "17px 17px 0 0",
+			"text-align": "center",
+			"height": "50px",
+			"border": "solid 1px rgba(142,142,142,.9)",
+			"font-size": "24px",
+		};
 
+	var keyScreenWrapperCss = {
+			"border-radius": "17px",
+			"width": "100%",
+			"border": "solid 1px rgba(142,142,142,.9)",
+			"margin-bottom": "30px",
+			"height": "260px",
+		};
+
+	var inputKeyCss = {
+			"float": "left",
+			"text-align": "center",
+			"border-top": "1px solid #eeeded",
+			"color": "#696969",
+			"font-size": "30px",
+		    "font-weight": '600',
+		    "line-height": "50px",
+		    "width": "33.33%",
+		    "border-left": "1px solid #eeeded",
+		    "border-top": "1px solid #eeeded",
+		};
+
+	var buttonGroupCss = {
+
+	};
+
+	var keypadComponent = $('<div id="input-keypad">');
+	
+	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">').css(keyScreenWrapperCss);
+
+	var screenComponent = $('<div><input type="text" id="input-screen" buffer="0" maxlength="13">').find('input').css(inputScreenCss);
+
+
+	var buttonGroup = $('<div>');
+	var payCardButton = $('<button class="btn btn-danger btn-lg select_card" id="pay-card">').text('Card 卡');
+	var payCashButton = $('<button class="btn btn-danger btn-lg select_card" id="pay-cash">').text('Cash 现金');
+
+	var tipCardButton = $('<button class="btn btn-danger btn-lg select_card" id="tip-card">').text('Card 卡');
+	var tipCashButton = $('<button class="btn btn-danger btn-lg select_card" id="tip-cash">').text('Cash 现金');
+
+	// confirm: write the input into the suborder detail
+	var confirmButton = $('<button class="btn btn-success btn-lg card-ok" id="input-confirm">').text('Confirm 卡');;
+
+	var submitButton = $('<button class="btn btn-success btn-lg card-ok" id="input-submit">').text('Submit 卡');;
+
+	buttonGroup.append(payCardButton).append(payCashButton).append(tipCardButton).append(tipCashButton).append(confirmButton).append(submitButton);
+
+	// construct keypad
+	var keyComponent = $('<ul id="input-key-list">');
 	for (var i = 1; i <= 9; ++i){
-		keyComponent.append('<li>' + i + '</li>' );
+		keyComponent.append('<li data-num=' + i + '>' + i + '</li>' );
 	}
 
-	keyComponent.append(clearButton).append('<li>0</li>').append(enterButton);
+	var screenClear = $('<li id="input-clear">').text("Clear 清除")
+												.on('click', function() {
+													var value = $('#input-screen').val().slice(0, -1);
+													$('#input-screen').val(value);
+												});
+
+    // should be changed
+    // should not change the suborder state directly
+	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
+												.on('click', function() {
+													// clear all input
+													$('#input-screen').val("00.00");
+
+													// store data in current suborder
+												});
+
+
+	keyComponent.append(screenClear).append('<li data-num=0 >0</li>').append(screenEnter);
+	keyComponent.find('li').css(inputKeyCss);
+
+	//  to be fixed
+	keyComponent.find('li').each(function() {
+		var attr = $(this).attr('data-num')
+		if (typeof attr !== typeof undefined && attr !== false) {
+			$(this).on('click', function () {
+				var value;
+				if (! parseFloat($('#input-screen').val())) {
+					value = 0;
+					var newValue = parseInt(value + $(this).attr('data-num')) / 100;
+					$('#input-screen').val(newValue);
+				} else {
+					value = parseFloat($('#input-screen').val()) * 100;
+					var newValue = (value + $(this).attr('data-num')) / 100
+					$('#input-screen').val(newValue);
+				}
+			});
+		}
+	});
+
+
+
+	keyScreenWrapper.append(screenComponent).append(keyComponent);
+
+	keypadComponent.append(keyScreenWrapper).append(buttonGroup);
+
+	return keypadComponent;
 }
 
 

@@ -92,10 +92,13 @@
         <ul class="nav nav-tabs" id="person-tab">
         </ul>
         <div class="clearfix total-payment" name="split_accounting_details" id="split_accounting_details">
-		
-			
 	    </div>
 
+	    <div id="input-placeholder" class="clearfix">
+	    	
+	    </div>
+		
+		<!--
         <?php
         if ($Order_detail['Order']['table_status'] != 'P') {
             ?>
@@ -137,6 +140,7 @@
             </div>
 
         <?php } ?>
+    -->
     </div>
 </div>
 </div>
@@ -210,24 +214,29 @@ echo $this->fetch('script');
 
 	// construct suborders by order
 	function restoreFromCookie() {
-		var tempOrder = Cookies.getJSON(orderCookie);
-		order = Order.fromJSON(tempOrder);
-		suborders = new Suborders();
-		// construct suborder
 
-		for (var i = 0; i < order.suborderNum; ++i) {
-			suborders.pushEmptySuborder();
-		}
+		// check whether cookie exist
+		var tempOrder = Cookies.getJSON(orderCookie); 
 
-		// restore suborder from order
-		for (var i = 0; i < order.items.length; ++i) {
-			if (order.items[i].state == 'keep') {
-				continue;
-			} else if (order.items[i].state == 'assigned') { // restore based on assigned_suborder
-				suborders.getSuborder(order.items[i].assigned_suborder).addItem(order.items[i])
-			} else if (order.items[i].state == 'share') { //restore based on shared_suborders
-				for (var j = 0; j < order.items[i].shared_suborders.length; ++j) {
-					suborders.getSuborder(order.items[i].shared_suborders[j]).addItem(order.items[i]);
+		if (tempOrder != undefined) {
+			order = Order.fromJSON(tempOrder);
+			suborders = new Suborders();
+			// construct suborder
+
+			for (var i = 0; i < order.suborderNum; ++i) {
+				suborders.pushEmptySuborder();
+			}
+
+			// restore suborder from order
+			for (var i = 0; i < order.items.length; ++i) {
+				if (order.items[i].state == 'keep') {
+					continue;
+				} else if (order.items[i].state == 'assigned') { // restore based on assigned_suborder
+					suborders.getSuborder(order.items[i].assigned_suborder).addItem(order.items[i])
+				} else if (order.items[i].state == 'share') { //restore based on shared_suborders
+					for (var j = 0; j < order.items[i].shared_suborders.length; ++j) {
+						suborders.getSuborder(order.items[i].shared_suborders[j]).addItem(order.items[i]);
+					}
 				}
 			}
 		}
@@ -363,6 +372,7 @@ echo $this->fetch('script');
 		drawOrder();
 		drawSubOrdersList();
 		drawSubordersDetail();
+		drawKeypadComponent();
 	}
 
 
@@ -384,6 +394,11 @@ echo $this->fetch('script');
 		if (order.suborderNum > 0) {
 			$('#suborder-tab-1').trigger('click');
 		}
+	}
+
+	function drawKeypadComponent() {
+		$('#input-placeholder').empty();
+		$('#input-placeholder').append(KeypadComponent());
 	}
 
 
@@ -1042,94 +1057,51 @@ echo $this->fetch('script');
 				    return false;
 			    }
 		    }
-	    //Modified by Yishou Liao @ Oct 19 2016.
-	    var radio_click = 0;
-	    radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
-	    //End.
+		    //Modified by Yishou Liao @ Oct 19 2016.
+		    var radio_click = 0;
+		    radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
+		    //End.
 
-	    //Modified by Yishou Liao @ Oct 21 2016.
-	    /*if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-	    var seletmp = "" + getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>) + "," + radio_click;
-	    } else{
-	    var seletmp = "" + radio_click;
-	    };
-	    setCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>, seletmp, 1);
-	    //End.*/
-
-	    //Modified by Yishou Liao @ Oct 20 2016.
-	    var item_detail_id = "";
-	    for (var i = 0; i < person_menu.length; i++){
-		    if (radio_click == person_menu[i][0]){
-			    item_detail_id += person_menu[i][9] + ",";
+		    //Modified by Yishou Liao @ Oct 20 2016.
+		    var item_detail_id = "";
+		    for (var i = 0; i < person_menu.length; i++){
+			    if (radio_click == person_menu[i][0]){
+				    item_detail_id += person_menu[i][9] + ",";
+			    }
 		    }
-	    }
-	    item_detail_id = item_detail_id.substr(0, (item_detail_id.length - 1));
-	    //End.
+		    item_detail_id = item_detail_id.substr(0, (item_detail_id.length - 1));
+		    //End.
 
-	    // submit form for complete payment process
-	    $.ajax({
-		    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'averdonepayment', $table, $type)); ?>",
-	        method: "post",
-	        data: {
-	        pay: $(".received_price").attr("amount"),
-	                paid_by: $("#selected_card").val(),
-	                change: $(".change_price").attr("amount"),
-	                table: "<?php echo $table ?>",
-	                type: "<?php echo $type ?>",
-	                order_id: "<?php echo $Order_detail['Order']['id'] ?>",
-	                split_method: "<?php echo $split_method ?>",
-	                card_val: $("#card_val").val(),
-	                cash_val: $("#cash_val").val(),
-	                tip_val: $("#tip_val").val(),
-	                tip_paid_by: $("#tip_paid_by").val(),
-	                account_no: radio_click,
-	                order_detail:item_detail_id,
-					discount:discount,
-	        },
-	        success: function (html) {
-	            $(".alert-warning").hide();
-	            $(".reprint").trigger("click");
-	            //Modified by Yishou Liao @ Oct 20 2016.
-	            
-	                //Modified by Yishou Liao @ Oct 21 2016.
-	                /*setCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(order_menu), 1);
-	                setCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>, arrtostr(person_menu), 1);
-	                setCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>, $("#persons").val(), 1);
-
-	                
-	                if (checkCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-	                var seletmp = getCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-	                };
-	                //End.
-	                if (seletmp.split(",").length == $('#account_no').attr('length')){//Modified by Yishou Liao @ Oct 21 2016.
-		                deleteCookie("order_menu" +<?php echo $Order_detail['Order']['order_no'] ?>);
-		                deleteCookie("person_menu_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-		                deleteCookie("persons_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-		                deleteCookie("persons_sele_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-						//Modified by Yishou Liao @ Nov 19 2016
-						deleteCookie("fix_discount_"+<?php echo $Order_detail['Order']['order_no'] ?>);
-						deleteCookie("discount_percent_"+<?php echo $Order_detail['Order']['order_no'] ?>);
-						deleteCookie("promocode_"+<?php echo $Order_detail['Order']['order_no'] ?>);
-						deleteCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-						deleteCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>);
-						//End
-		                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
-	                } else{//Modified by Yishou Liao @ Oct 21 2016.
-	                window.location.reload();
-	                }; //End. */
-
-
-	                // store payment info in the cookie
-
-	                window.location.reload();
-
-	            //End.
-	            },
-	        beforeSend: function () {
-	            $(".RIGHT-SECTION").addClass('load1 csspinner');
-	            $(".alert-warning").show();
-	            }
-	    });
+		    // submit form for complete payment process
+		    $.ajax({
+			    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'averdonepayment', $table, $type)); ?>",
+		        method: "post",
+		        data: {
+		        pay: $(".received_price").attr("amount"),
+		                paid_by: $("#selected_card").val(),
+		                change: $(".change_price").attr("amount"),
+		                table: "<?php echo $table ?>",
+		                type: "<?php echo $type ?>",
+		                order_id: "<?php echo $Order_detail['Order']['id'] ?>",
+		                split_method: "<?php echo $split_method ?>",
+		                card_val: $("#card_val").val(),
+		                cash_val: $("#cash_val").val(),
+		                tip_val: $("#tip_val").val(),
+		                tip_paid_by: $("#tip_paid_by").val(),
+		                account_no: radio_click,
+		                order_detail:item_detail_id,
+						discount:discount,
+		        },
+		        success: function (html) {
+			            $(".alert-warning").hide();
+			            $(".reprint").trigger("click");
+		                window.location.reload();
+		            },
+		        beforeSend: function () {
+			            $(".RIGHT-SECTION").addClass('load1 csspinner');
+			            $(".alert-warning").show();
+		            }
+		    });
 	    } else {
 	    	$.notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
 	                        position: "top center", 
@@ -1254,7 +1226,7 @@ echo $this->fetch('script');
 	//Modified by Yishou Liao @ Dec 08 2016
 	if (typeof($(".received_price").attr('amount')) == "undefined") {
 		received_price = 0;
-	};
+	}
 	//End @ Dec 08 2016
     var remaining = received_price - amount;
     $(".received_price").html("$" + remaining.toFixed(2));
@@ -1263,23 +1235,22 @@ echo $this->fetch('script');
     $(".change_price_txt").html("Remaining 其余");
     $(".change_price").html("$" + (total_price - remaining).toFixed(2));
     } else {
-    $(".change_price_txt").html("Change 找零");
+	    $(".change_price_txt").html("Change 找零");
     }
     }
     if (selected_card == 'tip') {
+	    $("#tip_val").val(0.00);
+	    $(".tip_price").html("$0.00");
+	    }
 
-    $("#tip_val").val(0.00);
-    $(".tip_price").html("$0.00");
-    }
-
-    $("#screen").attr('buffer', 0);
-    $("#screen").val("");
-    $("#screen").focus();
+	    $("#screen").attr('buffer', 0);
+	    $("#screen").val("");
+	    $("#screen").focus();
     })
 
-            $("#screen").keydown(function (e) {
-    // Allow: backspace, delete, tab, escape, enter and .
-    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== - 1 ||
+    $("#screen").keydown(function (e) {
+	    // Allow: backspace, delete, tab, escape, enter and .
+	    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== - 1 ||
             // Allow: Ctrl+A, Command+A
                     (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
                     // Allow: home, end, left, right, down, up
