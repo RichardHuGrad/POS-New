@@ -163,6 +163,7 @@
 
 <?php
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
+echo $this->Html->css('components/KeypadComponent');
 echo $this->fetch('script');
 ?>
 <script>
@@ -367,6 +368,67 @@ echo $this->fetch('script');
 		}
 		
 	}
+
+
+	// enter the number
+	// change the suborder based on the suborders tab
+	// only pay when order is totally split
+	// once is paid, the order and suborder cannot be modified any more
+	$('#input-enter').on('click', function () {
+		var payOrTip = $('input[name="pay-or-tip"]:checked').attr('data-type');
+		var cardOrCash = $('#input-type-group input:checked').attr('data-type');
+
+		var currentSuborderId = $('.suborder-tab.active').attr('data-index');
+
+		var inputNum = parseFloat($('#input-screen').val());
+		console.log(payOrTip);
+		console.log(cardOrCash);
+		console.log(currentSuborderId);
+		console.log(inputNum);
+
+		if (typeof currentSuborderId == "undefined") { // make sure has suborder first
+			alert("no suborder");
+		} else {
+			var currentSuborder = suborders.getSuborder(currentSuborderId);
+
+
+			if (typeof payOrTip == "undefined") { 
+				// notification
+				console.log("pay or tip error");
+			} else if (typeof cardOrCash == "undefined") {
+				// notification
+				console.log("card or cash error");
+			} else { // payortip and cardorcash are both defined
+				// console.log("input data")
+				// change the received and tip value in order
+				if (payOrTip == "pay") {
+					if (cardOrCash == "card") {
+						currentSuborder._received.card = inputNum;
+						
+					} else if (cardOrCash == "cash") {
+						currentSuborder._received.cash = inputNum;
+			
+					}
+
+				} else if (payOrTip == "tip") {
+					if (cardOrCash == "card") {
+						currentSuborder._tip.card = inputNum;
+				
+					} else if (cardOrCash == "cash") {
+						currentSuborder._tip.cash = inputNum;
+						
+					}
+
+				}
+				// console.log(inputNum);
+				drawSubordersDetail();
+			}
+		}
+
+		
+
+	});
+
 
 	function drawUI() {
 		drawOrder();

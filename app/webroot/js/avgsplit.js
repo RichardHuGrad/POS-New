@@ -196,7 +196,7 @@ class Suborder {
 	constructor(suborder_no) {
 		this.items = [];
 		this.suborder_no = suborder_no;
-		this._state = "unpaid";
+		// this._state = "unpaid";
 		this._tax_rate = 0.13;
 
 		this._received = {
@@ -205,7 +205,9 @@ class Suborder {
 			"total": 0
 		};
 		this._tip = {
-			"type": "unknown", // card or cash
+			// "type": "unknown", // card or cash
+			"cash": 0,
+			"card": 0,
 			"amount": 0
 		};
 		this._discount = {
@@ -213,8 +215,8 @@ class Suborder {
 			"amount": 0
 		};
 
-		this.change = 0;
-		this.remaining = 0;
+		// this.change = 0;
+		// this.remaining = 0;
 		// this._subtotal = 0;
 		
 	}
@@ -292,12 +294,44 @@ class Suborder {
 	}
 
 	get received() {
-		return this._received;
+		return  {
+					"card": round2(this._received.card),
+					"cash": round2(this._received.cash),
+					"total": round2 (this._received.card + this._received.cash)
+				}
 	}
 
 	get tip() {
-		return this._tip;
+		return {
+					"card": round2(this._tip.card),
+					"cash": round2(this._tip.cash),
+					"amount": round2(this._tip.card + this._tip.cash)
+				};
 	}
+
+	get remain() {
+		return this.total > this.received.total ? round2(this.total - this.received.total) : 0;
+	}
+
+	get change() {
+		return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
+	}
+
+	// paid or unpaid
+	get state() {
+		if (this.remain == 0 && this.received.total > 0) {
+			return "paid";
+		} else if (this.remain == 0 && this.received.total == 0){
+			return "no+item";
+		} else if (this.remain > 0 && this.received.total > 0) {
+			return "not+finish";
+		} else if (this.remain > 0 && this.received.total == 0) {
+			return "unpaid";
+		} else {
+			return "ERROR";
+		}
+	} 
+
 
 }
 
@@ -516,6 +550,8 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	// var suborderTabCompoenent = $('<a class="suborder-tab">');
 	var titleComponent = $('<li class="suborder-title">').text("Suborder #" + order_no + '-' + suborder.suborder_no);
 
+	// var stateComponent = $('<li class="suborder-state">').text("State :" + suborder.state);
+
 	var subtotalComponent = $('<li class="suborder-subtotal">').text("Subtotal 小计:" + suborder.subtotal);
 
 	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
@@ -526,16 +562,16 @@ var SuborderDetailComponent = function (suborder, cfg) {
 
 	var receivedComponent = $('<li class="suborder-received">').text("Received 收到: " + suborder.received.total + " Cash 现金: " + suborder.received.cash + " Card 卡: " + suborder.received.card);
 
-	var remainComponenet = $('<li class="suborder-remain">').text("Remaining 其余: " + suborder.remaining);
+	var remainComponenet = $('<li class="suborder-remain">').text("Remaining 其余: " + suborder.remain);
 
 	var changeComponent = $('<li class="suborder-change">').text("Change 找零: " + suborder.change);
 
-	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Type:" + suborder.tip.type);
+	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Cash 现金:" + suborder.tip.cash + " Card 卡: " + suborder.tip.card);
 
 	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
 
-	// set css
-	suborderDetailComponent.css("background-image", "url(https://dummyimage.com/600x200/ffffff/b4b5bf.png&text=Paid)")
+	// set css accounding to the state
+	suborderDetailComponent.css("background-image", "url(https://dummyimage.com/600x200/ffffff/b4b5bf.png&text=" + suborder.state + ")");
 
 	return suborderDetailComponent;
 }
@@ -620,60 +656,73 @@ var DiscountComponent = function (cfg) {
 var KeypadComponent = function (cfg) {
 	var cfg = cfg || {};
 
-	var inputScreenCss = {
-			"width": "100%",
-			"border-radius": "17px 17px 0 0",
-			"text-align": "center",
-			"height": "50px",
-			"border": "solid 1px rgba(142,142,142,.9)",
-			"font-size": "24px",
-		};
-
-	var keyScreenWrapperCss = {
-			"border-radius": "17px",
-			"width": "100%",
-			"border": "solid 1px rgba(142,142,142,.9)",
-			"margin-bottom": "30px",
-			"height": "260px",
-		};
-
-	var inputKeyCss = {
-			"float": "left",
-			"text-align": "center",
-			"border-top": "1px solid #eeeded",
-			"color": "#696969",
-			"font-size": "30px",
-		    "font-weight": '600',
-		    "line-height": "50px",
-		    "width": "33.33%",
-		    "border-left": "1px solid #eeeded",
-		    "border-top": "1px solid #eeeded",
-		};
-
-	var buttonGroupCss = {
-
-	};
-
 	var keypadComponent = $('<div id="input-keypad">');
 	
-	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">').css(keyScreenWrapperCss);
+	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">');
 
-	var screenComponent = $('<div><input type="text" id="input-screen" buffer="0" maxlength="13">').find('input').css(inputScreenCss);
+	var screenComponent = $('<div><input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00">');
 
 
 	var buttonGroup = $('<div>');
-	var payCardButton = $('<button class="btn btn-danger btn-lg select_card" id="pay-card">').text('Card 卡');
-	var payCashButton = $('<button class="btn btn-danger btn-lg select_card" id="pay-cash">').text('Cash 现金');
 
-	var tipCardButton = $('<button class="btn btn-danger btn-lg select_card" id="tip-card">').text('Card 卡');
-	var tipCashButton = $('<button class="btn btn-danger btn-lg select_card" id="tip-cash">').text('Cash 现金');
+	var payOrTipGroup = $('<div class="form-group">')
+	var paySelect= $('<label><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
+	var tipSelect = $('<label><input type="radio" id="tip-select" name="pay-or-tip" data-type="tip">Tip</label>');
+	
+	// maybe change the name, is used for select card or cash
+	var typeGroup = $('<div id="input-type-group" class="form-group">');
+
+
+	// var payGroup = $()
+	var payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">Card 卡</label>');							
+	var payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">Cash 现金</label>');
+	// payForm.append(payCardButton).append(payCashButton);
+
+	var tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">Card 卡</label>');
+	var tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
-	var confirmButton = $('<button class="btn btn-success btn-lg card-ok" id="input-confirm">').text('Confirm 卡');;
+	var confirmButton = $('<button class="btn btn-success btn-lg card-ok" id="input-confirm">').text('Confirm 确定');
 
-	var submitButton = $('<button class="btn btn-success btn-lg card-ok" id="input-submit">').text('Submit 卡');;
+	var submitButton = $('<button class="btn btn-success btn-lg card-ok" id="input-submit">').text('Submit 提交');
 
-	buttonGroup.append(payCardButton).append(payCashButton).append(tipCardButton).append(tipCashButton).append(confirmButton).append(submitButton);
+	
+
+
+
+	payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
+		if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
+			// enable payment buttons
+			typeGroup.empty();
+			typeGroup.append(payCardButton).append(payCashButton);
+			
+			// clear the screen
+			// screenClear.trigger('click');
+			
+			// store the type in the buffer
+			// payOrTipBuffer.text('pay');
+
+			console.log("payment is selected");
+		} else if ($(this).is(':checked') && $(this).attr('id') == "tip-select") {
+			// enable tip buttons
+			typeGroup.empty();
+			typeGroup.append(tipCardButton).append(tipCashButton);
+
+			// clear the screen
+			// screenClear.trigger('click');
+			
+			// store the type in the buffer
+			// payOrTipBuffer.text('tip');
+			
+			console.log("tip is selected");
+		} else {
+			console.log('error');
+		}
+	});
+
+
+	buttonGroup.append(payOrTipGroup).append(typeGroup);
+	// buttonGroup.append(payCardButton).append(payCashButton).append(tipCardButton).append(tipCashButton).append(confirmButton).append(submitButton);
 
 	// construct keypad
 	var keyComponent = $('<ul id="input-key-list">');
@@ -683,39 +732,32 @@ var KeypadComponent = function (cfg) {
 
 	var screenClear = $('<li id="input-clear">').text("Clear 清除")
 												.on('click', function() {
-													var value = $('#input-screen').val().slice(0, -1);
-													$('#input-screen').val(value);
+													// var value = $('#input-screen').val().slice(0, -1);
+													$('#input-screen').attr("data-buffer", "0")
+													$('#input-screen').val("00.00");
 												});
 
     // should be changed
     // should not change the suborder state directly
-	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
-												.on('click', function() {
-													// clear all input
-													$('#input-screen').val("00.00");
-
-													// store data in current suborder
-												});
+	var screenEnter = $('<li id="input-enter">').text("Enter 输入");
 
 
 	keyComponent.append(screenClear).append('<li data-num=0 >0</li>').append(screenEnter);
-	keyComponent.find('li').css(inputKeyCss);
 
 	//  to be fixed
+	//  add restriction of num length
 	keyComponent.find('li').each(function() {
 		var attr = $(this).attr('data-num')
 		if (typeof attr !== typeof undefined && attr !== false) {
 			$(this).on('click', function () {
-				var value;
-				if (! parseFloat($('#input-screen').val())) {
-					value = 0;
-					var newValue = parseInt(value + $(this).attr('data-num')) / 100;
-					$('#input-screen').val(newValue);
-				} else {
-					value = parseFloat($('#input-screen').val()) * 100;
-					var newValue = (value + $(this).attr('data-num')) / 100
-					$('#input-screen').val(newValue);
-				}
+				console.log("709");
+				// var value = $('#input-screen').val() ? parseFloat($('#input-screen').val() : 0;
+				var buffer = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');
+				$('#input-screen').attr("data-buffer", buffer);
+				var value = buffer / 100;
+				value = value.toFixed(2);
+
+				$('#input-screen').val(value);
 			});
 		}
 	});
