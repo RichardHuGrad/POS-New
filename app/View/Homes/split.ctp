@@ -22,119 +22,66 @@
 
 </header>
 
+<style>
+	#whole-wrapper {
+		margin-top: 20px;
+	}
 
-<div class="split container-fluid">
-    <div class="clearfix cartwrap-wrap"></div>
+</style>
+
+
+<div class="col-md-12 col-sm-12 col-xs-12" id="whole-wrapper">
     <div id="customer-select-alert" class="alert alert-info alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Customer # <span id="customer-number"></span></strong> selected
-    </div>
-    <div class="order-wrap no-padding">
-        <?php echo $this->Session->flash(); ?>
-        <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?></h2>
-            <?php
-            if ($Order_detail['Order']['table_status'] != 'P') {
-                ?>
-                <!-- Modified by Yishou Liao @ Oct 17 2016. -->
-
-                <div class="table-box dropdown">
-  
-                    <a class="split dropdown-toggle">Split 分单</a>
-     
-                    <ul class="dropdown-menu">
-                        <div class="customchangemenu clearfix">
-                            <div class="left-arrow"></div>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Persons 人数</div>
-                            <?php for ($t = 1; $t <= 20; $t++) { ?>
-                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="#" onclick="javascript:persons(<?php echo $t; ?>)"><?php echo $t; ?></a></div>
-                            <?php } ?>
-                        </div>
-                    </ul>
-                </div>
-
-                <!-- End. -->
-            <?php } ?>
-
-            <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
-            <div class="order-summary">
-                <h3>Order Summary 订单摘要</h3>
-				<div class="clearfix" id="order-component-placeholder">
-					
-				</div>
-
-				<!-- <button id="avg-split" class="btn btn-lg btn-primary">Avg. Split</button> -->
-
-
-                
-            </div>
-                 
-				<div id="person_details" class="order-summary addperson" style="display:block">
-                    <h3>Split Details 分单明细</h3>
-                    <div class="order-summary-indent addperson clearfix" name="splitmenu" id="splitmenu"></div>
-
-                    <div class="clearfix" id="suborders-list-component-placeholder"></div>
-                </div>
-            </div>
-
+        <!-- <strong>Customer # <span id="customer-number"></span></strong> selected -->
     </div>
 
-    <div class="col-md-8 col-sm-8 col-xs-12 RIGHT-SECTION">
-        <ul class="nav nav-tabs" id="person-tab">
-        </ul>
-        <div class="clearfix total-payment" name="split_accounting_details" id="split_accounting_details">
-	    </div>
 
-	    <div id="input-placeholder" class="clearfix">
-	    	
-	    </div>
-		
-		<!--
+    <?php echo $this->Session->flash(); ?>
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+    	<h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?></h2>
         <?php
         if ($Order_detail['Order']['table_status'] != 'P') {
             ?>
-            <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13"></div>
-            <div class="card-indent clearfix">
-                <ul>
-                    <li>1</li>
-                    <li>2</li>
-                    <li>3</li>
 
-                    <li>4</li>
-                    <li>5</li>
-                    <li>6</li>
-
-                    <li>7</li>
-                    <li>8</li>
-                    <li>9</li>
-
-                    <li class="clear-txt" id="Clear">Clear 清除</li>
-                    <li>0</li>
-                    <li class="enter-txt" id="Enter">Enter 输入</li>
-                </ul>
-            </div>
-
-            <div class="card-bot clearfix text-center">
-                <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> Card 卡</button>
-                <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> Cash 现金</button>
-
-                <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
-                <button type="button" class="btn btn-success card-ok"  id="pay-confirm"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
-
-                <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Submit</button>
-
-                <input type="hidden" id="selected_card" value="" />
-                <input type="hidden" id="card_val" name="card_val" value="" />
-                <input type="hidden" id="cash_val" name="cash_val" value="" />
-                <input type="hidden" id="tip_val"name="tip" value="" />
-                <input type="hidden" id="tip_paid_by"name="tip_paid_by" value="" />
+            <div class="table-box dropdown">
+                <a class="split dropdown-toggle">Split 分单</a>
             </div>
 
         <?php } ?>
-    -->
+
+        <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
+
+        <button class="btn btn-lg btn-success pull-right" id="sidebar-button">Test</button>
+    </div>
+
+    <div class="col-md-3 col-sm-4 col-xs-12 order-left" id="left-side">
+        
+
+        <div class="order-summary col-md-12 col-sm-12 col-xs-12" id="order-wrapper">
+            <h3>Order Summary 订单摘要</h3>
+			<div class="clearfix" id="order-component-placeholder"></div>
+        </div>
+             
+		<div class="order-summary col-md-12 col-sm-12 col-xs-12" id="suborders-wrapper">
+            <h3>Split Details 分单明细</h3>
+
+            <div class="clearfix" id="suborders-list-component-placeholder"></div>
+        </div>
+    </div>
+
+    <div class="col-md-9 col-sm-8 col-xs-12 RIGHT-SECTION" id="right-side">
+    	
+        <ul class="nav nav-tabs" id="person-tab">
+        </ul>
+
+	    <div class="clearfix" id="suborders-detail-component-placeholder"></div>
+
+	    <div id="input-placeholder" class="clearfix"> </div>
     </div>
 </div>
-</div>
+
 <div id="confirm" class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -160,6 +107,35 @@ echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCus
 echo $this->fetch('script');
 ?>
 <script>
+	// image path for component
+	var rightImg = '<?php echo $this->Html->image("right.png", array('alt' => "right")); ?>';
+	var cardImg = '<?php echo $this->Html->image("card.png", array('alt' => "card")); ?>';
+	var cashImg = '<?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?>';
+
+
+	jQuery.fn.clickToggle = function(a,b) {
+		var ab = [b,a];
+		return this.on("click", function(){ ab[this._tog^=1].call(this); });
+	};
+
+
+	// add a class for .suborder-list
+	// todo
+	$("#sidebar-button").clickToggle(
+		function() { 
+		  	$('#right-side').hide();
+			$('#left-side').removeClass('col-md-3 col-sm-4 col-xs-12').addClass('col-md-12 col-sm-12 col-xs-12');
+			$('#order-wrapper').removeClass('col-md-12 col-sm-12 col-xs-12').addClass('col-md-3 col-sm-3 col-xs-12');
+			$('#suborders-wrapper').removeClass('col-md-12 col-sm-12 col-xs-12').addClass('col-md-9 col-sm-9 col-xs-12');
+
+			$('.suborder-list').addClass('horizon');
+		}, 
+		function() {
+			$('#right-side').show();
+		    $('#left-side').addClass('col-md-3 col-sm-4 col-xs-12').removeClass('col-md-12 col-sm-12 col-xs-12');
+			$('#order-wrapper').addClass('col-md-12 col-sm-12 col-xs-12').removeClass('col-md-3 col-sm-3 col-xs-12');
+			$('#suborders-wrapper').addClass('col-md-12 col-sm-12 col-xs-12').removeClass('col-md-9 col-sm-9 col-xs-12');
+		}); 
 
 
 	$('#customer-select-alert').hide();
@@ -270,13 +246,13 @@ echo $this->fetch('script');
 	}
 
 	// share one item to all existed suborder
-	function shareItem(order, item_id, suborders, suborder_no) {
+	/*function shareItem(order, item_id, suborders, suborder_no) {
 		var availableItems = order.availableItems;
 
 		for (var i = 0; i < availableItems.length; ++i) {
 			
 		}
-	}
+	}*/
 
 	// return item to order
 	function returnItem(item_id) {
@@ -447,8 +423,8 @@ echo $this->fetch('script');
 	function drawSubordersDetail() {
 		var activeIndex = $('.suborders-detail-tab.active').attr('data-index');
 
-		$("#split_accounting_details").empty();
-		$("#split_accounting_details").append(SubordersDetailComponent(suborders));
+		$("#suborders-detail-component-placeholder").empty();
+		$("#suborders-detail-component-placeholder").append(SubordersDetailComponent(suborders));
 		
 		// TODO
 

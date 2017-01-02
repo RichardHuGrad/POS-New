@@ -644,7 +644,7 @@ var SubordersDetailComponent = function (suborders, cfg) {
 	var cfg = cfg || {};
 
 
-	var subordersDetailComponent = $('<div>');
+	var subordersDetailComponent = $('<div id="suborders-detail-component">');
 	var subordersComponent = $('<div>');
 	var tabComponent = $('<ul id="suborders-detail-tab-component">');
 
@@ -709,12 +709,12 @@ var KeypadComponent = function (cfg) {
 
 
 	// var payGroup = $()
-	var payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">Card 卡</label>');							
-	var payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">Cash 现金</label>');
+	var payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">' + cardImg + 'Card 卡</label>');							
+	var payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cashImg + 'Cash 现金</label>');
 	// payForm.append(payCardButton).append(payCashButton);
 
-	var tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">Card 卡</label>');
-	var tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">Cash 现金</label>');
+	var tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">' + cardImg + 'Card 卡</label>');
+	var tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cashImg + 'Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
 	var confirmButton = $('<button class="btn btn-success btn-lg card-ok" id="input-confirm">').text('Confirm 确定');
