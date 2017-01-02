@@ -184,6 +184,16 @@ class Suborders {
 		}
 	}
 
+	isAnySuborderPaid() {
+		for (var i = 0; i < this.suborders.length; ++i) {
+			if (this.suborders[i].received.total > 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	get length() {
 		// this._length = this.suborders.length;
 		return this.suborders.length;
@@ -224,29 +234,31 @@ class Suborder {
 
 	toJSON() {
 		return {
-			'items': this.items,
+			// 'items': this.items,
 			'suborder_no': this.suborder_no,
-			'state': this._state,
+			// 'state': this.state,
+			
+			// 'discount': this.discount,
+			// 'tax': this.tax,
+			'received': this.received,
+			'tip': this.tip
 		}
 	}
 
-	// the items should come from Order instance
-	// other information comes from obj
-		// restore from cookie first,
-	// then bind the item with order items
-	static fromJSON(order, obj) {
-		if (!(order instanceof Order)) {
-			return false;
-		}
+	// the suborders should be restored from order already
+	// the function should not be static
+	fromJSON(obj) {
 		if (typeof obj == "string") obj = JSON.parse(obj);
-		/*
-		var instance = new Suborder(obj.suborder_no);
-		for (var i = 0; i < obj.items.length; ++i) {
-			var tempItem = Item.fromJSON(obj.items[i]);
-			instance.items.push(tempItem);
+		
+		for (var i = 0; i < obj.suborders.length; ++i) {
+			var temp_no = obj.suborders[i].suborder_no;
+			if (temp_no == this.suborder_no) {
+				this._received.cash = obj.suborders[i].received.cash;
+				this._received.card = obj.suborders[i].received.card;
+				this._tip.cash = obj.suborders[i].tip.cash;
+				this._tip.card = obj.suborders[i].tip.card;
+			}
 		}
-
-		return instance;*/
 	}
 
 	addItem(item) {

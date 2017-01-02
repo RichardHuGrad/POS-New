@@ -182,7 +182,7 @@ echo $this->fetch('script');
 	var split_method = parseInt(<?php echo $split_method ?>);
 	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
 	var orderCookie = order_no + '_split_order';
-	var suborderCookie = order_no + '_split_suborder';
+	var subordersCookie = order_no + '_split_suborder';
 	var person_paid = new Array(); // person who have paid money
 	var suborder_detail = new Array();
 	var paid_info = new Array();
@@ -194,24 +194,24 @@ echo $this->fetch('script');
 	// order = loadOrder(order_no);
 
 	restoreFromCookie();
+
+	// if order changed, delete all cookies
 	if (isOrderChanged()) {
+		console.log('order has changed');
 		order = loadOrder(order_no);
 		suborders = new Suborders();
+
+		Cookies.remove(orderCookie);
+		Cookies.remove(subordersCookie);
 	}
 
 	drawUI();
 
-	// cookie name; order_no + "_split"
-
-	if (Cookies.get(orderCookie) && Cookies.get(orderCookie) != 'undefined') {
-		var tempOrderJson = Cookies.getJSON(orderCookie);
-
+	// whether any suborder is paid
+	if (suborders.isAnySuborderPaid()) {
+		disableSubOrderModify();
 	}
 
-	if (Cookies.get(suborderCookie) && Cookies.get(suborderCookie) != 'undefined') {
-		var tempOrderJson = Cookies.getJSON(suborderCookie);
-
-	}
 
 	// construct suborders by order
 	function restoreFromCookie() {
@@ -241,10 +241,20 @@ echo $this->fetch('script');
 				}
 			}
 		}
+
+		var tempSuborders = Cookies.getJSON(subordersCookie);
+		if (tempSuborders != undefined) {
+			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
+				var temp_no = tempSuborders.suborders[i].suborder_no;
+				console.log(temp_no);
+				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
+			}
+		}
 	}	
 
 	function persistentOrder() {
 		Cookies.set(orderCookie, order);
+		Cookies.set(subordersCookie, suborders);
 	}
 
 
@@ -285,6 +295,7 @@ echo $this->fetch('script');
 		order.setItemState(item_id, "keep");
 		suborders.refreshSuborders();
 
+		persistentOrder();
 		drawUI();
 	}
 
@@ -375,6 +386,12 @@ echo $this->fetch('script');
 	// only pay when order is totally split
 	// once is paid, the order and suborder cannot be modified any more
 	$('#input-enter').on('click', function () {
+		// only when order items are totally assigned, the enter will react
+		if (order.availableItems.length > 0) {
+			alert("You should assign all items of order to suborders");
+			return false;
+		}
+
 		var payOrTip = $('input[name="pay-or-tip"]:checked').attr('data-type');
 		var cardOrCash = $('#input-type-group input:checked').attr('data-type');
 
@@ -421,13 +438,33 @@ echo $this->fetch('script');
 
 				}
 				// console.log(inputNum);
+
+				persistentOrder();
 				drawSubordersDetail();
 			}
 		}
-
-		
-
 	});
+
+	function disableSubOrderModify() {
+		$('.order-item').prop('disabled', true);
+		$('#avg-split').prop('disabled', true);
+
+		// $('#avgSplit').prop('disabled', true);
+		$('#add-person button').prop('disabled', true);
+		$('#delete-person button').prop('disabled', true);
+		$('.order-item').off('click');
+		$('.suborder-label').off('click');
+		$('.suborder-list').off('click');
+		$('.suborder-item').off('click');
+
+		// $('.person-label').removeAttr('onclick');
+		// $('.person-label + ul li').removeAttr('onclick');
+	}
+
+	// todo
+	function enableSubOrderModify () {
+
+	}
 
 
 	function drawUI() {
@@ -435,6 +472,13 @@ echo $this->fetch('script');
 		drawSubOrdersList();
 		drawSubordersDetail();
 		drawKeypadComponent();
+
+		// whether any suborder is paid
+		// todo put to the right place
+		/*if (suborders.isAnySuborderPaid()) {
+			disableSubOrderModify();
+		}*/
+
 	}
 
 
@@ -449,12 +493,21 @@ echo $this->fetch('script');
 	}
 
 	function drawSubordersDetail() {
+		var activeIndex = $('.suborder-tab.active').attr('data-index');
+
 		$("#split_accounting_details").empty();
 		$("#split_accounting_details").append(SubordersDetailComponent(suborders));
 		
 		// TODO
-		if (order.suborderNum > 0) {
+
+		if (typeof activeIndex != "undefined") {
+			$('#suborder-tab-' + activeIndex).trigger('click');
+		} else if (order.suborderNum > 0) {
 			$('#suborder-tab-1').trigger('click');
+		}
+
+		if (suborders.isAnySuborderPaid()) {
+			disableSubOrderModify();
 		}
 	}
 
@@ -869,7 +922,7 @@ echo $this->fetch('script');
 	}
 
 
-	function disableSubOrderModify() {
+	function disableSubOrderModify1() {
 		$('#avgSplit').prop('disabled', true);
 		$('#addperson button').prop('disabled', true);
 		$('#deleteperson button').prop('disabled', true);
