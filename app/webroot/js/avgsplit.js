@@ -450,9 +450,16 @@ class Item {
 var OrderComponent = function(order, cfg) {
 	var cfg = cfg || {};
 
-	var orderComponent = $('<div>');
+	var orderComponent = $('<div id="order-component">');
 	var orderUl = $('<ul>');
-	// var avgSplitButton = $('<button id="avg-split" class="btn btn-primary btn-lg">').text("Avg. Split");
+	var avgSplitButton = $('<button id="avg-split" class="btn btn-primary btn-lg">').text("Avg. Split");
+	
+	if (!suborders.isAnySuborderPaid()) {
+		avgSplitButton.on('click', function () { avgSplit(); });
+	} else {
+		avgSplitButton.prop('disabled', true);
+	}
+	
 
 	var items = order.items;
 	for (var i = 0; i < items.length; ++i) {
@@ -469,7 +476,7 @@ var OrderComponent = function(order, cfg) {
 	}
 
 
-	orderComponent.append(orderUl);
+	orderComponent.append(orderUl).append(avgSplitButton);
 
 	return orderComponent;
 }
@@ -485,10 +492,15 @@ var OrderItemComponent = function(item, cfg) {
 
 	orderItemComponent.append(nameDiv).append(priceDiv);
 
-	orderItemComponent.on("click", function() {
-		assignItem(order, item_id, suborders, current_suborder);
-	});
-
+	// if any order paid, do not attach click event on it
+	if (!suborders.isAnySuborderPaid()) {
+		orderItemComponent.on("click", function() {
+			assignItem(order, item_id, suborders, current_suborder);
+		});
+	} else {
+		orderItemComponent.css('cursor', 'not-allowed');
+	}
+	
 	return orderItemComponent;
 }
 
@@ -503,10 +515,13 @@ var SuborderItemComponent = function (item, cfg) {
 
 	suborderItemComponent.append(nameDiv).append(priceDiv);
 
-	suborderItemComponent.on('click', function() {
-		returnItem(item_id);
-	});
-
+	if (!suborders.isAnySuborderPaid()) {
+		suborderItemComponent.on('click', function() {
+			returnItem(item_id);
+		});
+	} else {
+		suborderItemComponent.css('cursor', 'not-allowed');
+	}
 
 	return suborderItemComponent;
 }
@@ -534,19 +549,27 @@ var SuborderListComponent = function(suborder, cfg) {
 
 	// to be concised
 	//  in the compoenent, cannot use selector to select item
-	suborderListComponent.on("click", function () {
-		// set current person
-		current_suborder = suborderId;
-		$(".suborder-label").css("background-color", "white");
-		$(this).find("label").css("background-color", "red");
-	});
-	// set label css
-	if (current_suborder == suborderId) {
+	if (!suborders.isAnySuborderPaid()) {
+		suborderListComponent.on("click", function () {
+			// set current person
+			current_suborder = suborderId;
+			// $(".suborder-label").css("background-color", "white");
+			if ($(".suborder-label").hasClass('active')) {
+				$(".suborder-label").removeClass('active');
+			}
 
-		// console.log('#suborder-label-' + String(current_suborder));
-		suborderLabel.css("background-color", "red");
+			// $(this).find("label").css("background-color", "red");
+			$(this).find("label").addClass('active');
+		});
+		// set label css
+		if (current_suborder == suborderId) {
+			// console.log('#suborder-label-' + String(current_suborder));
+			// suborderLabel.css("background-color", "red");
+			suborderLabel.addClass('active');
+		}
+	} else {
+		suborderListComponent.css('cursor', 'not-allowed');
 	}
-
 
 
 	return suborderListComponent; 
@@ -591,18 +614,28 @@ var SuborderDetailComponent = function (suborder, cfg) {
 
 var SubordersListComponent = function (suborders, cfg) {
 	var cfg = cfg || {};
-	var subordersListComponent = $('<div id="suborders">');
-/*	var addPersonButton = $('<div id="add-person" class="btn btn-lg btn-primary">');
-	var deletePersonButton = $('<div id="delete-person" class="btn btn-lg btn-danger">');
-	subordersListComponent.append(addPersonButton).append(deletePersonButton);
-*/
+	var subordersListComponent = $('<div id="suborders-list-component">');
+	var addPersonButton = $('<button id="add-person" class="btn btn-lg btn-primary">').text('Add Person 增加人');
+	var deletePersonButton = $('<button id="delete-person" class="btn btn-lg btn-danger">').text('Delete Person 删除人');
+							
+	if (!suborders.isAnySuborderPaid()) {
+		addPersonButton.on('click', function() { addPerson();});
+		deletePersonButton.on('click', function() { deletePerson(suborders); });
+	} else {
+		addPersonButton.prop('disabled', true);
+		deletePersonButton.prop('disabled', true);
+	}
+	
+	var itemsComponent = $('<div id="suborders-list-items">');
+
 	var temp_suborders = suborders.suborders;
 
 	for (var i = 0; i < temp_suborders.length; ++i) {
 		// console.log(SuborderListComponent(temp_suborders[i]));
-		subordersListComponent.append(SuborderListComponent(temp_suborders[i]));
+		itemsComponent.append(SuborderListComponent(temp_suborders[i]));
 	}
 
+	subordersListComponent.append(addPersonButton).append(deletePersonButton).append(itemsComponent);
 
 	return subordersListComponent;
 }
@@ -610,35 +643,25 @@ var SubordersListComponent = function (suborders, cfg) {
 var SubordersDetailComponent = function (suborders, cfg) {
 	var cfg = cfg || {};
 
-	var tabCfg = {
-		"display": "inline",
-		"margin": "2px",
-		"padding": "5px",
-		// "background-color": "red",
-		"border-top-left-radius": 10,
-		"border-top-right-radius": 10,
-	};
-
 
 	var subordersDetailComponent = $('<div>');
 	var subordersComponent = $('<div>');
-	var tabComponent = $('<ul>');
+	var tabComponent = $('<ul id="suborders-detail-tab-component">');
 
 
 	for (var i = 0; i < suborders.suborders.length; ++i) {
 		var curSuborder = suborders.suborders[i];
 
-		var tab = $('<li class="suborder-tab">')
-			.attr("id", "suborder-tab-" + curSuborder.suborder_no)
+		var tab = $('<li class="suborders-detail-tab">')
+			.attr("id", "suborders-detail-tab-" + curSuborder.suborder_no)
 			.attr("data-index", curSuborder.suborder_no)
 			.text("tab #" + curSuborder.suborder_no)
-			.css(tabCfg)
 			.on('click', function() {
 					$(".suborder-detail").css("display", "none");
 					var index = $(this).attr("data-index");
 					$("#suborder-detail-" + index).css("display", "block")
 
-					$('.suborder-tab').each(function () {
+					$('.suborders-detail-tab').each(function () {
 						if ($(this).hasClass('active')) {
 							$(this).removeClass('active');
 						}
@@ -698,9 +721,6 @@ var KeypadComponent = function (cfg) {
 
 	var submitButton = $('<button class="btn btn-success btn-lg card-ok" id="input-submit">').text('Submit 提交');
 
-	
-
-
 
 	payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
 		if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
@@ -751,7 +771,10 @@ var KeypadComponent = function (cfg) {
 
     // should be changed
     // should not change the suborder state directly
-	var screenEnter = $('<li id="input-enter">').text("Enter 输入");
+	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
+												.on('click', function() {
+													enterInput();
+												});
 
 
 	keyComponent.append(screenClear).append('<li data-num=0 >0</li>').append(screenEnter);
@@ -762,7 +785,6 @@ var KeypadComponent = function (cfg) {
 		var attr = $(this).attr('data-num')
 		if (typeof attr !== typeof undefined && attr !== false) {
 			$(this).on('click', function () {
-				console.log("709");
 				// var value = $('#input-screen').val() ? parseFloat($('#input-screen').val() : 0;
 				var buffer = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');
 				$('#input-screen').attr("data-buffer", buffer);
