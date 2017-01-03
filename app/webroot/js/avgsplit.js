@@ -194,6 +194,31 @@ class Suborders {
 		return false;
 	}
 
+	isAllSuborderPaid() {
+		for (var i = 0; i < this.suborders.length; ++i) {
+			if (this.suborders[i].state == 'paid') {
+				continue;
+			} else {
+				return false;
+			}
+		}
+
+		return this.suborders.length > 0 
+	}
+
+	get unpaidSuborders() {
+		var list = []
+		for (var i = 0; i < this.suborders.length; ++i) {
+			if (this.suborders[i].state == 'paid') {
+				continue;
+			} else {
+				list.push(this.suborders[i].suborder_no);
+			}
+		}
+
+		return list;
+	}
+
 	get length() {
 		// this._length = this.suborders.length;
 		return this.suborders.length;
@@ -680,6 +705,8 @@ var SubordersDetailComponent = function (suborders, cfg) {
 	return subordersDetailComponent;
 } 
 
+
+// TODO
 var DiscountComponent = function (cfg) {
 
 }
@@ -721,6 +748,27 @@ var KeypadComponent = function (cfg) {
 
 	var submitButton = $('<button class="btn btn-success btn-lg card-ok" id="input-submit">').text('Submit 提交');
 
+	
+	if (order.availableItems.length == 0) {
+		submitButton.on('click', function(){
+			// submit to the backend
+			if (suborders.isAllSuborderPaid()) {
+				console.log();
+			} else {
+				if (suborders.suborders.length == 0) {
+					alert("there is no suborder to submit");
+				} else {
+					var tempStr = suborders.unpaidSuborders.join();
+					alert("please check the following suborders " + tempStr);
+				}
+			}
+		});
+	} else {
+		submitButton.prop('disabled', true);
+	}
+	
+
+	
 
 	payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
 		if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
@@ -752,8 +800,11 @@ var KeypadComponent = function (cfg) {
 		}
 	});
 
+	// submit button
+	// only be abled when all suborder's states are paidls
 
-	buttonGroup.append(payOrTipGroup).append(typeGroup);
+
+	buttonGroup.append(payOrTipGroup).append(typeGroup).append(submitButton);
 	// buttonGroup.append(payCardButton).append(payCashButton).append(tipCardButton).append(tipCashButton).append(confirmButton).append(submitButton);
 
 	// construct keypad
