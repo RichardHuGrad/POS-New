@@ -1,0 +1,38 @@
+#input-keypad input[type="radio"] {
+	/*display: none;*/
+}
+
+#input-keypad #input-key-list li{
+	float: left;
+	text-align: center;
+	border-top: 1px solid #eeeded;
+	color: #696969;
+	font-size: 30px;
+    font-weight: 600;
+    line-height: 50px;
+    width: 33.33%;
+    border-left: 1px solid #eeeded;
+    border-top: 1px solid #eeeded;
+}
+
+#input-keypad #input-key-screen-wrapper{
+	border-radius: 17px;
+	width: 100%;
+	border: solid 1px rgba(142,142,142,.9);
+	margin-bottom: 30px;
+	height: 260px;
+}
+
+
+#input-keypad #input-screen{
+	width: 100%;
+	border-radius: 17px 17px 0 0;
+	text-align: center;
+	height: 50px;
+	border: solid 1px rgba(142,142,142,.9);
+	font-size: 24px;
+} 
+
+#input-keypad label img{
+	background-color: red;
+}

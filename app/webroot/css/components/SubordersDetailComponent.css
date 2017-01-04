@@ -1,0 +1,28 @@
+.suborders-detail-tab {
+	display: inline;
+	margin: 0 10px;
+	padding: 5px;
+	border-radius: 10px 10px 0 0;
+	background-color: #ccc;
+	padding: 5px;
+}
+
+.suborders-detail-tab.active {
+	background-color: red;
+}
+
+#suborders-detail-tab-component {
+	/*margin-bottom: 10px;*/
+
+}
+#suborders-detail-component {
+	margin-bottom: 30px;
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.suborder-detail li {
+	padding: 5px 0;
+	border-bottom: 1px solid #ccc;
+}

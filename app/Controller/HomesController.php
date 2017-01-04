@@ -1842,6 +1842,8 @@ class HomesController extends AppController {
                 )
         );
 
+        // print_r ($Order_detail);
+
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
     }
 

@@ -1,0 +1,10 @@
+#order-component li {
+	overflow: hidden;
+	border-top: 1px solid #ccc;
+}
+
+
+#order-component-placeholder ul{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

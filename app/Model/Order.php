@@ -10,6 +10,10 @@ class Order extends AppModel {
             'className' => 'OrderItem',
             'foreignKey' => 'order_id'
         ),
+        'OrderSplit' => array(
+            'className' => 'OrderSplit',
+            'foreignKey' => 'order_no'
+        ),
     );
 
     // public $belongsTo = array(
