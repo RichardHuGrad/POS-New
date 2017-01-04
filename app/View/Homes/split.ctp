@@ -23,9 +23,9 @@
 </header>
 
 <style>
-	#whole-wrapper {
+	/* #whole-wrapper {
 		margin-top: 20px;
-	}
+	} */
 
 </style>
 
@@ -54,7 +54,10 @@
         <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
 
         <button class="btn btn-lg btn-success pull-right" id="sidebar-button">Test</button>
+<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->
     </div>
+
+
 
     <div class="col-md-3 col-sm-4 col-xs-12 order-left" id="left-side">
         
@@ -71,10 +74,7 @@
         </div>
     </div>
 
-    <div class="col-md-9 col-sm-8 col-xs-12 RIGHT-SECTION" id="right-side">
-    	
-        <ul class="nav nav-tabs" id="person-tab">
-        </ul>
+    <div class="col-md-9 col-sm-8 col-xs-12" id="right-side">
 
 	    <div class="clearfix" id="suborders-detail-component-placeholder"></div>
 
@@ -112,6 +112,16 @@ echo $this->fetch('script');
 	var cardImg = '<?php echo $this->Html->image("card.png", array('alt' => "card")); ?>';
 	var cashImg = '<?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?>';
 
+	// variable for payment
+	var table_id = '<?php echo $table ?>';
+	var order_type = '<?php echo $type ?>';
+	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+	// var reorder_no = 
+
+
+	// ajax path
+	var done_payment_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'pay')); ?>";
+	var countPopular_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'addPopular')); ?>";;
 
 	jQuery.fn.clickToggle = function(a,b) {
 		var ab = [b,a];
@@ -141,22 +151,17 @@ echo $this->fetch('script');
 
 
 	$('#customer-select-alert').hide();
-    //Modified by Yishou Liao @ Oct 18 2016.
-    var person_No = 0; // only addPerson and deletePerson can modify this variable
+
     //  initialize
 
     var current_person = '0';
     var current_person_tab = '1';
-    var person_menu = new Array();  // [0]: person_id  [8]: item_id
-    var order_menu = new Array();
-	var discount = 0;
-	var split_method = parseInt(<?php echo $split_method ?>);
-	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+
+	var split_method = parseInt(<?php echo $split_method ?>); // should be removed
+	
 	var orderCookie = order_no + '_split_order';
 	var subordersCookie = order_no + '_split_suborder';
-	var person_paid = new Array(); // person who have paid money
-	var suborder_detail = new Array();
-	var paid_info = new Array();
+	var discountCookie = order_no + '_split_discount';
 
 	var order = new Order(order_no);
 	// var suborder = new Suborder('1');
@@ -212,15 +217,18 @@ echo $this->fetch('script');
 		if (tempSuborders != undefined) {
 			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
 				var temp_no = tempSuborders.suborders[i].suborder_no;
-				console.log(temp_no);
+				// console.log(temp_no);
 				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
 			}
 		}
+
+		// restore from the discount cookie
 	}	
 
 	function persistentOrder() {
 		Cookies.set(orderCookie, order);
 		Cookies.set(subordersCookie, suborders);
+		// Cookies.set(discountCookie, discount);
 	}
 
 
@@ -379,6 +387,7 @@ echo $this->fetch('script');
 						currentSuborder._received.card = inputNum;
 						
 					} else if (cardOrCash == "cash") {
+						// give notification when the number is input into suborder
 						currentSuborder._received.cash = inputNum;
 			
 					}
@@ -388,6 +397,7 @@ echo $this->fetch('script');
 						currentSuborder._tip.card = inputNum;
 				
 					} else if (cardOrCash == "cash") {
+						//  give notification when the number is input into suborder
 						currentSuborder._tip.cash = inputNum;
 						
 					}
@@ -396,8 +406,7 @@ echo $this->fetch('script');
 				// console.log(inputNum);
 
 				persistentOrder();
-				// drawSubordersDetail();
-				drawUI();
+				drawExceptKeypad();
 			}
 		}
 	}
@@ -409,6 +418,12 @@ echo $this->fetch('script');
 		drawSubOrdersList();
 		drawSubordersDetail();
 		drawKeypadComponent();
+	}
+
+	function drawExceptKeypad() {
+		drawOrder();
+		drawSubOrdersList();
+		drawSubordersDetail();
 	}
 
 
@@ -448,10 +463,24 @@ echo $this->fetch('script');
 
 
 	function loadOrder(order_no) {
-		var tempOrder = new Order(order_no);
 
+		var tempOrder = new Order(order_no);
 		<?php
 			if (!empty($Order_detail['OrderItem'])) {
+			?>
+				var percent_discount = '<?php echo $Order_detail['Order']['percent_discount'] ;?>';
+				var fix_discount = '<?php echo $Order_detail['Order']['fix_discount']; ?>';
+
+				console.log(percent_discount);
+				console.log(fix_discount);
+				if (percent_discount != 0) {
+					tempOrder.discount = {"type": "percent", "value": percent_discount}
+					console.log(tempOrder.discount)
+				} else if (fix_discount != 0) {
+					tempOrder.discount = {"type": "fixed", "value": fix_discount}
+				}
+			<?php
+
 			    $i = 0;
 			    foreach ($Order_detail['OrderItem'] as $key => $value) {
 
@@ -496,11 +525,14 @@ echo $this->fetch('script');
 	}
 
 	// to be improved as more robust
+	// should check whether discount change
+
+	// discount should be seperate discuss
 	function isOrderChanged () {
 		var changed = false;
 		var temp_order = loadOrder();
 
-		if (temp_order['items'].length != order['items'].length) {
+		if ((temp_order['items'].length != order['items'].length) || (temp_order.discount.type != order.discount.type || temp_order.discount.value != order.discount.value)) {
 			return true;
 		} else {
 			for (var i = 0; i < temp_order['items'].length; ++i) {
@@ -512,17 +544,6 @@ echo $this->fetch('script');
 
 		return changed;
 	}
-
-
-
-	console.log("initailize person_No");
-	console.log(person_No);
-
-
-	console.log("initialize order_menu");
-    console.log(order_menu);
-    console.log("initialize person_menu");
-    console.log(person_menu);
 
 
     $(document).on('click', '.reprint', function () {
@@ -552,41 +573,6 @@ echo $this->fetch('script');
 
     $(document).ready(function () {
     	
-	//  once user want to, all modification operation will be disabled
-	/*$("#pay-confirm").click(function () {
-		if (countAvailableOrderMenu() > 0) {
-    		$.notify("请将所有订单分单完毕以后再付账。", {
-	                        position: "top center", 
-	                        className:"warn"
-	                    });
-    		return false;
-    	} else {
-    		disableSubOrderModify();
-    	}
-
-    	for (var i = 0; i < person_paid.length; ++i) {
-    		if (person_paid[i] != current_person_tab) {
-    			person_paid.push(current_person_tab);
-    		}
-    	}
-    	
-    	deleteCookie("persons_sele_" + order_no);
-    	setCookie("persons_sele_" + order_no, person_paid.join(','), 1);
-
-
-    	if (paid_info.length < person_No) {
-    		for (var i = paid_info.length; i < person_No; ++i) {
-    			paid_info.push(new Array(10));
-	    	}
-    	}
-
-    	storeOrderDetail();
-
-    	// whether all tab is paid?
-    		// yes jump to the first unpaid tab
-    		// no 
-	});*/
-
 
 	// suubmit all info to the database
 	// it should iterator all sub-orders and send them to the database

@@ -19,17 +19,19 @@ function areOrdersSame(order1, order2) {
 }
 
 class Order {
-	constructor(order_no, items, suborderNum) {
+	constructor(order_no, items, suborderNum, discount) {
 		this.items = items || [];
 		this.order_no = order_no;
 		this.suborderNum = suborderNum || 0;
+		this.discount = discount || {"type": "unknown", "value": 0};
 	}
 
 	toJSON() {
 		return {
 			"items": this.items,
 			"order_no": this.order_no,
-			"suborderNum": this.suborderNum
+			"suborderNum": this.suborderNum,
+			"discount": this.discount
 		}
 	}
 
@@ -37,6 +39,7 @@ class Order {
 
 		if (typeof obj == "string") obj = JSON.parse(obj);
 		var instance = new Order(obj.order_no);
+		instance.discount = obj.discount;
 		instance.suborderNum = obj.suborderNum;
 		for (var i = 0; i < obj.items.length; ++i) {
 			var tempItem = Item.fromJSON(obj.items[i]);
@@ -228,7 +231,7 @@ class Suborders {
 // constructor and fromJSON should be done 
 // when the suborder detail finish
 class Suborder {
-	constructor(suborder_no) {
+	constructor(suborder_no, discount) {
 		this.items = [];
 		this.suborder_no = suborder_no;
 		// this._state = "unpaid";
@@ -245,10 +248,8 @@ class Suborder {
 			"card": 0,
 			"amount": 0
 		};
-		this._discount = {
-			"type": "unknown", // fixed or rate
-			"amount": 0
-		};
+		// discount info should come from order
+		this._discount = discount || { "type": "unknown",  /*fixed or percent*/"value": 1};
 
 		// this.change = 0;
 		// this.remaining = 0;
@@ -269,6 +270,7 @@ class Suborder {
 			'tip': this.tip
 		}
 	}
+
 
 	// the suborders should be restored from order already
 	// the function should not be static
@@ -315,7 +317,14 @@ class Suborder {
 
 	//  to do
 	get discount() {
-		return this._discount;
+		if (order.discount.type == "fixed") {
+			return {
+				"type": "fixed",
+				"value": round2(order.discount.value / order.suborderNum)
+			}
+		} else {
+			return order.discount;
+		}
 	}
 
 	// return float with 2 precision
@@ -326,8 +335,19 @@ class Suborder {
 		}
 	}
 
+	// todo
+	// notice the discount, which should be seperate by multiple people
 	get total() {
-		return round2(this.subtotal + this.tax.amount - this.discount.amount);
+		// calculate the actual discount amount
+		var discountAmount;
+		if (this.discount.type == "unknown") {
+			discountAmount = 0;
+		} else if (this.discount.type == "fixed") {
+			discountAmount = parseFloat(this.discount.value);
+		} else if (this.discount.type == "percent") {
+			discountAmount = round2(this.subtotal * parseFloat(this.discount.value) / 100);
+		}
+		return round2(this.subtotal + this.tax.amount - discountAmount);
 	}
 
 	get received() {
@@ -616,7 +636,28 @@ var SuborderDetailComponent = function (suborder, cfg) {
 
 	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
 
-	//  var discountComponent
+	var discountText = function(type, value) { 
+
+		String.prototype.format = function () {
+	        var args = [].slice.call(arguments);
+	        return this.replace(/(\{\d+\})/g, function (a){
+	            return args[+(a.substr(1,a.length-2))||0];
+	        });
+		};
+		var discountAmount;
+		if (type == "unknown") {
+			discountAmount = 0;
+			return "Discount 折扣: {0} Type 类型: {1}".format(discountAmount, "N/A 不打折");
+		} else if (type == "fixed") {
+			discountAmount = parseFloat(value);
+			return "Discount 折扣: {0} Type 类型: {1}".format(discountAmount, "Fixed 固定折扣");
+		} else if (type == "percent") {
+			discountAmount = round2(suborder.subtotal * parseFloat(value) / 100);
+			return "Discount 折扣: {0} ({1}%) Type 类型: {2}".format(discountAmount, value, "Percentage 百分比");
+		}
+		
+	}
+	var discountComponent = $('<li class="suborder-discount">').text(discountText(suborder.discount.type, suborder.discount.value));	
 
 	var totalComponent = $('<li class="suborder-total">').text("Total 总: " + suborder.total);
 
@@ -628,7 +669,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 
 	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Cash 现金:" + suborder.tip.cash + " Card 卡: " + suborder.tip.card);
 
-	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
+	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(discountComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
 
 	// set css accounding to the state
 	suborderDetailComponent.css("background-image", "url(https://dummyimage.com/600x200/ffffff/b4b5bf.png&text=" + suborder.state + ")");
@@ -706,12 +747,6 @@ var SubordersDetailComponent = function (suborders, cfg) {
 } 
 
 
-// TODO
-var DiscountComponent = function (cfg) {
-
-}
-
-
 
 // get val of $('#screen')
 // get type by whether button is active
@@ -722,8 +757,27 @@ var KeypadComponent = function (cfg) {
 	
 	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">');
 
-	var screenComponent = $('<div><input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00">');
-
+	var screenComponent = $('<input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00">');
+	// restrict the input type of screen by keyboard
+	screenComponent.keydown(function(e) {
+		// Allow: backspace, delete, tab, escape, enter and .
+	    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== - 1 ||
+	            // Allow: Ctrl+A, Command+A
+                    (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                    // Allow: home, end, left, right, down, up
+                            (e.keyCode >= 35 && e.keyCode <= 40)) {
+	        
+	        // enter button should trigger enter button
+	    	if (e.keyCode == 13) {
+	    		$('#input-enter').trigger('click');
+	    	}
+	        return;
+        }
+            // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
 
 	var buttonGroup = $('<div>');
 
@@ -753,7 +807,54 @@ var KeypadComponent = function (cfg) {
 		submitButton.on('click', function(){
 			// submit to the backend
 			if (suborders.isAllSuborderPaid()) {
-				console.log();
+				// iterator all suborder
+				/*$.ajax({
+					url: countPopular_url,
+					data: {}
+				});*/
+
+				for (var i = 0; i < suborders.suborders.length; ++i) {
+					var tempSuborder = suborders.suborders[i];
+
+					// clear original order, store the suborder
+					$.ajax({
+						url: done_payment_url,
+						method: "post",
+						data: {
+			                "table_id": table_id,
+			                "order_type": order_type,
+			                "order_id": order_no,
+			                "suborder_id": tempSuborder.suborder_no,
+			                "subtotal": tempSuborder.subtotal,
+			                "discount": {
+			                	"type": tempSuborder.discount.type,
+			                	"value": tempSuborder.discount.value
+			                },
+			                "tax": {
+			                	"tax": tempSuborder.tax.tax,
+			                	"amount": tempSuborder.tax.amount
+			                },
+			                "total": tempSuborder.total,
+			                "change": tempSuborder.change,
+			                "received" : {
+			                	"card": tempSuborder.received.card,
+			                	"cash": tempSuborder.received.cash,
+			                	"total": tempSuborder.received.total
+			                },
+			                "tip": {
+			                	"card": tempSuborder.tip.card,
+			                	"cash": tempSuborder.tip.cash,
+			                	"amount": tempSuborder.tip.amount
+			                },
+			                "suborder_detail": JSON.stringify(tempSuborder.items),
+						}
+					});
+				}
+
+				
+
+
+
 			} else {
 				if (suborders.suborders.length == 0) {
 					alert("there is no suborder to submit");
