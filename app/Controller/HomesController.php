@@ -901,7 +901,8 @@ class HomesController extends AppController {
 
             // update order no            
             $data['Order']['id'] = $order_id;
-            $data['Order']['order_no'] = str_pad($order_id, 5, rand(98753, 87563), STR_PAD_LEFT);
+            // Change to DateTime related $data['Order']['order_no'] = str_pad($order_id, 5, rand(98753, 87563), STR_PAD_LEFT);
+            $data['Order']['order_no'] = date('Ymdhis').$table;
             $this->Order->save($data, false);
         } else {
             $order_id = $Order_detail['Order']['id'];
