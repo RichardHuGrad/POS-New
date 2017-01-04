@@ -378,16 +378,18 @@ class Suborder {
 	}
 
 	// return float with 2 percision
+	// should include extra amount
 	get subtotal() {
 		var subtotal = 0;
 		for (var i = 0; i < this.items.length; ++i) {
 			var temp_item = this.items[i];
 
-			subtotal += parseFloat(temp_item["price"]) + parseFloat(temp_item["extras_amount"]);
+			subtotal += parseFloat(temp_item["price"]);
 		}
 
 		return round2(subtotal);
 	}
+
 
 	//  to do
 	get discount() {
@@ -484,8 +486,8 @@ class Item {
 		this._name_en = name_en;
 		this._name_zh = name_zh;
 		this.selected_extras_name = selected_extras_name;
-		this._price = price;
-		this.extras_amount = extras_amount || 0;
+		this._price = parseFloat(price);
+		this._extras_amount = parseFloat(extras_amount) || 0;
 		this.quantity= quantity;
 		this.order_item_id = order_item_id;
 		this._state = state ;
@@ -501,7 +503,7 @@ class Item {
 			"name_zh": this._name_zh,
 			"selected_extras_name": this.selected_extras_name,
 			"price": this._price,
-			"extras_amount": this.extras_amount,
+			"extras_amount": this._extras_amount,
 			"quantity": this.quantity,
 			"order_item_id": this.order_item_id,
 			"state": this._state,
@@ -542,10 +544,11 @@ class Item {
 	}
 
 	get price() {
+
 		if (this.state == "share" && this.shared_suborders.length > 1) {
-			return round2(this._price / this.shared_suborders.length)
+			return round2((this._price + this._extras_amount) / this.shared_suborders.length)
 		} else {
-			return this._price;
+			return this._price + this._extras_amount;
 		}
 	}
 
@@ -553,7 +556,7 @@ class Item {
 		if (this.state == "share" && this.shared_suborders.length > 1) {
 			var tempStr = this._name_en + ' shared by';
 			for (var i = 0; i < this.shared_suborders.length; ++i) {
-				tempStr += " " + String(this.shared_suborders[i])
+				tempStr += " " + String(this.shared_suborders[i]);
 			}
 
 			return tempStr;
@@ -618,9 +621,10 @@ var OrderItemComponent = function(item, cfg) {
 
 	var orderItemComponent = $('<li class="order-item" id="order-item-' + item_id + '">');
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
+	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["selected_extras_name"]);
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4">').text('$' + item["price"]);
 
-	orderItemComponent.append(nameDiv).append(priceDiv);
+	orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
 	// if any order paid, do not attach click event on it
 	if (!suborders.isAnySuborderPaid()) {
@@ -641,9 +645,10 @@ var SuborderItemComponent = function (item, cfg) {
 
 	var suborderItemComponent = $('<li class="suborder-item" id="suborder-item-' + item_id + '" data-itemId="' + item_id + '">');
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
+	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["selected_extras_name"]); 
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4">').text('$' + item["price"]);
 
-	suborderItemComponent.append(nameDiv).append(priceDiv);
+	suborderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
 	if (!suborders.isAnySuborderPaid()) {
 		suborderItemComponent.on('click', function() {

@@ -325,26 +325,9 @@
                                     <?php } ?>
                                 </li>
 
-                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class="dropdown-submenu bottom-submenu"' ?>><a class="test" tabindex="-1" href="<?php
-                                    /*if (@$dinein_tables_status[$i] == 'N')
-                                        echo $this->Html->url(array('controller' => 'homes', 'action' => 'split', 'table' => $i, 'type' => 'D', 'order' => @$orders_no[$i]['D']));
-                                    else*/
-                                        echo "javascript:void(0)";
+                                <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class=" bottom-submenu"' ?>><a class="test" tabindex="-1" href="<?php
+                                    echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1'));
                                     ?>">Split Bill<br />分单</a>
-                                    <?php
-                                        if (@$dinein_tables_status[$i] == 'N') {
-                                    ?>
-                                            <ul class="dropdown-menu">
-                                                <div class="clearfix">
-                                                    <a class="close-btn" href="javascript:void(0)">X</a>
-                                                    <div class="left-arrow"></div>
-                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'0')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Avg. Split 平均分单</div></a>
-                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1')); ?>"><div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Cust. Split 按人分单</div></a>
-                                                </div>
-                                            </ul>
-                                    <?php
-                                        }
-                                    ?>
                                 </li>
                                 <!-- End. -->
                                 
