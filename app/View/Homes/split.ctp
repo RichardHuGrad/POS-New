@@ -120,8 +120,10 @@ echo $this->fetch('script');
 
 
 	// ajax path
-	var done_payment_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'pay')); ?>";
-	var countPopular_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'addPopular')); ?>";;
+	var home_page_url = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>"
+	var store_suborder_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'storeSuborder')); ?>";
+	var countPopular_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'addPopular')); ?>";
+	var update_original_order_url = "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'updateOriginalOrder')); ?>";
 
 	jQuery.fn.clickToggle = function(a,b) {
 		var ab = [b,a];

@@ -226,6 +226,80 @@ class Suborders {
 		// this._length = this.suborders.length;
 		return this.suborders.length;
 	}
+
+	get count() {
+		var tax_amount = 0;
+		var subtotal = 0;
+		var total = 0;
+		var card_val = 0;
+		var cash_val = 0;
+		var tip = 0;
+		var tip_paid_by; 
+		var tip_paid_by_set = new Set();
+		var paid = 0;
+		var paid_by;
+		var change = 0;
+		var fix_discount = 0;
+		var percent_discount = 0;
+		var discount_value = 0;
+
+		for (var i = 0; i < this.suborders.length; ++i) {
+			var tempSuborder = this.suborders[i];
+			tax_amount += tempSuborder.tax.amount;
+			subtotal += tempSuborder.subtotal;
+			total += tempSuborder.total;
+			card_val += tempSuborder.received.card;
+			cash_val += tempSuborder.received.cash;
+			tip += tempSuborder.tip.card + tempSuborder.tip.cash;
+			if (tempSuborder.tip.type != "no tip")
+				tip_paid_by_set.add(tempSuborder.tip.type);
+			if (tip_paid_by_set.size == 1) {
+				tip_paid_by = tempSuborder.tip.type
+			} else {
+				tip_paid_by = "mixed";
+			}
+			paid += tempSuborder.received.card + tempSuborder.received.cash;
+			change += tempSuborder.change;
+		}
+
+		if (order.discount.type == "fixed") {
+			fix_discount = order.discount.value;
+			discount_value = order.discount.value;
+		} else if (order.discount.type == "percent") {
+			percent_discount = order.discount.value;
+			discount_value = round2(parseFloat(subtotal) * parseFloat(order.discount.value));
+		}
+
+		if (card_val > 0 && cash_val > 0) {
+			paid_by = "mixed";
+		} else if (card_val > 0 ) {
+			paid_by = "card";
+		} else if (cash_val > 0 ) {
+			paid_by = "cash";
+		}
+
+
+		return {
+			"tax": 13,
+			"tax_amount": tax_amount,
+			"subtotal": subtotal,
+			"total": total,
+			"card_val": card_val,
+			"cash_val": cash_val,
+			"tip": tip,
+			"tip_paid_by": tip_paid_by,
+			"paid": paid,
+			"paid_by": paid_by,
+			"change": change,
+			"fix_discount": fix_discount,
+			"percent_discount": percent_discount,
+			"discount_value": discount_value,
+		}
+
+		
+		order.discount.type
+		order.discount.value
+	}
 }
 
 // constructor and fromJSON should be done 
@@ -359,10 +433,21 @@ class Suborder {
 	}
 
 	get tip() {
+		var type;
+		if (this._tip.card > 0 && this._tip.cash) {
+			type = "mixed";
+		} else if (this._tip.card > 0) {
+			type = "card";
+		} else if (this._tip.cash) {
+			type = "cash";
+		} else {
+			type = "no tip";
+		}
 		return {
 					"card": round2(this._tip.card),
 					"cash": round2(this._tip.cash),
-					"amount": round2(this._tip.card + this._tip.cash)
+					"amount": round2(this._tip.card + this._tip.cash),
+					"type": type 
 				};
 	}
 
@@ -807,49 +892,72 @@ var KeypadComponent = function (cfg) {
 		submitButton.on('click', function(){
 			// submit to the backend
 			if (suborders.isAllSuborderPaid()) {
+				
+				
 				// iterator all suborder
-				/*$.ajax({
-					url: countPopular_url,
-					data: {}
-				});*/
-
 				for (var i = 0; i < suborders.suborders.length; ++i) {
 					var tempSuborder = suborders.suborders[i];
 
-					// clear original order, store the suborder
+
+
 					$.ajax({
-						url: done_payment_url,
+						url: store_suborder_url,
 						method: "post",
 						data: {
-			                "table_id": table_id,
-			                "order_type": order_type,
-			                "order_id": order_no,
-			                "suborder_id": tempSuborder.suborder_no,
-			                "subtotal": tempSuborder.subtotal,
-			                "discount": {
-			                	"type": tempSuborder.discount.type,
-			                	"value": tempSuborder.discount.value
-			                },
-			                "tax": {
-			                	"tax": tempSuborder.tax.tax,
-			                	"amount": tempSuborder.tax.amount
-			                },
+							"table_no": table_id,
+			                "order_no": order_no,
+			                "suborder_no": tempSuborder.suborder_no,
+		                	"subtotal": tempSuborder.subtotal,
+		                	// "discount_type": tempSuborder.discount.type.toUpperCase(),
+			                "discount_value": tempSuborder.discount.value,
+		                	"tax": tempSuborder.tax.tax * 100,
+		                	"tax_amount": tempSuborder.tax.amount,
 			                "total": tempSuborder.total,
+			                "paid_card": tempSuborder.received.card,
+			                "paid_cash": tempSuborder.received.cash,
+			                "tip_card": tempSuborder.tip.card,
+			                "tip_cash": tempSuborder.tip.cash,
 			                "change": tempSuborder.change,
-			                "received" : {
-			                	"card": tempSuborder.received.card,
-			                	"cash": tempSuborder.received.cash,
-			                	"total": tempSuborder.received.total
-			                },
-			                "tip": {
-			                	"card": tempSuborder.tip.card,
-			                	"cash": tempSuborder.tip.cash,
-			                	"amount": tempSuborder.tip.amount
-			                },
-			                "suborder_detail": JSON.stringify(tempSuborder.items),
+			                "items": JSON.stringify(tempSuborder.items),
 						}
+					}).done(function() {
+						console.log("succuess");
+					}).fail(function() {
+						alert("fail");
 					});
 				}
+
+
+				// update original order
+				var sendData = suborders.count
+				$.ajax({
+					url: update_original_order_url,
+					method: "post",
+					data: {
+		    			"order_no": order_no,
+		    			// "table_no": table_id,
+		    			// "tax": sendData.tax,
+		    			// "tax_amount": sendData.tax_amount,
+		    			// "subtotal": sendData.subtotal,
+		    			// "total": sendData.total,
+		    			"card_val": sendData.card_val,
+		    			"cash_val": sendData.cash_val,
+		    			"tip": sendData.tip,
+		    			"tip_paid_by": sendData.tip_paid_by.toUpperCase(),
+		    			"paid": sendData.tip_paid,
+		    			"change": sendData.change,
+		    			"paid_by": sendData.paid_by.toUpperCase(),
+		    			// "fix_discount": sendData.fix_discount,
+		    			// "percent_discount": sendData.percent_discount,
+		    			// "discount_value": sendData.discount_value
+					}
+				}).fail(function() {
+						alert("fail");
+				}).done(
+					function() {
+						window.location.replace(home_page_url);
+					}
+				);
 
 				
 
