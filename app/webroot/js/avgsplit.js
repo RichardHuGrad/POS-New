@@ -128,6 +128,8 @@ class Order {
 
 }
 
+
+// rely on order
 class Suborders {
 	constructor(suborders = []) {
 		this.suborders = suborders;
@@ -840,8 +842,13 @@ var SubordersDetailComponent = function (suborders, cfg) {
 
 // get val of $('#screen')
 // get type by whether button is active
-var KeypadComponent = function (cfg) {
+// use inverse of control to decouple the order and suborder
+var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentFunction) {
 	var cfg = cfg || {};
+	var order = order;
+	var suborders = suborders;
+	var drawFunction = drawFunction;
+	var persistentFunction = persistentFunction;
 
 	var keypadComponent = $('<div id="input-keypad">');
 	
@@ -880,17 +887,17 @@ var KeypadComponent = function (cfg) {
 
 
 	// var payGroup = $()
-	var payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">' + cardImg + 'Card 卡</label>');							
-	var payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cashImg + 'Cash 现金</label>');
+	var payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">' + cfg.cardImg + 'Card 卡</label>');							
+	var payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
 	// payForm.append(payCardButton).append(payCashButton);
 
-	var tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">' + cardImg + 'Card 卡</label>');
-	var tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cashImg + 'Cash 现金</label>');
+	var tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">' + cfg.cardImg + 'Card 卡</label>');
+	var tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
-	var confirmButton = $('<button class="btn btn-success btn-lg card-ok" id="input-confirm">').text('Confirm 确定');
+	var confirmButton = $('<button class="btn btn-success btn-lg" id="input-confirm">').text('Confirm 确定');
 
-	var submitButton = $('<button class="btn btn-success btn-lg card-ok" id="input-submit">').text('Submit 提交');
+	var submitButton = $('<button class="btn btn-success btn-lg" id="input-submit">').text('Submit 提交');
 
 	
 	if (order.availableItems.length == 0) {
@@ -902,8 +909,6 @@ var KeypadComponent = function (cfg) {
 				// iterator all suborder
 				for (var i = 0; i < suborders.suborders.length; ++i) {
 					var tempSuborder = suborders.suborders[i];
-
-
 
 					$.ajax({
 						url: store_suborder_url,
@@ -970,10 +975,10 @@ var KeypadComponent = function (cfg) {
 
 			} else {
 				if (suborders.suborders.length == 0) {
-					alert("there is no suborder to submit");
+					$.notify("there is no suborder to submit");
 				} else {
 					var tempStr = suborders.unpaidSuborders.join();
-					alert("please check the following suborders " + tempStr);
+					$.notify("please check the following suborders " + tempStr);
 				}
 			}
 		});
@@ -989,24 +994,12 @@ var KeypadComponent = function (cfg) {
 			// enable payment buttons
 			typeGroup.empty();
 			typeGroup.append(payCardButton).append(payCashButton);
-			
-			// clear the screen
-			// screenClear.trigger('click');
-			
-			// store the type in the buffer
-			// payOrTipBuffer.text('pay');
 
 			console.log("payment is selected");
 		} else if ($(this).is(':checked') && $(this).attr('id') == "tip-select") {
 			// enable tip buttons
 			typeGroup.empty();
 			typeGroup.append(tipCardButton).append(tipCashButton);
-
-			// clear the screen
-			// screenClear.trigger('click');
-			
-			// store the type in the buffer
-			// payOrTipBuffer.text('tip');
 			
 			console.log("tip is selected");
 		} else {
@@ -1038,7 +1031,7 @@ var KeypadComponent = function (cfg) {
     // should not change the suborder state directly
 	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
 												.on('click', function() {
-													enterInput();
+													$(document).queue(enterInput).queue(persistentFunction).queue(drawFunction);
 												});
 
 
@@ -1069,6 +1062,9 @@ var KeypadComponent = function (cfg) {
 
 	return keypadComponent;
 }
+
+
+
 
 
 function round2(number) {
