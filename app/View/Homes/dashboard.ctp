@@ -114,6 +114,7 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
+                    	<li><div id='print-today-all' class="pull-left paid-txt">Print orders 打印总单 </div></li>
                         <li>
                             <div class="clearfix marginB15">
                                 <div class="pull-left notpaid"></div>
@@ -660,7 +661,24 @@ echo $this->fetch('script');
         $('.merge-checkbox').on('click', function(e) {
             e.stopPropagation();
         });
-    });
+        
+        $('#print-today-all').on('click', function(e) {
+        	e.preventDefault();
+			$.ajax({
+				url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders', 0)); ?>",
+				method: "post",
+				data: {},
+				dataType: "html",
+				async: false,
+				success: function (html) {
+					alert("Finished");
+				},
+				error: function (html) {
+					alert("error");
+				}
+			});
+		});
+	});
 
     $(window).load(function () {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {

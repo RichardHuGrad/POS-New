@@ -1848,7 +1848,129 @@ class HomesController extends AppController {
     }
 
     
+    //End.
+    //Modified by Jack @2017-01-05
+    public function printTodayOrders($print_zh = false) {
+        // $this->loadModel('Cashier');
+    	if (empty($this->data['Printer'])) {
+    		die("No Printer");
+    	}
+    	$Printer = $this->data['Printer'];
+    	$this->loadModel('Order');
+        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', time() - 86400));
+        $fields = array(
+        		'Order.order_no',
+        		'Order.cashier_id',
+        		'Order.table_no',
+        		'Order.total',
+        		'Order.paid',
+        		'Order.cash_val',
+        		'Order.card_val',
+        		'Order.tax_amount',
+        		'Order.discount_value',
+        		'Order.percent_discount',
+        		'Order.paid_by',
+        		'Order.tip',
+        		'Order.tip_paid_by'
+        );
+        $Orders = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
+        print_r($Orders);
+        die('XX');
+		foreach (array_keys($Printer) as $key) {
+			$printer_name = $Printer[$key];
+			$printer_loca = $key;
 
+			date_default_timezone_set("America/Toronto");
+			$date_time = date("l M d Y h:i:s A");
+			
+			$handle = printer_open($printer_name);
+			printer_start_doc($handle, "All Orders");
+			printer_start_page($handle);
+			
+			if ($print_zh == true) {
+				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+				printer_select_font($handle, $font);
+				printer_draw_text($handle, iconv("UTF-8", "gb2312", "总单"), 138, 20);
+			} else {
+				$font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+				printer_select_font($handle, $font);
+				printer_draw_text($handle, "All Orders", 138, 20);
+			};
+			
+			//Print order information
+			$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+			printer_select_font($handle, $font);
+			printer_draw_text($handle, "Order #       Total      Pay By", 32, 80);
+
+			$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+			printer_select_pen($handle, $pen);
+			printer_draw_line($handle, 21, 160, 600, 160);
+			
+			if ($print_zh == true) {
+				$font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+			} else {
+				$font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+			}
+			printer_select_font($handle, $font);
+			
+			//Print orders
+			$cashierArr = array();
+			$totalArr = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'tax' => 0);
+			$print_y = 180;
+			foreach ($Orders as $order) {
+				printer_draw_text($handle, $order['order_no'] . '   ' . $order['paid'] . '   ' . $order['paid_by'], 32, $print_y);
+				$print_y+=32;
+				if (!isset($cashierArr[$order['cashier_id']])) {
+					$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0);
+    			}
+    			$cashierArr[$order['cashier_id']]['total'] += $order['total'];
+    			$cashierArr[$order['cashier_id']]['cash_total'] += $order['cash_val'];
+    			$cashierArr[$order['cashier_id']]['card_total'] += $order['card_val'];
+    			$cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
+    			if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+    				$cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
+    			} else {
+    				$cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
+    			}
+    			$totalArr['total'] += $order['total'];
+    			$totalArr['tax'] += $order['tax_amount'];
+    			$totalArr['cash_total'] += $order['cash_val'];
+    			$totalArr['card_total'] += $order['card_val'];
+    			$totalArr['total_tip'] += $order['tip'];
+    			if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+    				$totalArr['cash_tip_total'] += $order['tip'];
+    			} else {
+    				$totalArr['card_tip_total'] += $order['paid'];
+    			}
+			}
+			$print_y+=32;
+			
+			printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
+			
+			foreach ($cashierArr as $key => $cs) {
+				printer_draw_text($handle, 'Cashier ' . $key, 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $cs['total_tip']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $cs['cash_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $cs['card_tip_total']), 32, $print_y); $print_y+=32;
+			}
+			printer_delete_font($font);
+			printer_end_page($handle);
+			printer_end_doc($handle);
+			printer_close($handle);
+		};
+		exit;
+	}
+    
+    
     //End.
     //Modified by Yishou Liao @ Nov 15 2016.
     public function printTokitchen($print_zh = false, $splitItme = false) {
