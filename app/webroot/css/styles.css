@@ -128,11 +128,15 @@ header { background: #c30e23; height: 75px; }
 .total-payment li { border-bottom: 1px solid #ccc; /* padding: 4px 0;  */}
 .total-payment li:last-child { border: 0px; }
 .discount_view .form-group { margin-bottom: 5px; }
-.card-wrap input { -webkit-border-radius: 17px 17px 0 0; -moz-border-radius: 17px 17px 0 0; border-radius: 17px 17px 0 0; width: 100%; background-color: #fff; -webkit-box-shadow: -1px -1px 3px rgba(0,0,0,.16); -moz-box-shadow: -1px -1px 3px rgba(0,0,0,.16); box-shadow: -1px -1px 3px rgba(0,0,0,.16); border: solid 1px rgba(142,142,142,.9); padding: 0 20px; font-size: 24px; height: 44px; text-align: center; }
+.card-wrap input {background: #e0e0e0!important; -webkit-border-radius: 17px 17px 0 0; -moz-border-radius: 17px 17px 0 0; border-radius: 17px 17px 0 0; width: 100%; background-color: #fff; -webkit-box-shadow: -1px -1px 3px rgba(0,0,0,.16); -moz-box-shadow: -1px -1px 3px rgba(0,0,0,.16); box-shadow: -1px -1px 3px rgba(0,0,0,.16); border: solid 1px rgba(142,142,142,.9); padding: 0 20px; font-size: 24px; height: 44px; text-align: center; }
 .card-indent { -webkit-border-radius: 0 0 17px 17px; -moz-border-radius: 0 0 17px 17px; border-radius: 0 0 17px 17px; width: 100%; background-color: #fff; -webkit-box-shadow: -1px -1px 3px rgba(0,0,0,.16); -moz-box-shadow: -1px -1px 3px rgba(0,0,0,.16); box-shadow: -1px -1px 3px rgba(0,0,0,.16); border: solid 1px rgba(142,142,142,.9); }
 .card-indent li { cursor: pointer; width: 33.33%; border-left: 1px solid #eeeded; float: left; text-align: center; height: 45px; border-top: 1px solid #eeeded; color: #696969; font-size: 30px; font-weight: 600; line-height: 45px; }
-.card-indent li.clear-txt { font-size: 22px; }
-.card-indent li.enter-txt { font-size: 22px; color: #c30e23; }
+.card-indent li.clear-txt { font-size: 22px; border-bottom-left-radius: 15px;color: #c30e23;}
+.card-indent li.enter-txt { font-size: 22px; color: #337ab7; border-bottom-right-radius: 15px;}
+.card-indent li:hover{
+	background: #ccc;
+	color: #c30e23;
+}
 .card-bot { padding: 20px 0 30px; }
 .card-bot .btn { font-size: 19px; vertical-align: middle; margin: 0; padding: 10px 15px; opacity: 0.2; }
 .card-bot .btn.active { opacity: 1 !important; }

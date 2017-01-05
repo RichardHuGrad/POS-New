@@ -13,6 +13,7 @@
 	background-color: #d9534f;
 	color: #fff;
 	padding: 5px 8px;
+	cursor: pointer;
 }
 
 #suborders-list-component-placeholder #suborders-list-items{
