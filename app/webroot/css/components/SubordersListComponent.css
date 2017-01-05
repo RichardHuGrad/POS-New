@@ -5,9 +5,12 @@
 }
 .suborder-label{
 	color:#c30e23;
+	width: 100%;
+	background: #eee;
+    padding: 5px 8px;
 }
 .suborder-label.active {
-	background-color: #c30e23;
+	background-color: #d9534f;
 	color: #fff;
 	padding: 5px 8px;
 }
