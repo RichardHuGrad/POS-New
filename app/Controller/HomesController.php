@@ -1892,33 +1892,37 @@ class HomesController extends AppController {
 			if ($print_zh == true) {
 				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
 				printer_select_font($handle, $font);
-				printer_draw_text($handle, iconv("UTF-8", "gb2312", "总单"), 138, 20);
+				printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 138, 20);
+				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
 			} else {
 				$font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
 				printer_select_font($handle, $font);
 				printer_draw_text($handle, "All Orders", 138, 20);
+				$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
 			};
 			
 			//Print order information
-			$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
 			printer_select_font($handle, $font);
 			$c1 = 30;
-			$c2 = 130;
-			$c3 = 230;
-			printer_draw_text($handle, "Order #", $c1, 80);
-			printer_draw_text($handle, "Pay By", $c2, 80);
-			printer_draw_text($handle, "Total", $c3, 80);
+			$c2 = 230;
+			$c3 = 350;
+			if ($print_zh == true) {
+				$orderNstr = "Order #";
+				$paybystr = "Pay By";
+				$toralStr = "Total";
+			} else {
+				$orderNstr = "订单号";
+				$paybystr = "类型";
+				$toralStr = "总计";
+			}
+			
+			printer_draw_text($handle, $orderNstr, $c1, 80);
+			printer_draw_text($handle, $paybystr, $c2, 80);
+			printer_draw_text($handle, $toralStr, $c3, 80);
 				
 			$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
 			printer_select_pen($handle, $pen);
 			printer_draw_line($handle, 21, 160, 600, 160);
-			
-			if ($print_zh == true) {
-				$font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-			} else {
-				$font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-			}
-			printer_select_font($handle, $font);
 			
 			//Print orders
 			$cashierArr = array();
@@ -1928,7 +1932,7 @@ class HomesController extends AppController {
 				$order = $o['Order'];
 				printer_draw_text($handle, $order['order_no'], $c1, $print_y);
 				printer_draw_text($handle, $order['paid_by'], $c2, $print_y);
-				printer_draw_text($handle, $order['total'], $c3, $print_y);
+				printer_draw_text($handle, number_format($order['total'], 2), $c3, $print_y);
 				$print_y+=32;
 				if (!isset($cashierArr[$order['cashier_id']])) {
 					$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
@@ -1965,30 +1969,67 @@ class HomesController extends AppController {
 			printer_draw_line($handle, 21, $print_y, 600, $print_y);
 			$print_y+=32;
 				
-			printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
-			$print_y+=16;
-			printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Mix Tip Total : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
-				
-			$print_y+=16;
-			foreach ($cashierArr as $key => $cs) {
+			if ($print_zh == true) {
+				printer_draw_text($handle, '税额 : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '现金额 : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '卡类额 : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '混和现金额 : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '混和卡类额 : ' . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '总计 : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
 				$print_y+=16;
-				printer_draw_line($handle, 21, $print_y, 600, $print_y);
+				printer_draw_text($handle, '现金小费总计 : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '卡类小费总计 : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '混和小费总计 : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, '小费总计 : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+					
 				$print_y+=16;
-				printer_draw_text($handle, 'Cashier ' . $key, 32, $print_y); $print_y+=32;
-				printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
-				printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
-				printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
-				printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $cs['total_tip']), 32, $print_y); $print_y+=32;
-				printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $cs['cash_tip_total']), 32, $print_y); $print_y+=32;
-				printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $cs['card_tip_total']), 32, $print_y); $print_y+=32;
+				foreach ($cashierArr as $key => $cs) {
+					$print_y+=16;
+					printer_draw_line($handle, 21, $print_y, 600, $print_y);
+					$print_y+=16;
+					printer_draw_text($handle, '收银台 ' . $key, 32, $print_y); $print_y+=32;
+					$print_y+=16;
+					printer_draw_line($handle, 21, $print_y, 600, $print_y);
+					printer_draw_text($handle, '税额 : ' . sprintf('%0.2f', $cs['tax']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '现金额 : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '卡类额 : ' . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '混和现金额 : ' . sprintf('%0.2f', $cs['cash_mix_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '混和卡类额 : ' . sprintf('%0.2f', $cs['card_mix_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '总计 : ' . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
+					$print_y+=16;
+					printer_draw_text($handle, '现金小费总计 : ' . sprintf('%0.2f', $cs['cash_tip_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '卡类小费总计 : ' . sprintf('%0.2f', $cs['card_tip_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '混和小费总计 : ' . sprintf('%0.2f', $cs['mix_tip_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, '小费总计 : ' . sprintf('%0.2f', $cs['total_tip']), 32, $print_y); $print_y+=32;
+				}
+			} else {
+				printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $cs['tax']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
+				$print_y+=16;
+				printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Mix Tip Total : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+					
+				$print_y+=16;
+				foreach ($cashierArr as $key => $cs) {
+					$print_y+=16;
+					printer_draw_line($handle, 21, $print_y, 600, $print_y);
+					$print_y+=16;
+					printer_draw_text($handle, 'Cashier ' . $key, 32, $print_y); $print_y+=32;
+					$print_y+=16;
+					printer_draw_line($handle, 21, $print_y, 600, $print_y);
+					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $cs['tax']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $cs['cash_mix_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $cs['card_mix_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
+				}
 			}
 			printer_delete_font($font);
 			printer_end_page($handle);
