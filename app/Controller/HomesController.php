@@ -1892,7 +1892,7 @@ class HomesController extends AppController {
 			if ($print_zh == true) {
 				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
 				printer_select_font($handle, $font);
-				printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 138, 20);
+				printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 108, 20);
 				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
 			} else {
 				$font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
@@ -1922,12 +1922,12 @@ class HomesController extends AppController {
 				
 			$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
 			printer_select_pen($handle, $pen);
-			printer_draw_line($handle, 21, 160, 600, 160);
+			printer_draw_line($handle, 21, 130, 600, 130);
 			
 			//Print orders
 			$cashierArr = array();
 			$totalArr = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0, 'tax' => 0);
-			$print_y = 180;
+			$print_y = 150;
 			foreach ($Orders as $o) {
 				$order = $o['Order'];
 				printer_draw_text($handle, $order['order_no'], $c1, $print_y);
@@ -1991,7 +1991,6 @@ class HomesController extends AppController {
 					$print_y+=8;
 					printer_draw_line($handle, 21, $print_y, 600, $print_y);
 					$print_y+=8;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $cs['tax']), 32, $print_y); $print_y+=32;
 					printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金额 : ') . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
 					printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类额 : ') . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
 					printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和现金额 : ') . sprintf('%0.2f', $cs['cash_mix_total']), 32, $print_y); $print_y+=32;
@@ -2004,7 +2003,7 @@ class HomesController extends AppController {
 					printer_draw_text($handle, iconv("UTF-8", "gb2312", '小费总计 : ') . sprintf('%0.2f', $cs['total_tip']), 32, $print_y); $print_y+=32;
 				}
 			} else {
-				printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $cs['tax']), 32, $print_y); $print_y+=32;
+				printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
 				printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
 				printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
 				printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
@@ -2025,7 +2024,6 @@ class HomesController extends AppController {
 					$print_y+=8;
 					printer_draw_line($handle, 21, $print_y, 600, $print_y);
 					$print_y+=8;
-					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $cs['tax']), 32, $print_y); $print_y+=32;
 					printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
 					printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
 					printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $cs['cash_mix_total']), 32, $print_y); $print_y+=32;
