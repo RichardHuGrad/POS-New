@@ -665,7 +665,7 @@ class Item {
 			"name_zh": this._name_zh,
 			"name_en": this._name_en,
 			"price": this._price,
-			"selected_extras_name": this.selected_extras_name.split(','),
+			"selected_extras_name": this.selected_extras_name,
 			"extras_amount": this._extras_amount,
 			"quantity": this.quantity,
 		}

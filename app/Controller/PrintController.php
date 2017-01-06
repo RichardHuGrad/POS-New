@@ -2,6 +2,63 @@
 
 class PrintController extends AppController {
 
+    var $fontHeaderEn = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+
+    var $fontH = 28; // font height
+    var $fontW = 10; // font width
+
+
+   
+
+   
+
+
+    // line width
+
+    var $itemLineWidth = 180;
+    var $itemLen = $this->itemLineWidth / $this->fontW;
+
+    var $lineSpace = 38;
+
+    var $emptyLineSpace = 15;
+
+    var $lineStartPos = 18;
+
+    // when draw price should go back to the begin
+    public function printLongLine($handle, $str ,$y) {
+        var $start = 0;
+        var $print_str = "";
+        while (strlen($str) != 0) {
+            $print_str = substr($str, start, $this->itemLen);
+
+            printer_draw_text($handle, $print_str, $this->lineStartPos, $y);
+            $y += $this->lineSpace;
+
+            $start +=  $this->itemLen;
+
+        }
+    }
+
+    // move y to insert an empty line
+    public function insertEmptyLine($y) {
+        return $y + $this->lineSpace;
+    }
+
+    public function insertLineTail() {
+
+    }
+
+
+    public function switchZh($handle) {
+         var $fontZh = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
+         printer_select_font($handle, $fontZh);
+    }
+
+    public function switchEn($handle) {
+         var $fontEn = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
+         printer_select_font($handle, $fontEn);
+    }
+
 	public function printBill() {
 		$this->layout = false;
         $this->autoRender = NULL;
@@ -62,7 +119,7 @@ class PrintController extends AppController {
 
         echo json_encode($order);
 
-            date_default_timezone_set("America/Toronto");
+        date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
 
         $handle = printer_open($printer_name);
@@ -118,10 +175,12 @@ class PrintController extends AppController {
             	$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
 
-                for ($j = 0; $j < count($items[$i]['selected_extras_name']); ++$j) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", $items[$i]['selected_extras_name']), 32, $print_y);
+
+                /*for ($j = 0; $j < count($items[$i]['selected_extras_name']); ++$j) {
                 	printer_draw_text($handle, iconv("UTF-8", "gb2312", $items[$i]['selected_extras_name'][$j]), 32, $print_y);
                 	$print_y += 20;
-                }
+                }*/
 
 	            printer_draw_text($handle, number_format($items[$i]['extra_amount'], 2), 360, $print_y);
             }
@@ -138,8 +197,18 @@ class PrintController extends AppController {
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
+        } else {
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtotal :"), 58, $print_y);
-        } 
+        }
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($subtotal, 2)), 360, $print_y);
+
+        if ($discount_amount > 0) {
+
+        }
 
         
 		printer_draw_text($handle, $date_time, 80, $print_y);
