@@ -52,6 +52,11 @@
         <?php } ?>
 
         <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
+		
+		<button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill</button>
+		<button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt</button>
+		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill</button>
+		<button class="btn btn-lg btn-primary pull-right" id="print-original-receipt">Print Original Receipt</button>
 
         <button class="btn btn-lg btn-success pull-right" id="sidebar-button">Test</button>
 <!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->
@@ -102,7 +107,7 @@
 <?php
 
 echo $this->Html->css(array('components/KeypadComponent', 'components/OrderComponent', 'components/SubordersListComponent', 'components/SubordersDetailComponent'));
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js', 'print.js'));
 
 echo $this->fetch('script');
 ?>
@@ -564,13 +569,70 @@ echo $this->fetch('script');
 	}
 
 
+	$('#printer').on('click', function() {
+		printSplitBill(order, suborders);
+	});
 	// print accounding order and suborders
-	function printReceipt() {
+	function printSplitBill(order, suborders) {
+		var order = order;
+		var suborders = suborders
+
 		for (var i = 0; i < suborders.suborders.length; ++i) {
 			
 		}
 
+		// ReceiptHeader
+		// logo
+
+
+		// send request to the server
+		$.ajax({
+			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printBill"));?>',
+			method: 'post',
+			data: {
+				items: JSON.stringify(order.items),
+				suborders: suborders.suborders,
+			}
+		});
+
 	}
+
+	function printSplitReceipt(suborders) {
+
+		var suborders = suborders;
+
+
+		$.ajax({
+			url: '<?php echo $this->Html->url(array("controller" => "homes", "action" => "printReceipt"));?>',
+			method: 'post',
+			data: {
+				items: JSON.stringify(order.items),
+
+			}
+		});
+
+	}
+
+	$('#print-original-bill').on('click', function() {
+		printOriginalBill();
+	})
+
+	function printOriginalBill() {
+
+		var  a = '<?php $cashier_detail["Admin"]["service_printer_device"]; ?>'
+		$.ajax({
+			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printOriginalBill", $Order_detail["Order"]["order_no"], $table, $cashier_detail["Admin"]["service_printer_device"]));?>',
+			method: 'post',
+			data: {
+				order: order.billInfo
+			}
+		})
+	}
+
+	function printOriginalReceipt() {
+		
+	}
+
 
 
 
