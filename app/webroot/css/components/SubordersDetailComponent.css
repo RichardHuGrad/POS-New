@@ -41,7 +41,7 @@ ul.suborder-detail{
     border-radius: 0 10px 10px;
     background-position: right bottom;
     background-repeat: no-repeat;
-    background-size: 50%;
+    background-size: 120px;
     column-count: 2;
     -webkit-column-count: 2;
     -moz-column-count: 2;
