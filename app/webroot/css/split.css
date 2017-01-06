@@ -18,7 +18,12 @@
 }
 
 #add-person,#delete-person{
-	width: 100%;
+	width: 50%;
 	margin-bottom: 15px;
+    white-space: inherit;
+    display: inline;
+    vertical-align: baseline;
+    max-width: 220px;
 }
+#add-person{float: right;}
 #delete-person{margin-bottom: 25px !important;}

@@ -2,7 +2,7 @@
 .sublistingwrap li .order-brn{ width:90px; height:auto; padding-bottom:10px; border-radius:10px;}
 .sublistingwrap li .inquery-brn{ width:90px; height:auto;padding-bottom:10px; border-radius:10px;}
 .sublistingwrap li .inquiry-txt, .sublistingwrap li .order-txt { font-size:12px;}
-.order_no_box { font-size:15px;}
+.order_no_box { font-size:12px;}
 .titlebox { width:100%;}
 }
 @media screen and (max-width:1023px) {
