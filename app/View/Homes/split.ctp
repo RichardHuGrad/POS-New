@@ -588,47 +588,47 @@ echo $this->fetch('script');
 	}
 
 
-	$('#printer').on('click', function() {
-		printSplitBill(order, suborders);
+	$('#print-split-receipt').on('click', function() {
+		printSplitReceipt(order, suborders);
 	});
 	// print accounding order and suborders
-	function printSplitBill(order, suborders) {
+	function printSplitReceipt(order, suborders) {
 		var order = order;
-		var suborders = suborders
+		var suborders = suborders;
 
 		for (var i = 0; i < suborders.suborders.length; ++i) {
-			
+			var tempSuborder = suborders.suborders[i];
+			$.ajax({
+				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $cashier_detail["Admin"]["service_printer_device"], true, true));?>',
+				method: 'post',
+				data: {
+					suborder: tempSuborder.receiptInfo,
+				}
+			});
+
 		}
-
-		// ReceiptHeader
-		// logo
-
-
-		// send request to the server
-		$.ajax({
-			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printBill"));?>',
-			method: 'post',
-			data: {
-				items: JSON.stringify(order.items),
-				suborders: suborders.suborders,
-			}
-		});
 
 	}
 
-	function printSplitReceipt(suborders) {
+	$('#print-split-bill').on('click', function() {
+		printSplitBill(order, suborders);
+	});
+	function printSplitBill(order, suborders) {
 
+		var order = order;
 		var suborders = suborders;
 
+		for (var i = 0; i < suborders.suborders.length; ++i) {
+			var tempSuborder = suborders.suborders[i];
+			$.ajax({
+				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $cashier_detail["Admin"]["service_printer_device"], true, false));?>',
+				method: 'post',
+				data: {
+					suborder: tempSuborder.receiptInfo,
+				}
+			});
 
-		$.ajax({
-			url: '<?php echo $this->Html->url(array("controller" => "homes", "action" => "printReceipt"));?>',
-			method: 'post',
-			data: {
-				items: JSON.stringify(order.items),
-
-			}
-		});
+		}
 
 	}
 

@@ -62,6 +62,7 @@ class Order {
 			"discount_type": this.discount.type,
 			"discount_value": this.discount.value,
 			"discount_amount": this.discountAmount,
+			"after_discount": this.afterDiscount,
 			"tax_rate": this.tax.tax_rate,
 			"tax_amount": this.tax.tax_amount,
 			"total": this.total
@@ -459,7 +460,8 @@ class Suborder {
 			'subtotal': this.subtotal,
 			'discount_type': this.discount.type,
 			'discount_value': this.discount.value,
-			'tax': this.tax.amount,
+			'tax_rate': this.tax.tax,
+			'tax_amount': this.tax.amount,
 			'total': this.total,
 			'items': items
 		}
@@ -475,7 +477,10 @@ class Suborder {
 			'subtotal': this.subtotal,
 			'discount_type': this.discount.type,
 			'discount_value': this.discount.value,
-			'tax': this.tax.amount,
+			'discount_amount': this.discountAmount,
+			'after_discount': this.afterDiscount,
+			'tax_rate': this.tax.tax * 100,
+			'tax_amount': this.tax.amount,
 			'total': this.total,
 			'received_card': this.received.card,
 			'received_cash': this.received.cash,
@@ -527,6 +532,19 @@ class Suborder {
 		} else {
 			return order.discount;
 		}
+	}
+
+	get discountAmount() {
+		var discountAmount;
+		if (this.discount.type == "unknown") {
+			discountAmount = 0;
+		} else if (this.discount.type == "fixed") {
+			discountAmount = parseFloat(this.discount.value);
+		} else if (this.discount.type == "percent") {
+			discountAmount = round2(parseFloat(this.subtotal) * parseFloat(this.discount.value) / 100);
+		}
+
+		return discountAmount;
 	}
 
 	get afterDiscount() {
@@ -653,6 +671,7 @@ class Item {
 	get printInfo() {
 		return {
 			"selected_extras_name": this.selected_extras_name,
+			// "extras_amount": this._extras_amount,
 			"name_zh": this.name_zh,
 			"name_en": this.name_en,
 			"price": this.price,
@@ -902,7 +921,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	}
 	var discountComponent = $('<li class="suborder-discount">').text(discountText(suborder.discount.type, suborder.discount.value));	
 
-	var afterDiscountComponent = $('<li class="suborder-after-discount">').text("After Discount 折后: " + suborder.afterDiscount);
+	var afterDiscountComponent = $('<li class="suborder-after-discount">').text("After Discount 打折后: " + suborder.afterDiscount);
 
 	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
 
