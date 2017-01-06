@@ -587,7 +587,7 @@ var OrderComponent = function(order, cfg) {
 
 	var orderComponent = $('<div id="order-component">');
 	var orderUl = $('<ul>');
-	var avgSplitButton = $('<button id="avg-split" class="btn btn-primary btn-lg">').text("Avg. Split");
+	var avgSplitButton = $('<button id="avg-split" class="btn btn-primary btn-lg">').text("Avg. Split 平均分单");
 	
 	if (!suborders.isAnySuborderPaid()) {
 		avgSplitButton.on('click', function () { avgSplit(); });
@@ -793,7 +793,7 @@ var SubordersListComponent = function (suborders, cfg) {
 		itemsComponent.append(SuborderListComponent(temp_suborders[i]));
 	}
 
-	subordersListComponent.append(addPersonButton).append(deletePersonButton).append(itemsComponent);
+	subordersListComponent.append(deletePersonButton).append(addPersonButton).append(itemsComponent);
 
 	return subordersListComponent;
 }

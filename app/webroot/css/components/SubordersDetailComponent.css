@@ -28,7 +28,12 @@
 	padding: 5px 0;
 	border-bottom: 1px solid #ccc;
 }
-
+.suborder-detail li:nth-child(5){
+	border:none !important;
+}
+.suborder-detail li:nth-child(6){
+	margin-top: -5px !important;
+}
 ul.suborder-detail{
 	margin: 7px 10px;
     border: 1px solid #c30e23;
@@ -37,4 +42,7 @@ ul.suborder-detail{
     background-position: right bottom;
     background-repeat: no-repeat;
     background-size: 50%;
+    column-count: 2;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
 }

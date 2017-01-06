@@ -8,8 +8,9 @@
 	width: 100%;
 	background: #eee;
     padding: 5px 8px;
+    cursor: pointer;
 }
-.suborder-label.active {
+.suborder-label.active,.suborder-label:hover {
 	background-color: #d9534f;
 	color: #fff;
 	padding: 5px 8px;

@@ -157,7 +157,8 @@ header { background: #c30e23; height: 75px; }
 .dine-box { margin-bottom: 20px; }
 .dine-box .dinebtn { -webkit-border-radius: 15px; -moz-border-radius: 15px; border-radius: 15px; background-color: #c30e23; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.26); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.26); box-shadow: -2px 5px 5px rgba(0,0,0,.26); background-image: -webkit-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -moz-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -o-linear-gradient(bottom, #c30e23, #df7f8a); background-image: -ms-linear-gradient(bottom, #c30e23, #df7f8a); background-image: linear-gradient(to top, #c30e23, #df7f8a); border: 0px; color: #fff; font-size: 26px; font-weight: 600; padding: 10px 20px 13px; }
 .dine-box .dinebtn img { vertical-align: -7px; margin-right: 10px; }
-.dine-wrap li { float: left; margin-bottom: 20px; margin-right: 3%; position: relative; width: 75px; }
+.dine-wrap{margin-top: 20px;}
+.dine-wrap li { float: left; margin-bottom: 20px; margin-right: 3%; position: relative; width: 100px; }
 .dine-wrap li:nth-child(9n) { margin-right: 0; }
 .dine-wrap li .notpaidwrap { height: 75px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .availablebwrap { height: 75px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; border-radius: 10px;}
