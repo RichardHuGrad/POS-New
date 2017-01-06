@@ -49,6 +49,70 @@ class Order {
 		return instance;
 	}
 
+	get billInfo() {
+		var items = [];
+
+		for (var i = 0; i < this.items.length; ++i) {
+			items.push(this.items[i].originalPrintInfo);
+		}
+
+		return {
+			"items": items,
+			"subtotal": this.subtotal,
+			"discount_type": this.discount.type,
+			"discount_value": this.discount.value,
+			"discount_amount": this.discountAmount,
+			"tax_rate": this.tax.tax_rate,
+			"tax_amount": this.tax.tax_amount,
+			"total": this.total
+		}
+	}
+
+	get receiptInfo() {
+
+	}
+
+	get subtotal() {
+
+		var subtotal = 0;
+		for (var i = 0; i < this.items.length; ++i) {
+			var temp_item = this.items[i].originalPrintInfo;
+
+			subtotal += parseFloat(temp_item.price) + parseFloat(temp_item.extras_amount);
+		}
+
+		return round2(subtotal);
+	}
+
+	/*get discount() {
+		if (this.discount.type == "")
+	}*/
+
+	get discountAmount() {
+		if (this.discount.type == "unknown") {
+			return 0;
+		} else if (this.discount.type == "fixed") {
+			return this.discount.value;
+		} else if (this.discount.type == "percent") {
+			return round2(this.subtotal * this.discount.value / 100);
+		}
+	}
+
+	get afterDiscount() {
+		return this.subtotal - this.discountAmount;
+	}
+
+	get tax() {
+		var tax_rate = 0.13;
+		return {
+			"tax_rate": tax_rate,
+			"tax_amount": round2(tax_rate * this.afterDiscount),
+		}
+	}
+
+	get total() {
+		return round2 (parseFloat(this.subtotal) - parseFloat(this.discountAmount) + parseFloat(this.tax.tax_amount));
+	}
 
 
 	addItem(item) {
@@ -157,6 +221,26 @@ class Suborders {
 		}
 
 		return instance;*/
+	}
+
+	get billInfo() {
+		var suborders = [];
+
+		for (var i = 0; i < this.suborders.length; ++i) {
+			suborders.push(this.suborders[i].billInfo);
+		}
+
+		return suborders;
+	}
+
+	get receiptInfo() {
+		var suborders = [];
+
+		for (var i = 0; i < this.suborders.length; ++i) {
+			suborders.push(this.suborders[i].receiptInfo);
+		}
+
+		return suborders;
 	}
 
 
@@ -364,6 +448,46 @@ class Suborder {
 		}
 	}
 
+
+	get billInfo() { //do not include the received, tip, 
+		var items = [];
+		for (var i = 0; i < this.items.length; ++i) {
+			items.push(this.items[i].printInfo);
+		}
+		return {
+			'suborder_no': this.suborder_no,
+			'subtotal': this.subtotal,
+			'discount_type': this.discount.type,
+			'discount_value': this.discount.value,
+			'tax': this.tax.amount,
+			'total': this.total,
+			'items': items
+		}
+	}
+
+	get receiptInfo() {
+		var items = [];
+		for (var i = 0; i < this.items.length; ++i) {
+			items.push(this.items[i].printInfo);
+		}
+		return {
+			'suborder_no': this.suborder_no,
+			'subtotal': this.subtotal,
+			'discount_type': this.discount.type,
+			'discount_value': this.discount.value,
+			'tax': this.tax.amount,
+			'total': this.total,
+			'received_card': this.received.card,
+			'received_cash': this.received.cash,
+			'received_total': this.received.total,
+			'tip_card': this.tip.card,
+			'tip_cash': this.tip.cash,
+			'tip_amount': this.tip.amount,
+			'change': this.change,
+			'items': items
+		}
+	}
+
 	addItem(item) {
 		this.items.push(item) 
 	}
@@ -405,18 +529,8 @@ class Suborder {
 		}
 	}
 
-	// return float with 2 precision
-	get tax() {
-		return {
-			"tax": this._tax_rate,
-			"amount": round2(this.subtotal * this._tax_rate)
-		}
-	}
+	get afterDiscount() {
 
-	// todo
-	// notice the discount, which should be seperate by multiple people
-	get total() {
-		// calculate the actual discount amount
 		var discountAmount;
 		if (this.discount.type == "unknown") {
 			discountAmount = 0;
@@ -425,7 +539,23 @@ class Suborder {
 		} else if (this.discount.type == "percent") {
 			discountAmount = round2(this.subtotal * parseFloat(this.discount.value) / 100);
 		}
-		return round2(this.subtotal + this.tax.amount - discountAmount);
+
+		return this.subtotal - discountAmount;
+	}
+
+	// return float with 2 precision
+	get tax() {
+		return {
+			"tax": this._tax_rate,
+			"amount": round2(this.afterDiscount * this._tax_rate)
+		}
+	}
+
+	// todo
+	// notice the discount, which should be seperate by multiple people
+	get total() {
+
+		return round2(this.afterDiscount + this.tax.amount);
 	}
 
 	get received() {
@@ -518,6 +648,27 @@ class Item {
 		if (typeof obj == "string") obj = JSON.parse(obj);
 		var instance = new Item(obj.item_id, obj.image, obj.name_en, obj.name_zh, obj.selected_extras_name, obj.price, obj.extras_amount, obj.quantity, obj.order_item_id, obj.state, obj.shared_suborders, obj.assigned_suborder);
 		return instance;
+	}
+
+	get printInfo() {
+		return {
+			"selected_extras_name": this.selected_extras_name,
+			"name_zh": this.name_zh,
+			"name_en": this.name_en,
+			"price": this.price,
+			"quantity": this.quantity,
+		}
+	}
+
+	get originalPrintInfo() {
+		return {
+			"name_zh": this._name_zh,
+			"name_en": this._name_en,
+			"price": this._price,
+			"selected_extras_name": this.selected_extras_name,
+			"extras_amount": this._extras_amount,
+			"quantity": this.quantity,
+		}
 	}
 
 	// if state is set to "keep"
@@ -726,7 +877,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 
 	var subtotalComponent = $('<li class="suborder-subtotal">').text("Subtotal 小计:" + suborder.subtotal);
 
-	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
+	
 
 	var discountText = function(type, value) { 
 
@@ -751,6 +902,10 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	}
 	var discountComponent = $('<li class="suborder-discount">').text(discountText(suborder.discount.type, suborder.discount.value));	
 
+	var afterDiscountComponent = $('<li class="suborder-after-discount">').text("After Discount 折后: " + suborder.afterDiscount);
+
+	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
+
 	var totalComponent = $('<li class="suborder-total">').text("Total 总: " + suborder.total);
 
 	var receivedComponent = $('<li class="suborder-received">').text("Received 收到: " + suborder.received.total + " Cash 现金: " + suborder.received.cash + " Card 卡: " + suborder.received.card);
@@ -761,7 +916,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 
 	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Cash 现金:" + suborder.tip.cash + " Card 卡: " + suborder.tip.card);
 
-	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(discountComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
+	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(discountComponent).append(afterDiscountComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
 
 	// set css accounding to the state
 	suborderDetailComponent.css("background-image", "url(https://dummyimage.com/600x200/ffffff/b4b5bf.png&text=" + suborder.state + ")");

@@ -1982,6 +1982,7 @@ class HomesController extends AppController {
             $Print_Item = array();
         };
         //End
+
         for ($x = 0; $x < (isset($Print_Item_split) ? count($Print_Item_split) : 1); $x++) {//Modified by Yishou Liao @ Nov 28 2016
             if (isset($Print_Item_split)) {
                 $Print_Item[0] = $Print_Item_split[$x];
@@ -2123,10 +2124,54 @@ class HomesController extends AppController {
                 unset($_SESSION['DELEITEM_' . $table]);
             };
 
+            echo $Print_Item;
+
             echo true;
         }; //End @ Nov 28 2016
         exit;
     }
+
+    public function printOriginalBill($printer_name) {
+        $this->layout = false;
+        $this->autoRender = NULL;   
+
+        $order = $this->data['order'];
+        $items = $order['items'];
+        
+        $subtotal = $order['subtotal'];
+        $discount_type = $order['discount_type'];
+        $discount_value = $order['discount_value'];
+        $discount_amount = $order['discount_amount'];
+        $tax_rate = $order['tax_rate'];
+        $tax_amount = $order['tax_amount'];
+        $total = $order['total'];
+
+        echo json_encode($order);
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "my_Receipt");
+        printer_start_page($handle);
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
+        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
+        printer_draw_text($handle, "416-792-4476", 156, 206);
+
+
+        printer_draw_text($handle, $date_time, 80, $print_y);
+
+        printer_delete_font($font);
+
+        printer_end_page($handle);
+        printer_end_doc($handle);
+        printer_close($handle);
+
+        echo true;
+        exit;
+
+        
+    }
+
 
     //Modified by Yishou Liao @ Nov 15 2016
     public function printReceipt($order_no, $table_no, $printer_name, $print_zh = false) {
