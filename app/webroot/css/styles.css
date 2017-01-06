@@ -266,11 +266,11 @@ header { background: #c30e23; height: 75px; }
 }
 .cashierbox .dropdown-menu > li > a:hover/*, .cashierbox .dropdown-menu > li > a:focus*/, .cashierbox .dropdown-menu > li > a.active { background: #c30e23; color: #fff; border-radius: 10px; }
 .cashierbox .menu-arrow { position: absolute; top: 5%; left: -10px; /*background: url(../img/left-arrow.png) left top no-repeat; */width: 10px; height: 21px; }
-.cashierbox .dropdown-menu .savebtn{ /*background-color:#228917;*/ color:#fff; margin:5px; /*padding: 10px 0 5px;*/ height: 40px; /*width: 30%; */text-align: center; font-size: 18px; border-radius: 10px; float:left;
+.cashierbox .dropdown-menu .savebtn{ /*background-color:#228917;*/ color:#fff; margin:5px; padding: 8px 12px 8px !important;*/ height: 40px; /*width: 30%; */text-align: center; font-size: 18px; border-radius: 10px; float:right;
  border: 0px; /*background: none;*/ margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
 
 /* Modified by Yishou Liao @ Nov 10 2016 */
-.cashierbox .dropdown-menu .clearbtn{ background-color:#c44343; color:#fff; margin: 5px; /*padding: 10px 0 5px;*/ /*width: 30%;*/ text-align: center; font-size: 18px; border-radius: 10px; float:right;
+.cashierbox .dropdown-menu .clearbtn{ background-color:#c44343; color:#fff; margin: 5px; /*padding: 10px 0 5px;*/ /*width: 30%;*/ text-align: center; font-size: 18px; border-radius: 10px; float:left;
 	border: 0px; /*background: none;*/ margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
 
 .cashierbox .dropdown-menu .extbtn{ padding: 10px 0 5px; width: 100%; text-align: center; font-size: 18px; border: 0px; background: none; margin-top: 0px; border-top: 1px solid #e0e0e0; font-weight: 600; font-size: 18px; }
