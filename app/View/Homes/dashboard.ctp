@@ -228,7 +228,7 @@
 
             <div class="clearfix marginB30">
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                        <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 480px; padding:0">
+                        <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 580px; padding:0">
                         	<?php
                             $dine_table = @explode(",", $tables['Admin']['table_size']);
                             $dine_table_order = @$tables['Admin']['table_order']?@json_decode($tables['Admin']['table_order'], true):array();
@@ -357,11 +357,12 @@
 
         <div class="clearfix dine-box">
             <div class="col-md-12">
+            <hr style="border-color:#c30e23;margin-bottom:-18px;">
                 <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?>  Takeout Orders 外卖桌</button>
             </div>
         </div>
 
-        <div class="clearfix marginB30">
+        <div class="clearfix">
 
             <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
                 <ul>
@@ -459,6 +460,7 @@
 
         <div class="clearfix dine-box">
             <div class="col-md-12">
+            <hr style="border-color:#c30e23;margin-bottom:-18px;margin-top:0px;">
                 <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Waiting List 等待桌</button>
             </div>
         </div>
@@ -536,7 +538,7 @@
 	                        	</ul>
                                 </div>
 	                            <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-	                                <div class="number-txt for-dine">Waiting<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+	                                <div class="number-txt for-dine">Wait<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
 	                                <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
 	                                	<?php
 	                                	if(!@$waiting_tables_status[$i]) 
