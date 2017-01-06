@@ -664,10 +664,12 @@ echo $this->fetch('script');
         
         $('#print-today-all').on('click', function(e) {
         	e.preventDefault();
-			$.ajax({
+				$.ajax({
 				url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders', 0)); ?>",
 				method: "post",
-				data: {},
+				data: {
+		               Printer: {"K": "<?php echo $tables['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $tables['Admin']['service_printer_device']; ?>"},
+				},
 				dataType: "html",
 				async: false,
 				success: function (html) {

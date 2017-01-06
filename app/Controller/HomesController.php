@@ -129,11 +129,11 @@ class HomesController extends AppController {
         // get all table details
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", array(
-            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.id'),
+            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-        
+       
         //Modified by Yishou Liao @ Dec 12 2016
         $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
         //End @ Dec 12 2016
@@ -1874,16 +1874,18 @@ class HomesController extends AppController {
         		'Order.tip_paid_by'
         );
         $Orders = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-        print_r($Orders);
-        die('XX');
-		foreach (array_keys($Printer) as $key) {
-			$printer_name = $Printer[$key];
-			$printer_loca = $key;
+        //print_r($Printer);
 
-			date_default_timezone_set("America/Toronto");
-			$date_time = date("l M d Y h:i:s A");
-			
+		$printer_name = $Printer['C'];
+		date_default_timezone_set("America/Toronto");
+		$date_time = date("l M d Y h:i:s A");
+		$handle = '';
+		if ($printer_name) {
 			$handle = printer_open($printer_name);
+		} else {
+			die("Can't open printer");
+		}
+		if ($handle) {
 			printer_start_doc($handle, "All Orders");
 			printer_start_page($handle);
 			
@@ -1924,24 +1926,24 @@ class HomesController extends AppController {
 					$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0);
     			}
     			$cashierArr[$order['cashier_id']]['total'] += $order['total'];
-    			$cashierArr[$order['cashier_id']]['cash_total'] += $order['cash_val'];
-    			$cashierArr[$order['cashier_id']]['card_total'] += $order['card_val'];
-    			$cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
-    			if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-    				$cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
-    			} else {
-    				$cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
-    			}
     			$totalArr['total'] += $order['total'];
-    			$totalArr['tax'] += $order['tax_amount'];
-    			$totalArr['cash_total'] += $order['cash_val'];
-    			$totalArr['card_total'] += $order['card_val'];
+    			if ($order['tip_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+    				$cashierArr[$order['cashier_id']]['cash_total'] += $order['tip'];
+    				$totalArr['cash_total'] += $order['total'];
+    			} else {
+    				$cashierArr[$order['cashier_id']]['card_total'] += $order['tip'];
+    				$totalArr['card_total'] += $order['total'];
+    			}
+    			$cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
     			$totalArr['total_tip'] += $order['tip'];
     			if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+    				$cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
     				$totalArr['cash_tip_total'] += $order['tip'];
     			} else {
+    				$cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
     				$totalArr['card_tip_total'] += $order['paid'];
     			}
+    			$totalArr['tax'] += $order['tax_amount'];
 			}
 			$print_y+=32;
 			
