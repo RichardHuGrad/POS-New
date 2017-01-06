@@ -1857,7 +1857,9 @@ class HomesController extends AppController {
     	}
     	$Printer = $this->data['Printer'];
     	$this->loadModel('Order');
-        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', time() - 86400));
+		date_default_timezone_set("America/Toronto");
+		$date_time = date("l M d Y h:i:s A");
+    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', time() - 86400));
         $fields = array(
         		'Order.order_no',
         		'Order.cashier_id',
@@ -1877,8 +1879,6 @@ class HomesController extends AppController {
         //print_r($Printer);
 
 		$printer_name = $Printer['C'];
-		date_default_timezone_set("America/Toronto");
-		$date_time = date("l M d Y h:i:s A");
 		$handle = '';
 		if ($printer_name) {
 			$handle = printer_open($printer_name);
@@ -1902,8 +1902,13 @@ class HomesController extends AppController {
 			//Print order information
 			$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
 			printer_select_font($handle, $font);
-			printer_draw_text($handle, "Order #       Total      Pay By", 32, 80);
-
+			$c1 = 30;
+			$c2 = 130;
+			$c3 = 230;
+			printer_draw_text($handle, "Order #", $c1, 80);
+			printer_draw_text($handle, "Pay By", $c2, 80);
+			printer_draw_text($handle, "Total", $c3, 80);
+				
 			$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
 			printer_select_pen($handle, $pen);
 			printer_draw_line($handle, 21, 160, 600, 160);
@@ -1917,45 +1922,66 @@ class HomesController extends AppController {
 			
 			//Print orders
 			$cashierArr = array();
-			$totalArr = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'tax' => 0);
+			$totalArr = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0, 'tax' => 0);
 			$print_y = 180;
-			foreach ($Orders as $order) {
-				printer_draw_text($handle, $order['order_no'] . '   ' . $order['paid'] . '   ' . $order['paid_by'], 32, $print_y);
+			foreach ($Orders as $o) {
+				$order = $o['Order'];
+				printer_draw_text($handle, $order['order_no'], $c1, $print_y);
+				printer_draw_text($handle, $order['paid_by'], $c2, $print_y);
+				printer_draw_text($handle, $order['total'], $c3, $print_y);
 				$print_y+=32;
 				if (!isset($cashierArr[$order['cashier_id']])) {
-					$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0);
+					$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
     			}
     			$cashierArr[$order['cashier_id']]['total'] += $order['total'];
     			$totalArr['total'] += $order['total'];
-    			if ($order['tip_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-    				$cashierArr[$order['cashier_id']]['cash_total'] += $order['tip'];
+    			if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+    				$cashierArr[$order['cashier_id']]['cash_total'] += $order['total'];
     				$totalArr['cash_total'] += $order['total'];
-    			} else {
-    				$cashierArr[$order['cashier_id']]['card_total'] += $order['tip'];
+    			} else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP
+    				$cashierArr[$order['cashier_id']]['card_total'] += $order['total'];
     				$totalArr['card_total'] += $order['total'];
+    			} else {
+    				$cashierArr[$order['cashier_id']]['card_mix_total'] += $order['card_val'];
+    				$totalArr['card_mix_total'] += $order['card_val'];
+    				$cashierArr[$order['cashier_mix_id']]['cash_total'] += $order['total'] - $order['card_val'];
+    				$totalArr['cash_mix_total'] += $order['total'] - $order['card_val'];
     			}
     			$cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
     			$totalArr['total_tip'] += $order['tip'];
     			if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
     				$cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
     				$totalArr['cash_tip_total'] += $order['tip'];
-    			} else {
+    			} else if ($order['tip_paid_by'] == 'CARD') {
     				$cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
-    				$totalArr['card_tip_total'] += $order['paid'];
+    				$totalArr['card_tip_total'] += $order['tip'];
+    			} else { // MIX
+    				$cashierArr[$order['cashier_id']]['mix_tip_total'] += $order['tip'];
+    				$totalArr['mix_tip_total'] += $order['tip'];
     			}
     			$totalArr['tax'] += $order['tax_amount'];
 			}
+			$print_y+=16;
+			printer_draw_line($handle, 21, $print_y, 600, $print_y);
 			$print_y+=32;
-			
-			printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
+				
 			printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
 			printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
 			printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-			printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
+			$print_y+=16;
 			printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
 			printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
-			
+			printer_draw_text($handle, 'Mix Tip Total : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
+			printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+				
+			$print_y+=16;
 			foreach ($cashierArr as $key => $cs) {
+				$print_y+=16;
+				printer_draw_line($handle, 21, $print_y, 600, $print_y);
+				$print_y+=16;
 				printer_draw_text($handle, 'Cashier ' . $key, 32, $print_y); $print_y+=32;
 				printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
 				printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
