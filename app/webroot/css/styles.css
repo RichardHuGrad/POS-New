@@ -920,3 +920,13 @@ input[type="checkbox"] {
    body { font-size: 2em; }
 
 } */
+
+
+#print-today-all{
+	border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 18px 8px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+#print-today-all:hover{background: #f7f7f7;color: #c30e23;}
