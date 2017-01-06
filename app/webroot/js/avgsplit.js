@@ -774,8 +774,8 @@ var OrderItemComponent = function(item, cfg) {
 
 	var orderItemComponent = $('<li class="order-item" id="order-item-' + item_id + '">');
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
-	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["selected_extras_name"]);
-	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4">').text('$' + item["price"]);
+	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
+	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
 
 	orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
@@ -798,8 +798,8 @@ var SuborderItemComponent = function (item, cfg) {
 
 	var suborderItemComponent = $('<li class="suborder-item" id="suborder-item-' + item_id + '" data-itemId="' + item_id + '">');
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
-	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["selected_extras_name"]); 
-	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4">').text('$' + item["price"]);
+	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]); 
+	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
 
 	suborderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
@@ -1033,21 +1033,22 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 
 	var buttonGroup = $('<div>');
 
-	var payOrTipGroup = $('<div class="form-group">')
-	var paySelect= $('<label><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
-	var tipSelect = $('<label><input type="radio" id="tip-select" name="pay-or-tip" data-type="tip">Tip</label>');
+	var payOrTipGroup = $('<div class="form-group p-method">')
+	//var paySelect= $('<label class="p-pay"><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
+	var paySelect= $('<label class="p-pay"><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
+	var tipSelect = $('<label class="p-tip"><input type="radio" id="tip-select" name="pay-or-tip" data-type="tip">Tip</label>');
 	
 	// maybe change the name, is used for select card or cash
 	var typeGroup = $('<div id="input-type-group" class="form-group">');
 
 
 	// var payGroup = $()
-	var payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">' + cfg.cardImg + 'Card 卡</label>');							
-	var payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var payCardButton = $('<label class="pp-card"><input type="radio" id="pay-card" name="pay" data-type="card">' + cfg.cardImg + 'Card 卡</label>');							
+	var payCashButton = $('<label class="pp-cash"><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
 	// payForm.append(payCardButton).append(payCashButton);
 
-	var tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">' + cfg.cardImg + 'Card 卡</label>');
-	var tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var tipCardButton = $('<label class="pp-card"><input type="radio" id="tip-card" name="tip" data-type="card">' + cfg.cardImg + 'Card 卡</label>');
+	var tipCashButton = $('<label class="pp-cash"><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
 	var confirmButton = $('<button class="btn btn-success btn-lg" id="input-confirm">').text('Confirm 确定');

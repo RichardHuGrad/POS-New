@@ -39,27 +39,45 @@
 
     <?php echo $this->Session->flash(); ?>
 
-    <div class="col-md-12 col-sm-12 col-xs-12">
-    	<h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br/>Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?></h2>
-        <?php
-        if ($Order_detail['Order']['table_status'] != 'P') {
-            ?>
 
-            <div class="table-box dropdown">
-                <a class="split dropdown-toggle">Split 分单</a>
-            </div>
+    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px;">
+    	<div class="row">
+    	  <div class="col-sm-7">
+	    	<h2>
+		    	<span class="split-p-order">Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?></span>
+		    		<?php
+			        if ($Order_detail['Order']['table_status'] != 'P') {
+			            ?>
 
-        <?php } ?>
+			            <span class="table-box dropdown">
+			                <a class="split dropdown-toggle order-status">Split 分单</a>
+			            </span>
 
-        <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
-		
-		<button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill</button>
+			        <?php } ?>
+
+		    	
+		    	<br/>
+		    	<span class="split-p-table">Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?>
+
+		    	</span>
+	    	</h2>
+	        
+	      </div>
+	      <div class="col-sm-5 text-right">  
+	        <div class="avoid-this text-center reprint pull-right"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
+	      </div>  
+        </div>
+
+        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill</button>
 		<button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt</button>
 		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill</button>
 		<button class="btn btn-lg btn-primary pull-right" id="print-original-receipt">Print Original Receipt</button>
 
-        <button class="btn btn-lg btn-success pull-right" id="sidebar-button">Test</button>
-<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->
+        <div class="row">
+    	  <div class="col-sm-12" style="margin-bottom: 15px;">
+        	<button class="btn btn-lg btn-success pull-right" id="sidebar-button">Test</button>
+<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
+        </div> 
     </div>
 
 
@@ -106,8 +124,9 @@
 
 <?php
 
-echo $this->Html->css(array('components/KeypadComponent', 'components/OrderComponent', 'components/SubordersListComponent', 'components/SubordersDetailComponent'));
+echo $this->Html->css(array('components/KeypadComponent', 'components/OrderComponent', 'components/SubordersListComponent', 'components/SubordersDetailComponent', 'split'));
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js', 'print.js'));
+
 
 echo $this->fetch('script');
 ?>
