@@ -255,8 +255,8 @@ echo $this->fetch('script');
 	}	
 
 	function deleteAllCookies () {
-		Cookies.remove(orderCookie);
-		Cookies.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 	}
 
 
@@ -507,7 +507,7 @@ echo $this->fetch('script');
 
 	function drawKeypadComponent() {
 		$('#input-placeholder').empty();
-		$('#input-placeholder').append(KeypadComponent(order, suborders, {"cardImg": cardImg, "cashImg": cashImg}, drawExceptKeypad, persistentOrder));
+		$('#input-placeholder').append(KeypadComponent( {"cardImg": cardImg, "cashImg": cashImg}, drawExceptKeypad, persistentOrder));
 	}
 
 
@@ -610,10 +610,11 @@ echo $this->fetch('script');
 		for (var i = 0; i < suborders.suborders.length; ++i) {
 			var tempSuborder = suborders.suborders[i];
 			$.ajax({
-				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $cashier_detail["Admin"]["service_printer_device"], true, true));?>',
+				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $type, $cashier_detail["Admin"]["service_printer_device"], true, true));?>',
 				method: 'post',
 				data: {
 					suborder: tempSuborder.receiptInfo,
+					logo_name: '../webroot/img/logo.bmp',
 				}
 			});
 
@@ -621,13 +622,14 @@ echo $this->fetch('script');
 
 	}
 
-	$('#input-submit').on('click', function () {
+/*	$('#input-submit').on('click', function () {
 		if (suborders.isAllSuborderPaid()) {
-			printSplitReceipt(order, suborders);
+			// printSplitReceipt(order, suborders);
+			// $('#print-split-receipt').trigger('click');
 
-			// deleteAllCookies();
+			deleteAllCookies();
 		}
-	})
+	})*/
 
 
 
@@ -642,10 +644,11 @@ echo $this->fetch('script');
 		for (var i = 0; i < suborders.suborders.length; ++i) {
 			var tempSuborder = suborders.suborders[i];
 			$.ajax({
-				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $cashier_detail["Admin"]["service_printer_device"], true, false));?>',
+				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $type, $cashier_detail["Admin"]["service_printer_device"], true, false));?>',
 				method: 'post',
 				data: {
 					suborder: tempSuborder.receiptInfo,
+					logo_name: '../webroot/img/logo.bmp',
 				}
 			});
 
@@ -661,10 +664,11 @@ echo $this->fetch('script');
 
 		var  a = '<?php $cashier_detail["Admin"]["service_printer_device"]; ?>'
 		$.ajax({
-			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printOriginalBill", $Order_detail["Order"]["order_no"], $table, $cashier_detail["Admin"]["service_printer_device"]));?>',
+			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printOriginalBill", $Order_detail["Order"]["order_no"], $table, $type, $cashier_detail["Admin"]["service_printer_device"]));?>',
 			method: 'post',
 			data: {
-				order: order.billInfo
+				order: order.billInfo,
+				logo_name: '../webroot/img/logo.bmp',
 			}
 		})
 	}
