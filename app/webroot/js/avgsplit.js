@@ -263,7 +263,8 @@ class Suborders {
 		if (this.suborders.length > 0) {
 			return this.suborders.pop();
 		} else {
-			alert('no suborder to be removed');
+			// alert('no suborder to be removed');
+			$.notify("no suborder to be removed \n没有可删除的子单",{ position: "top center", className:"warn"});
 		}
 	}
 
@@ -1096,12 +1097,12 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 
 	// var payGroup = $()
-	var payCardButton = $('<label class="pp-card"><input type="radio" id="pay-card" name="pay" data-type="card">' + cfg.cardImg + 'Card 卡</label>');							
-	var payCashButton = $('<label class="pp-cash"><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var payCardButton = $('<input type="radio" id="pay-card" name="pay" data-type="card"><label for="pay-card" class="pp-card">' + cfg.cardImg + 'Card 卡</label>');							
+	var payCashButton = $('<input type="radio" id="pay-cash" name="pay" data-type="cash"><label for="pay-cash" class="pp-cash">' + cfg.cashImg + 'Cash 现金</label>');
 	// payForm.append(payCardButton).append(payCashButton);
 
-	var tipCardButton = $('<label class="pp-card"><input type="radio" id="tip-card" name="tip" data-type="card">' + cfg.cardImg + 'Card 卡</label>');
-	var tipCashButton = $('<label class="pp-cash"><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var tipCardButton = $('<input type="radio" id="tip-card" name="tip" data-type="card"><label for="tip-card" class="pp-card">' + cfg.cardImg + 'Card 卡</label>');
+	var tipCashButton = $('<input type="radio" id="tip-cash" name="tip" data-type="cash"><label for="tip-cash" class="pp-cash">' + cfg.cashImg + 'Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
 	var confirmButton = $('<button class="btn btn-success btn-lg" id="input-confirm">').text('Confirm 确定');
@@ -1188,10 +1189,10 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 			} else {
 				if (suborders.suborders.length == 0) {
-					$.notify("there is no suborder to submit");
+					$.notify("there is no suborder to submit \n请分单后再提交",{ position: "top center", className:"warn"});
 				} else {
 					var tempStr = suborders.unpaidSuborders.join();
-					$.notify("please check the following suborders " + tempStr);
+					$.notify("please check the following suborders \n请检查以下分单" + tempStr,{ position: "top center", className:"warn"});
 				}
 			}
 		});

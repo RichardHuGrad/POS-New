@@ -294,7 +294,8 @@ echo $this->fetch('script');
 			drawUI();
 			// return suborder;
 		} else {
-			alert("Please indicate suborder id");
+			// alert("Please indicate suborder id");
+			$.notify("Please indicate suborder id \n请指定子单号",{ position: "top center", className:"warn"});
 		}
 	}
 
@@ -337,7 +338,9 @@ echo $this->fetch('script');
 			persistentOrder();
 			drawUI();
 		} else {
-			alert("Please make sure you have more than two people to share, or more than one item to be shared.");
+			// alert("Please make sure you have more than two people to share, or more than one item to be shared.");
+
+			$.notify("Please make sure you have more than two people to share, or more than one item to be shared. \n请确定至少两人来分单或至少有个一个菜",{ position: "top center", className:"warn"});
 		}
 	}
 
@@ -381,7 +384,8 @@ echo $this->fetch('script');
 
 			return deletedSuborder;
 		} else {
-			alert("No person to be deleted");
+			// alert("No person to be deleted");
+			$.notify("No person to be deleted. \n无人可删",{ position: "top center", className:"warn"});
 		}
 		
 	}
@@ -393,7 +397,8 @@ echo $this->fetch('script');
 	function enterInput (callback) {
 		// only when order items are totally assigned, the enter will react
 		if (order.availableItems.length > 0) {
-			alert("You should assign all items of order to suborders");
+			// alert("You should assign all items of order to suborders");
+			$.notify("You should assign all items of order to suborders. \n请分完所有的菜",{ position: "top center", className:"warn"});
 			return;
 		}
 
