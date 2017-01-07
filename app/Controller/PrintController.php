@@ -81,13 +81,13 @@ class PrintController extends AppController {
         $start = 0;
 
         while (mb_strlen($str, 'UTF-8') > 0) {
-            $print_str = mb_substr($str, $start, $this->charNo);
+            $print_str = mb_substr($str, $start, $this->charNo / 2);
             printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $print_str), $x, $y);
             
 
             $y += $this->fontH + 2; // change the line
 
-            $start += $this->charNo;
+            $start += $this->charNo / 2;
             $str = mb_substr($str, $start);
         }
 
@@ -103,7 +103,7 @@ class PrintController extends AppController {
             printer_draw_text($this->handle, $print_str, $x, $y);
             
 
-            $y += 30; // change the line
+            $y += $this->fontH + 2; // change the line
 
             $start += $this->charNo;
             $str = substr($str, $start);
@@ -151,9 +151,13 @@ class PrintController extends AppController {
         $this->handle = printer_open($printer_name);
         printer_start_doc($this->handle, "my_Receipt");
         printer_start_page($this->handle);
-        $this->printBigEn("2038 Yonge St.", 156, 130);
+        /*$this->printBigEn("2038 Yonge St.", 156, 130);
         $this->printBigEn("Toronto ON M4S 1Z9", 110, 168);
-        $this->printBigEn("416-792-4476", 156, 206);
+        $this->printBigEn("416-792-4476", 156, 206);*/
+
+        $this->printBigEn("3700 Midland Ave. #108", 156, 130);
+        $this->printBigEn("Scarborogh ON M1V 0B3", 110, 168);
+        $this->printBigEn("647-352-5333", 156, 206);
 
         $print_y = 244;
 
@@ -177,18 +181,18 @@ class PrintController extends AppController {
         // print order item
         $print_y += 20;
         for ($i = 0; $i < count($items); ++$i) {
-            $this->printEn($items[$i]['name_en'], 10, $print_y);
+            $this->printItemEn($items[$i]['name_en'] . $items[$i]['name_en'] . $items[$i]['name_en']. $items[$i]['name_en']. $items[$i]['name_en'], 10, $print_y);
             $this->printEn(number_format($items[$i]['price'], 2), 360, $print_y);
             $print_y += 30;
             if ($print_zh == true) {
-                $this->printZh($items[$i]['name_zh'], 10, $print_y);
+                $this->printItemZh($items[$i]['name_zh'], 10, $print_y);
             };
 
             $print_y += 30;
 
             if (!empty(trim($items[$i]['selected_extras_name']))) {
                 // $print_y += 30;
-                $this->printItemZh( $items[$i]['selected_extras_name'], 32, $print_y);
+                $this->printItemZh( $items[$i]['selected_extras_name'] . $items[$i]['selected_extras_name'] . $items[$i]['selected_extras_name'] . $items[$i]['selected_extras_name'] . $items[$i]['selected_extras_name'], 32, $print_y);
 
                 $this->printEn( number_format($items[$i]['extra_amount'], 2), 360, $print_y);
             }
@@ -339,7 +343,7 @@ class PrintController extends AppController {
         // print order item
         $print_y += 20;
         for ($i = 0; $i < count($items); ++$i) {
-            $this->printEn($items[$i]['name_en'], 10, $print_y);
+            $this->printItemEn($items[$i]['name_en'] . $items[$i]['name_en'] . $items[$i]['name_en'] . $items[$i]['name_en'] . $items[$i]['name_en'], 10, $print_y);
             $this->printEn(number_format($items[$i]['price'], 2), 360, $print_y);
             $print_y += 30;
             if ($print_zh == true) {

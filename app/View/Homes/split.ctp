@@ -623,9 +623,9 @@ echo $this->fetch('script');
 
 	$('#input-submit').on('click', function () {
 		if (suborders.isAllSuborderPaid()) {
-			printSplitReceipt();
+			printSplitReceipt(order, suborders);
 
-			deleteAllCookies();
+			// deleteAllCookies();
 		}
 	})
 
