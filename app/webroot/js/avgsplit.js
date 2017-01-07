@@ -1051,10 +1051,10 @@ var SubordersDetailComponent = function (suborders, cfg) {
 // get val of $('#screen')
 // get type by whether button is active
 // use inverse of control to decouple the order and suborder
-var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentFunction) {
+var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	var cfg = cfg || {};
-	var order = order;
-	var suborders = suborders;
+	/*var order = order;
+	var suborders = suborders;*/
 	var drawFunction = drawFunction;
 	var persistentFunction = persistentFunction;
 
@@ -1176,7 +1176,8 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 
 					function() {
 						// delete cookie
-						
+						printSplitReceipt(order, suborders);
+						deleteAllCookies();
 						window.location.replace(home_page_url);
 					}
 				);

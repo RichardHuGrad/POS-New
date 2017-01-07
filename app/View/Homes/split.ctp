@@ -255,8 +255,8 @@ echo $this->fetch('script');
 	}	
 
 	function deleteAllCookies () {
-		Cookies.remove(orderCookie);
-		Cookies.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 	}
 
 
@@ -507,7 +507,7 @@ echo $this->fetch('script');
 
 	function drawKeypadComponent() {
 		$('#input-placeholder').empty();
-		$('#input-placeholder').append(KeypadComponent(order, suborders, {"cardImg": cardImg, "cashImg": cashImg}, drawExceptKeypad, persistentOrder));
+		$('#input-placeholder').append(KeypadComponent( {"cardImg": cardImg, "cashImg": cashImg}, drawExceptKeypad, persistentOrder));
 	}
 
 
@@ -621,13 +621,14 @@ echo $this->fetch('script');
 
 	}
 
-	$('#input-submit').on('click', function () {
+/*	$('#input-submit').on('click', function () {
 		if (suborders.isAllSuborderPaid()) {
-			printSplitReceipt(order, suborders);
+			// printSplitReceipt(order, suborders);
+			// $('#print-split-receipt').trigger('click');
 
-			// deleteAllCookies();
+			deleteAllCookies();
 		}
-	})
+	})*/
 
 
 
