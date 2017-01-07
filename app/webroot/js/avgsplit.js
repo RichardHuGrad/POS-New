@@ -384,8 +384,8 @@ class Suborders {
 		}
 
 		
-		order.discount.type
-		order.discount.value
+		/*order.discount.type
+		order.discount.value*/
 	}
 }
 
@@ -410,7 +410,7 @@ class Suborder {
 			"amount": 0
 		};
 		// discount info should come from order
-		this._discount = discount || { "type": "unknown",  /*fixed or percent*/"value": 1};
+		this._discount = discount || { "type": "unknown",  /*fixed or percent*/"value": 0};
 
 		// this.change = 0;
 		// this.remaining = 0;
