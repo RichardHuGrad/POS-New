@@ -657,6 +657,7 @@ class HomesController extends AppController {
         if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) { 
         	$logs .= 'subtotal[' . $subtotal . ' <= ' . $Order_detail['Order']['subtotal'] . "]"; 
         	$data['subtotal'] = $subtotal; 
+        	$data['tax_amount'] = $subtotal *  $Order_detail['Order']['tax'] / 100; 
         }
         if ($discount_value != number_format($Order_detail['Order']['discount_value'],2)) { 
         	$logs .= 'discount_value[' . $discount_value . ' <= ' . $Order_detail['Order']['discount_value'] . "]"; 
