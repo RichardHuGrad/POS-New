@@ -77,18 +77,18 @@ class PrintController extends AppController {
         printer_select_font($this->handle, $fontZh);
 
         // change the str to chinese string
-        $str =  iconv("UTF-8", "gb2312", $str);
+        // $str =  iconv("UTF-8", "gb2312", $str);
         $start = 0;
 
-        while (strlen($str) != 0) {
-            $print_str = substr($str, $start, $this->charNo);
-            printer_draw_text($this->handle, $print_str, $x, $y);
+        while (mb_strlen($str, 'UTF-8') > 0) {
+            $print_str = mb_substr($str, $start, $this->charNo);
+            printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $print_str), $x, $y);
             
 
-            $y += 30; // change the line
+            $y += $this->fontH + 2; // change the line
 
             $start += $this->charNo;
-            $str = substr($str, $start);
+            $str = mb_substr($str, $start);
         }
 
         // printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
@@ -343,10 +343,11 @@ class PrintController extends AppController {
             $this->printEn(number_format($items[$i]['price'], 2), 360, $print_y);
             $print_y += 30;
             if ($print_zh == true) {
-                $this->printZh($items[$i]['name_zh'], 10, $print_y);
+                // $this->printZh($items[$i]['name_zh'], 10, $print_y);
+                $this->printItemZh($items[$i]['name_zh'] .$items[$i]['name_zh'] . $items[$i]['name_zh'].$items[$i]['name_zh'].$items[$i]['name_zh'].$items[$i]['name_zh'].$items[$i]['name_zh'], 10, $print_y);
             };
 
-            $print_y += 30;
+            // $print_y += 30;
 
             if (!empty(trim($items[$i]['selected_extras_name']))) {
                 // $print_y += 30;
@@ -355,7 +356,7 @@ class PrintController extends AppController {
                 // $this->printEn( number_format($items[$i]['extra_amount'], 2), 360, $print_y);
             }
 
-            $print_y += 40;
+            // $print_y += 40;
         }
 
         $print_y += 10;
