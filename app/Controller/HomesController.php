@@ -2145,6 +2145,7 @@ class HomesController extends AppController {
                                 if ($Print_Item[$i][13] == "C") {
                                     printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
                                 };
+                                $print_y+=38;
                             } else {
                                 if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
                                     printer_draw_text($handle, "(Takeout)", 366, $print_y);
@@ -2152,11 +2153,22 @@ class HomesController extends AppController {
                                 if ($Print_Item[$i][13] == "C") {
                                     printer_draw_text($handle, "(Cancel)", 366, $print_y);
                                 };
+                                $print_y += 32;
                             };
                             if (strlen($Print_Item[$i][10]) > 0) {
                                 $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
                                 printer_select_font($handle, $font);
                                 $print_str = $Print_Item[$i][10];
+                                $len = mb_strlen($print_str, 'UTF-8');
+                                $strb = 0;
+                                while ($len > $strb) {
+                                    $subStr = mb_substr($print_str, $strb, 16);
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $subStr), 120, $print_y);
+                                    $strb += 16;
+                                    $print_y+=32;
+                                }
+                                /*
+                                die("XXXX[".$len."]XXXXXXXX");
                                 $len = 0;
                                 $print_y+=32;
                                 while (strlen($print_str) != 0) {
@@ -2167,6 +2179,7 @@ class HomesController extends AppController {
                                         $print_y+=32;
                                     };
                                 };
+                                */
                                 $print_y-=32;
                             };
                             $print_y += 46;
