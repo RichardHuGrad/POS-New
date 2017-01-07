@@ -938,7 +938,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(discountComponent).append(afterDiscountComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
 
 	// set css accounding to the state
-	suborderDetailComponent.css("background-image", "url(/img/" + suborder.state + ")");
+	suborderDetailComponent.css("background-image", "url(" + imgPath + suborder.state + ")");
 
 	return suborderDetailComponent;
 }

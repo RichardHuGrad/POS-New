@@ -71,7 +71,6 @@
         <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill</button>
 		<button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt</button>
 		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill</button>
-		<button class="btn btn-lg btn-primary pull-right" id="print-original-receipt">Print Original Receipt</button>
 
         <div class="row">
     	  <div class="col-sm-12" style="margin-bottom: 15px;">
@@ -135,6 +134,8 @@ echo $this->fetch('script');
 	var rightImg = '<?php echo $this->Html->image("right.png", array('alt' => "right")); ?>';
 	var cardImg = '<?php echo $this->Html->image("card.png", array('alt' => "card")); ?>';
 	var cashImg = '<?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?>';
+
+	var imgPath = '<?php echo $this->webroot ?>' + 'img/';
 
 	// variable for payment
 	var table_id = '<?php echo $table ?>';
@@ -647,11 +648,6 @@ echo $this->fetch('script');
 			}
 		})
 	}
-
-	function printOriginalReceipt() {
-		
-	}
-
 
 
 
