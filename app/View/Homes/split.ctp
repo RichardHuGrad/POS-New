@@ -201,6 +201,8 @@ echo $this->fetch('script');
 	restoreFromCookie();
 
 	// if order changed, delete all cookies
+
+
 	if (isOrderChanged()) {
 		console.log('order has changed');
 		order = loadOrder(order_no);
@@ -585,7 +587,14 @@ echo $this->fetch('script');
 		var changed = false;
 		var temp_order = loadOrder();
 
-		if ((temp_order['items'].length != order['items'].length) || (temp_order.discount.type != order.discount.type || temp_order.discount.value != order.discount.value)) {
+		if (temp_order.discount.type != order.discount.type || temp_order.discount.value != order.discount.value) {
+			order.discount.type = temp_order.discount.type;
+			order.discount.value = temp_order.discount.value;
+		}
+
+		if ((temp_order['items'].length < order['items'].length)) {
+			return true;
+		} else if (temp_order['items'].length > order['items'].length) {
 			return true;
 		} else {
 			for (var i = 0; i < temp_order['items'].length; ++i) {
