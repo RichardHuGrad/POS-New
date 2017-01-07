@@ -57,7 +57,7 @@
 
 		    	
 		    	<br/>
-		    	<span class="split-p-table">Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?>
+		    	<span class="split-p-table">Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>
 
 		    	</span>
 	    	</h2>
