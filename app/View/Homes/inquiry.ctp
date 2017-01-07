@@ -31,11 +31,15 @@
 
         <div class="calc-total clearfix">
             <ul>
-                <li><input type="text" placeholder="-" class="order_input order1" alt="1" maxlength="1"></li>
-                <li><input type="text" placeholder="-" class="order_input order2" alt="2" maxlength="1"></li>
-                <li><input type="text" placeholder="-" class="order_input order3" alt="3" maxlength="1"></li>
-                <li><input type="text" placeholder="-" class="order_input order4" alt="4" maxlength="1"></li>
-                <li><input type="text" placeholder="-" class="order_input order5" alt="5s" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order1" style='width:10%' alt="1" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order2" style='width:10%' alt="2" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order3" style='width:10%' alt="3" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order4" style='width:10%' alt="4" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order5" style='width:10%' alt="5" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order6" style='width:10%' alt="6" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order7" style='width:10%' alt="7" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order8" style='width:10%' alt="8" maxlength="1"></li>
+                <li><input type="text" placeholder="-" class="order_input order9" style='width:10%' alt="9s" maxlength="1"></li>
             </ul>
         </div>
         <div class="calc-indent clearfix">
@@ -95,10 +99,10 @@ $(document).ready(function(){
 
   $("#Enter").click(function() {
     var order_id = "";
-    for(i = 1; i <= 5; i++) {
+    for(i = 1; i <= 9; i++) {
         order_id += $(".order"+i).val();
     }
-    if(order_id.length == 5) {
+    if((order_id.length == 8)||(order_id.length == 9)) {
       // send request to server to verify order no
       window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay')) ?>?order_no="+order_id;
     } else {
