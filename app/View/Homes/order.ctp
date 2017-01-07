@@ -307,6 +307,10 @@ echo $this->fetch('script');
         //End.
     });
     $(document).on("click", "#pay", function () {
+		//Modified by Yishou Liao @ Jan 07 2017
+		$("#submit").trigger("click");
+		//End @ Jan 07 2017
+		
         // update order message here
         if (!$(this).hasClass('disabled')) {
             var order_id = $(this).attr("alt");
