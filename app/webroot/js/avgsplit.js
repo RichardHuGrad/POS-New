@@ -1245,7 +1245,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
     // should not change the suborder state directly
 	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
 												.on('click', function() {
+
 													$(document).queue(enterInput).queue(persistentFunction).queue(drawFunction);
+													screenClear.trigger('click');
 												});
 
 
