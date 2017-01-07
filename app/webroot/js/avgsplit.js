@@ -558,7 +558,7 @@ class Suborder {
 			discountAmount = round2(this.subtotal * parseFloat(this.discount.value) / 100);
 		}
 
-		return this.subtotal - discountAmount;
+		return round2(this.subtotal - discountAmount) > 0 ? round2(this.subtotal - discountAmount) : 0;
 	}
 
 	// return float with 2 precision
@@ -572,7 +572,6 @@ class Suborder {
 	// todo
 	// notice the discount, which should be seperate by multiple people
 	get total() {
-
 		return round2(this.afterDiscount + this.tax.amount);
 	}
 
@@ -814,8 +813,17 @@ var OrderItemComponent = function(item, cfg) {
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
 	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
+	
+	// TODO merge nameDiv and extraDiv
+	// var nameAndExtraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">');
 
-	orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
+	if (item["selected_extras_name"] != "") {
+		orderItemComponent.append(nameDiv).append(priceDiv).append(extraDiv);
+	} else {
+		orderItemComponent.append(nameDiv).append(priceDiv);
+	}
+
+	// orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
 	// if any order paid, do not attach click event on it
 	if (!suborders.isAnySuborderPaid()) {
@@ -839,7 +847,14 @@ var SuborderItemComponent = function (item, cfg) {
 	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]); 
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
 
-	suborderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
+	if (item["selected_extras_name"] != "") {
+		suborderItemComponent.append(nameDiv).append(priceDiv).append(extraDiv);
+	} else {
+		suborderItemComponent.append(nameDiv).append(priceDiv);
+	}
+
+
+	// suborderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
 	if (!suborders.isAnySuborderPaid()) {
 		suborderItemComponent.on('click', function() {
@@ -966,8 +981,8 @@ var SuborderDetailComponent = function (suborder, cfg) {
 var SubordersListComponent = function (suborders, cfg) {
 	var cfg = cfg || {};
 	var subordersListComponent = $('<div id="suborders-list-component">');
-	var addPersonButton = $('<button id="add-person" class="btn btn-lg btn-primary">').text('Add Person 增加人');
-	var deletePersonButton = $('<button id="delete-person" class="btn btn-lg btn-danger">').text('Delete Person 删除人');
+	var addPersonButton = $('<button id="add-person" class="btn btn-lg btn-primary">').text('增加人');
+	var deletePersonButton = $('<button id="delete-person" class="btn btn-lg btn-danger">').text('删除人');
 							
 	if (!suborders.isAnySuborderPaid()) {
 		addPersonButton.on('click', function() { addPerson();});
@@ -1073,8 +1088,8 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 
 	var payOrTipGroup = $('<div class="form-group p-method">')
 	//var paySelect= $('<label class="p-pay"><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
-	var paySelect= $('<label class="p-pay"><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
-	var tipSelect = $('<label class="p-tip"><input type="radio" id="tip-select" name="pay-or-tip" data-type="tip">Tip</label>');
+	var paySelect= $('<input type="radio" id="pay-select" name="pay-or-tip" data-type="pay"><label for="pay-select" class="p-pay">Payment<br/>付款</label>');
+	var tipSelect = $('<input type="radio" id="tip-select" name="pay-or-tip" data-type="tip"><label for="tip-select" class="p-tip">Tip<br/>小费</label>');
 	
 	// maybe change the name, is used for select card or cash
 	var typeGroup = $('<div id="input-type-group" class="form-group">');
@@ -1160,6 +1175,8 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 				}).done(
 
 					function() {
+						// delete cookie
+						
 						window.location.replace(home_page_url);
 					}
 				);

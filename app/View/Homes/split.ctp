@@ -66,17 +66,19 @@
 	      <!-- <div class="col-sm-5 text-right">  
 	        <div class="avoid-this text-center reprint pull-right"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
 	      </div>   -->
+
+	        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill <b>分单账单</b></button>
+			<!-- <button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt <b>分单收据</b></button> -->
+			<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill <b>原账单</b></button>
+
+			<div class="row">
+			  <div class="col-sm-12" style="margin-bottom: 15px;">
+				<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
+			<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
+			</div> 
         </div>
 
-        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill <b>分单账单</b></button>
-		<!-- <button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt <b>分单收据</b></button> -->
-		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill <b>原账单</b></button>
-
-        <div class="row">
-    	  <div class="col-sm-12" style="margin-bottom: 15px;">
-        	<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
-<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
-        </div> 
+        
     </div>
 
 
@@ -252,9 +254,17 @@ echo $this->fetch('script');
 		// restore from the discount cookie
 	}	
 
+	function deleteAllCookies () {
+		Cookies.remove(orderCookie);
+		Cookies.remove(subordersCookie);
+	}
+
+
 	function persistentOrder(callback) {
-		Cookies.set(orderCookie, order);
-		Cookies.set(subordersCookie, suborders);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
+		Cookies.set(orderCookie, order, { expires: 3, path: '' });
+		Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
 		// Cookies.set(discountCookie, discount);
 
 		if (typeof callback === "function") {
@@ -614,6 +624,8 @@ echo $this->fetch('script');
 	$('#input-submit').on('click', function () {
 		if (suborders.isAllSuborderPaid()) {
 			printSplitReceipt();
+
+			deleteAllCookies();
 		}
 	})
 
