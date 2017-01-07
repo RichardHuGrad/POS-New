@@ -69,12 +69,20 @@ class PrintController extends AppController {
         $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
         printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
+        printer_delete_font($font);
+    }
+
+    public function printBigZh ($str, $x, $y) {
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($this->handle, $font);
+        printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
+        printer_delete_font($font);
     }
 
     // each chinese character take two byte
     public function printItemZh($str, $x, &$y) {
-        $fontZh = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($this->handle, $fontZh);
+        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($this->handle, $font);
 
         // change the str to chinese string
         // $str =  iconv("UTF-8", "gb2312", $str);
@@ -93,6 +101,7 @@ class PrintController extends AppController {
         }
 
         // printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
+        printer_delete_font($font);
     }
 
     public function printItemEn($str, $x, &$y) {
@@ -110,23 +119,29 @@ class PrintController extends AppController {
             }
             $start += 20;
         }
+
+        printer_delete_font($font);
     }
 
     public function printEn($str, $x, $y) {
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
         printer_draw_text($this->handle, $str, $x, $y);
+
+        printer_delete_font($font);
     }
 
     public function printBigEn($str, $x, $y) {
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
         printer_draw_text($this->handle, $str, $x, $y);
+
+        printer_delete_font($font);
     }
 
 
     // order number
-    public function printOriginalBill($order_no, $table_no, $printer_name, $print_zh=true, $is_receipt=true) {
+    public function printOriginalBill($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=true) {
         $this->layout = false;
         $this->autoRender = NULL;   
 
@@ -141,6 +156,9 @@ class PrintController extends AppController {
         $tax_rate = $order['tax_rate'];
         $tax_amount = $order['tax_amount'];
         $total = $order['total'];
+        $logo_name = $this->data['logo_name'];
+
+        $type = (($table_type == 'D') ? '[[堂食]]' : (($table_type == 'T') ? '[[外卖]]' : (($table_type == 'W') ? '[[等候]]' : '')));
 
         echo json_encode($order);
 
@@ -156,6 +174,7 @@ class PrintController extends AppController {
         /*$this->printBigEn("2038 Yonge St.", 156, 130);
         $this->printBigEn("Toronto ON M4S 1Z9", 110, 168);
         $this->printBigEn("416-792-4476", 156, 206);*/
+        printer_draw_bmp($this->handle, $logo_name, 100, 20, 263, 100);
 
         $this->printBigEn("3700 Midland Ave. #108", 156, 130);
         $this->printBigEn("Scarborogh ON M1V 0B3", 110, 168);
@@ -173,7 +192,7 @@ class PrintController extends AppController {
 
         $this->printBigEn("Order Number: #" . $order_no , 32, $print_y);
         $print_y+=40;
-        $this->printBigEn("Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $print_y);
+        $this->printBigZh("Table:". $type . iconv("UTF-8", "gb2312", "#" . $table_no) , 32, $print_y);
         $print_y+=38;
 
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
@@ -206,7 +225,7 @@ class PrintController extends AppController {
         $print_y += 10;
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($this->handle, $pen);
-        printer_draw_line($Printer, 21, $print_y, 600, $print_y);
+        printer_draw_line($this->handle, 21, $print_y, 600, $print_y);
 
         $print_y += 10;
 
@@ -276,7 +295,7 @@ class PrintController extends AppController {
 
         $this->printEn($date_time, 80, $print_y);
 
-        printer_delete_font($font);
+        
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
@@ -289,7 +308,7 @@ class PrintController extends AppController {
     }
 
 
-    public function printSplitReceipt($order_no, $table_no, $printer_name, $print_zh=true, $is_receipt) {
+    public function printSplitReceipt($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=false) {
         $this->layout = false;
         $this->autoRender = NULL;   
 
@@ -313,6 +332,10 @@ class PrintController extends AppController {
         $tip_cash = $suborder['tip_cash'];
         $change = $suborder['change'];
 
+        $logo_name = $this->data['logo_name'];
+
+        $type = (($table_type == 'D') ? '[[堂食]]' : (($table_type == 'T') ? '[[外卖]]' : (($table_type == 'W') ? '[[等候]]' : '')));
+
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
 
@@ -323,7 +346,7 @@ class PrintController extends AppController {
         /*$this->printBigEn("2038 Yonge St.", 156, 130);
         $this->printBigEn("Toronto ON M4S 1Z9", 110, 168);
         $this->printBigEn("416-792-4476", 156, 206);*/
-
+        printer_draw_bmp($this->handle, $logo_name, 100, 20, 263, 100);
         $this->printBigEn("3700 Midland Ave. #108", 156, 130);
         $this->printBigEn("Scarborogh ON M1V 0B3", 110, 168);
         $this->printBigEn("647-352-5333", 156, 206);
@@ -340,7 +363,7 @@ class PrintController extends AppController {
 
         $this->printBigEn("Order Number: #" . $order_no . '-' . $suborder_no , 32, $print_y);
         $print_y+=40;
-        $this->printBigEn("Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $print_y);
+        $this->printBigZh("Table:". $type . iconv("UTF-8", "gb2312", "#" . $table_no) , 32, $print_y);
         $print_y+=38;
 
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
@@ -455,7 +478,6 @@ class PrintController extends AppController {
 
         $this->printEn($date_time, 80, $print_y);
 
-        printer_delete_font($font);
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
