@@ -2260,6 +2260,7 @@ class HomesController extends AppController {
     //Modified by Yishou Liao @ Nov 15 2016
     public function printReceipt($order_no, $table_no, $printer_name, $print_zh = false) {
         $Print_Item = $this->data['Print_Item'];
+        
         $logo_name = $this->data['logo_name'];
         $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
         $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0.00;
@@ -2323,15 +2324,15 @@ class HomesController extends AppController {
         printer_draw_line($handle, 21, $print_y, 600, $print_y);
 
 
-
+        
         //Print order items
         $print_y += 20;
         for ($i = 0; $i < count($Print_Item); $i++) {
             $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
-
+            
             printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
-            printer_draw_text($handle, number_format($Print_Item[$i][6], 2), 360, $print_y);
+            printer_draw_text($handle, number_format($Print_Item[$i][6]+$Print_Item[$i][12], 2), 360, $print_y);
             $print_str = $Print_Item[$i][3];
             $len = 0;
             while (strlen($print_str) != 0) {
