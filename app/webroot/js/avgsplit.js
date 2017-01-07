@@ -672,8 +672,8 @@ class Item {
 		return {
 			"selected_extras_name": this.selected_extras_name,
 			// "extras_amount": this._extras_amount,
-			"name_zh": this.name_zh,
-			"name_en": this.name_en,
+			"name_zh": this.print_name_zh,
+			"name_en": this.print_name_en,
 			"price": this.price,
 			"quantity": this.quantity,
 		}
@@ -721,6 +721,25 @@ class Item {
 			return round2((this._price + this._extras_amount) / this.shared_suborders.length)
 		} else {
 			return this._price + this._extras_amount;
+		}
+	}
+
+	get print_name_en () {
+		if (this.state == "share" && this.shared_suborders.length > 1) {
+			var tempStr = this._name_en + ' s' + this.shared_suborders.length;
+			return tempStr;
+		} else {
+			return this._name_en;
+		}
+	}
+
+	get print_name_zh () {
+		if (this.state == "share" && this.shared_suborders.length > 1) {
+			var tempStr = this._name_zh + ' s' + this.shared_suborders.length;
+
+			return tempStr;
+		} else {
+			return this._name_zh;
 		}
 	}
 
@@ -1079,7 +1098,7 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 		submitButton.on('click', function(){
 			// submit to the backend
 			if (suborders.isAllSuborderPaid()) {
-				
+
 				
 				// iterator all suborder
 				for (var i = 0; i < suborders.suborders.length; ++i) {
@@ -1139,6 +1158,7 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 				}).fail(function() {
 						alert("fail");
 				}).done(
+
 					function() {
 						window.location.replace(home_page_url);
 					}

@@ -63,18 +63,18 @@
 	    	</h2>
 	        
 	      </div>
-	      <div class="col-sm-5 text-right">  
+	      <!-- <div class="col-sm-5 text-right">  
 	        <div class="avoid-this text-center reprint pull-right"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
-	      </div>  
+	      </div>   -->
         </div>
 
-        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill</button>
-		<button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt</button>
-		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill</button>
+        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill <b>分单账单</b></button>
+		<!-- <button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt <b>分单收据</b></button> -->
+		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill <b>原账单</b></button>
 
         <div class="row">
     	  <div class="col-sm-12" style="margin-bottom: 15px;">
-        	<button class="btn btn-lg btn-success pull-right" id="sidebar-button">Test</button>
+        	<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
 <!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
         </div> 
     </div>
@@ -611,6 +611,14 @@ echo $this->fetch('script');
 
 	}
 
+	$('#input-submit').on('click', function () {
+		if (suborders.isAllSuborderPaid()) {
+			printSplitReceipt();
+		}
+	})
+
+
+
 	$('#print-split-bill').on('click', function() {
 		printSplitBill(order, suborders);
 	});
@@ -649,132 +657,5 @@ echo $this->fetch('script');
 		})
 	}
 
-
-
-    $(document).on('click', '.reprint', function () {
-    	print_receipt(); //Modified by Yishou @ Nov 08 2016.
-    });
-    $(document).on('click', '.reprint_2', function () {
-    //Print ele4 with custom options
-	    $("#print_panel_2").print({
-		    //Use Global styles
-		    globalStyles: false,
-	        //Add link with attrbute media=print
-	        mediaPrint: true,
-	        //Custom stylesheet
-	        stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
-	        //Print in a hidden iframe
-	        iframe: false,
-	        //Don't print this
-	        noPrintSelector: ".avoid-this",
-	        //Add this at top
-	        // prepend : "<h2></h2>",
-	        //Add this on bottom
-	        // append : "<br/>Buh Bye!"
-	    });
-    });
-
-
-
-    $(document).ready(function () {
-
-
-    //Modified by Yishou Liao @ Oct 19 2016.
-    function print_receipt1() {
-	    var radio_click = 0;
-	    var print_String = "";
-	    var account_String = "";
-	    var sub_total = 0;
-	    var Tax =<?php echo $Order_detail['Order']['tax'] ?>;
-	    var person_menu_print = Array(); //Modified by Yishou Liao @ Oct 27 2016.
-
-	    //Modified by Yishou Liao @ Oct 27 2016.
-		<?php 
-			if ($split_method == 0) { 
-		?>
-		        for (var i = 0; i < order_menu.length; i++){
-		        sub_total += parseFloat(order_menu[i][5]);
-		        person_menu_print.push(Array("", "", "", order_menu[i][2], order_menu[i][3], "", order_menu[i][5], "1")); //Modified by Yishou Liao @ Oct 27 2016.
-
-		        };
-		<?php 
-			} else { 
-		?>
-
-		        radio_click = parseInt($('#person-tab').find('.active').attr('data-tabIdx'));
-		        //Modified by Yishou Liao @ Oct 20 2016.
-		        if (person_menu.length == 0){
-		        for (var i = 0; i < order_menu.length; i++){
-		        person_menu.push(Array(order_menu[i][0], order_menu[i][1], order_menu[i][2], order_menu[i][3], order_menu[i][4], order_menu[i][5], order_menu[i][6], order_menu[i][7], order_menu[i][8], radio_click));
-		        };
-		        }
-		        //End.
-
-		        for (var i = 0; i < person_menu.length; i++){
-		        if (person_menu[i][0] == radio_click){
-		        sub_total += parseFloat(person_menu[i][5]);
-		        person_menu_print.push(Array("", "", "", person_menu[i][2], person_menu[i][3], "", person_menu[i][5], "1")); //Modified by Yishou Liao @ Oct 27 2016.
-		        };
-		        };
-		<?php 
-			} 
-		?>
-
-
-		//Modified by Yishou Liao @ Nov 29 2016
-		var discount=0;
-		if (checkCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)) {
-			discount = parseFloat(getCookie("fix_discount_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
-		};
-		if (checkCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>)){
-			//Modified by Yishou Liao @ Dec 15 2016
-			discount = (parseFloat(sub_total)*parseInt(getCookie("discount_percent_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
-			//End Yishou Liao @ Dec 15 2016
-		};
-		if (getCookie("promocode_" +<?php echo $Order_detail['Order']['order_no'] ?>)!=""){
-			//Modified by Yishou Liao @ Nov 19 2016
-			if (getCookie("discount_type_" +<?php echo $Order_detail['Order']['order_no'] ?>)==1) {
-				//Modified by Yishou Liao @ Dec 15 2016
-				discount = (parseFloat(sub_total)*parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>))/100).toFixed(2);
-				//End Yishou Liao @ Dec 15 2016
-			} else {
-				discount = parseFloat(getCookie("discount_value_" +<?php echo $Order_detail['Order']['order_no'] ?>)).toFixed(2);
-			};
-			//End
-		};
-//End
-
-
-	    var tax_amount = ((sub_total-discount) * Tax / 100).toFixed(2);
-	    var total = (parseFloat(sub_total-discount) + parseFloat(tax_amount)).toFixed(2);
-	    //Modified by Yishou Liao @ Nov 08 2016.
-	    $.ajax({
-		    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
-	        method:"post",
-	        data:{
-		        logo_name:"../webroot/img/logo.bmp",
-	            Print_Item:person_menu_print,
-	            subtotal:sub_total,
-				discount:discount,
-				after_discount: (sub_total-discount),
-	            tax:Tax,
-				//Modified by Yishou Liao @ Nov 29 2016
-				tax_Amount: tax_amount,
-				//paid_by: $("#selected_card").val(),
-				paid: $(".received_price").attr("amount"),
-				change: $(".change_price").attr("amount"),
-				//End
-	            total:total,
-	            split_no:radio_click,
-
-	        },
-	        success:function(html) {
-
-	        }
-	    });
-            //End.
-    }
-    //End.
-})
 
 </script>
