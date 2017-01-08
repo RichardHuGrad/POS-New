@@ -222,6 +222,7 @@ echo $this->fetch('script');
 				var tempItemInfo = " 菜:";
 				for (var j = 0; j < tempSuborderInfo.items.length; ++j) {
 					tempItemInfo += tempSuborderInfo.items[j].name_zh;
+					tempItemInfo += ' ' + tempSuborderInfo.items[j].selected_extras_name;
 				}
 				tempInfo += tempItemInfo;
 
