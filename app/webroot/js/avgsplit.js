@@ -1246,7 +1246,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
 												.on('click', function() {
 
-													$(document).queue(enterInput).queue(persistentFunction).queue(drawFunction);
+													enterInput();
 													screenClear.trigger('click');
 												});
 

@@ -76,6 +76,11 @@
 				<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
 			<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
 			</div> 
+
+
+			<div id="dangerous-notice">
+				<p></p>
+			</div>
         </div>
 
         
@@ -205,11 +210,33 @@ echo $this->fetch('script');
 
 	if (isOrderChanged()) {
 		console.log('order has changed');
+		// alert("由于订单修改，请重新分菜");
+
+		if (suborders.isAnySuborderPaid()) {
+			var info = "由于订单改变，且有部分子单支付, 请重新录入已付款信息\n";
+
+			for (var i = 0; i < suborders.suborders.length; ++i) {
+				var tempSuborderInfo = suborders.suborders[i].receiptInfo;
+				var tempInfo = "子单号:" + tempSuborderInfo.suborder_no + ",  总计:" + tempSuborderInfo.total + ", 实收 卡:" + tempSuborderInfo.received_card + " 现金:" + tempSuborderInfo.received_cash + " , 小费: " + tempSuborderInfo.tip_amount + ", 找零:" + tempSuborderInfo.change;
+
+				var tempItemInfo = " 菜:";
+				for (var j = 0; j < tempSuborderInfo.items.length; ++j) {
+					tempItemInfo += tempSuborderInfo.items[j].name_zh;
+				}
+				tempInfo += tempItemInfo;
+
+				info += tempInfo + '\n';
+			}
+
+			$('#dangerous-notice').text(info);
+			$('#dangerous-notice').html($('#dangerous-notice').html().replace(/\n/g,'<br/>'));
+		}
+
 		order = loadOrder(order_no);
 		suborders = new Suborders();
 
-		Cookies.remove(orderCookie);
-		Cookies.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 	}
 
 	drawUI();
@@ -452,6 +479,10 @@ echo $this->fetch('script');
 				}
 				// console.log(inputNum);
 
+				// drawUI();
+
+				persistentOrder();
+				drawExceptKeypad();
 							
 			}
 		}
@@ -597,9 +628,7 @@ echo $this->fetch('script');
 			order.discount.value = temp_order.discount.value;
 		}
 
-		if ((temp_order['items'].length < order['items'].length)) {
-			return true;
-		} else if (temp_order['items'].length > order['items'].length) {
+		if ((temp_order['items'].length != order['items'].length)) {
 			return true;
 		} else {
 			for (var i = 0; i < temp_order['items'].length; ++i) {
