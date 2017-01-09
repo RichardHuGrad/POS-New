@@ -46,13 +46,14 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
                   ?>
                     <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
                     	<!-- Modified by Yishou Liao @ Dec 13 2016 -->
+                    	<a href="javascript:void(0)" alt="<?php echo $value['id'] ?>" order_id="<?php echo $Order_detail['Order']['id'] ?>" class="fa fa-car waimai-link" aria-hidden="true"></a>
                         <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
                         <!-- <div class="row  <?php //if (count($extras)) { ?>dropdown-toggle<?php //}?>" data-toggle="dropdown"> -->
                         <!-- End -->
-                            <div class="col-md-8 col-sm-8 col-xs-7">
+                            <div class="col-md-8 col-sm-8 col-xs-7" >
                                 <div class="pull-left titlebox">
                                     <!-- to show name of item -->
-                                    <div class="less-title"><?php echo (($value['is_waimai'] == 'Y') ? "(Takeaway) " : "" ) . $value['name_en']."<br/>".(($value['is_waimai'] == 'Y') ? "(外卖) " : "" ).$value['name_xh']; ?></div>
+                                    <div class="less-title" style="padding-left:24px;"><?php echo (($value['is_waimai'] == 'Y') ? "(Takeaway) " : "" ) . $value['name_en']."<br/>".(($value['is_waimai'] == 'Y') ? "(外卖) " : "" ).$value['name_xh']; ?></div>
 
                                     <!-- to show the extras item name -->
                                     <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>
@@ -168,7 +169,7 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
                             </ul>
                         <?php }?>
                         <a href="javascript:void(0)" alt="<?php echo $value['id'] ?>" order_id="<?php echo $Order_detail['Order']['id'] ?>" class="fa fa-times pull-right close-link" aria-hidden="true"></a>
-                        <a href="javascript:void(0)" alt="<?php echo $value['id'] ?>" order_id="<?php echo $Order_detail['Order']['id'] ?>" class="fa fa-times pull-right waimai-link" aria-hidden="true"></a>
+                        
                     </li>
             <?php }
         }?>

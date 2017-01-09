@@ -1926,21 +1926,21 @@ class HomesController extends AppController {
     		die("No Printer");
     	}
 
-	date_default_timezone_set("America/Toronto");
-	$date_time = date("l M d Y h:i:s A");
-	$timeline = strtotime(date("Y-m-d 11:00:00"));
-	$nottm = time();
-	if ($timeline < $nowtm) {
-		// before 11 am
-		$timeline -= 86400;
-	}
-	$tm11 = date("c", $timeline);
-	$timeline += 3600 * 6;
-	$tm17 = date("c", $timeline);
-	$timeline += 3600 * 6;
-	$tm23 = date("c", $timeline);
-	$timeline += 3600 * 5;
-	$tm04 = date("c", $timeline);
+		date_default_timezone_set("America/Toronto");
+		$date_time = date("l M d Y h:i:s A");
+		$timeline = strtotime(date("Y-m-d 11:00:00"));
+		$nottm = time();
+		if ($timeline < $nowtm) {
+			// before 11 am
+			$timeline -= 86400;
+		}
+		$tm11 = $timeline;
+		$timeline += 3600 * 6;
+		$tm17 = $timeline;
+		$timeline += 3600 * 6;
+		$tm23 = $timeline;
+		$timeline += 3600 * 5;
+		$tm04 = $timeline;
 
     	$Printer = $this->data['Printer'];
     	$this->loadModel('Order');

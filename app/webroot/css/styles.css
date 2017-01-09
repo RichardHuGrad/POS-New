@@ -318,6 +318,7 @@ header { background: #c30e23; height: 75px; }
     vertical-align: super;
     padding: 6px;
 }
+.waimai-link{position:absolute;top:4px;z-index:999999;cursor:pointer;background: #ddd;font-size: 20px !important;border-radius: 5px;text-align: center; padding:6px 0 6px 0;}
 #product li { border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding-top: 15x; }
 .products-panel {padding-left: 0;}
 .productbox { width: 100%; height: 500px; position: relative; overflow-y: auto; overflow-x: hidden; margin: 0; }
