@@ -2275,7 +2275,7 @@ class HomesController extends AppController {
                                 $print_str = $Print_Item[$i][4];
 	                            if ($Print_Item[$i][17] == 'Y') $print_str = '(外卖) ' .  $print_str;
 
-	                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
+	                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
 
 
                                 if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
