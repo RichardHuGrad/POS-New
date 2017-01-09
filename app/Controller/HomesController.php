@@ -2044,10 +2044,10 @@ class HomesController extends AppController {
 					'tax' => 0);
 				foreach ($Orders as $o) {
 					$order = $o['Order'];
-					printer_draw_text($handle, $order['order_no'], $c1, $print_y);
-					printer_draw_text($handle, $order['paid_by'], $c2, $print_y);
-					printer_draw_text($handle, number_format($order['total'], 2), $c3, $print_y);
-					$print_y+=32;
+					//printer_draw_text($handle, $order['order_no'], $c1, $print_y);
+					//printer_draw_text($handle, $order['paid_by'], $c2, $print_y);
+					//printer_draw_text($handle, number_format($order['total'], 2), $c3, $print_y);
+					//$print_y+=32;
 					if (!isset($cashierArr[$order['cashier_id']])) {
 						$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
 					}
@@ -2085,21 +2085,30 @@ class HomesController extends AppController {
 				$print_y+=16;
 				printer_draw_line($handle, 21, $print_y, 600, $print_y);
 				$print_y+=32;
-					
+				
+				$real_total = $totalArr['paid_cash_total'] + $totalArr['paid_card_total'];
+				if ($real_total > 0) {
+					$paid_cash_percent = " " . number_format($totalArr['paid_cash_total'] * 100 / $real_total, 2) . '%';
+					$paid_card_percent = " " . number_format($totalArr['paid_card_total'] * 100 / $real_total, 2) . '%';
+				} else {
+					$paid_cash_percent = "-";
+					$paid_card_percent = "-";
+				}
 				if ($print_zh == true) {
 					printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金额 : ') . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类额 : ') . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和现金额 : ') . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和卡类额 : ') . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金总计 : ') . sprintf('%0.2f', $totalArr['paid_cash_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类总计 : ') . sprintf('%0.2f', $totalArr['paid_card_total']), 32, $print_y); $print_y+=32;
-					$print_y+=16;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金小费总计 : ') . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类小费总计 : ') . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和小费总计 : ') . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '小费总计 : ') . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金额 : ') . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类额 : ') . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和现金额 : ') . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和卡类额 : ') . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $totalArr['total']) . " ( " . sizeof($Orders) . "单 ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $real_total), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $totalArr['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $totalArr['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+					//$print_y+=16;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金小费总计 : ') . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类小费总计 : ') . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和小费总计 : ') . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '小费总计 : ') . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
 				/*		
 					$print_y+=16;
 					foreach ($cashierArr as $key => $cs) {
@@ -2124,18 +2133,19 @@ class HomesController extends AppController {
 				*/
 				} else {
 					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $totalArr['paid_cash_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $totalArr['paid_card_total']), 32, $print_y); $print_y+=32;
-					$print_y+=16;
-					printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Mix Tip Total : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']) . " ( " . sizeof($Orders) . " sales ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $real_total), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $totalArr['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $totalArr['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+					//$print_y+=16;
+					//printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Mix Tip Total : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
+					//printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
 						
 				/*		
 					$print_y+=16;
@@ -2155,7 +2165,7 @@ class HomesController extends AppController {
 					}
 				*/
 				}
-				$print_y+=40;
+				$print_y+=60;
 			}
 			printer_delete_font($font);
 			printer_end_page($handle);
