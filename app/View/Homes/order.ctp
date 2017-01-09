@@ -211,6 +211,31 @@ echo $this->fetch('script');
         })
     })
 
+    $(document).on('click', ".waimai-link", function () {
+        var item_id = $(this).attr("alt");
+        var order_id = $(this).attr("order_id");
+        var message = $("#Message").val();
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'waimaiitem')); ?>",
+            method: "post",
+            data: {item_id: item_id, order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            success: function (html) {
+                $(".summary_box").html(html);
+                $(".summary_box").removeClass('load1 csspinner');
+				Order_Item_Printer = Array();
+				if ($('#Order_Item').val() != ""){
+	                var arrtmp = $('#Order_Item').val().split("#");
+				};
+                for (var i = 0; i < arrtmp.length; i++) {
+                    Order_Item_Printer.push(arrtmp[i].split("*"));
+                }
+            },
+            beforeSend: function () {
+                $(".summary_box").addClass('load1 csspinner');
+            }
+        })
+    })
+
     $(document).on('click', ".add_extras", function () {
         var item_id = $(this).attr("item_id");
         var price = $(this).attr("price");

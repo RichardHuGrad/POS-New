@@ -1217,6 +1217,75 @@ class HomesController extends AppController {
         $this->render('summarypanel');
     }
 
+    public function waimaiitem() {
+
+        // get cashier details        
+        $this->loadModel('Cashier');
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+                )
+        );
+
+        // get all params
+        $item_id = $this->data['item_id'];
+        $table = $this->data['table'];
+        $order_id = $this->data['order_id'];
+        $type = $this->data['type'];
+
+        $this->layout = false;
+        // $this->autoRender = NULL;
+        // get tax details
+        $this->loadModel('OrderItem');
+
+        $update_para['is_waimai'] = 'Y';
+        $update_para['id'] = $item_id;
+        $this->OrderItem->save($update_para, false);
+        
+        // check the item already exists or not
+        $this->loadModel('Order');
+
+        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
+        $Order_detail = $this->Order->find("first", array(
+            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
+                'Order.table_no' => $table,
+                'Order.is_completed' => 'N',
+                'Order.order_type' => $type
+            )
+                )
+        );
+
+        //Modified by Yishou Liao @ Oct 26 2016.
+        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
+        //End.
+        //Modified by Yishou Liao @ Oct 29 2016.
+        if (isset($_SESSION['DELEITEM_' . $table])) {
+            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
+            for ($i = 0; $i < count($deleitem); $i++) {
+                $deleitem[$i] = explode("*", $deleitem[$i]);
+            };
+        };
+
+        if (isset($deleitem)) {//Modified by Yishou Liao @ Oct 31 2016
+            for ($i = 0; $i < count($deleitem); $i++) {
+                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
+                array_splice($deleitem[$i], -1);
+                //array_splice($deleitem[$i],-5);
+                $deleitem[$i][13] = 'C';
+
+                $arr_tmp['order_items'] = $deleitem[$i];
+
+                array_push($Order_detail_print, $arr_tmp);
+            };
+        }; //End - Oct 31 2016.
+        //End.
+
+        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
+        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
+        $this->render('summarypanel');
+    }
+    
     public function add_extras() {
 
         // get cashier details        
@@ -2175,9 +2244,11 @@ class HomesController extends AppController {
                             printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
 
                             $print_str = $Print_Item[$i][3];
+                            if ($Print_Item[$i][17] == 'Y') $print_str = '(Takeaway) ' .  $print_str;
+                            $print_str_save = $print_str;
                             $len = 0;
                             while (strlen($print_str) != 0) {
-                                $print_str = substr($Print_Item[$i][3], $len, 16);
+                                $print_str = substr($print_str_save, $len, 16);
                                 printer_draw_text($handle, $print_str, 122, $print_y);
                                 $len+=16;
                                 if (strlen($print_str) != 0) {
@@ -2191,7 +2262,10 @@ class HomesController extends AppController {
                                 $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
                                 printer_select_font($handle, $font);
 
-                                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
+                                $print_str = $Print_Item[$i][4];
+	                            if ($Print_Item[$i][17] == 'Y') $print_str = '(外卖) ' .  $print_str;
+
+	                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 120, $print_y);
 
 
                                 if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
