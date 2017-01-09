@@ -57,7 +57,7 @@
 
 		    	
 		    	<br/>
-		    	<span class="split-p-table">Table 桌 <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?>
+		    	<span class="split-p-table">Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>
 
 		    	</span>
 	    	</h2>
@@ -66,17 +66,24 @@
 	      <!-- <div class="col-sm-5 text-right">  
 	        <div class="avoid-this text-center reprint pull-right"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
 	      </div>   -->
+
+	        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill <b>分单账单</b></button>
+			<!-- <button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt <b>分单收据</b></button> -->
+			<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill <b>原账单</b></button>
+
+			<div class="row">
+			  <div class="col-sm-12" style="margin-bottom: 15px;">
+				<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
+			<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
+			</div> 
+
+
+			<div id="dangerous-notice">
+				<p></p>
+			</div>
         </div>
 
-        <button class="btn btn-lg btn-primary pull-right" id="print-split-bill">Print Split Bill <b>分单账单</b></button>
-		<!-- <button class="btn btn-lg btn-primary pull-right" id="print-split-receipt">Print Split Receipt <b>分单收据</b></button> -->
-		<button class="btn btn-lg btn-primary pull-right" id="print-original-bill">Print Original Bill <b>原账单</b></button>
-
-        <div class="row">
-    	  <div class="col-sm-12" style="margin-bottom: 15px;">
-        	<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
-<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
-        </div> 
+        
     </div>
 
 
@@ -199,13 +206,38 @@ echo $this->fetch('script');
 	restoreFromCookie();
 
 	// if order changed, delete all cookies
+
+
 	if (isOrderChanged()) {
 		console.log('order has changed');
+		// alert("由于订单修改，请重新分菜");
+
+		if (suborders.isAnySuborderPaid()) {
+			var info = "由于订单改变，且有部分子单支付, 请重新录入已付款信息\n";
+
+			for (var i = 0; i < suborders.suborders.length; ++i) {
+				var tempSuborderInfo = suborders.suborders[i].receiptInfo;
+				var tempInfo = "子单号:" + tempSuborderInfo.suborder_no + ",  总计:" + tempSuborderInfo.total + ", 实收 卡:" + tempSuborderInfo.received_card + " 现金:" + tempSuborderInfo.received_cash + " , 小费: " + tempSuborderInfo.tip_amount + ", 找零:" + tempSuborderInfo.change;
+
+				var tempItemInfo = " 菜:";
+				for (var j = 0; j < tempSuborderInfo.items.length; ++j) {
+					tempItemInfo += tempSuborderInfo.items[j].name_zh;
+					tempItemInfo += ' ' + tempSuborderInfo.items[j].selected_extras_name;
+				}
+				tempInfo += tempItemInfo;
+
+				info += tempInfo + '\n';
+			}
+
+			$('#dangerous-notice').text(info);
+			$('#dangerous-notice').html($('#dangerous-notice').html().replace(/\n/g,'<br/>'));
+		}
+
 		order = loadOrder(order_no);
 		suborders = new Suborders();
 
-		Cookies.remove(orderCookie);
-		Cookies.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 	}
 
 	drawUI();
@@ -252,9 +284,17 @@ echo $this->fetch('script');
 		// restore from the discount cookie
 	}	
 
+	function deleteAllCookies () {
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
+	}
+
+
 	function persistentOrder(callback) {
-		Cookies.set(orderCookie, order);
-		Cookies.set(subordersCookie, suborders);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
+		Cookies.set(orderCookie, order, { expires: 3, path: '' });
+		Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
 		// Cookies.set(discountCookie, discount);
 
 		if (typeof callback === "function") {
@@ -282,7 +322,8 @@ echo $this->fetch('script');
 			drawUI();
 			// return suborder;
 		} else {
-			alert("Please indicate suborder id");
+			// alert("Please indicate suborder id");
+			$.notify("Please indicate suborder id \n请指定子单号",{ position: "top center", className:"warn"});
 		}
 	}
 
@@ -325,7 +366,9 @@ echo $this->fetch('script');
 			persistentOrder();
 			drawUI();
 		} else {
-			alert("Please make sure you have more than two people to share, or more than one item to be shared.");
+			// alert("Please make sure you have more than two people to share, or more than one item to be shared.");
+
+			$.notify("Please make sure you have more than two people to share, or more than one item to be shared. \n请确定至少两人来分单或至少有个一个菜",{ position: "top center", className:"warn"});
 		}
 	}
 
@@ -369,7 +412,8 @@ echo $this->fetch('script');
 
 			return deletedSuborder;
 		} else {
-			alert("No person to be deleted");
+			// alert("No person to be deleted");
+			$.notify("No person to be deleted. \n无人可删",{ position: "top center", className:"warn"});
 		}
 		
 	}
@@ -381,7 +425,8 @@ echo $this->fetch('script');
 	function enterInput (callback) {
 		// only when order items are totally assigned, the enter will react
 		if (order.availableItems.length > 0) {
-			alert("You should assign all items of order to suborders");
+			// alert("You should assign all items of order to suborders");
+			$.notify("You should assign all items of order to suborders. \n请分完所有的菜",{ position: "top center", className:"warn"});
 			return;
 		}
 
@@ -435,6 +480,10 @@ echo $this->fetch('script');
 				}
 				// console.log(inputNum);
 
+				// drawUI();
+
+				persistentOrder();
+				drawExceptKeypad();
 							
 			}
 		}
@@ -497,7 +546,7 @@ echo $this->fetch('script');
 
 	function drawKeypadComponent() {
 		$('#input-placeholder').empty();
-		$('#input-placeholder').append(KeypadComponent(order, suborders, {"cardImg": cardImg, "cashImg": cashImg}, drawExceptKeypad, persistentOrder));
+		$('#input-placeholder').append(KeypadComponent( {"cardImg": cardImg, "cashImg": cashImg}, drawExceptKeypad, persistentOrder));
 	}
 
 
@@ -575,7 +624,12 @@ echo $this->fetch('script');
 		var changed = false;
 		var temp_order = loadOrder();
 
-		if ((temp_order['items'].length != order['items'].length) || (temp_order.discount.type != order.discount.type || temp_order.discount.value != order.discount.value)) {
+		if (temp_order.discount.type != order.discount.type || temp_order.discount.value != order.discount.value) {
+			order.discount.type = temp_order.discount.type;
+			order.discount.value = temp_order.discount.value;
+		}
+
+		if ((temp_order['items'].length != order['items'].length)) {
 			return true;
 		} else {
 			for (var i = 0; i < temp_order['items'].length; ++i) {
@@ -600,10 +654,11 @@ echo $this->fetch('script');
 		for (var i = 0; i < suborders.suborders.length; ++i) {
 			var tempSuborder = suborders.suborders[i];
 			$.ajax({
-				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $cashier_detail["Admin"]["service_printer_device"], true, true));?>',
+				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $type, $cashier_detail["Admin"]["service_printer_device"], true, true));?>',
 				method: 'post',
 				data: {
 					suborder: tempSuborder.receiptInfo,
+					logo_name: '../webroot/img/logo.bmp',
 				}
 			});
 
@@ -611,11 +666,14 @@ echo $this->fetch('script');
 
 	}
 
-	$('#input-submit').on('click', function () {
+/*	$('#input-submit').on('click', function () {
 		if (suborders.isAllSuborderPaid()) {
-			printSplitReceipt();
+			// printSplitReceipt(order, suborders);
+			// $('#print-split-receipt').trigger('click');
+
+			deleteAllCookies();
 		}
-	})
+	})*/
 
 
 
@@ -630,10 +688,11 @@ echo $this->fetch('script');
 		for (var i = 0; i < suborders.suborders.length; ++i) {
 			var tempSuborder = suborders.suborders[i];
 			$.ajax({
-				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $cashier_detail["Admin"]["service_printer_device"], true, false));?>',
+				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $type, $cashier_detail["Admin"]["service_printer_device"], true, false));?>',
 				method: 'post',
 				data: {
 					suborder: tempSuborder.receiptInfo,
+					logo_name: '../webroot/img/logo.bmp',
 				}
 			});
 
@@ -649,10 +708,11 @@ echo $this->fetch('script');
 
 		var  a = '<?php $cashier_detail["Admin"]["service_printer_device"]; ?>'
 		$.ajax({
-			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printOriginalBill", $Order_detail["Order"]["order_no"], $table, $cashier_detail["Admin"]["service_printer_device"]));?>',
+			url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printOriginalBill", $Order_detail["Order"]["order_no"], $table, $type, $cashier_detail["Admin"]["service_printer_device"]));?>',
 			method: 'post',
 			data: {
-				order: order.billInfo
+				order: order.billInfo,
+				logo_name: '../webroot/img/logo.bmp',
 			}
 		})
 	}

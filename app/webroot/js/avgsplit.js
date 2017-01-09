@@ -263,7 +263,8 @@ class Suborders {
 		if (this.suborders.length > 0) {
 			return this.suborders.pop();
 		} else {
-			alert('no suborder to be removed');
+			// alert('no suborder to be removed');
+			$.notify("no suborder to be removed \n没有可删除的子单",{ position: "top center", className:"warn"});
 		}
 	}
 
@@ -384,8 +385,8 @@ class Suborders {
 		}
 
 		
-		order.discount.type
-		order.discount.value
+		/*order.discount.type
+		order.discount.value*/
 	}
 }
 
@@ -410,7 +411,7 @@ class Suborder {
 			"amount": 0
 		};
 		// discount info should come from order
-		this._discount = discount || { "type": "unknown",  /*fixed or percent*/"value": 1};
+		this._discount = discount || { "type": "unknown",  /*fixed or percent*/"value": 0};
 
 		// this.change = 0;
 		// this.remaining = 0;
@@ -558,7 +559,7 @@ class Suborder {
 			discountAmount = round2(this.subtotal * parseFloat(this.discount.value) / 100);
 		}
 
-		return this.subtotal - discountAmount;
+		return round2(this.subtotal - discountAmount) > 0 ? round2(this.subtotal - discountAmount) : 0;
 	}
 
 	// return float with 2 precision
@@ -572,7 +573,6 @@ class Suborder {
 	// todo
 	// notice the discount, which should be seperate by multiple people
 	get total() {
-
 		return round2(this.afterDiscount + this.tax.amount);
 	}
 
@@ -814,8 +814,17 @@ var OrderItemComponent = function(item, cfg) {
 	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
 	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
+	
+	// TODO merge nameDiv and extraDiv
+	// var nameAndExtraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">');
 
-	orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
+	if (item["selected_extras_name"] != "") {
+		orderItemComponent.append(nameDiv).append(priceDiv).append(extraDiv);
+	} else {
+		orderItemComponent.append(nameDiv).append(priceDiv);
+	}
+
+	// orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
 	// if any order paid, do not attach click event on it
 	if (!suborders.isAnySuborderPaid()) {
@@ -839,7 +848,14 @@ var SuborderItemComponent = function (item, cfg) {
 	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]); 
 	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
 
-	suborderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
+	if (item["selected_extras_name"] != "") {
+		suborderItemComponent.append(nameDiv).append(priceDiv).append(extraDiv);
+	} else {
+		suborderItemComponent.append(nameDiv).append(priceDiv);
+	}
+
+
+	// suborderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
 	if (!suborders.isAnySuborderPaid()) {
 		suborderItemComponent.on('click', function() {
@@ -966,8 +982,8 @@ var SuborderDetailComponent = function (suborder, cfg) {
 var SubordersListComponent = function (suborders, cfg) {
 	var cfg = cfg || {};
 	var subordersListComponent = $('<div id="suborders-list-component">');
-	var addPersonButton = $('<button id="add-person" class="btn btn-lg btn-primary">').text('Add Person 增加人');
-	var deletePersonButton = $('<button id="delete-person" class="btn btn-lg btn-danger">').text('Delete Person 删除人');
+	var addPersonButton = $('<button id="add-person" class="btn btn-lg btn-primary">').text('增加人');
+	var deletePersonButton = $('<button id="delete-person" class="btn btn-lg btn-danger">').text('删除人');
 							
 	if (!suborders.isAnySuborderPaid()) {
 		addPersonButton.on('click', function() { addPerson();});
@@ -1036,10 +1052,10 @@ var SubordersDetailComponent = function (suborders, cfg) {
 // get val of $('#screen')
 // get type by whether button is active
 // use inverse of control to decouple the order and suborder
-var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentFunction) {
+var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	var cfg = cfg || {};
-	var order = order;
-	var suborders = suborders;
+	/*var order = order;
+	var suborders = suborders;*/
 	var drawFunction = drawFunction;
 	var persistentFunction = persistentFunction;
 
@@ -1073,20 +1089,20 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 
 	var payOrTipGroup = $('<div class="form-group p-method">')
 	//var paySelect= $('<label class="p-pay"><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
-	var paySelect= $('<label class="p-pay"><input type="radio" id="pay-select" name="pay-or-tip" data-type="pay">Payment</label>');
-	var tipSelect = $('<label class="p-tip"><input type="radio" id="tip-select" name="pay-or-tip" data-type="tip">Tip</label>');
+	var paySelect= $('<input type="radio" id="pay-select" name="pay-or-tip" data-type="pay"><label for="pay-select" class="p-pay">Payment<br/>付款</label>');
+	var tipSelect = $('<input type="radio" id="tip-select" name="pay-or-tip" data-type="tip"><label for="tip-select" class="p-tip">Tip<br/>小费</label>');
 	
 	// maybe change the name, is used for select card or cash
 	var typeGroup = $('<div id="input-type-group" class="form-group">');
 
 
 	// var payGroup = $()
-	var payCardButton = $('<label class="pp-card"><input type="radio" id="pay-card" name="pay" data-type="card">' + cfg.cardImg + 'Card 卡</label>');							
-	var payCashButton = $('<label class="pp-cash"><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var payCardButton = $('<input type="radio" id="pay-card" name="pay" data-type="card"><label for="pay-card" class="pp-card">' + cfg.cardImg + 'Card 卡</label>');							
+	var payCashButton = $('<input type="radio" id="pay-cash" name="pay" data-type="cash"><label for="pay-cash" class="pp-cash">' + cfg.cashImg + 'Cash 现金</label>');
 	// payForm.append(payCardButton).append(payCashButton);
 
-	var tipCardButton = $('<label class="pp-card"><input type="radio" id="tip-card" name="tip" data-type="card">' + cfg.cardImg + 'Card 卡</label>');
-	var tipCashButton = $('<label class="pp-cash"><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var tipCardButton = $('<input type="radio" id="tip-card" name="tip" data-type="card"><label for="tip-card" class="pp-card">' + cfg.cardImg + 'Card 卡</label>');
+	var tipCashButton = $('<input type="radio" id="tip-cash" name="tip" data-type="cash"><label for="tip-cash" class="pp-cash">' + cfg.cashImg + 'Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
 	var confirmButton = $('<button class="btn btn-success btn-lg" id="input-confirm">').text('Confirm 确定');
@@ -1160,6 +1176,9 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 				}).done(
 
 					function() {
+						// delete cookie
+						printSplitReceipt(order, suborders);
+						deleteAllCookies();
 						window.location.replace(home_page_url);
 					}
 				);
@@ -1170,10 +1189,10 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
 
 			} else {
 				if (suborders.suborders.length == 0) {
-					$.notify("there is no suborder to submit");
+					$.notify("there is no suborder to submit \n请分单后再提交",{ position: "top center", className:"warn"});
 				} else {
 					var tempStr = suborders.unpaidSuborders.join();
-					$.notify("please check the following suborders " + tempStr);
+					$.notify("please check the following suborders \n请检查以下分单" + tempStr,{ position: "top center", className:"warn"});
 				}
 			}
 		});
@@ -1226,7 +1245,9 @@ var KeypadComponent = function (order, suborders, cfg, drawFunction, persistentF
     // should not change the suborder state directly
 	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
 												.on('click', function() {
-													$(document).queue(enterInput).queue(persistentFunction).queue(drawFunction);
+
+													enterInput();
+													screenClear.trigger('click');
 												});
 
 
