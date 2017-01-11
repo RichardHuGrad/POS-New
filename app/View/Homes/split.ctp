@@ -131,21 +131,21 @@
 <?php
 
 echo $this->Html->css(array('components/KeypadComponent', 'components/OrderComponent', 'components/SubordersListComponent', 'components/SubordersDetailComponent', 'split'));
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js', 'store.min.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
 
 
 echo $this->fetch('script');
 ?>
 <script>
 
-	init()
+	/*init()
     function init() {
         if (!store.enabled) {
             alert('Local storage is not supported by your browser. Please disable "Private Mode", or upgrade to a modern browser.')
             return
         }
         
-    }
+    }*/
 
 	// image path for component
 	var rightImg = '<?php echo $this->Html->image("right.png", array('alt' => "right")); ?>';
@@ -288,7 +288,7 @@ echo $this->fetch('script');
 
 		var tempSuborders = Cookies.getJSON(subordersCookie);
 		// var tempSuborders = store.get(subordersCookie);
-		console.log(tempSuborders);
+		// console.log(tempSuborders);
 		if (tempSuborders != undefined) {
 			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
 				var temp_no = tempSuborders.suborders[i].suborder_no;
