@@ -246,11 +246,11 @@ echo $this->fetch('script');
 		order = loadOrder(order_no);
 		suborders = new Suborders();
 
-		// Cookies.remove(orderCookie, { path: '' });
-		// Cookies.remove(subordersCookie, { path: '' });
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 
-		store.remove(orderCookie);
-		store.remove(subordersCookie);
+		// store.remove(orderCookie);
+		// store.remove(subordersCookie);
 	}
 
 	drawUI();
@@ -260,8 +260,8 @@ echo $this->fetch('script');
 	function restoreFromCookie() {
 
 		// check whether cookie exist
-		// var tempOrder = Cookies.getJSON(orderCookie); 
-		var tempOrder = store.get(orderCookie);
+		var tempOrder = Cookies.getJSON(orderCookie); 
+		// var tempOrder = store.get(orderCookie);
 
 		if (tempOrder != undefined) {
 			order = Order.fromJSON(tempOrder);
@@ -286,8 +286,8 @@ echo $this->fetch('script');
 			}
 		}
 
-		// var tempSuborders = Cookies.getJSON(subordersCookie);
-		var tempSuborders = store.get(subordersCookie);
+		var tempSuborders = Cookies.getJSON(subordersCookie);
+		// var tempSuborders = store.get(subordersCookie);
 		console.log(tempSuborders);
 		if (tempSuborders != undefined) {
 			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
@@ -301,22 +301,22 @@ echo $this->fetch('script');
 	}	
 
 	function deleteAllCookies () {
-		// Cookies.remove(orderCookie, { path: '' });
-		// Cookies.remove(subordersCookie, { path: '' });
-		store.remove(orderCookie);
-		store.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
+		// store.remove(orderCookie);
+		// store.remove(subordersCookie);
 	}
 
 
 	function persistentOrder(callback) {
-		// Cookies.remove(orderCookie, { path: '' });
-		// Cookies.remove(subordersCookie, { path: '' });
-		// Cookies.set(orderCookie, order, { expires: 3, path: '' });
-		// Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
-		store.remove(orderCookie);
-		store.remove(subordersCookie);
-		store.set(orderCookie, order);
-		store.set(subordersCookie, suborders);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
+		Cookies.set(orderCookie, order, { expires: 3, path: '' });
+		Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
+		// store.remove(orderCookie);
+		// store.remove(subordersCookie);
+		// store.set(orderCookie, order);
+		// store.set(subordersCookie, suborders);
 
 
 
