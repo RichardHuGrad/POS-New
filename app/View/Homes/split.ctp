@@ -147,6 +147,56 @@ echo $this->fetch('script');
         
     }*/
 
+    // log helper
+    var log = (function() {
+    	var log = "";
+
+    	return {
+    		add: function (msg) { log += msg + "\n"},
+    		show: function () {alert(log); log = "";}
+    	}
+    })();
+
+
+    var StorageProxy = (function(Cookies) {
+    	supportCheck();
+
+    	function supportCheck() {
+    		// check the browser support
+    		return;
+    	}
+
+
+    	function set(key, value, cfg) {
+			var cfg = cfg || {};
+			if (typeof value == "object")
+				value = JSON.stringify(value);
+
+			Cookies.set(key, value, cfg);
+		}
+
+		function get(key, cfg) {
+			var cfg = cfg || {};
+			var obj = Cookies.get(key);
+			if (typeof obj == "string")
+				obj = JSON.parse(obj);
+
+			return obj; 
+		}
+
+		function remove(key, cfg) {
+			var cfg = cfg || {};
+			Cookies.remove(subordersCookie, cfg);
+		}
+
+    	return {
+    		set: set,
+    		get: get,
+    		remove: remove
+    	}
+    })(Cookies);
+
+
 	// image path for component
 	var rightImg = '<?php echo $this->Html->image("right.png", array('alt' => "right")); ?>';
 	var cardImg = '<?php echo $this->Html->image("card.png", array('alt' => "card")); ?>';
@@ -246,8 +296,11 @@ echo $this->fetch('script');
 		order = loadOrder(order_no);
 		suborders = new Suborders();
 
-		Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });
+		/*Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });*/
+
+		StorageProxy.remove(orderCookie, { path: '' });
+		StorageProxy.remove(subordersCookie, { path: '' });
 
 		// store.remove(orderCookie);
 		// store.remove(subordersCookie);
@@ -301,18 +354,25 @@ echo $this->fetch('script');
 	}	
 
 	function deleteAllCookies () {
-		Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });
+		// Cookies.remove(orderCookie, { path: '' });
+		// Cookies.remove(subordersCookie, { path: '' });
+		StorageProxy.remove(orderCookie, { path: '' });
+		StorageProxy.remove(subordersCookie, { path: '' });
 		// store.remove(orderCookie);
 		// store.remove(subordersCookie);
 	}
 
 
 	function persistentOrder(callback) {
-		Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });
-		Cookies.set(orderCookie, order, { expires: 3, path: '' });
-		Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
+		// Cookies.remove(orderCookie, { path: '' });
+		// Cookies.remove(subordersCookie, { path: '' });
+		// Cookies.set(orderCookie, order, { expires: 3, path: '' });
+		// Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
+
+		StorageProxy.remove(orderCookie, { path: '' });
+		StorageProxy.remove(subordersCookie, { path: '' });
+		StorageProxy.set(orderCookie, order, { expires: 3, path: '' });
+		StorageProxy.set(subordersCookie, suborders, { expires: 3, path: '' });
 		// store.remove(orderCookie);
 		// store.remove(subordersCookie);
 		// store.set(orderCookie, order);
