@@ -110,14 +110,13 @@
     
         <div class="clearfix homepage col-md-12 col-sm-12 col-xs-12">
             <?php echo $this->Session->flash(); ?>
-            <!--<div class="clearfix dine-box">
-			<div class="col-md-12">
-                <button class="dinebtn"><?php //echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Dine in Table 堂食</button>
-            </div>
-			</div>-->
-
             <div class="clearfix col-md-8 col-sm-8 col-xs-8" id="dine-in-component">
+                  <!--   <div class="col-md-12 col-sm-12 col-xs-12" id="dine-in-title">
+                      Dine in <br/> 堂食
+                  </div> -->
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
+                        
+
                         <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 580px; padding:0">
                             <!-- <?php print_r($tables['Admin']);?>  -->
 
@@ -247,13 +246,6 @@
                 
             </div>
 
-    <!--         <div class="clearfix dine-box col-md-2 col-sm-2 col-xs-2">
-        <div class="col-md-12">
-        <hr style="border-color:#c30e23;margin-bottom:-18px;">
-            <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?>  Takeout Orders 外卖桌</button>
-        </div>
-    </div> -->
-
             <div class="col-md-2 col-sm-2 col-xs-2" id="take-out-component">
                 <div class="col-md-12 col-sm-12 col-xs-12" id="take-out-title">
                         Takeout Orders <br/> 外卖桌
@@ -271,7 +263,7 @@
                                 <div class="dropdown-menu dropdown-overlay">
                                 <ul class="takeout-tables">
                                     <!--<div class="arrow"></div>-->
-                                    <li class="dropdown-title">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                    <li class="dropdown-title">外卖<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if (@$takeway_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                         if (@$takeway_tables_status[$i] <> 'P')
                                             echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'T'));
@@ -369,7 +361,7 @@
                                 <div class="dropdown-menu dropdown-overlay">
                                 <ul class="waiting-tables">
                                     <!--<div class="arrow"></div>-->
-                                    <li class="dropdown-title">Waiting<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                    <li class="dropdown-title">等待<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                         if (@$waiting_tables_status[$i] <> 'P')
                                             echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'W'));
@@ -449,14 +441,6 @@
             </div>
 
         </div>
-
-
-    <!--         <div class="clearfix dine-box">
-        <div class="col-md-2 col-sm-2 col-xs-2">
-        <hr style="border-color:#c30e23;margin-bottom:-18px;margin-top:0px;">
-            <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Waiting List 等待桌</button>
-        </div>
-    </div> -->
 
             
                     <!-- Scroll buttons -->
