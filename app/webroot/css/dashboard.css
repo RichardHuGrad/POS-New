@@ -1,0 +1,13 @@
+#take-out-component, #waiting-list-component {
+	border-left: 1px solid #c30e23;
+}
+
+#take-out-title, #waiting-list-title {
+	background-color: #c30e23;
+	text-align: left;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	height: 40px;
+	line-height: 20px;
+}

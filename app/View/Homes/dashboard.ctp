@@ -7,12 +7,19 @@
             // }, 30000);
             if ($(window).width() <= 780) {
                 $(".dine_ul, .dine_li").removeAttr("style");
+                $('#dine-in-component').removeClass('col-md-8 col-sm-8 col-xs-8')
+                $("#take-out-component, #waiting-list-component").removeClass('col-md-2 col-sm-2 col-xs-2');
                 // $("").removeAttr("style");
             }
             $(window).resize(function () {
                 if ($(window).width() <= 780) {
                     $(".dine_ul, .dine_li").removeAttr("style");
                     // $("").removeAttr("style");
+                    $('#dine-in-component').removeClass('col-md-8 col-sm-8 col-xs-8')
+                    $("#take-out-component, #waiting-list-component").removeClass('col-md-2 col-sm-2 col-xs-2');
+                } else {
+                    $('#dine-in-component').addClass('col-md-8 col-sm-8 col-xs-8')
+                    $("#take-out-component, #waiting-list-component").addClass('col-md-2 col-sm-2 col-xs-2');
                 }
             })
             
@@ -20,8 +27,8 @@
     </script>
 
     <header>
-        <?php echo $this->Html->css(array('navbar')); ?>
-        <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <?php echo $this->Html->css(array('navbar', 'dashboard')); ?>
+        <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-static-top" role="navigation">
             <div class="container-fluid ">
                 <!-- brand -->
                 <div class="navbar-header">
@@ -36,8 +43,15 @@
                         <li>
                             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
                         </li>
-                        <li><a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
+                        <!-- <li><a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="javascript:void(0)"><strong>外卖桌</strong></a>
                         </li>
+                        
+                        <li>
+                            <a href="javascript:void(0)"><strong>等待桌</strong></a>
+                        </li> -->
                         
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">More
@@ -94,7 +108,7 @@
 
     </header>
     
-        <div class="clearfix homepage">
+        <div class="clearfix homepage col-md-12 col-sm-12 col-xs-12">
             <?php echo $this->Session->flash(); ?>
             <!--<div class="clearfix dine-box">
 			<div class="col-md-12">
@@ -102,17 +116,19 @@
             </div>
 			</div>-->
 
-            <div class="clearfix marginB30">
+            <div class="clearfix col-md-8 col-sm-8 col-xs-8" id="dine-in-component">
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
                         <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 580px; padding:0">
+                            <!-- <?php print_r($tables['Admin']);?>  -->
+
                         	<?php
                             $dine_table = @explode(",", $tables['Admin']['table_size']);
                             $dine_table_order = @$tables['Admin']['table_order']?@json_decode($tables['Admin']['table_order'], true):array();
                         	for($i = 1; $i <= $tables['Admin']['no_of_tables']; $i++) {
                         	?>
-	                        <li class="clearfix dine_li" style="<?php echo @$dine_table_order[$i-1] ?>">
+                            <li class="clearfix dine_li" style="<?php echo @$dine_table_order[$i-1] ?>">
                                 <div class="dropdown-menu dropdown-overlay">
-	                        	<ul class="dine-tables">
+                            	<ul class="dine-tables">
                                     <!--<div class="arrow"></div>-->
                                     <li class="dropdown-title">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if(@$dinein_tables_status[$i] == 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'order', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)"; ?>">Order <br/>点餐</a></li>
@@ -120,10 +136,10 @@
                                     <li class="dropdown-submenu <?php if(!@$dinein_tables_status[$i])echo 'disabled';?>">
                                         <a class="test" tabindex="-1" href="<?php if(@$dinein_tables_status[$i])echo $this->Html->url(array('controller'=>'homes', 'action'=>'changetable', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Change Table<br/>换桌</a>
                                     	<?php if(@$dinein_tables_status[$i]) {;?>
-	                                        <ul class="dropdown-menu">
+                                            <ul class="dropdown-menu">
                                                 <div class="customchangemenu clearfix">
                                                 <a class="close-btn" href="javascript:void(0)">X</a>
-	                                            <div class="left-arrow"></div>
+                                                <div class="left-arrow"></div>
                                                 <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN 堂食</div>
                                                 <?php
                                                 for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
@@ -151,7 +167,7 @@
                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['D']));?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
                                                 <?php } }?>
                                                 </div>
-	                                        </ul>
+                                            </ul>
                                         <?php }?>
                                     </li>
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
@@ -209,232 +225,244 @@
                                 <!-- End. -->
                                 
                                     <li><a tabindex="-1" href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'tableHistory', 'table_no'=>$i)); ?>">History</a></li>
-	                        	</ul>
+                            	</ul>
                                 </div>
-	                            <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-	                                <div class="number-txt for-dine">Dine<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                                <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                                    <div class="number-txt for-dine">Dine<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                    
                                     <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
-	                                	<?php
+                                    	<?php
                                 	 	if(!@$dinein_tables_status[$i]) 
-	                                		echo "&nbsp;";
+                                    		echo "&nbsp;";
                                 		else
                                 			echo @$orders_no[$i]['D'];
-	                                	?>
-	                                </div>
-	                                <div class="txt12 text-center <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php if(@$dinein_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['D']?date("H:i", strtotime(@$orders_time[$i]['D'])):"" ?><?php }?>
-	                            </div>
-	                        </li>
-	                        <?php }?>
+                                    	?>
+                                    </div>
+                                    <div class="txt12 text-center <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php if(@$dinein_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['D']?date("H:i", strtotime(@$orders_time[$i]['D'])):"" ?><?php }?>
+                                </div>
+                            </li>
+                            <?php }?>
                         </ul>
                     </div>                    
                 
             </div>
 
-        <div class="clearfix dine-box">
-            <div class="col-md-12">
-            <hr style="border-color:#c30e23;margin-bottom:-18px;">
-                <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?>  Takeout Orders 外卖桌</button>
-            </div>
+    <!--         <div class="clearfix dine-box col-md-2 col-sm-2 col-xs-2">
+        <div class="col-md-12">
+        <hr style="border-color:#c30e23;margin-bottom:-18px;">
+            <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?>  Takeout Orders 外卖桌</button>
         </div>
+    </div> -->
 
-        <div class="clearfix">
-
-            <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                <ul>
-                    <?php
-                    $takeout_tables = @explode(",", $tables['Admin']['takeout_table_size']);
-                    for ($i = 1; $i <= $tables['Admin']['no_of_takeout_tables']; $i++) {
-                        ?>
-                        <li class="clearfix">
-                            <div class="dropdown-menu dropdown-overlay">
-                            <ul class="takeout-tables">
-                                <!--<div class="arrow"></div>-->
-                                <li class="dropdown-title">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
-                                <li <?php if (@$takeway_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
-                                    if (@$takeway_tables_status[$i] <> 'P')
-                                        echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'T'));
-                                    else
-                                        echo "javascript:void(0)";
-                                    ?>">Order<br>点餐</a></li>
-                                <li class="dropdown-submenu <?php if (!@$takeway_tables_status[$i]) echo 'disabled'; ?>">
-                                    <a class="test" tabindex="-1" href="<?php
-                                    if (@$takeway_tables_status[$i])
-                                        echo $this->Html->url(array('controller' => 'homes', 'action' => 'changetable', 'table' => $i, 'type' => 'T'));
-                                    else
-                                        echo "javascript:void(0)";
-                                    ?>">Change Table<br/>换桌</a>
-                                       <?php
-                                       if (@$takeway_tables_status[$i]) {
-                                           ;
-                                           ?>
-                                        <ul class="dropdown-menu">
-                                            <div class="customchangemenu clearfix">
-                                                <div class="left-arrow"></div>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN 堂食</div>
-                                                <?php
-                                                for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
-                                                    if (!@$orders_no[$t]['D']) {
-                                                        ?>
-                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖</div>
-                                                <?php
-                                                for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
-                                                    if (!@$orders_no[$t]['T'] and $t <> $i) {
-                                                        ?>
-                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
-                                                <?php
-                                                for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
-                                                    if (!@$orders_no[$t]['W']) {
-                                                        ?>
-                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                            </div>
-                                            </ul>
-	                                        <?php }?>
-	                                    </li>
-                                        <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
-	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$takeway_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T']));?>');">Completed<br/>变空桌</a></li>
-                                        
-		                        	</ul>
-                                    </div>
-	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-		                                <!-- <div class="takeout-txt">Takeout</div> -->
-                                            <div class="number-txt for-dine">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
-                                            <?php 
-                                            if(@$takeway_tables_status[$i]) {
-                                            ?>
-			                                <div class="order_no_box <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
-			                                	<?php
-                                                    echo @$orders_no[$i]['T'];                            	
-			                                	?>
-			                                </div>
-			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>
-		                            	
-                                            <?php }?>
-		                            </div>
-	                            </li>
-                            <?php } ?>
-                        </ul>
-                    </div>
-            </div>
-
-        </div>
-
-
-        <div class="clearfix dine-box">
-            <div class="col-md-12">
-            <hr style="border-color:#c30e23;margin-bottom:-18px;margin-top:0px;">
-                <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Waiting List 等待桌</button>
-            </div>
-        </div>
-
-        <div class="clearfix marginB30">
-
-            <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                <ul>
-                    <?php
-                    $wait_table = @explode(",", $tables['Admin']['waiting_table_size']);
-                    for ($i = 1; $i <= $tables['Admin']['no_of_waiting_tables']; $i++) {
-                        ?>
-                        <li class="clearfix">
-                            <div class="dropdown-menu dropdown-overlay">
-                            <ul class="waiting-tables">
-                                <!--<div class="arrow"></div>-->
-                                <li class="dropdown-title">Waiting<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
-                                <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
-                                    if (@$waiting_tables_status[$i] <> 'P')
-                                        echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'W'));
-                                    else
-                                        echo "javascript:void(0)";
-                                    ?>">Order<br/>点餐</a></li>
-
-                                <li class="dropdown-submenu <?php if (!@$waiting_tables_status[$i]) echo 'disabled'; ?>">
-                                    <a class="test" tabindex="-1" href="<?php
-                                    if (@$waiting_tables_status[$i])
-                                        echo $this->Html->url(array('controller' => 'homes', 'action' => 'changetable', 'table' => $i, 'type' => 'W'));
-                                    else
-                                        echo "javascript:void(0)";
-                                    ?>">Change Table</br/>换桌</a>
-                                       <?php
-                                       if (@$waiting_tables_status[$i]) {
-                                           ;
-                                           ?>
-                                        <ul class="dropdown-menu">
-                                            <div class="customchangemenu clearfix">
-                                                <div class="left-arrow"></div>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"> DINE IN 堂食</div>
-                                                <?php
-                                                for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
-                                                    if (!@$orders_no[$t]['D']) {
-                                                        ?>
-                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖</div>
-                                                <?php
-                                                for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
-                                                    if (!@$orders_no[$t]['T']) {
-                                                        ?>
-                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
-                                                <?php
-                                                for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
-                                                    if (!@$orders_no[$t]['W'] and $t <> $i) {
-                                                        ?>
-                                                        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                            </div>
-                                            </ul>
-                                        <?php }?>
-                                    </li>
-                                    <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'W')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
-                                    <li <?php if(@$waiting_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$waiting_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'W', 'order'=>@$orders_no[$i]['W']));?>');">Completed<br/>变空桌</a></li>
-	                        	</ul>
-                                </div>
-	                            <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-	                                <div class="number-txt for-dine">Wait<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
-	                                <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
-	                                	<?php
-	                                	if(!@$waiting_tables_status[$i]) 
-                                            echo "&nbsp;";
-                                		else
-                                            echo @$orders_no[$i]['W'];                       	
-	                                	?>
-	                                </div>
-	                                <div class="txt12 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
-                                        <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i", strtotime(@$orders_time[$i]['W'])):""; } ?>
-	                            </div>
-	                        </li>
-                            <?php } ?>
-                        </ul>
-                    </div>
+            <div class="col-md-2 col-sm-2 col-xs-2" id="take-out-component">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="take-out-title">
+                        Takeout Orders <br/> 外卖桌
                 </div>
-                <!-- Scroll buttons -->
-                <a href="#" class="scrollUp">Up</a>
-                <a href="#" class="scrollDown">Down</a>
+
+                <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
+                    
+
+                    <ul>
+                        <?php
+                        $takeout_tables = @explode(",", $tables['Admin']['takeout_table_size']);
+                        for ($i = 1; $i <= $tables['Admin']['no_of_takeout_tables']; $i++) {
+                            ?>
+                            <li class="clearfix">
+                                <div class="dropdown-menu dropdown-overlay">
+                                <ul class="takeout-tables">
+                                    <!--<div class="arrow"></div>-->
+                                    <li class="dropdown-title">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                    <li <?php if (@$takeway_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
+                                        if (@$takeway_tables_status[$i] <> 'P')
+                                            echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'T'));
+                                        else
+                                            echo "javascript:void(0)";
+                                        ?>">Order<br>点餐</a></li>
+                                    <li class="dropdown-submenu <?php if (!@$takeway_tables_status[$i]) echo 'disabled'; ?>">
+                                        <a class="test" tabindex="-1" href="<?php
+                                        if (@$takeway_tables_status[$i])
+                                            echo $this->Html->url(array('controller' => 'homes', 'action' => 'changetable', 'table' => $i, 'type' => 'T'));
+                                        else
+                                            echo "javascript:void(0)";
+                                        ?>">Change Table<br/>换桌</a>
+                                           <?php
+                                           if (@$takeway_tables_status[$i]) {
+                                               ;
+                                               ?>
+                                            <ul class="dropdown-menu">
+                                                <div class="customchangemenu clearfix">
+                                                    <div class="left-arrow"></div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN 堂食</div>
+                                                    <?php
+                                                    for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
+                                                        if (!@$orders_no[$t]['D']) {
+                                                            ?>
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖</div>
+                                                    <?php
+                                                    for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
+                                                        if (!@$orders_no[$t]['T'] and $t <> $i) {
+                                                            ?>
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                                                    <?php
+                                                    for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
+                                                        if (!@$orders_no[$t]['W']) {
+                                                            ?>
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['T'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                                </ul>
+    	                                        <?php }?>
+    	                                    </li>
+                                            <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
+    	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$takeway_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T']));?>');">Completed<br/>变空桌</a></li>
+                                            
+    		                        	</ul>
+                                        </div>
+    	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+    		                                <!-- <div class="takeout-txt">Takeout</div> -->
+                                                <div class="number-txt for-dine">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                                                <?php 
+                                                if(@$takeway_tables_status[$i]) {
+                                                ?>
+    			                                <div class="order_no_box <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+    			                                	<?php
+                                                        echo @$orders_no[$i]['T'];                            	
+    			                                	?>
+    			                                </div>
+    			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>
+    		                            	
+                                                <?php }?>
+    		                            </div>
+    	                            </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
             </div>
+
+
+            <div class="col-md-2 col-sm-2 col-xs-2" id="waiting-list-component">
+
+                <div class="col-md-12 col-sm-12 col-xs-12" id="waiting-list-title">
+                        Waiting List <br/> 等待桌
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
+                    <ul>
+                        <?php
+                        $wait_table = @explode(",", $tables['Admin']['waiting_table_size']);
+                        for ($i = 1; $i <= $tables['Admin']['no_of_waiting_tables']; $i++) {
+                            ?>
+                            <li class="clearfix">
+                                <div class="dropdown-menu dropdown-overlay">
+                                <ul class="waiting-tables">
+                                    <!--<div class="arrow"></div>-->
+                                    <li class="dropdown-title">Waiting<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                    <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
+                                        if (@$waiting_tables_status[$i] <> 'P')
+                                            echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'W'));
+                                        else
+                                            echo "javascript:void(0)";
+                                        ?>">Order<br/>点餐</a></li>
+
+                                    <li class="dropdown-submenu <?php if (!@$waiting_tables_status[$i]) echo 'disabled'; ?>">
+                                        <a class="test" tabindex="-1" href="<?php
+                                        if (@$waiting_tables_status[$i])
+                                            echo $this->Html->url(array('controller' => 'homes', 'action' => 'changetable', 'table' => $i, 'type' => 'W'));
+                                        else
+                                            echo "javascript:void(0)";
+                                        ?>">Change Table</br/>换桌</a>
+                                           <?php
+                                           if (@$waiting_tables_status[$i]) {
+                                               ;
+                                               ?>
+                                            <ul class="dropdown-menu">
+                                                <div class="customchangemenu clearfix">
+                                                    <div class="left-arrow"></div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"> DINE IN 堂食</div>
+                                                    <?php
+                                                    for ($t = 1; $t <= $tables['Admin']['no_of_tables']; $t++) {
+                                                        if (!@$orders_no[$t]['D']) {
+                                                            ?>
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT 外卖</div>
+                                                    <?php
+                                                    for ($t = 1; $t <= $tables['Admin']['no_of_takeout_tables']; $t++) {
+                                                        if (!@$orders_no[$t]['T']) {
+                                                            ?>
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                                                    <?php
+                                                    for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
+                                                        if (!@$orders_no[$t]['W'] and $t <> $i) {
+                                                            ?>
+                                                            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$orders_no[$i]['W'])); ?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                                </ul>
+                                            <?php }?>
+                                        </li>
+                                        <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'W')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
+                                        <li <?php if(@$waiting_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$waiting_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'W', 'order'=>@$orders_no[$i]['W']));?>');">Completed<br/>变空桌</a></li>
+                                    </ul>
+                                    </div>
+                                    <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                                        <div class="number-txt for-dine">Wait<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                                        <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+                                            <?php
+                                            if(!@$waiting_tables_status[$i]) 
+                                                echo "&nbsp;";
+                                            else
+                                                echo @$orders_no[$i]['W'];                          
+                                            ?>
+                                        </div>
+                                        <div class="txt12 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+                                            <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i", strtotime(@$orders_time[$i]['W'])):""; } ?>
+                                    </div>
+                                </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+            </div>
+
+        </div>
+
+
+    <!--         <div class="clearfix dine-box">
+        <div class="col-md-2 col-sm-2 col-xs-2">
+        <hr style="border-color:#c30e23;margin-bottom:-18px;margin-top:0px;">
+            <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Waiting List 等待桌</button>
+        </div>
+    </div> -->
+
+            
+                    <!-- Scroll buttons -->
+                    <a href="#" class="scrollUp">Up</a>
+                    <a href="#" class="scrollDown">Down</a>
+        </div>
 
 
 <div id="dialog" title="Please Enter Password" style="display:none" class="popPassword">
@@ -618,3 +646,7 @@ echo $this->fetch('script');
 	//End.
 </script>
 <!-- End. -->
+
+<script>
+    
+</script>
