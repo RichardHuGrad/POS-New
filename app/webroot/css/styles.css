@@ -321,7 +321,7 @@ header { background: #c30e23; height: 75px; }
 .waimai-link{position:absolute;top:4px;z-index:999999;cursor:pointer;background: #ddd;font-size: 20px !important;border-radius: 5px;text-align: center; padding:6px 0 6px 0;}
 #product li { border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding-top: 15x; }
 .products-panel {padding-left: 0;}
-.productbox { width: 100%; height: 500px; position: relative; overflow-y: auto; overflow-x: hidden; margin: 0; }
+.productbox { width: 100%; height: 100%; position: relative; overflow-y: auto; overflow-x: hidden; margin: 0; }
 
 .name-title { /*overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;*/ padding:0 0 0 5px; }
 .productbox li { cursor: pointer; float:left; display:inline-block; vertical-align:top; }
@@ -331,7 +331,7 @@ header { background: #c30e23; height: 75px; }
 	margin: 5px 2px; 
 	background: white; 
 	box-shadow: -2px 5px 5px rgba(0,0,0,.12); 
-	height:150px;
+	height:100px;
 }
 .cartwrap-wrap { padding: 5px 0; }
 .cart-txt { font-size: 20px; color: #151515; font-weight: 600; padding-top: 5px; }

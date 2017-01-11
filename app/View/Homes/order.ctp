@@ -27,6 +27,8 @@
         }
         ?>
     </ul>
+
+    <?php echo $this->Html->css(array('order')); ?>
 </header>
 
 <div class="clearfix cartwrap-wrap">      
@@ -85,9 +87,9 @@
                                             ?>
                                             <li class="col-md-3 col-sm-6 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
                                                 <div class="item-wrapper">
-                                                    <div class="clearfix padding10 row">
-                                                        <div class="dish-title txt13 pull-left col-md-9 col-sm-9 col-xs-7"><div class="name-title"><strong><?php echo $items['eng_name'] . "<br/>" . $items['zh_name']; ?></strong></div></div>
-                                                        <div class="dish-price pull-right txt14 col-md-3 col-sm-3 col-xs-5">$<?php echo number_format($items['price'], 2); ?></div>
+                                                    <div class="clearfixrow">
+                                                        <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
+                                                        <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
                                                     </div>
                                                 </div>
                                             </li>
@@ -591,67 +593,6 @@ echo $this->fetch('script');
     });
 </script>
 
-
-<style type="text/css">
-    html {
-        position: relative;
-        min-height: 100%;
-        margin: 0;
-    }
-    .dropdown-menu{
-        position:fixed;
-    }
-    .show_extras {
-        display: block;
-        float: left;
-        margin-bottom: 15px;
-        margin-top: 14px;
-        width: 100%;
-    }
-    .extras_inner{
-        border: 1px solid #eee;
-        border-radius: 14px;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px;
-        padding: 8px;
-    }
-    .extras_inner > span {
-        margin-right: 10px;
-    }
-    .fa.fa-times.remove_extra {
-        color: rgb(195, 14, 35);
-        font-size: 19px;
-    }.fa.fa-times.remove_extra:hover {
-        color: #23527c;
-        font-size: 19px;
-    }
-
-    .name-title {
-        margin-top:30px;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-    ::-webkit-scrollbar {
-        width: 30px;
-        height: 30px;
-        overflow: visible;
-    }
-
-    ::-webkit-scrollbar-track {
-        border: 15px solid transparent;
-        background-clip: content-box;   THIS IS IMPORTANT
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #D1D0D0;
-        width: 30px;
-        border-radius: 50px;
-        height: 10px;
-        border: 1px solid rgb(0,0,0);
-        -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
-    }​ 
-
-</style>
 
 <script>
 // touch move
