@@ -71,3 +71,17 @@ html,body {
 /* .order-summary-indent {
     height: 350px;
 } */
+
+#button-group button {
+    /*border-radius: 8px;*/
+}
+
+#send-to-kitchen {
+    background-color: #c30e23;
+    color: #fff;
+}
+
+#pay {
+    background-color: #292929; 
+    color: #fff;
+}

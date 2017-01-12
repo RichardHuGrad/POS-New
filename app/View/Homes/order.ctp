@@ -38,7 +38,7 @@
 
         
     </header>
-    <div class="clearfix cartwrap-wrap">      
+    <div class="clearfix cartwrap-wrap col-md-12 col-sm-12 col-xs-12">      
         <div class="col-md-9 col-sm-8 col-xs-12 home-link">
             <div class="cart-txt" id="order_no_display">
             <!-- Modified by Yishou Liao @ Dec 09 2016 -->
@@ -58,7 +58,7 @@
     </div>
 
 
-    <div class="clearfix cart-wrap">
+    <div class="clearfix cart-wrap col-md-12 col-sm-12 col-xs-12">
         <div class="col-md-4 col-sm-5 col-xs-12 summary_box">
             <div class="clearfix marginB15 cashierbox" style="display:none">
                 <div class="pull-left marginR5">
@@ -78,6 +78,7 @@
 
         <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
             <div class="tab-content">
+                <!-- <?php print_r ($records); ?> -->
                 <?php
                 if (!empty($records)) {
                     $count = 0;
@@ -118,6 +119,17 @@
                 ?>
             </div>
         </div>
+
+        
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12" id="button-group">
+        <button id="send-to-kitchen" class="btn btn-lg">Send to Kitchen</button>
+        <button id="pay" class="btn btn-lg">Pay</button>
+        <button id="taste" class="btn btn-lg">Taste</button>
+        <button id="delete" class="btn btn-lg">Delete</button>
+        <button id="quantity" class="btn btn-lg">Quantity</button>
+        <button id="take-out" class="btn btn-lg">Take Out</button> 
+        <button id="add-discount" class="btn btn-lg">Add Discount</button> 
     </div>
 
 </body>
@@ -133,8 +145,6 @@ echo $this->fetch('script');
 <script type="text/javascript">
     var Order_Item_Printer = Array(); //Modified by Oct 25 2016.
 
-    (function ($) {
-    })(jQuery);
     $(document).on('click', ".add_items", function () {
         var item_id = $(this).attr("alt");
         var message = $("#Message").val();
@@ -145,16 +155,6 @@ echo $this->fetch('script');
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
-
-                // add touch move function
-                // modified by Yu Dec 16, 2016
-/*                $('.order-summary-indent').kinetic({
-                    filterTarget: function(target, e){
-                        if (!/down|start/.test(e.type)){
-                            return !(/area|a|input/i.test(target.tagName));
-                        }
-                    }
-                });*/
 
                 /*$('.less-title').flowtype({
                     // fontRatio : 15,
@@ -475,17 +475,7 @@ echo $this->fetch('script');
 						Order_Item_Printer.push(arrtmp[i].split("*"));
 					};
 				};//Modified by Yishou Liao @ Nov 28 2016
-                //End.
-
-                // add touch move function
-                // modified By yu Dec 16, 2016
-/*                $('.order-summary-indent').kinetic({
-                    filterTarget: function(target, e){
-                        if (!/down|start/.test(e.type)){
-                            return !(/area|a|input/i.test(target.tagName));
-                        }
-                    }
-                });*/
+                //End
                 // responsive font size
                 /*$('.less-title').flowtype({
                     // fontRatio : 15,
@@ -611,17 +601,6 @@ echo $this->fetch('script');
 // touch move
 // modified by Yu Dec 16, 2016
 
-/*$(document).ready(function () {
-    $('.productbox').kinetic({
-        filterTarget: function(target, e){
-            if (!/down|start/.test(e.type)){
-                return !(/area|a|input/i.test(target.tagName));
-            }
-        }
-    });
-
-    
-});*/
     $(document).ready(function () {
         $('.txt13').flowtype({
             fontRatio : 15,
