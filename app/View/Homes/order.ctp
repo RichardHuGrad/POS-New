@@ -1,117 +1,130 @@
-<header class="product-header">
-
-    <div class="home-logo">
-        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
-            <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
-        </a>
-
-        <div class="HomeText text-left">
-            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
-            <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-        </div>
-
-    </div>
-
-
-
-    <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
-
-    <ul class="nav nav-tabs text-center">
-        <?php
-        if (!empty($records)) {
-            foreach ($records as $key => $category) {
-                ?>
-                <li <?php if ($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name'] . "<br/>" . $category['Category']['zh_name']; ?></a></li>
-                <?php
-            }
-        }
-        ?>
-    </ul>
-
+<html>
+<head>
     <?php echo $this->Html->css(array('order')); ?>
-</header>
+</head>
+    
 
-<div class="clearfix cartwrap-wrap">      
-    <div class="col-md-9 col-sm-8 col-xs-12 home-link">
-        <div class="cart-txt" id="order_no_display">
-        <!-- Modified by Yishou Liao @ Dec 09 2016 -->
-            Order 订单号 #<?php echo @$Order_detail['Order']['order_no']; ?>, Table 桌 #<?php echo $table; ?>
-        <!-- End -->
-        </div>
-    </div>
+<body>
 
-    <div class="col-md-3 col-sm-4 col-xs-12">
-        <div class="searchwrap">
-            <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i></label>
-            <a class="fa fa-times-circle-o search-clear" aria-hidden="true"></a>
-            <input id="search-input" class="form-control input-lg" placeholder="Search 搜索">
-        </div>
-    </div>
+    <header class="product-header">
 
-</div>
+        <div class="home-logo">
+            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
+                <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
+            </a>
 
-
-<div class="clearfix cart-wrap">
-    <div class="col-md-4 col-sm-5 col-xs-12 summary_box">
-        <div class="clearfix marginB15 cashierbox" style="display:none">
-            <div class="pull-left marginR5">
-                <?php if ($cashier_detail['Cashier']['image']) { ?>
-                    <?php echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . CASHIER_IMAGE_PATH . $cashier_detail['Cashier']['image'] . "&h=60&w=60&&zc=4&Q=100", array('class' => 'img-circle img-responsive')); ?>
-                <?php } else { ?>
-                    <?php echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . TIMB_PATH . 'no_image.jpg' . "&h=60&w=60&&zc=4&Q=100", array('class' => 'img-circle img-responsive')); ?>
-                <?php } ?>
+            <div class="HomeText text-left">
+                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
+                <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
             </div>
-            <div class="pull-left marginL5 clearfix">
-                <div class="txt16 marginB5 marginT5"><?php echo ucfirst($cashier_detail['Cashier']['firstname']) . " " . $cashier_detail['Cashier']['lastname']; ?></div>
-                <div class="txt15"><?php echo str_pad($cashier_detail['Cashier']['id'], 4, 0, STR_PAD_LEFT); ?></div>
-            </div>
+
         </div>
-    </div>
 
 
-    <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
-        <div class="tab-content">
+
+        <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
+
+        <ul class="nav nav-tabs text-center">
             <?php
             if (!empty($records)) {
-                $count = 0;
                 foreach ($records as $key => $category) {
-                    $count++;
                     ?>
-                    <div id="tab<?php echo $category['Category']['id']; ?>" class="tab-pane fade in <?php if ($key == 0) echo "active" ?>">
-                        <div class="clearfix">
-                            <div class="clearfix row productbox">
-                                <?php if (!empty($category['Cousine'])) { ?>
-                                    <ul>
-                                        <?php
-                                        foreach ($category['Cousine'] as $items) {
-                                            ?>
-                                            <li class="col-md-3 col-sm-6 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
-                                                <div class="item-wrapper">
-                                                    <div class="clearfixrow">
-                                                        <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
-                                                        <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <?php
-                                        }
-                                        ?>
-                                    </ul>
-                                <?php
-                                } else {
-                                    echo "<div class='noitems'>No Items Available</div>";
-                                }
-                                ?>
-                            </div>
-                        </div>
-                    </div>                
+                    <li <?php if ($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name'] . "<br/>" . $category['Category']['zh_name']; ?></a></li>
                     <?php
                 }
             }
             ?>
+        </ul>
+
+        
+    </header>
+    <div class="clearfix cartwrap-wrap">      
+        <div class="col-md-9 col-sm-8 col-xs-12 home-link">
+            <div class="cart-txt" id="order_no_display">
+            <!-- Modified by Yishou Liao @ Dec 09 2016 -->
+                Order 订单号 #<?php echo @$Order_detail['Order']['order_no']; ?>, Table 桌 #<?php echo $table; ?>
+            <!-- End -->
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-4 col-xs-12">
+            <div class="searchwrap">
+                <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i></label>
+                <a class="fa fa-times-circle-o search-clear" aria-hidden="true"></a>
+                <input id="search-input" class="form-control input-lg" placeholder="Search 搜索">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="clearfix cart-wrap">
+        <div class="col-md-4 col-sm-5 col-xs-12 summary_box">
+            <div class="clearfix marginB15 cashierbox" style="display:none">
+                <div class="pull-left marginR5">
+                    <?php if ($cashier_detail['Cashier']['image']) { ?>
+                        <?php echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . CASHIER_IMAGE_PATH . $cashier_detail['Cashier']['image'] . "&h=60&w=60&&zc=4&Q=100", array('class' => 'img-circle img-responsive')); ?>
+                    <?php } else { ?>
+                        <?php echo $this->Html->image(TIMB_PATH . "timthumb.php?src=" . TIMB_PATH . 'no_image.jpg' . "&h=60&w=60&&zc=4&Q=100", array('class' => 'img-circle img-responsive')); ?>
+                    <?php } ?>
+                </div>
+                <div class="pull-left marginL5 clearfix">
+                    <div class="txt16 marginB5 marginT5"><?php echo ucfirst($cashier_detail['Cashier']['firstname']) . " " . $cashier_detail['Cashier']['lastname']; ?></div>
+                    <div class="txt15"><?php echo str_pad($cashier_detail['Cashier']['id'], 4, 0, STR_PAD_LEFT); ?></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
+            <div class="tab-content">
+                <?php
+                if (!empty($records)) {
+                    $count = 0;
+                    foreach ($records as $key => $category) {
+                        $count++;
+                        ?>
+                        <div id="tab<?php echo $category['Category']['id']; ?>" class="tab-pane fade in <?php if ($key == 0) echo "active" ?>">
+                            <div class="clearfix">
+                                <div class="clearfix row productbox">
+                                    <?php if (!empty($category['Cousine'])) { ?>
+                                        <ul>
+                                            <?php
+                                            foreach ($category['Cousine'] as $items) {
+                                                ?>
+                                                <li class="col-md-3 col-sm-6 col-xs-6 add_items" alt="<?php echo $items['id']; ?>" title="Add to Cart">
+                                                    <div class="item-wrapper">
+                                                        <div class="clearfixrow">
+                                                            <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
+                                                            <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <?php
+                                            }
+                                            ?>
+                                        </ul>
+                                    <?php
+                                    } else {
+                                        echo "<div class='noitems'>No Items Available</div>";
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>                
+                        <?php
+                    }
+                }
+                ?>
+            </div>
         </div>
     </div>
-</div>
+
+</body>
+</html>
+
+
+
 
 <?php
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js'));
