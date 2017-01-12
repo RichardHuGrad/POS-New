@@ -76,12 +76,12 @@ html,body {
     /*border-radius: 8px;*/
 }
 
-#send-to-kitchen {
+#send-to-kitchen-btn {
     background-color: #c30e23;
     color: #fff;
 }
 
-#pay {
+#pay-btn {
     background-color: #292929; 
     color: #fff;
 }

@@ -123,13 +123,14 @@
         
     </div>
     <div class="col-md-12 col-sm-12 col-xs-12" id="button-group">
-        <button id="send-to-kitchen" class="btn btn-lg">Send to Kitchen</button>
-        <button id="pay" class="btn btn-lg">Pay</button>
-        <button id="taste" class="btn btn-lg">Taste</button>
-        <button id="delete" class="btn btn-lg">Delete</button>
-        <button id="quantity" class="btn btn-lg">Quantity</button>
-        <button id="take-out" class="btn btn-lg">Take Out</button> 
-        <button id="add-discount" class="btn btn-lg">Add Discount</button> 
+        <button id="send-to-kitchen-btn" class="btn btn-lg">Send to Kitchen</button>
+        <button id="pay-btn" class="btn btn-lg">Pay</button>
+        <button id="taste-btn" class="btn btn-lg">Taste</button>
+        <button id="combo-btn" class="btn btn-lg">Combo</button>
+        <button id="delete-btn" class="btn btn-lg">Delete</button>
+        <button id="quantity-btn" class="btn btn-lg">Quantity</button>
+        <button id="take-out-btn" class="btn btn-lg">Take Out</button> 
+        <button id="add-discount-btn" class="btn btn-lg">Add Discount</button> 
     </div>
 
 </body>
@@ -145,7 +146,7 @@ echo $this->fetch('script');
 <script type="text/javascript">
     var Order_Item_Printer = Array(); //Modified by Oct 25 2016.
 
-    $(document).on('click', ".add_items", function () {
+    /*$(document).on('click', ".add_items", function () {
         var item_id = $(this).attr("alt");
         var message = $("#Message").val();
         $.ajax({
@@ -155,13 +156,6 @@ echo $this->fetch('script');
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
-
-                /*$('.less-title').flowtype({
-                    // fontRatio : 15,
-                    // minimum: 500,
-                    minFont: 13,
-                    maxFont: 20
-                });*/
 
 
                 $(".products-panel").removeClass('load1 csspinner');
@@ -188,6 +182,52 @@ echo $this->fetch('script');
 					$(".dropdown-toggle").trigger("click");
 				};
 				//End @ Dec 15 2016
+            },
+            beforeSend: function () {
+                $(".products-panel").addClass('load1 csspinner');
+            }
+        })
+    })*/
+
+    $(".add_items").on("click", function () {
+        var item_id = $(this).attr("alt");
+        var message = $("#Message").val();
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'addItem')); ?>",
+            method: "post",
+            data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            success: function (html) {
+                $(".summary_box").html(html);
+                $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
+
+                /*$('.less-title').flowtype({
+                    // fontRatio : 15,
+                    // minimum: 500,
+                    minFont: 13,
+                    maxFont: 20
+                });*/
+
+
+                $(".products-panel").removeClass('load1 csspinner');
+
+                $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
+ 
+                Order_Item_Printer = Array();
+                
+                if ($('#Order_Item').val() != ""){
+                    var arrtmp = $('#Order_Item').val().split("#");
+                };
+
+                for (var i = 0; i < arrtmp.length; i++) {
+                    Order_Item_Printer.push(arrtmp[i].split("*"));
+                }
+                
+
+                if ($("#show_extras_flag").val() ==  true) {
+                    $(".dropdown-toggle").trigger("click");
+                };
+
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
