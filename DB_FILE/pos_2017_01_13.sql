@@ -1,0 +1,1 @@
+ALTER TABLE `order_items` CHANGE COLUMN `is_waimai` `is_takeout` ENUM('N','Y') NOT NULL DEFAULT 'N';

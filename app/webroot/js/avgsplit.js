@@ -630,7 +630,7 @@ class Suborder {
 }
 
 class Item {
-	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder) {
+	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder, is_takeout) {
 		this.item_id = item_id;
 		this.image = image;
 		this._name_en = name_en;
@@ -643,6 +643,7 @@ class Item {
 		this._state = state ;
 		this.shared_suborders = shared_suborders || [];
 		this.assigned_suborder = assigned_suborder || 0;
+		this.is_takeout = is_takeout || 'N';
 	}
 
 	toJSON() {
@@ -744,29 +745,38 @@ class Item {
 	}
 
 	get name_en() {
+		var tempStr = this._name_en;
+
+
 		if (this.state == "share" && this.shared_suborders.length > 1) {
-			var tempStr = this._name_en + ' shared by';
+			tempStr += ' shared by';
 			for (var i = 0; i < this.shared_suborders.length; ++i) {
 				tempStr += " " + String(this.shared_suborders[i]);
 			}
+		} 
 
-			return tempStr;
-		} else {
-			return this._name_en;
+		if(this.is_takeout == 'Y') {
+			tempStr = "(Take Out)" + tempStr;
 		}
+
+		return tempStr;
 	}
 
 	get name_zh() {
+		var tempStr = this._name_zh
+
 		if (this.state == "share" && this.shared_suborders.length > 1) {
-			var tempStr = this._name_zh + ' shared by';
+			tempStr += ' shared by';
 			for (var i = 0; i < this.shared_suborders.length; ++i) {
 				tempStr += " " + String(this.shared_suborders[i])
 			}
-
-			return tempStr;
-		} else {
-			return this._name_zh;
 		}
+
+		if(this.is_takeout == 'Y') {
+			tempStr = "(外卖)" + tempStr;
+		}
+
+		return tempStr;
 	}
 }
 

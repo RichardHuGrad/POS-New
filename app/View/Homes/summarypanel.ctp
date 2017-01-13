@@ -55,7 +55,7 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
                             <div class="col-md-8 col-sm-8 col-xs-7" >
                                 <div class="pull-left titlebox">
                                     <!-- to show name of item -->
-                                    <div class="less-title" style="padding-left:24px;"><?php echo (($value['is_waimai'] == 'Y') ? "(Takeaway) " : "" ) . $value['name_en']."<br/>".(($value['is_waimai'] == 'Y') ? "(外卖) " : "" ).$value['name_xh']; ?></div>
+                                    <div class="less-title" style="padding-left:24px;"><?php echo (($value['is_takeout'] == 'Y') ? "(Takeaway) " : "" ) . $value['name_en']."<br/>".(($value['is_takeout'] == 'Y') ? "(外卖) " : "" ).$value['name_xh']; ?></div>
 
                                     <!-- to show the extras item name -->
                                     <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>
@@ -347,111 +347,106 @@ var orderStr = "";
 <!-- End. -->
 
 <script>
-	
 
 	$(document).ready(function() {
 
 
-		var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+        function loadOrder(order_no) {
 
+            var tempOrder = new Order(order_no);
+            <?php
+                if (!empty($Order_detail['OrderItem'])) {
+                ?>
+                    var percent_discount = '<?php echo $Order_detail['Order']['percent_discount'] ;?>';
+                    var fix_discount = '<?php echo $Order_detail['Order']['fix_discount']; ?>';
 
-		var order = loadOrder(order_no);
+                    console.log(percent_discount);
+                    console.log(fix_discount);
+                    if (percent_discount != 0) {
+                        tempOrder.discount = {"type": "percent", "value": percent_discount}
+                        console.log(tempOrder.discount)
+                    } else if (fix_discount != 0) {
+                        tempOrder.discount = {"type": "fixed", "value": fix_discount}
+                    }
+                <?php
 
-		function loadOrder(order_no) {
+                    $i = 0;
+                    foreach ($Order_detail['OrderItem'] as $key => $value) {
 
-			var tempOrder = new Order(order_no);
-			<?php
-				if (!empty($Order_detail['OrderItem'])) {
-				?>
-					var percent_discount = '<?php echo $Order_detail['Order']['percent_discount'] ;?>';
-					var fix_discount = '<?php echo $Order_detail['Order']['fix_discount']; ?>';
+                        $selected_extras_name = [];
+                        if ($value['all_extras']) {
+                            $extras = json_decode($value['all_extras'], true);
+                            $selected_extras = json_decode($value['selected_extras'], true);
 
-					console.log(percent_discount);
-					console.log(fix_discount);
-					if (percent_discount != 0) {
-						tempOrder.discount = {"type": "percent", "value": percent_discount}
-						console.log(tempOrder.discount)
-					} else if (fix_discount != 0) {
-						tempOrder.discount = {"type": "fixed", "value": fix_discount}
-					}
-				<?php
+                            // prepare extras string
+                            $selected_extras_id = [];
+                            if (!empty($selected_extras)) {
+                                foreach ($selected_extras as $k => $v) {
+                                    $selected_extras_name[] = $v['name'];
+                                    $selected_extras_id[] = $v['id'];
+                                }
+                            }
+                        }
+                ?>
+                        var temp_item = new Item(
+                                item_id = '<?php echo $i ?>',
+                                image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
+                                name_en = '<?php echo $value['name_en']; ?>',
+                                name_zh = '<?php echo $value['name_xh']; ?>',
+                                selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
+                                price = '<?php echo $value['price'] ?>',
+                                extras_amount = '<?php echo $value['extras_amount'] ?>',
+                                quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
+                                order_item_id = '<?php echo $value['id'] ?>',
+                                state = "keep", 
+                                shared_suborders = null,
+                                assigned_suborder = null,
+                                is_takeout = '<?php echo $value["is_takeout"] ?>');
 
-				    $i = 0;
-				    foreach ($Order_detail['OrderItem'] as $key => $value) {
+                        tempOrder.addItem(temp_item);
+                <?php
+                        $i++;
+                    }
+                ?>
 
-				        $selected_extras_name = [];
-				        if ($value['all_extras']) {
-				            $extras = json_decode($value['all_extras'], true);
-				            $selected_extras = json_decode($value['selected_extras'], true);
-
-				            // prepare extras string
-				            $selected_extras_id = [];
-				            if (!empty($selected_extras)) {
-				                foreach ($selected_extras as $k => $v) {
-				                    $selected_extras_name[] = $v['name'];
-				                    $selected_extras_id[] = $v['id'];
-				                }
-				            }
-				        }
-		        ?>
-
-		        		var temp_item = new Item(item_id = '<?php echo $i ?>',
-		        			image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
-		        			name_en = '<?php echo $value['name_en']; ?>',
-		        			name_zh = '<?php echo $value['name_xh']; ?>',
-		        			selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
-		        			price = '<?php echo $value['price'] ?>',
-		        			extras_amount = '<?php echo $value['extras_amount'] ?>',
-		        			quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
-		        			order_item_id = '<?php echo $value['id'] ?>',
-		        			state = "keep");
-
-		        		tempOrder.addItem(temp_item);
-
-			    <?php
-					   	$i++;
-				 	} // line 563 foreach
-			    ?>
-
-		    <?php 
-				} // line 561 if  
-			?>
-			return tempOrder;
-		}
-		console.log(order);
+            <?php 
+                }
+            ?>
+            return tempOrder;
+        }
+        
 
 
 
-		var ItemComponent = (function() {
-			// createDom(item);
+        var ItemComponent = (function() {
+            // createDom(item);
 
-			var template = `
-				<li class="col-md-12 col-sm-12 col-xs-12 order-item">
-					<div class="col-md-8 col-sm-8 col-xs-7 item-name">
-					</div>
-					<div class="col-md-4 col-sm-4 col-xs-5 item-price"></div>
-					<div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra"></div>
-				</li>
-			`;
-            
+            var template = `
+                <li class="col-md-12 col-sm-12 col-xs-12 order-item">
+                    <div class="col-md-8 col-sm-8 col-xs-7 item-name">
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-5 item-price"></div>
+                    <div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra"></div>
+                </li>
+            `;
 
-
-			var createDom = function(item) {
+            var createDom = function(item) {
                 var itemComponent = $(template);
-
-				itemComponent.find('.item-name').text(item.name_en + '\n' + item.name_zh);
+                itemComponent.attr('id', 'order-item-' + item.item_id);
+                itemComponent.attr('data-order-item-id', item.order_item_id);
+                itemComponent.find('.item-name').text(item.name_en + '\n' + item.name_zh);
                 itemComponent.find('.item-price').text(item.price);
-				itemComponent.find('.item-selected-extra').text(item.selected_extras_name);
+                itemComponent.find('.item-selected-extra').text(item.selected_extras_name);
 
-				return itemComponent;
-			}
+                return itemComponent;
+            }
 
-			var bindEvent = function(itemComponent) {
-				itemComponent.on('click', function () {
-					$(this).toggleClass('selected');
+            var bindEvent = function(itemComponent) {
+                itemComponent.on('click', function () {
+                    $(this).toggleClass('selected');
                     // alert('test');
-				});
-			}
+                });
+            }
 
             var init = function(item) {
                 // createDom(item);
@@ -461,10 +456,10 @@ var orderStr = "";
                 return itemComponent;
             }
 
-			return {
-				init: init
-			}; 
-		})();
+            return {
+                init: init
+            }; 
+        })();
 
 
         var OrderComponent = (function() {
@@ -481,11 +476,9 @@ var orderStr = "";
                 }
             }
 
-
-
             var init = function (order, ItemComponent) {
                 createDom(order, ItemComponent);
- 
+
                 return orderComponent
             }
 
@@ -495,13 +488,19 @@ var orderStr = "";
         })();
 
 
-		// console.log(ItemComponent);
 
+        var order;
 
-		$('.order-summary-indent').append(OrderComponent.init(order, ItemComponent))
+        <?php if (isset($Order_detail['Order']['order_no'])) { ?>
+
+    		var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+    		order = loadOrder(order_no);
+
+    		console.log(order);
+
+    		$('.order-summary-indent').append(OrderComponent.init(order, ItemComponent))
+
+        <?php } ?>
 	})
 
-
-
-	
 </script>

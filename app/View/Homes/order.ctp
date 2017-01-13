@@ -144,6 +144,7 @@ echo $this->fetch('script');
 ?>
 
 <script type="text/javascript">
+
     var Order_Item_Printer = Array(); //Modified by Oct 25 2016.
 
     /*$(document).on('click', ".add_items", function () {
@@ -218,7 +219,7 @@ echo $this->fetch('script');
                 
                 if ($('#Order_Item').val() != ""){
                     var arrtmp = $('#Order_Item').val().split("#");
-                };
+                }
 
                 for (var i = 0; i < arrtmp.length; i++) {
                     Order_Item_Printer.push(arrtmp[i].split("*"));
@@ -227,14 +228,50 @@ echo $this->fetch('script');
 
                 if ($("#show_extras_flag").val() ==  true) {
                     $(".dropdown-toggle").trigger("click");
-                };
+                }
 
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
             }
-        })
-    })
+        });
+    });
+
+    $('#delete-btn').on('click', function () {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        }
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'removeitem')); ?>",
+            method: "post",
+            data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>", order_no: $("#Order_no").val()},
+            success: function(html) {
+                // console.log(html);
+                $(".summary_box").html(html);
+                // $(".summary_box").removeClass('load1 csspinner');
+
+                // TODO
+                // add printer array
+            }
+        });
+
+    });
+    //get order_item_id of all selected items
+    var getSelectedItem = function () {
+        var order_item_id_list = [];
+
+        $('#order-component .order-item.selected').each(function() {
+            order_item_id_list.push(parseInt($(this).attr('data-order-item-id')));
+            // console.log($(this).attr('data-order-item-id'));
+        });
+
+        return order_item_id_list;
+    }
+
 
     $(document).on('click', ".close-link", function () {
         var item_id = $(this).attr("alt");
@@ -629,90 +666,187 @@ echo $this->fetch('script');
     });
 
 
-    var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+   
 
-
-        var order = loadOrder(order_no);
-
-        function loadOrder(order_no) {
-
-            var tempOrder = new Order(order_no);
-            <?php
-                if (!empty($Order_detail['OrderItem'])) {
-                ?>
-                    var percent_discount = '<?php echo $Order_detail['Order']['percent_discount'] ;?>';
-                    var fix_discount = '<?php echo $Order_detail['Order']['fix_discount']; ?>';
-
-                    console.log(percent_discount);
-                    console.log(fix_discount);
-                    if (percent_discount != 0) {
-                        tempOrder.discount = {"type": "percent", "value": percent_discount}
-                        console.log(tempOrder.discount)
-                    } else if (fix_discount != 0) {
-                        tempOrder.discount = {"type": "fixed", "value": fix_discount}
-                    }
-                <?php
-
-                    $i = 0;
-                    foreach ($Order_detail['OrderItem'] as $key => $value) {
-
-                        $selected_extras_name = [];
-                        if ($value['all_extras']) {
-                            $extras = json_decode($value['all_extras'], true);
-                            $selected_extras = json_decode($value['selected_extras'], true);
-
-                            // prepare extras string
-                            $selected_extras_id = [];
-                            if (!empty($selected_extras)) {
-                                foreach ($selected_extras as $k => $v) {
-                                    $selected_extras_name[] = $v['name'];
-                                    $selected_extras_id[] = $v['id'];
-                                }
-                            }
-                        }
-                ?>
-
-                        var temp_item = new Item(item_id = '<?php echo $i ?>',
-                            image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
-                            name_en = '<?php echo $value['name_en']; ?>',
-                            name_zh = '<?php echo $value['name_xh']; ?>',
-                            selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
-                            price = '<?php echo $value['price'] ?>',
-                            extras_amount = '<?php echo $value['extras_amount'] ?>',
-                            quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
-                            order_item_id = '<?php echo $value['id'] ?>',
-                            state = "keep");
-
-                        tempOrder.addItem(temp_item);
-
-                <?php
-                        $i++;
-                    } // line 563 foreach
-                ?>
-
-            <?php 
-                } // line 561 if  
-            ?>
-            return tempOrder;
-        }
-
-
+    // todo
     $('#add-discount-btn').on('click', function() {
         // console.log(order);
 
-        if (order.discount.type == "unknown") {
-            // allow discount
-            console.log("no discount");
-        } else {
-            // show discount information
-            console.log("has discount");
-        }
+        // if (order.discount.type == "unknown") {
+        //     // allow discount
+        //     console.log("no discount");
+        // } else {
+        //     // show discount information
+        //     console.log("has discount");
+        // }
 
         // use ajax update page information
     });
 
 
     $('#taste-btn').on('click', function() {
-        
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        }
+
+        // show all taste
+        if ($("#Order_no").val()) {
+
+        }
+
     });
+
+
+    $('#take-out-btn').on('click', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        }
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'takeout')); ?>",
+            method: "post",
+            data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            success: function (html) {
+                $(".summary_box").html(html);
+                // $(".summary_box").removeClass('load1 csspinner');
+            },
+        });
+    });
+
+
+    $('#send-to-kitchen-btn').on('click', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        }
+
+    });
+
+
+    var TastesComponent = (function() {
+        var template = `
+            <ul id="taste-component">
+                <div id="taste-component-title">taste(味道)</div>
+
+                <div>
+                    <label>Special Instructions:</label>
+                    <input id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size=30>
+
+                    <button id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
+                    <button id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                </div>
+            </ul>
+        `;
+
+        var tastesComponent = $(template);
+
+        var createDom = function () {
+            
+        }
+
+        var init = function() {
+
+        }
+
+        return {
+            init: init
+        }
+    })();
+
+    var TasteItemComponent = (function() {
+        var template = `
+            <li class="taste-item-component">
+
+            </li>
+        `;
+
+        var createDom = function() {
+            // var TasteItemComponent
+        }
+
+        var init = function() {
+
+        }
+
+        return {
+            init: init
+        }
+    })();
+    var loadExtra = function() {
+
+    }
+
+/*    var Extra = (function() {
+        var _id,
+            _cousine_id,
+            _name_en,
+            _name_zh,
+            _price,
+            _category_id;
+        
+        var init = function(id, cousine_id, name_en, name_zh, price, category_id) {
+            _id = id;
+            _cousine_id = cousine_id;
+            _name_en = name_en;
+            _name_zh = name_zh;
+            _price = price;
+            _category_id = category_id;
+        }
+
+
+        return {
+
+        }
+    })();*/
+
+
+    class Extra {
+        constructor(id, cousine_id, name_en, name_zh, price, category_id) {
+            this._id = id;
+            this._cousine_id = cousine_id;
+            this._name_en = name_en;
+            this._name_zh = name_zh;
+            this._price = price;
+            this._category_id = category_id;
+        }
+    }
+
+
+    var loadTaste = function() {
+        var extras = [];
+
+        <?php
+            if (!empty($tastes)) {
+                $i = 0;
+                foreach ($tastes as $taste) {
+            ?>
+                    var temp_taste = new Extra(
+                            id = '<?php echo $taste["id"]; ?>',
+                            cousine_id = '<?php echo $taste["cousine_id"]; ?>',
+                            name_en = '<?php echo $taste["name"]; ?>',
+                            name_zh = '<?php echo $taste["name_zh"]; ?>',
+                            price = '<?php echo $taste["price"]; ?>',
+                            category_id = '<?php echo $taste["category_id"]; ?>');
+
+                    extras.push(temp_taste);
+            <?php
+                }
+            ?>
+
+        <?php 
+            }
+        ?>
+        return extras;
+    }
+
+    var taste = loadTaste();
+
 </script>
