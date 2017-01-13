@@ -426,50 +426,79 @@ var orderStr = "";
 			// createDom(item);
 
 			var template = `
-				<div class="order-item">
+				<li class="col-md-12 col-sm-12 col-xs-12 order-item">
 					<div class="col-md-8 col-sm-8 col-xs-7 item-name">
 					</div>
-					<div class="col-md-4 col-sm-4 col-xs-5 item-price">10.99</div>
-					<div class="col-md-8 col-sm-8 col-xs-7"></div>
-				</div>
+					<div class="col-md-4 col-sm-4 col-xs-5 item-price"></div>
+					<div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra"></div>
+				</li>
 			`;
-
-		
+            
 
 
 			var createDom = function(item) {
-				var itemComponent = $(template);
-				itemComponent.find('.item-name').text("宋嫂牛肉面")
-				itemComponent.find('.item-price').text("200")
-				console.log(typeof itemComponent);
-				console.log($('.order-item').html());
-				
-				// var itemComponent = $('<div class="order-item">');
-				// var nameComponent = $('<div class="col-md-8 col-sm-8 col-xs-7">').text(item.name_en + '\n' + item.name_zh);
-				// var priceComponent = $('<div class="col-md-4 col-sm-4 col-xs-5">').text(item.price);
-				// var extraComponent = $('<div class="col-md-8 col-sm-8 col-xs-7">').text(item.selected_extras_name);
+                var itemComponent = $(template);
 
-				// itemComponent.append(nameComponent).append(priceComponent).append(extraComponent);
+				itemComponent.find('.item-name').text(item.name_en + '\n' + item.name_zh);
+                itemComponent.find('.item-price').text(item.price);
+				itemComponent.find('.item-selected-extra').text(item.selected_extras_name);
 
 				return itemComponent;
 			}
 
-			/*var bindEvent = function() {
+			var bindEvent = function(itemComponent) {
 				itemComponent.on('click', function () {
 					$(this).toggleClass('selected');
-				})
+                    // alert('test');
+				});
 			}
-*/
+
+            var init = function(item) {
+                // createDom(item);
+                var itemComponent = createDom(item)
+                bindEvent(itemComponent);
+
+                return itemComponent;
+            }
+
 			return {
-				createDom: createDom
+				init: init
 			}; 
 		})();
+
+
+        var OrderComponent = (function() {
+            var template = `
+                <ul class="col-md-12 col-sm-12 col-xs-12" id="order-component">
+                </ul>
+            `;
+            var orderComponent = $(template);
+
+            var createDom = function(order, ItemComponent) {
+                for (var i = 0; i < order.items.length; ++i) {
+                    var item = order.items[i];
+                    orderComponent.append(ItemComponent.init(item))
+                }
+            }
+
+
+
+            var init = function (order, ItemComponent) {
+                createDom(order, ItemComponent);
+ 
+                return orderComponent
+            }
+
+            return {
+                init: init
+            }
+        })();
 
 
 		// console.log(ItemComponent);
 
 
-		$('.order-summary-indent').append(ItemComponent.createDom(order.items[0]))
+		$('.order-summary-indent').append(OrderComponent.init(order, ItemComponent))
 	})
 
 

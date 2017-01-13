@@ -133,6 +133,8 @@
         <button id="add-discount-btn" class="btn btn-lg">Add Discount</button> 
     </div>
 
+
+
 </body>
 </html>
 
@@ -140,6 +142,7 @@
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js'));
 echo $this->fetch('script');
 ?>
+
 <script type="text/javascript">
     var Order_Item_Printer = Array(); //Modified by Oct 25 2016.
 

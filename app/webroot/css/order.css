@@ -85,3 +85,11 @@ html,body {
     background-color: #292929; 
     color: #fff;
 }
+
+#order-component, #order-component li {
+    padding: 0;
+}
+
+#order-component .selected{
+    background-color: red;
+}
