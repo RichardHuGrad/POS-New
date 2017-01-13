@@ -136,11 +136,8 @@
 </body>
 </html>
 
-
-
-
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js'));
 echo $this->fetch('script');
 ?>
 <script type="text/javascript">
@@ -198,6 +195,7 @@ echo $this->fetch('script');
             method: "post",
             data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
+                // console.log(html);
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
 
@@ -502,6 +500,7 @@ echo $this->fetch('script');
         });
 
         $.ajax({
+            // async: false, 
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'summarypanel', $table, $type)); ?>",
             method: "post",
             success: function (html) {
@@ -514,16 +513,7 @@ echo $this->fetch('script');
 					for (var i = 0; i < arrtmp.length; i++) {
 						Order_Item_Printer.push(arrtmp[i].split("*"));
 					};
-				};//Modified by Yishou Liao @ Nov 28 2016
-                //End
-                // responsive font size
-                /*$('.less-title').flowtype({
-                    // fontRatio : 15,
-                    // minimum: 500,
-                    minFont: 13,
-                    maxFont: 20
-                })*/
-
+				};
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
@@ -634,24 +624,92 @@ echo $this->fetch('script');
     $(document).on('click', ".dropdown-menu", function (event) {
         event.stopPropagation();
     });
-</script>
 
 
-<script>
-// touch move
-// modified by Yu Dec 16, 2016
-
-    $(document).ready(function () {
-        $('.txt13').flowtype({
-            fontRatio : 15,
-            // minimum: 500,
-            minFont: 13,
-            maxFont: 20
-        });
+    var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
 
 
-        $('.dish-title br').after('<br/>')
+        var order = loadOrder(order_no);
 
+        function loadOrder(order_no) {
+
+            var tempOrder = new Order(order_no);
+            <?php
+                if (!empty($Order_detail['OrderItem'])) {
+                ?>
+                    var percent_discount = '<?php echo $Order_detail['Order']['percent_discount'] ;?>';
+                    var fix_discount = '<?php echo $Order_detail['Order']['fix_discount']; ?>';
+
+                    console.log(percent_discount);
+                    console.log(fix_discount);
+                    if (percent_discount != 0) {
+                        tempOrder.discount = {"type": "percent", "value": percent_discount}
+                        console.log(tempOrder.discount)
+                    } else if (fix_discount != 0) {
+                        tempOrder.discount = {"type": "fixed", "value": fix_discount}
+                    }
+                <?php
+
+                    $i = 0;
+                    foreach ($Order_detail['OrderItem'] as $key => $value) {
+
+                        $selected_extras_name = [];
+                        if ($value['all_extras']) {
+                            $extras = json_decode($value['all_extras'], true);
+                            $selected_extras = json_decode($value['selected_extras'], true);
+
+                            // prepare extras string
+                            $selected_extras_id = [];
+                            if (!empty($selected_extras)) {
+                                foreach ($selected_extras as $k => $v) {
+                                    $selected_extras_name[] = $v['name'];
+                                    $selected_extras_id[] = $v['id'];
+                                }
+                            }
+                        }
+                ?>
+
+                        var temp_item = new Item(item_id = '<?php echo $i ?>',
+                            image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
+                            name_en = '<?php echo $value['name_en']; ?>',
+                            name_zh = '<?php echo $value['name_xh']; ?>',
+                            selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
+                            price = '<?php echo $value['price'] ?>',
+                            extras_amount = '<?php echo $value['extras_amount'] ?>',
+                            quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
+                            order_item_id = '<?php echo $value['id'] ?>',
+                            state = "keep");
+
+                        tempOrder.addItem(temp_item);
+
+                <?php
+                        $i++;
+                    } // line 563 foreach
+                ?>
+
+            <?php 
+                } // line 561 if  
+            ?>
+            return tempOrder;
+        }
+
+
+    $('#add-discount-btn').on('click', function() {
+        // console.log(order);
+
+        if (order.discount.type == "unknown") {
+            // allow discount
+            console.log("no discount");
+        } else {
+            // show discount information
+            console.log("has discount");
+        }
+
+        // use ajax update page information
     });
 
+
+    $('#taste-btn').on('click', function() {
+        
+    });
 </script>
