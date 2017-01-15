@@ -1,0 +1,39 @@
+#taste-component {
+	/*margin: auto;*/
+	left:50%;
+	margin-left: -400px;
+	width: 800px;
+	/*height: 300px;*/
+	z-index: 100;
+	position: fixed;
+	top: 20%;
+	/*left: 30%;*/
+	/*left: 30%;*/
+	background-color: #fff;
+	padding: 10px;
+	border-radius: 20px;
+	border: 2px solid #C30E23;
+	display: block;
+
+}
+
+#taste-component.hide {
+	display: none;
+}
+
+.taste-item-component {
+	/*display: inline;*/
+	/*line-height: 70px;*/
+	float: left;
+	width: 70px;
+	height: 50px;
+	text-align: center;
+	/*border: 1px solid black;*/
+	padding: 5px;
+	background-color: #ECE7E7;
+	margin: 10px;
+}
+
+.taste-item-component:hover {
+	background-color: #C30E23;
+}

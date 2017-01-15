@@ -1,6 +1,6 @@
 <html>
 <head>
-    <?php echo $this->Html->css(array('order')); ?>
+    <?php echo $this->Html->css(array('order', 'components/TastesComponent')); ?>
 </head>
     
 
@@ -145,50 +145,8 @@ echo $this->fetch('script');
 
 <script type="text/javascript">
 
-    var Order_Item_Printer = Array(); //Modified by Oct 25 2016.
+    var Order_Item_Printer = Array();
 
-    /*$(document).on('click', ".add_items", function () {
-        var item_id = $(this).attr("alt");
-        var message = $("#Message").val();
-        $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'additems')); ?>",
-            method: "post",
-            data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
-            success: function (html) {
-                $(".summary_box").html(html);
-                $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
-
-
-                $(".products-panel").removeClass('load1 csspinner');
-				// Modiied by Yishou Liao @ Dec 12 2016
-				$("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
-				// End @ Dec 12 2016
-				
-                // Modified by Yishou Liao @ Oct 27 2016.
-				Order_Item_Printer = Array();
-				
-				// Modified by Yishou Liao @ Nov 16 2016.
-				if ($('#Order_Item').val() != ""){
-	                var arrtmp = $('#Order_Item').val().split("#");
-				};
-				//End
-                for (var i = 0; i < arrtmp.length; i++) {
-                    Order_Item_Printer.push(arrtmp[i].split("*"));
-                }
-                ;
-                //End.
-				
-				//Modified by Yishou Liao @ Dec 15 2016
-				if ($("#show_extras_flag").val() ==  true) {
-					$(".dropdown-toggle").trigger("click");
-				};
-				//End @ Dec 15 2016
-            },
-            beforeSend: function () {
-                $(".products-panel").addClass('load1 csspinner');
-            }
-        })
-    })*/
 
     $(".add_items").on("click", function () {
         var item_id = $(this).attr("alt");
@@ -694,7 +652,7 @@ echo $this->fetch('script');
 
         // show all taste
         if ($("#Order_no").val()) {
-
+            $('#taste-component').toggleClass('hide');
         }
 
     });
@@ -733,8 +691,12 @@ echo $this->fetch('script');
 
     var TastesComponent = (function() {
         var template = `
-            <ul id="taste-component">
+            <div id="taste-component" class="hide">
                 <div id="taste-component-title">taste(味道)</div>
+                    <ul id="taste-component-items">
+
+                    </ul>
+                
 
                 <div>
                     <label>Special Instructions:</label>
@@ -743,17 +705,23 @@ echo $this->fetch('script');
                     <button id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
                     <button id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
                 </div>
-            </ul>
+            </div>
         `;
 
         var tastesComponent = $(template);
 
-        var createDom = function () {
-            
+        var createDom = function (tastes, TasteItemComponent) {
+            var itemsUl = tastesComponent.find('#taste-component-items');
+
+            for (var i = 0; i < tastes.length; ++i) {
+                itemsUl.append(TasteItemComponent.init(tastes[i]));
+            }
         }
 
-        var init = function() {
+        var init = function(tastes, TasteItemComponent) {
+            createDom(tastes, TasteItemComponent);
 
+            return tastesComponent;
         }
 
         return {
@@ -763,26 +731,27 @@ echo $this->fetch('script');
 
     var TasteItemComponent = (function() {
         var template = `
-            <li class="taste-item-component">
-
-            </li>
+                <li class="taste-item-component">
+                    <span class="taste-item-name"></span>
+                </li>
         `;
 
-        var createDom = function() {
-            // var TasteItemComponent
+        var createDom = function(taste) {
+            var tasteItemComponent = $(template);
+            tasteItemComponent.find('.taste-item-name').text(taste.name_zh + '\n' + taste.price);
+            // tasteItemComponent.find('.taste-item-price').text();
+
+            return tasteItemComponent;
         }
 
-        var init = function() {
-
+        var init = function(taste) {
+            return createDom(taste);
         }
 
         return {
             init: init
         }
     })();
-    var loadExtra = function() {
-
-    }
 
 /*    var Extra = (function() {
         var _id,
@@ -810,12 +779,12 @@ echo $this->fetch('script');
 
     class Extra {
         constructor(id, cousine_id, name_en, name_zh, price, category_id) {
-            this._id = id;
-            this._cousine_id = cousine_id;
-            this._name_en = name_en;
-            this._name_zh = name_zh;
-            this._price = price;
-            this._category_id = category_id;
+            this.id = id;
+            this.cousine_id = cousine_id;
+            this.name_en = name_en;
+            this.name_zh = name_zh;
+            this.price = price;
+            this.category_id = category_id;
         }
     }
 
@@ -848,5 +817,9 @@ echo $this->fetch('script');
     }
 
     var taste = loadTaste();
+
+    var tastesComponent = TastesComponent.init(taste, TasteItemComponent);
+
+    $('body').append(tastesComponent);
 
 </script>

@@ -526,7 +526,7 @@ class HomesController extends AppController {
 
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'tastes'));
 
-        print_r($tastes);
+        // print_r($tastes);
     }
 
     public function pay() {

@@ -302,10 +302,19 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 <!-- End @ Dec 15 2016 -->
 <!-- Modified by Yishou Liao @ Dec 15 2016 -->
 <input type="hidden" name="numofcomb" id="numofcomb" value="<?php echo $numofcomb; ?>" />
-<!-- End @ Dec 15 2016 -->
 
 
-<!-- Modified by Yishou Liao @ Oct 25 2016. -->
+<script id="item-component" type="text/template">
+    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}"" data-order-item-id="{1}">
+        <div class="col-md-8 col-sm-8 col-xs-7 item-name">{2}
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-5 item-price">{3}</div>
+        <div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra">{4}</div>
+    </li>
+</script>
+
+
+
 <script type="text/javascript">
 var orderStr = "";
 <?php for ($i=0;$i<count(@$Order_detail_print);$i++) {
@@ -349,6 +358,19 @@ var orderStr = "";
 <script>
 
 	$(document).ready(function() {
+
+        if (!String.prototype.format) {
+          String.prototype.format = function() {
+            var args = arguments;
+            return this.replace(/{(\d+)}/g, function(match, number) { 
+              return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+              ;
+            });
+          };
+        }
+
 
 
         function loadOrder(order_no) {
@@ -419,24 +441,9 @@ var orderStr = "";
 
 
         var ItemComponent = (function() {
-            // createDom(item);
-
-            var template = `
-                <li class="col-md-12 col-sm-12 col-xs-12 order-item">
-                    <div class="col-md-8 col-sm-8 col-xs-7 item-name">
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-5 item-price"></div>
-                    <div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra"></div>
-                </li>
-            `;
 
             var createDom = function(item) {
-                var itemComponent = $(template);
-                itemComponent.attr('id', 'order-item-' + item.item_id);
-                itemComponent.attr('data-order-item-id', item.order_item_id);
-                itemComponent.find('.item-name').text(item.name_en + '\n' + item.name_zh);
-                itemComponent.find('.item-price').text(item.price);
-                itemComponent.find('.item-selected-extra').text(item.selected_extras_name);
+                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
 
                 return itemComponent;
             }
@@ -504,3 +511,4 @@ var orderStr = "";
 	})
 
 </script>
+
