@@ -125,7 +125,8 @@
     <div class="col-md-12 col-sm-12 col-xs-12" id="button-group">
         <button id="send-to-kitchen-btn" class="btn btn-lg">Send to Kitchen</button>
         <button id="pay-btn" class="btn btn-lg">Pay</button>
-        <button id="taste-btn" class="btn btn-lg">Taste</button>
+        <button id="taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal">Add Taste</button>
+        <button id="clear-taste-btn" class="btn btn-lg btn-danger">Clear Taste</button>
         <button id="combo-btn" class="btn btn-lg">Combo</button>
         <button id="delete-btn" class="btn btn-lg">Delete</button>
         <button id="quantity-btn" class="btn btn-lg">Quantity</button>
@@ -133,10 +134,57 @@
         <button id="add-discount-btn" class="btn btn-lg">Add Discount</button> 
     </div>
 
-
+  
+</div>
 
 </body>
 </html>
+
+<script id="taste-component" type="text/template">
+    <div class="modal fade clearfix" id="taste-component-modal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content clearfix">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Taste(味道)</h4>
+                    <!-- <div id="taste-component-title">taste(味道)</div> -->
+                </div>
+                <div class="modal-body clearfix">
+                    <ul id="taste-component-items" class="clearfix">
+                        
+                    </ul>
+                    <div class="clearfix">
+                        已选:
+                    </div>
+                    <ul id="selected-extra" class="clearfix">
+                        
+                    </ul>
+                </div>
+                <div class="modal-footer clearfix">
+                    <div class="clearfix">
+                        <label class="pull-left" for="taset-component-special">Special Instructions:</label>
+                        <input class="pull-left" id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
+                    </div>
+                    <div class="clearfix">
+                         <button type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
+                        <button type="button" id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- <script id="taste-component" type="text/template"></script> -->
+<script id="selected-extra-item-component" type="text/template">
+    <li class="selected-extra-item clearfix">
+        <button type="button" class="close pull-right">&times;</button>
+        <div class="selected-extra-item-name">{0}</div>
+        <div class="selected-extra-item-price">{1}</div>
+    </li>
+</script>
 
 <?php
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js'));
@@ -690,91 +738,66 @@ echo $this->fetch('script');
 
 
     var TastesComponent = (function() {
-        var template = `
-            <div id="taste-component" class="hide">
-                <div id="taste-component-title">taste(味道)</div>
-                    <ul id="taste-component-items">
+        var tastesComponent = $($('#taste-component').html());
 
-                    </ul>
-                
 
-                <div>
-                    <label>Special Instructions:</label>
-                    <input id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size=30>
-
-                    <button id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
-                    <button id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
-                </div>
-            </div>
-        `;
-
-        var tastesComponent = $(template);
-
-        var createDom = function (tastes, TasteItemComponent) {
+        var createDom = function (tastes) {
             var itemsUl = tastesComponent.find('#taste-component-items');
-
+            
             for (var i = 0; i < tastes.length; ++i) {
-                itemsUl.append(TasteItemComponent.init(tastes[i]));
+                var taste = tastes[i];
+                // build item with jquery
+                var itemComponent = $('<li class="taste-item-component"><div class="taste-item-name"></div><div class="taste-item-price"></div></li>');
+                itemComponent.find('.taste-item-name').text(taste.name_zh);
+                itemComponent.find('.taste-item-price').text(taste.price);
+
+                if (parseFloat(taste.price) == 0) {
+                    itemComponent.find('.taste-item-price').hide();
+                }
+
+                itemsUl.append(itemComponent);
             }
         }
 
-        var init = function(tastes, TasteItemComponent) {
-            createDom(tastes, TasteItemComponent);
+        var bindEvent = function() {
+            tastesComponent.find('.taste-item-component').each(function() {
+                // console.log($(this));
+                $(this).on('click', function() {
+                    var name = $(this).find('.taste-item-name').text(),
+                        price = $(this).find('.taste-item-price').text();
+                    var selectedItem = $($('#selected-extra-item-component').html().format(name, price));
+                    selectedItem.find('button').on('click', function() {
+                        selectedItem.remove();
+                    })
+
+                    tastesComponent.find('#selected-extra').append(selectedItem);
+                });
+            });
+
+
+
+            // save button, send ajax to the backend and store the data in database
+            $('body').on('click', '#taste-component-save', function() {
+                console.log($('#selected-extra li'));
+            });
+
+            // clear button
+            
+        }
+
+        var init = function(tastes) {
+            createDom(tastes);
+            bindEvent();
 
             return tastesComponent;
         }
 
-        return {
-            init: init
-        }
-    })();
-
-    var TasteItemComponent = (function() {
-        var template = `
-                <li class="taste-item-component">
-                    <span class="taste-item-name"></span>
-                </li>
-        `;
-
-        var createDom = function(taste) {
-            var tasteItemComponent = $(template);
-            tasteItemComponent.find('.taste-item-name').text(taste.name_zh + '\n' + taste.price);
-            // tasteItemComponent.find('.taste-item-price').text();
-
-            return tasteItemComponent;
-        }
-
-        var init = function(taste) {
-            return createDom(taste);
-        }
-
-        return {
-            init: init
-        }
-    })();
-
-/*    var Extra = (function() {
-        var _id,
-            _cousine_id,
-            _name_en,
-            _name_zh,
-            _price,
-            _category_id;
         
-        var init = function(id, cousine_id, name_en, name_zh, price, category_id) {
-            _id = id;
-            _cousine_id = cousine_id;
-            _name_en = name_en;
-            _name_zh = name_zh;
-            _price = price;
-            _category_id = category_id;
-        }
-
 
         return {
-
+            init: init
         }
-    })();*/
+    })();
 
 
     class Extra {
@@ -788,7 +811,7 @@ echo $this->fetch('script');
         }
     }
 
-
+// load extra based on category id
     var loadTaste = function() {
         var extras = [];
 
@@ -818,7 +841,7 @@ echo $this->fetch('script');
 
     var taste = loadTaste();
 
-    var tastesComponent = TastesComponent.init(taste, TasteItemComponent);
+    var tastesComponent = TastesComponent.init(taste);
 
     $('body').append(tastesComponent);
 
