@@ -125,9 +125,8 @@
     <div class="col-md-12 col-sm-12 col-xs-12" id="button-group">
         <button id="send-to-kitchen-btn" class="btn btn-lg">Send to Kitchen</button>
         <button id="pay-btn" class="btn btn-lg">Pay</button>
-        <button id="taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal">Add Taste</button>
-        <button id="clear-taste-btn" class="btn btn-lg btn-danger">Clear Taste</button>
-        <button id="combo-btn" class="btn btn-lg">Combo</button>
+        <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal">Batch Add Taste</button>
+        <button id="add-taste-btn" class="btn btn-lg btn-danger">Add Taste</button>
         <button id="delete-btn" class="btn btn-lg">Delete</button>
         <button id="quantity-btn" class="btn btn-lg">Quantity</button>
         <button id="take-out-btn" class="btn btn-lg">Take Out</button> 
@@ -696,7 +695,7 @@ echo $this->fetch('script');
     });
 
 
-    $('#taste-btn').on('click', function() {
+    $('#batch-add-taste-btn').on('click', function() {
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
@@ -707,6 +706,11 @@ echo $this->fetch('script');
         }
 
     });
+
+
+
+
+    
 
 
     $('#take-out-btn').on('click', function() {
@@ -849,7 +853,7 @@ echo $this->fetch('script');
         // console.log(selected_extras_amount);
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'addExtras')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'batchAddExtras')); ?>",
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
@@ -860,6 +864,24 @@ echo $this->fetch('script');
     });
 
     
+    $('#add-taste-btn').on('click', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        } else if (selected_item_id_list.length > 1) {
+            alert("Please select only one item");
+            return false;
+        }
+
+        var selected_item_id = parseInt(selected_item_id_list[0]);
+        console.log('li[alt="' + selected_item_id +'"] div.row');
+
+        $('.order-summary-indent').find('li[alt=' + selected_item_id +'] div.row').trigger('click');
+        console.log($('.order-summary-indent li[alt=' + selected_item_id +'] div.row'));
+
+    });
 
 
 </script>

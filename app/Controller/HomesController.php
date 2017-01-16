@@ -1225,7 +1225,7 @@ class HomesController extends AppController {
         $this->render('summarypanel');
     }
 
-    public function addExtras() {
+    public function batchAddExtras() {
 
         $this->layout = false;
 

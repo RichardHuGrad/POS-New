@@ -46,7 +46,7 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
                         }
                     }
                   ?>
-                    <li class="clearfix dropdown" style="border-top:0px; padding-top:5px;">
+                    <li class="clearfix dropdown" alt="<?php echo $value['id'] ?>" style="border-top:0px; padding-top:5px;">
                     	<!-- Modified by Yishou Liao @ Dec 13 2016 -->
                     	<a href="javascript:void(0)" alt="<?php echo $value['id'] ?>" order_id="<?php echo $Order_detail['Order']['id'] ?>" class="fa fa-car waimai-link" aria-hidden="true"></a>
                         <div class="row  <?php if ($value['all_extras']) { ?>dropdown-toggle<?php }?>" data-toggle="dropdown">
@@ -351,6 +351,12 @@ var orderStr = "";
             $(".addadish[adish!='" + dichCat + "']").hide();
 
         });
+
+
+
+
+
+
     });
 </script>
 <!-- End. -->
@@ -508,7 +514,14 @@ var orderStr = "";
     		$('.order-summary-indent').append(OrderComponent.init(order, ItemComponent))
 
         <?php } ?>
+
+
+
+
 	})
+
+
+
 
 </script>
 
