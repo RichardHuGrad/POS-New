@@ -911,7 +911,7 @@ class HomesController extends AppController {
 
         if (empty($Order_detail)) {
             // to create a new order
-            $order_id = $this->createOrder($restaurant_id, $this->Session->read('Front.id'), $table, $type, $tax_rate);
+            $order_id = $this->Order->insertOrder($restaurant_id, $this->Session->read('Front.id'), $table, $type, $tax_rate);
         } else {
             $order_id = $Order_detail['Order']['id'];
         }
@@ -946,10 +946,10 @@ class HomesController extends AppController {
             $tax_amount = 0;
         }
 
-        $this->createOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1);
+        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1);
 
 
-        $this->updateOrderPrice($order_id, $tax_rate);
+        $this->Order->updateBillInfo($order_id);
 
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
@@ -1004,111 +1004,6 @@ class HomesController extends AppController {
         }
     }
 
-    // initialize the order_no
-    // return new order_id
-    public function createOrder($cashier_id, $counter_id, $table_no, $order_type, $tax) {
-        $this->layout = false;
-        $this->autoRender = NULL;
-
-        $this->loadModel('Order');
-
-        $insert_data = array(
-            'cashier_id' => $cashier_id, // cashier should be restaurant_id
-            'counter_id' => $counter_id,
-            'table_no' => $table_no,
-            'is_completed' => 'N',
-            'order_type' => $order_type,
-            'tax' => $tax,
-            'created' => date('Y-m-d H:i:s')
-        );
-        $this->Order->save($insert_data, false);
-        $order_id = $this->Order->getLastInsertId();
-
-        // update order no            
-        $data['Order']['id'] = $order_id;
-        // Change to DateTime related $data['Order']['order_no'] = str_pad($order_id, 5, rand(98753, 87563), STR_PAD_LEFT);
-        $data['Order']['order_no'] = $table_no.sprintf("%07d",date('zHi'));
-        $this->Order->save($data, false);
-
-        return $order_id;
-    }
-
-    // update price in Order
-    // todo: change the calculation of items 
-    public function updateOrderPrice($order_id, $tax_rate) {
-        $this->layout = false;
-        $this->autoRender = NULL;
-
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $Order_detail = $this->OrderItem->find('first', array(
-                            'conditions' => array('Order.id' => $order_id)
-                        ));
-
-        // get all items from OrderItem
-        $order_item_list = $this->OrderItem->find('all', array(
-                            'conditions' => array('OrderItem.order_id' => $order_id)
-                        ));
-
-        $data = array();
-        $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = 0;
-        $data['Order']['tax'] = $tax_rate;
-        $data['Order']['tax_amount'] = 0;
-        $data['Order']['total'] = 0;
-        $data['Order']['discount_value'] = 0;
-
-        
-
-        foreach ($order_item_list as $order_item) {
-            $data['Order']['subtotal'] += $order_item['OrderItem']['price'] + ($order_item['OrderItem']['extras_amount'] ? $order_item['OrderItem']['extras_amount'] : 0);
-
-        }
-        
-        if ($Order_detail['Order']['fix_discount'] && $Order_detail['Order']['fix_discount'] > 0) {
-            $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
-        } else if ($Order_detail['Order']['percent_discount'] && $Order_detail['Order']['percent_discount'] > 0) {
-            $data['Order']['discount_value'] = $data['Order']['subtotal'] * $Order_detail['Order']['percent_discount'] / 100;
-        }
-
-        $after_discount = $data['Order']['subtotal'] - $data['Order']['discount_value'];
-
-        // tax should be after discount
-        $data['Order']['tax_amount'] = $after_discount * $data['Order']['tax'] / 100;
-
-        $data['Order']['total'] = $data['Order']['subtotal'] - $data['Order']['discount_value'] + $data['Order']['tax_amount'];
-
-        $this->Order->save($data, false);
-    } 
-
-    // insert data into OrderItem
-    public function createOrderItem($order_id, $item_id, $name_en, $name_xh, $price, $category_id, $all_extras, $tax, $tax_amount, $qty) {
-        $this->layout = false;
-        $this->autoRender = NULL;
-
-        $this->loadModel('OrderItem');
-
-        $insert_data = array(
-            'order_id' => $order_id,
-            'item_id' => $item_id,
-            'name_en' => $name_en,
-            'name_xh' => $name_xh,
-            'price' => $price,
-            'category_id' => $category_id,
-            'created' => date('Y-m-d H:i:s'),
-            'all_extras' => $all_extras, 
-            'tax' => $tax,
-            'tax_amount' => $tax_amount,
-            'qty' => $qty,
-        );
-
-
-        $this->OrderItem->save($insert_data, false);
-    }
-
-
-    
 
     public function updateordermessage() {
 
@@ -1206,12 +1101,26 @@ class HomesController extends AppController {
                 )
             )
         );
+
+        // send removed items to kitchen printer
+        // $order_id, $item_list
  
         // update order amount
         // para: order_id, tax_rate
-        $this->updateOrderPrice($Order_detail['Order']['id'], $Order_detail['Order']['tax']);
+        $this->Order->updateBillInfo($Order_detail['Order']['id']);
 
 
+        $this->set($this->getAllDBInfo($table, $type));
+        $this->render('summarypanel');
+    }
+
+
+    public function getAllDBInfo($table, $type) {
+        $this->loadModel('Cashier');
+        $this->loadModel('OrderItem');
+        $this->loadModel('Order');
+        $this->loadModel('OrderItem');
+        
 
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
@@ -1233,8 +1142,8 @@ class HomesController extends AppController {
         $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
 
         
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
-        $this->render('summarypanel');
+        return compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories');
+
     }
 
 
@@ -1316,10 +1225,15 @@ class HomesController extends AppController {
         $this->render('summarypanel');
     }
 
+    public function addExtras() {
 
+        $this->layout = false;
 
+        $selected_item_id_list = $this->data['selected_item_id_list'];
+        $selected_extras_id_list = $this->data['selected_extras_id'];
+        $table = $this->data['table'];
+        $type = $this->data['type'];
 
-    public function removeitem1() {
 
         // get cashier details        
         $this->loadModel('Cashier');
@@ -1329,131 +1243,57 @@ class HomesController extends AppController {
                 )
         );
 
-        // get all params
-        $item_id = $this->data['item_id'];
-        $table = $this->data['table'];
-        $order_id = $this->data['order_id'];
-        $type = $this->data['type'];
 
-        $this->layout = false;
-        // $this->autoRender = NULL;
-        // get tax details
         $this->loadModel('OrderItem');
+        $this->loadModel('Extra');
 
-        //Modified by Yishou Liao @ Oct 29 2016.
-        $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
-        //End.
 
-        if ($item_detail[0]['order_items']['qty'] > 1) {
-            // update item quantity
-            $update_qty['qty'] = $item_detai[0]['order_items']['qty'] - 1; //Modified by Yishou Liao @ Oct 29 2016.
-            $update_qty['id'] = $item_detail[0]['order_items']['id']; //Modified by Yishou Liao @ Oct 29 2016.
-            $this->OrderItem->save($update_qty, false);
-        } else {
-            // delete item details
-            $this->OrderItem->delete($item_id);
-        }
-
-        //Modified by Yishou Liao @ Oct 29 2016.
-        if (count($item_detail) > 0 && $item_detail[0]['order_items']['is_print'] == 'Y') {
-            if (isset($_SESSION['DELEITEM_' . $table])) {
-                $_SESSION['DELEITEM_' . $table] .= "#";
-                $_SESSION['DELEITEM_' . $table] .= implode("*", $item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
-            } else {
-                $_SESSION['DELEITEM_' . $table] = implode("*", $item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
-            };
-        };
-        //End.
-        // check the item already exists or not
-        $this->loadModel('Order');
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount','discount_value'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-        // update order amount
-        $data = array();
-        $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + @$Order_detail['Order']['discount_value'] - $item_detail[0]['order_items']['price']; //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['tax'] = $Order_detail['Order']['tax'];
-        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
+        $extras_amount = 0;
         
-        // calculate discount if exists
-        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
-        if ($Order_detail['Order']['percent_discount']) {
-            $data['Order']['discount_value'] = $data['Order']['subtotal'] * $Order_detail['Order']['percent_discount'] / 100;//Modified by Yishou Liao @ Dec 21 2016
-        } else if ($Order_detail['Order']['fix_discount']) {
-            if ($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
-                $data['Order']['discount_value'] = $data['Order']['total'];
-            } else {
-                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
-            }
+        $selected_extras_list = [];
+        foreach ($selected_extras_id_list as $extra_id) {
+            $extra_details = $this->Extra->find("first", array(
+                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
+                    'conditions' => array('Extra.id' => $extra_id)
+                ));
+            $temp_data = array(
+                    'id' => $extra_details['Extra']['id'],
+                    'price' => $extra_details['Extra']['price'],
+                    'name' => $extra_details['Extra']['name_zh'],
+                    'category_id' => $extra_details['Extra']['category_id']
+                );
+            array_push($selected_extras_list, $temp_data);
         }
-        //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-        //$data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
-        //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['subtotal'] = $data['Order']['subtotal'] - $data['Order']['discount_value']; 
-        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); 
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
-        //End @ Dec 21 2016
+        // echo json_encode($selected_extras_list);
+
+        foreach ($selected_item_id_list as $item_id) {
 
 
-        $this->Order->save($data, false);
+            $item_detail = $this->OrderItem->find("first", array(
+                'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
+                'conditions' => array('OrderItem.id' => $item_id)
+                    )
+            );
 
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
+            if (empty($item_detail['OrderItem']['selected_extras'])) {
+                $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
+            } else {
+                $item_detail['OrderItem']['selected_extras'] = json_decode($item_detail['OrderItem']['selected_extras'], true);
+                $item_detail['OrderItem']['selected_extras'] = json_encode(array_merge($item_detail['OrderItem']['selected_extras'], $selected_extras_list));
+            }
 
-        //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-        //End.
-        //Modified by Yishou Liao @ Oct 29 2016.
-        if (isset($_SESSION['DELEITEM_' . $table])) {
-            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $deleitem[$i] = explode("*", $deleitem[$i]);
-            };
-        };
+            $this->OrderItem->save($item_detail, false);
 
-        if (isset($deleitem)) {//Modified by Yishou Liao @ Oct 31 2016
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
-                array_splice($deleitem[$i], -1);
-                //array_splice($deleitem[$i],-5);
-                $deleitem[$i][13] = 'C';
+            // update extra amount will also incur the updateBillInfo() function
+            $this->OrderItem->updateExtraAmount($item_id);
 
-                $arr_tmp['order_items'] = $deleitem[$i];
+        }
 
-                array_push($Order_detail_print, $arr_tmp);
-            };
-        }; //End - Oct 31 2016.
-        //End.
 
-        //Modified by Yishou Liao @ Dec 05 2016
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
-        //Modified by Yishou Liao @ Dec 13 2016
-        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }*/
-        //End
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
+        $this->set($this->getAllDBInfo($table, $type));
         $this->render('summarypanel');
     }
+
 
 
     public function waimaiitem() {
@@ -2593,46 +2433,7 @@ class HomesController extends AppController {
         exit;
     }
 
-    public function printOriginalBill($printer_name) {
-        $this->layout = false;
-        $this->autoRender = NULL;   
 
-        $order = $this->data['order'];
-        $items = $order['items'];
-        
-        $subtotal = $order['subtotal'];
-        $discount_type = $order['discount_type'];
-        $discount_value = $order['discount_value'];
-        $discount_amount = $order['discount_amount'];
-        $tax_rate = $order['tax_rate'];
-        $tax_amount = $order['tax_amount'];
-        $total = $order['total'];
-
-        echo json_encode($order);
-
-        $handle = printer_open($printer_name);
-        printer_start_doc($handle, "my_Receipt");
-        printer_start_page($handle);
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
-        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
-        printer_draw_text($handle, "416-792-4476", 156, 206);
-
-
-        printer_draw_text($handle, $date_time, 80, $print_y);
-
-        printer_delete_font($font);
-
-        printer_end_page($handle);
-        printer_end_doc($handle);
-        printer_close($handle);
-
-        echo true;
-        exit;
-
-        
-    }
 
 
     //Modified by Yishou Liao @ Nov 15 2016

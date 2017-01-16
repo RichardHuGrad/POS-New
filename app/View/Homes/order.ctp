@@ -179,10 +179,10 @@
 
 <!-- <script id="taste-component" type="text/template"></script> -->
 <script id="selected-extra-item-component" type="text/template">
-    <li class="selected-extra-item clearfix">
+    <li class="selected-extra-item clearfix" data-extra-id="{0}" data-extra-category-id="{1}">
         <button type="button" class="close pull-right">&times;</button>
-        <div class="selected-extra-item-name">{0}</div>
-        <div class="selected-extra-item-price">{1}</div>
+        <div class="selected-extra-item-name">{2}</div>
+        <div class="selected-extra-item-price">{3}</div>
     </li>
 </script>
 
@@ -192,6 +192,18 @@ echo $this->fetch('script');
 ?>
 
 <script type="text/javascript">
+
+    if (!String.prototype.format) {
+      String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) { 
+          return typeof args[number] != 'undefined'
+            ? args[number]
+            : match
+          ;
+        });
+      };
+    }
 
     var Order_Item_Printer = Array();
 
@@ -279,36 +291,6 @@ echo $this->fetch('script');
     }
 
 
-    $(document).on('click', ".close-link", function () {
-        var item_id = $(this).attr("alt");
-        var order_id = $(this).attr("order_id");
-        var message = $("#Message").val();
-        $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'removeitem')); ?>",
-            method: "post",
-            data: {item_id: item_id, order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
-            success: function (html) {
-                $(".summary_box").html(html);
-                $(".summary_box").removeClass('load1 csspinner');
-
-                // Modified by Yishou Liao @ Oct 27 2016.
-				Order_Item_Printer = Array();
-				// Modified by Yishou Liao @ Nov 16 2016.
-				if ($('#Order_Item').val() != ""){
-	                var arrtmp = $('#Order_Item').val().split("#");
-				};
-				//End
-                for (var i = 0; i < arrtmp.length; i++) {
-                    Order_Item_Printer.push(arrtmp[i].split("*"));
-                }
-                ;
-                //End.
-            },
-            beforeSend: function () {
-                $(".summary_box").addClass('load1 csspinner');
-            }
-        })
-    })
 
     $(document).on('click', ".waimai-link", function () {
         var item_id = $(this).attr("alt");
@@ -373,6 +355,30 @@ echo $this->fetch('script');
     $(document).on("click", '.sub-items', function (e) {
         e.stopPropagation();
     })
+
+    function getCurrentItems () {
+        var current_items = []; // store order-item-id
+        $('#order-component li').each(function() {
+            current_items.push($(this).attr('data-order-item-id'));
+        });
+
+        return current_items;
+    }
+
+    $("#send-to-kitchen-btn").on('click', function() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'print', 'action' => 'printToKitchen',1,0)); ?>",
+            method: "post",
+            data: {
+                current_items: getCurrentItems(),
+                Printer: {"K": "<?php echo $cashier_detail['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $cashier_detail['Admin']['service_printer_device']; ?>"},
+                order_no: $("#Order_no").val(),//Modified by Yishou Liao @ Dec 12 2016
+                order_type: '<?php echo isset($Order_detail['Order']['order_type']) ? $Order_detail['Order']['order_type'] : "" ?>',
+                table_no: '<?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table ?>',
+                table: '<?php echo $table ?>',
+            },
+        }); 
+    });
 
     $(document).on("click", "#submit", function () {
         //Modified by Yishou Liao @ Oct 26 2016.
@@ -696,11 +702,8 @@ echo $this->fetch('script');
         if (selected_item_id_list.length == 0) {
             alert("No item selected");
             return false;
-        }
-
-        // show all taste
-        if ($("#Order_no").val()) {
-            $('#taste-component').toggleClass('hide');
+        } else {
+            $("#selected-extra").empty();
         }
 
     });
@@ -726,16 +729,6 @@ echo $this->fetch('script');
     });
 
 
-    $('#send-to-kitchen-btn').on('click', function() {
-        var selected_item_id_list = getSelectedItem();
-
-        if (selected_item_id_list.length == 0) {
-            alert("No item selected");
-            return false;
-        }
-
-    });
-
 
     var TastesComponent = (function() {
         var tastesComponent = $($('#taste-component').html());
@@ -747,9 +740,9 @@ echo $this->fetch('script');
             for (var i = 0; i < tastes.length; ++i) {
                 var taste = tastes[i];
                 // build item with jquery
-                var itemComponent = $('<li class="taste-item-component"><div class="taste-item-name"></div><div class="taste-item-price"></div></li>');
-                itemComponent.find('.taste-item-name').text(taste.name_zh);
-                itemComponent.find('.taste-item-price').text(taste.price);
+                var itemComponent = $('<li class="taste-item-component" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
+                // itemComponent.find('.taste-item-name').text(taste.name_zh);
+                // itemComponent.find('.taste-item-price').text(taste.price);
 
                 if (parseFloat(taste.price) == 0) {
                     itemComponent.find('.taste-item-price').hide();
@@ -763,9 +756,11 @@ echo $this->fetch('script');
             tastesComponent.find('.taste-item-component').each(function() {
                 // console.log($(this));
                 $(this).on('click', function() {
-                    var name = $(this).find('.taste-item-name').text(),
+                    var extra_id = $(this).attr('data-extra-id'),
+                        extra_category_id = $(this).attr('data-extra-category-id'),
+                        name = $(this).find('.taste-item-name').text(),
                         price = $(this).find('.taste-item-price').text();
-                    var selectedItem = $($('#selected-extra-item-component').html().format(name, price));
+                    var selectedItem = $($('#selected-extra-item-component').html().format(extra_id, extra_category_id, name, price));
                     selectedItem.find('button').on('click', function() {
                         selectedItem.remove();
                     })
@@ -773,14 +768,6 @@ echo $this->fetch('script');
                     tastesComponent.find('#selected-extra').append(selectedItem);
                 });
             });
-
-
-
-            // save button, send ajax to the backend and store the data in database
-            $('body').on('click', '#taste-component-save', function() {
-                console.log($('#selected-extra li'));
-            });
-
             // clear button
             
         }
@@ -844,5 +831,35 @@ echo $this->fetch('script');
     var tastesComponent = TastesComponent.init(taste);
 
     $('body').append(tastesComponent);
+
+
+    // save button, send ajax to the backend and store the data in database
+    $('body').on('click', '#taste-component-save', function() {
+        console.log($('#selected-extra li'));
+        // save all selected-extra to all selected items
+        var selected_item_id_list = getSelectedItem();
+        var selected_extras_id = [];
+        $('#selected-extra li').each(function() {
+            selected_extras_id.push($(this).attr('data-extra-id'));
+            // selected_extras_amount += parseFloat($(this).find(".selected-extra-item-price").text());
+        });
+        // selected_extras_id = selected_extras_id.join(',');
+        console.log(selected_extras_id);
+        console.log(selected_item_id_list);
+        // console.log(selected_extras_amount);
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'addExtras')); ?>",
+            method: "post",
+            data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            success: function (html) {
+                $(".summary_box").html(html);
+                $('.modal-header .close').trigger('click');
+            }
+        });
+    });
+
+    
+
 
 </script>

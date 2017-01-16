@@ -487,6 +487,170 @@ class PrintController extends AppController {
         exit;
 
     }
+
+
+
+    public function printToKitchen($print_zh = false, $splitItme = false) {
+
+        $this->loadModel('OrderItem');
+        $this->loadModel('Order');
+
+
+        for ($x = 0; $x < (isset($Print_Item_split) ? count($Print_Item_split) : 1); $x++) {
+            $current_items = $this->data['current_items'];
+            $Printer = $this->data['Printer'];
+            $order_no = $this->data['order_no'];
+
+            $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+            echo $order_id;
+
+            $order_type = $this->data['order_type'];
+            $table_no = $this->data['table_no'];
+            $table = $this->data['table'];
+
+            foreach (array_keys($Printer) as $key) {
+                $printer_name = $Printer[$key];
+                $printer_loca = $key;
+
+                $check_print_flag = false;
+                for ($i = 0; $i < count($Print_Item); $i++) {
+                    if ($Print_Item[$i][count($Print_Item[$i]) - 1] == $printer_loca) {
+                        $check_print_flag = true;
+                    };
+                };
+
+                if ($check_print_flag) {
+
+                    date_default_timezone_set("America/Toronto");
+                    $date_time = date("l M d Y h:i:s A");
+
+                    $handle = printer_open($printer_name);
+                    printer_start_doc($handle, "my_Receipt");
+                    printer_start_page($handle);
+
+                    if ($print_zh == true) {
+                        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+                        printer_select_font($handle, $font);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
+                    } else {
+                        $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+                        printer_select_font($handle, $font);
+                        printer_draw_text($handle, "Kitchen", 138, 20);
+                    };
+
+
+                    //Print order information
+                    $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    printer_select_font($handle, $font);
+                    printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
+                    printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
+                    //End
+
+                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+                    printer_select_pen($handle, $pen);
+                    printer_draw_line($handle, 21, 160, 600, 160);
+
+                    //Print order items
+                    $print_y = 180;
+                    for ($i = 0; $i < count($Print_Item); $i++) {
+                        if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
+                            if ($print_zh == true) {
+                                $font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+                            } else {
+                                $font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+                            };
+                            printer_select_font($handle, $font);
+
+                            printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
+
+                            $print_str = $Print_Item[$i][3];
+                            if ($Print_Item[$i][17] == 'Y') $print_str = '(Takeaway) ' .  $print_str;
+                            $print_str_save = $print_str;
+                            $len = 0;
+                            while (strlen($print_str) != 0) {
+                                $print_str = substr($print_str_save, $len, 16);
+                                printer_draw_text($handle, $print_str, 122, $print_y);
+                                $len+=16;
+                                if (strlen($print_str) != 0) {
+                                    $print_y+=32;
+                                };
+                            };
+                            $print_y-=32;
+
+                            if ($print_zh == true) {
+                                $print_y += 32;
+                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
+                                printer_select_font($handle, $font);
+
+                                $print_str = $Print_Item[$i][4];
+                                if ($Print_Item[$i][17] == 'Y') $print_str = '(外卖) ' .  $print_str;
+
+                                printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
+
+
+                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 366, $print_y);
+                                };
+                                if ($Print_Item[$i][13] == "C") {
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
+                                };
+                                $print_y+=38;
+                            } else {
+                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
+                                    printer_draw_text($handle, "(Takeout)", 366, $print_y);
+                                };
+                                if ($Print_Item[$i][13] == "C") {
+                                    printer_draw_text($handle, "(Cancel)", 366, $print_y);
+                                };
+                                $print_y += 32;
+                            };
+                            if (strlen($Print_Item[$i][10]) > 0) {
+                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
+                                printer_select_font($handle, $font);
+                                $print_str = $Print_Item[$i][10];
+                                $len = mb_strlen($print_str, 'UTF-8');
+                                $strb = 0;
+                                while ($len > $strb) {
+                                    $subStr = mb_substr($print_str, $strb, 16);
+                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $subStr), 120, $print_y);
+                                    $strb += 16;
+                                    $print_y+=32;
+                                }
+
+                                $print_y-=32;
+                            };
+                            $print_y += 46;
+                        };
+                    };
+                    //End.
+                    $print_y += 10;
+                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+                    printer_select_pen($handle, $pen);
+                    printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+                    $print_y += 10;
+                    $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    printer_select_font($handle, $font);
+                    printer_draw_text($handle, $date_time, 80, $print_y);
+
+                    printer_delete_font($font);
+
+                    printer_end_page($handle);
+                    printer_end_doc($handle);
+                    printer_close($handle);
+                };
+            };
+
+            if (isset($_SESSION['DELEITEM_' . $table])) {
+                unset($_SESSION['DELEITEM_' . $table]);
+            };
+
+            echo $Print_Item;
+
+            echo true;
+        }
+        exit;
+    }
 }
 
 
