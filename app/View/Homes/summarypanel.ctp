@@ -71,7 +71,7 @@ $numofcomb = ""; //Modified by Yishou Liao @ Dec 15 2016
 						//End @ Dec 09 2016
                             ?>
 
-                            <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>">
+                            <ul class="dropdown-menu sub-items" id="sub_<?php echo $value['id'] ?>" >
                             <div>
                             <?php
 							//Modified by Yishou Liao @ Dec 14 2016
@@ -305,13 +305,14 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 
 <script id="item-component" type="text/template">
-    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}">
-        <div class="col-md-8 col-sm-8 col-xs-7 item-name">{2}
+    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}'>
+        <div class="col-md-8 col-sm-8 col-xs-7 item-name">{4}
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-5 item-price">{3}</div>
-        <div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra">{4}</div>
+        <div class="col-md-4 col-sm-4 col-xs-5 item-price">{5}</div>
+        <div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra">{6}</div>
     </li>
 </script>
+
 
 
 
@@ -429,7 +430,9 @@ var orderStr = "";
                                 state = "keep", 
                                 shared_suborders = null,
                                 assigned_suborder = null,
-                                is_takeout = '<?php echo $value["is_takeout"] ?>');
+                                is_takeout = '<?php echo $value["is_takeout"] ?>',
+                                comb_id = '<?php echo $value["comb_id"] ?>',
+                                selected_extras_json = '<?php echo $value['selected_extras'] ?>');
 
                         tempOrder.addItem(temp_item);
                 <?php
@@ -449,7 +452,7 @@ var orderStr = "";
         var ItemComponent = (function() {
 
             var createDom = function(item) {
-                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
+                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
 
                 return itemComponent;
             }
@@ -515,13 +518,10 @@ var orderStr = "";
 
         <?php } ?>
 
-
-
+        
+        
 
 	})
-
-
-
 
 </script>
 

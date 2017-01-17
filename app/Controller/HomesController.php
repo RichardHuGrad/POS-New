@@ -516,15 +516,22 @@ class HomesController extends AppController {
         //$order_no = str_pad(($order_id[0][0]['max_id']+1), 5, rand(98753, 87563), STR_PAD_LEFT);
         //End @ Dec 09 2016
         
-        $query_str = "SELECT extras.* FROM `extras` WHERE extras.category_id = 1";
+        $query_str = "SELECT extras.* FROM `extras`";
 
-        $all_tastes = $this->Extra->query($query_str);
-        $tastes = array();
-        foreach ($all_tastes as $taste){
-            array_push($tastes, $taste['extras']);
+        $all_extras = $this->Extra->query($query_str);
+        $extras = array();
+        foreach ($all_extras as $extra){
+            array_push($extras, $extra['extras']);
         }
 
-        $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'tastes'));
+        $query_str = "SELECT extrascategories.* FROM extrascategories WHERE extrascategories.status = 'A'";
+        $all_extra_categories = $this->Extra->query($query_str);
+        $extra_categories= array();
+        foreach ($all_extra_categories as $category){
+            array_push($extra_categories, $category['extrascategories']);
+        }
+
+        $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);
     }
@@ -946,7 +953,12 @@ class HomesController extends AppController {
             $tax_amount = 0;
         }
 
-        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1);
+
+        $comb_id = $this->Cousine->find("first", array(
+                'conditions' => array('Cousine.id' => $item_id)
+            ))['Cousine']['comb_num'];
+        
+        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1, $comb_id);
 
 
         $this->Order->updateBillInfo($order_id);
@@ -1543,6 +1555,7 @@ class HomesController extends AppController {
             )
                 )
         );
+
 
         //Modified by Yishou LIao @ Oct 26 2016.
         $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
