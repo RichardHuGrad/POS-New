@@ -1,0 +1,1 @@
+ALTER TABLE `order_items` ADD COLUMN `comb_id` int DEFAULT 0;
