@@ -130,7 +130,7 @@
         <button id="delete-btn" class="btn btn-lg">Delete</button>
         <button id="quantity-btn" class="btn btn-lg">Quantity</button>
         <button id="take-out-btn" class="btn btn-lg">Take Out</button> 
-        <button id="add-discount-btn" class="btn btn-lg">Add Discount</button> 
+        <!-- <button id="add-discount-btn" class="btn btn-lg">Add Discount</button>  -->
     </div>
 
   

@@ -4,7 +4,10 @@
  * Class HomesController
  * Note*- here cashier id is related to the restaurant id
  */
+App::uses('PrintLib', 'Lib');
 class HomesController extends AppController {
+
+
 
     public $components = array('Paginator');
 
@@ -1060,6 +1063,11 @@ class HomesController extends AppController {
     }
 
     public function removeitem() {
+
+        
+        // App::import('Lib', 'Print', array('file'=> 'Print.php'));
+        // App::import('')
+        
         $this->layout = false;
         // get cashier details        
         $this->loadModel('Cashier');
@@ -1076,23 +1084,22 @@ class HomesController extends AppController {
             return false;
         }
 
-        
+
+
+        $cancel_items = array('K'=> array(), 'C'=>array());
+
         foreach ($item_id_list as $item_id) {
             // if the item is printed
             // send to kitchen print
             $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
             // print_r($item_detail);
+
             $is_print = $item_detail[0]['order_items']['is_print'];
             $printer = $item_detail[0]['categories']['printer'];
             if ($is_print == 'Y') {
-                if ($printer == 'K') {
-                    // send to kitchen
-                    echo $printer;
-                } else if ($printer == 'C') {
-                    // send to front
-                    echo $printer;
-                }
-                echo $is_print;
+
+                array_push($cancel_items[$printer], $item_detail[0]);
+
             } // else do nothing
 
 
@@ -1101,6 +1108,8 @@ class HomesController extends AppController {
             $this->OrderItem->delete($data);
         }
 
+        $print = new PrintLib();
+        $print->printCancelledItems($item_id_list, true, true);
 
         $Order_detail = $this->Order->find("first", array(
                 'fields' => array('Order.id', 'Order.tax'),
@@ -1126,9 +1135,7 @@ class HomesController extends AppController {
     }
 
 
-    public function printKitchenCancelItems($item_id_list) {
-        
-    }
+
 
 
     public function getAllDBInfo($table, $type) {
