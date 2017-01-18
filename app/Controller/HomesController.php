@@ -1065,7 +1065,6 @@ class HomesController extends AppController {
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
-        $this->loadModel('OrderItem');
 
         // get all params
         $item_id_list = $this->data['selected_item_id_list'];
@@ -1124,6 +1123,11 @@ class HomesController extends AppController {
 
         $this->set($this->getAllDBInfo($table, $type));
         $this->render('summarypanel');
+    }
+
+
+    public function printKitchenCancelItems($item_id_list) {
+        
     }
 
 

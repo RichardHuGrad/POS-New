@@ -91,7 +91,8 @@ html,body {
 }
 
 #order-component .selected{
-    background-color: red;
+    background-color: #e03636;
+    color: #fff;
 }
 
 #single-extra-component-categories li{
@@ -101,4 +102,31 @@ html,body {
     margin-right: 10px;
     padding: 10px;
     border-radius: 10px;
+}
+
+.order-item {
+    /*height: 50px;*/
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-height: 30px;
+    /*border: 1px solid rgb(0,0,0);*/
+}
+
+.order-item.is-print {
+    color: #ccc;
+    background-color: #ECE7E7;
+}
+
+.selected-extra-item {
+    float:left;
+    width: 70px;
+    margin: 5px;
+    min-height: 40px;
+    padding: 10px;
+    background-color: #ECE7E7;
+}
+
+.selected-extra-item .close {
+    color: red;
 }

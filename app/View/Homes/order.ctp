@@ -145,7 +145,7 @@
 
 <script id="taste-component" type="text/template">
     <div class="modal fade clearfix" id="taste-component-modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
             <div class="modal-content clearfix">
@@ -182,7 +182,7 @@
 
 <script id="single-extra-component" type="text/template">
     <div class="modal fade clearfix" id="single-extra-component-modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content clearfix">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -293,9 +293,9 @@ echo $this->fetch('script');
                 }
                 
 
-                if ($("#show_extras_flag").val() ==  true) {
-                    $(".dropdown-toggle").trigger("click");
-                }
+                // if ($("#show_extras_flag").val() ==  true) {
+                //     $(".dropdown-toggle").trigger("click");
+                // }
 
             },
             beforeSend: function () {
@@ -829,7 +829,7 @@ echo $this->fetch('script');
             }
         }
 
-        var bindEvent = function() {
+        var bindEvent = function(SelectedExtraItemComponent) {
             tastesComponent.find('.taste-item-component').each(function() {
                 // console.log($(this));
                 $(this).on('click', function() {
@@ -837,7 +837,8 @@ echo $this->fetch('script');
                         extra_category_id = $(this).attr('data-extra-category-id'),
                         name = $(this).find('.taste-item-name').text(),
                         price = $(this).find('.taste-item-price').text();
-                    var selectedItem = $($('#selected-extra-item-component').html().format(extra_id, extra_category_id, name, price));
+
+                    var selectedItem = SelectedExtraItemComponent.init(extra_id, extra_category_id, name, price);
                     selectedItem.find('button').on('click', function() {
                         selectedItem.remove();
                     })
@@ -849,9 +850,9 @@ echo $this->fetch('script');
             
         }
 
-        var init = function(tastes) {
+        var init = function(tastes, SelectedExtraItemComponent) {
             createDom(tastes);
-            bindEvent();
+            bindEvent(SelectedExtraItemComponent);
 
             return tastesComponent;
         }
@@ -866,7 +867,7 @@ echo $this->fetch('script');
 
     var SingleExtraComponent = (function() {
         
-        var createDom = function (tastes, categories, combo_id, selected_extras) {
+        var createDom = function (tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent) {
 
             var singleExtraComponent = $($('#single-extra-component').html());
             
@@ -911,11 +912,7 @@ echo $this->fetch('script');
             selectedComboUl.empty();
 
             $.each(selected_extras, function(i) {
-                var tempItem = $($('#selected-extra-item-component').html().format(selected_extras[i]['id'], selected_extras[i]['category_id'], selected_extras[i]['name'], selected_extras[i]['price']));
-                tempItem.find('button').on('click', function() {
-                    tempItem.remove();
-                });
-
+                var tempItem = SelectedExtraItemComponent.init(selected_extras[i]['id'], selected_extras[i]['category_id'], selected_extras[i]['name'], selected_extras[i]['price']);
 
                 if (selected_extras[i]['category_id'] == '1') {
                     selectedExtraUl.append(tempItem);
@@ -936,7 +933,7 @@ echo $this->fetch('script');
         }
 
 
-        var bindEvent = function(singleExtraComponent, categories, combo_id) {
+        var bindEvent = function(singleExtraComponent, categories, combo_id, SelectedExtraItemComponent) {
             // add event for select extra
             singleExtraComponent.find('.taste-item-component').each(function() {
                 // console.log($(this));
@@ -945,10 +942,7 @@ echo $this->fetch('script');
                         extra_category_id = $(this).attr('data-extra-category-id'),
                         name = $(this).find('.taste-item-name').text(),
                         price = $(this).find('.taste-item-price').text();
-                    var selectedItem = $($('#selected-extra-item-component').html().format(extra_id, extra_category_id, name, price));
-                    selectedItem.find('button').on('click', function() {
-                        selectedItem.remove();
-                    })
+                    var selectedItem = SelectedExtraItemComponent.init(extra_id, extra_category_id, name, price);
 
                     var combo_num = 0;
                     for (var i = 0; i < categories.length; ++i) {
@@ -989,9 +983,9 @@ echo $this->fetch('script');
             return singleExtraComponent;
         }
 
-        var init = function(tastes, categories, combo_id, selected_extras) {
-            var singleExtraComponent = createDom(tastes, categories, combo_id, selected_extras);
-            singleExtraComponent = bindEvent(singleExtraComponent, categories, combo_id);
+        var init = function(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent) {
+            var singleExtraComponent = createDom(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent);
+            singleExtraComponent = bindEvent(singleExtraComponent, categories, combo_id, SelectedExtraItemComponent);
 
             return singleExtraComponent;
         }
@@ -1001,6 +995,38 @@ echo $this->fetch('script');
             bindEvent: bindEvent
         }
     })();
+
+
+
+    var SelectedExtraItemComponent = (function() {
+        var createDom = function (extra_id, extra_category_id, name, price) {
+            var selectedItem = $($('#selected-extra-item-component').html().format(extra_id, extra_category_id, name, price));
+            if (parseFloat(price) == 0) {
+                selectedItem.find('.selected-extra-item-price').hide();
+            }
+
+            return selectedItem;
+        }
+
+        var bindEvent = function(selectedItem) {
+            selectedItem.find('button').on('click', function() {
+                selectedItem.remove();
+            })
+
+            return selectedItem;
+        }
+
+        var init = function(extra_id, extra_category_id, name, price) {
+            var selectedItem = createDom(extra_id, extra_category_id, name, price);
+            selectedItem = bindEvent(selectedItem);
+
+            return selectedItem;
+        }
+
+        return {
+            init: init
+        }
+    })()
 
 
 
@@ -1079,7 +1105,7 @@ echo $this->fetch('script');
     var extras = loadExtras();
     var extraCategories = loadExtraCategories();
 
-    var tastesComponent = TastesComponent.init(extras);
+    var tastesComponent = TastesComponent.init(extras, SelectedExtraItemComponent);
 
 
 
@@ -1144,7 +1170,7 @@ echo $this->fetch('script');
 
         // remove existing modal
         $('#single-extra-component-modal').modal('hide').remove();
-        var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras);
+        var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent);
         $('body').append(singleExtraComponent);
 
         
@@ -1176,6 +1202,15 @@ echo $this->fetch('script');
         })
     }); 
 
+    // when part of selected items are printed, only allow delete action
+    $('body').on('click', '#order-component li',function() {
+        console.log('click');
+        if ($('#order-component li.selected.is-print').length > 0) {
+            $('#button-group .btn').not('#delete-btn').attr('disabled', true);
+        } else {
+            $('#button-group .btn').not('#delete-btn').attr('disabled', false);
+        }
+    });
 
 
 
