@@ -122,8 +122,6 @@
 
         
     </div>
-
-    
     <div class="col-md-12 col-sm-12 col-xs-12" id="button-group">
         <button id="send-to-kitchen-btn" class="btn btn-lg">Send to Kitchen</button>
         <button id="pay-btn" class="btn btn-lg">Pay</button>
@@ -135,66 +133,47 @@
         <button id="add-discount-btn" class="btn btn-lg">Add Discount</button> 
     </div>
 
-    <template id="taste-component">
-        <div class="modal fade clearfix" id="taste-component-modal" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content clearfix">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">{{title}}</h4>
-                    </div>
-                    <div class="modal-body clearfix">
-                        <ul id="taste-component-items" class="clearfix">
-                            <li v-for="extra in extras" v-bind:extras='extras' class="taste-item-component" :data-extra-id="extra.id" :data-extra-category-id="extra.category_id" v-on:click="select_extra(extra)">
-                                <div class="taste-item-name">{{extra.name_zh}}</div>
-                                <div class="taste-item-price">{{extra.price}}</div>
-                            </li>
-                        </ul>
-                        <div class="clearfix">
-                            已选:
-                        </div>
-                        <ul id="selected-extra" class="clearfix">
-                            <li v-for="extra in selected_extras"  v-bind:selected_extras='selected_extras' class="taste-item-component" :data-extra-id="extra.id" :data-extra-category-id="extra.category_id" v-on:click="test(extra)">
-                                <div class="taste-item-name">{{extra.name_zh}}</div>
-                                <div class="taste-item-price">{{extra.price}}</div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer clearfix">
-                        <div class="clearfix">
-                            <label class="pull-left" for="taset-component-special">Special Instructions:</label>
-                            <input class="pull-left" id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
-                        </div>
-                        <div class="clearfix">
-                             <button type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">{{clearBtn}}</button>
-                            <button type="button" id="taste-component-save" class="pull-right btn btn-lg btn-success">{{saveBtn}}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="extra-item-component">
-        <li class="taste-item-component" :data-extra-id="extra.id" :data-extra-category-id="extra.category_id">
-            <div class="taste-item-name">{{extra.name_zh}}</div>
-            <div class="taste-item-price">{{extra.price}}</div>
-        </li>
-    </template>
-
-
-    <div id="taste-component-placeholder">
-        <taste-component></taste-component>
-    </div>
-    
+  
 </div>
 
 </body>
 </html>
 
+<script id="taste-component" type="text/template">
+    <div class="modal fade clearfix" id="taste-component-modal" role="dialog">
+        <div class="modal-dialog">
 
+            <!-- Modal content-->
+            <div class="modal-content clearfix">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Taste(味道)</h4>
+                </div>
+                <div class="modal-body clearfix">
+                    <ul id="taste-component-items" class="clearfix">
+                        
+                    </ul>
+                    <div class="clearfix">
+                        已选:
+                    </div>
+                    <ul id="selected-extra" class="clearfix">
+                        
+                    </ul>
+                </div>
+                <div class="modal-footer clearfix">
+                    <div class="clearfix">
+                        <label class="pull-left" for="taset-component-special">Special Instructions:</label>
+                        <input class="pull-left" id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
+                    </div>
+                    <div class="clearfix">
+                         <button type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
+                        <button type="button" id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
 
 
 <script id="single-extra-component" type="text/template">
@@ -251,8 +230,6 @@
         <div class="selected-extra-item-price">{3}</div>
     </li>
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
 
 <?php
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js'));
@@ -875,10 +852,6 @@ echo $this->fetch('script');
     })();
 
 
-
-
-
-
     var SingleExtraComponent = (function() {
         var singleExtraComponent = $($('#single-extra-component').html());
 
@@ -1069,7 +1042,7 @@ echo $this->fetch('script');
 
 
 
-    // $('body').append(tastesComponent);
+    $('body').append(tastesComponent);
     $('body').append(singleExtraComponent);
 
 
@@ -1160,36 +1133,8 @@ echo $this->fetch('script');
         
 
     });
-    var selected_extras = [];
 
-    Vue.component('taste-component', {
-        template: '#taste-component',
-        
-        data: function() {
-            return {
-                title: "Taste(味道)",
-                clearBtn:"Clear 清除",
-                saveBtn: "Save 保存",
-                extras: extras,
-                selected_extras: selected_extras,
-            }
-        },
-        methods: {
-            select_extra: function (extra) {
-                selected_extras.push(extra);
-            },
-            test: function(a) {
-                // alert('test');
-                console.log(a);
-            }
-        }
 
-    });
-
-    new Vue({
-        el: '#taste-component-placeholder',
-        
-    })
 
 
 
