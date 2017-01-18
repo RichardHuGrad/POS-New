@@ -1307,6 +1307,68 @@ class HomesController extends AppController {
     }
 
 
+    // overwrite all extras of items
+    public function addExtras() {
+        $this->layout = false;
+
+        $item_id = $this->data['selected_item_id'];
+        // selected_extras_id_list maybe empty
+        $selected_extras_id_list = isset($this->data['selected_extras_id']) ?  $this->data['selected_extras_id'] : [];
+        $table = $this->data['table'];
+        $type = $this->data['type'];
+
+
+        // get cashier details        
+        $this->loadModel('Cashier');
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+                )
+        );
+
+        $this->loadModel('OrderItem');
+        $this->loadModel('Extra');
+
+
+        $extras_amount = 0;
+        
+        $selected_extras_list = [];
+        foreach ($selected_extras_id_list as $extra_id) {
+            $extra_details = $this->Extra->find("first", array(
+                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
+                    'conditions' => array('Extra.id' => $extra_id)
+                ));
+            $temp_data = array(
+                    'id' => $extra_details['Extra']['id'],
+                    'price' => $extra_details['Extra']['price'],
+                    'name' => $extra_details['Extra']['name_zh'],
+                    'category_id' => $extra_details['Extra']['category_id']
+                );
+            array_push($selected_extras_list, $temp_data);
+        }
+        // echo json_encode($selected_extras_list);
+
+
+
+        $item_detail = $this->OrderItem->find("first", array(
+            'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
+            'conditions' => array('OrderItem.id' => $item_id)
+                )
+        );
+
+        $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
+
+        $this->OrderItem->save($item_detail, false);
+
+        // update extra amount will also incur the updateBillInfo() function
+        $this->OrderItem->updateExtraAmount($item_id);
+
+
+
+        $this->set($this->getAllDBInfo($table, $type));
+        $this->render('summarypanel');
+    }
+
 
     public function waimaiitem() {
 

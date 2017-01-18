@@ -93,3 +93,12 @@ html,body {
 #order-component .selected{
     background-color: red;
 }
+
+#single-extra-component-categories li{
+    display: block;
+    float: left;
+    background: #ccc;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
