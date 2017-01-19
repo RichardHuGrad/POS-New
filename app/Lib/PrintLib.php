@@ -139,25 +139,43 @@ class PrintLib {
         printer_delete_font($font);
     }
 
-    public function printHeaderPage($handle, $order_no, $table_no) {
+
+
+    public function printHeaderPage($handle, $order_no, $table_no, $print_zh=true, $header_type) {
         printer_start_page($handle);
 
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
-        } else {
-            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, "Kitchen", 138, 20);
-        }
+        $y = 10;
 
+        if ($header_type == "kitchen") {
+            if ($print_zh == true) {
+                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
+            } else {
+                $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, "Kitchen", 138, $y);
+            }
+        }
+        printer_end_page($handle);
+        
+
+        printer_start_page($handle);
+
+        $y = 0;
         //Print order information
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
+        printer_draw_text($handle, "Order Number: #" . $order_no, 32, $y);
+
+        $y += 35;
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $y);
         //End
+
+        $y += 35;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($this->handle, $pen);
+        printer_draw_line($this->handle, 21, $y, 600, $y);
 
         printer_end_page($handle);
     }
@@ -169,9 +187,16 @@ class PrintLib {
         $date_time = date("l M d Y h:i:s A");
 
         $print_y = 10;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+        printer_end_page($handle);
+        
+        $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, $date_time, 80, $print_y);
+
 
         printer_end_page($handle);
     }
@@ -207,7 +232,7 @@ class PrintLib {
         printer_start_doc($handle, "kitchen");
 
         // print header
-        $this->printHeaderPage($handle);
+        $this->printHeaderPage($handle, $order_no, $table_no, true, );
 
         printer_start_page($handle);
 
@@ -232,13 +257,8 @@ class PrintLib {
         }
 
 
-        $print_y += 10;
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
-        printer_end_page($handle);
 
-
+        // print footer
         $this->printFooterPage($handle);
 
 
