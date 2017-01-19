@@ -432,7 +432,7 @@ echo $this->fetch('script');
 
     $("#send-to-kitchen-btn").on('click', function() {
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'print', 'action' => 'printToKitchen',1,0)); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printToKitchen',1,0)); ?>",
             method: "post",
             data: {
                 current_items: getCurrentItems(),

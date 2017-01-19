@@ -2350,11 +2350,17 @@ class HomesController extends AppController {
 		};
 		exit;
 	}
+
+    public function printTokitchen() {
+        // according to order_id
+        // find all items in order, print all items which is not print
+        
+    }
     
     
     //End.
     //Modified by Yishou Liao @ Nov 15 2016.
-    public function printTokitchen($print_zh = false, $splitItme = false) {
+    public function printTokitchen1($print_zh = false, $splitItme = false) {
         //Modified by Yishou Liao @ Nov 28 2016
         if ($splitItme == false) {
             $Print_Item = $this->data['Print_Item'];
