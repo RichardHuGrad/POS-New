@@ -1063,10 +1063,6 @@ class HomesController extends AppController {
     }
 
     public function removeitem() {
-
-        
-        // App::import('Lib', 'Print', array('file'=> 'Print.php'));
-        // App::import('')
         
         $this->layout = false;
         // get cashier details        
@@ -1108,8 +1104,10 @@ class HomesController extends AppController {
             $this->OrderItem->delete($data);
         }
 
+        print_r ($cancel_items);
+
         $print = new PrintLib();
-        $print->printCancelledItems($item_id_list, true, true);
+        // $print->printCancelledItems($cancel_items['K'], 'K',true, true);
 
         $Order_detail = $this->Order->find("first", array(
                 'fields' => array('Order.id', 'Order.tax'),

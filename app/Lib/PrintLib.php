@@ -140,18 +140,31 @@ class PrintLib {
     }
 
 
+
     // print all items with cancelled tag
-    public function printCancelledItems($item_id_list, $print_zh=true, $print_en=true) {
+    public function printCancelledItems($item_id_list, $printer_name, $print_zh=true, $print_en=true) {
         // do not check $item_id_list 
+
+
+        $this->handle = printer_open($printer_name);
+        printer_start_doc($this->handle, "kitchen");
+        printer_start_page($this->handle);
+
+        if ($print_zh == true) {
+            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
+        } else {
+            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, "Kitchen", 138, 20);
+        };
     }
 
 
 
     // order number
     public function printOriginalBill($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=true) {
-        $this->layout = false;
-        $this->autoRender = NULL;   
-
         $order = $this->data['order'];
         $items = $order['items'];
         
