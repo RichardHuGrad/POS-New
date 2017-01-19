@@ -1,5 +1,5 @@
 <?php 
-
+App::uses('PrintLib', 'Lib');
 class SplitController extends AppController {
 
     public function split() {
@@ -107,6 +107,23 @@ class SplitController extends AppController {
 
         echo json_encode($data);
         $this->OrderSplit->save($data);
+
+    }
+
+
+    public function printOriginalBill($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=true) {
+        $this->layout = false;
+        $this->autoRender = NULL;   
+
+        $print = new PrintLib();
+        // echo $print->printCancelledItems($order_no, $table, $cancel_items['K'], 'K',true, true);
+    }
+
+
+    public function printSplitReceipt($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=false) {
+
+        $this->layout = false;
+        $this->autoRender = NULL; 
 
     }
 

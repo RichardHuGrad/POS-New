@@ -131,72 +131,12 @@
 <?php
 
 echo $this->Html->css(array('components/KeypadComponent', 'components/OrderComponent', 'components/SubordersListComponent', 'components/SubordersDetailComponent', 'split'));
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', "notify.min.js", 'js.cookie.js', 'avgsplit.js', 'print.js'));
 
 
 echo $this->fetch('script');
 ?>
 <script>
-
-	/*init()
-    function init() {
-        if (!store.enabled) {
-            alert('Local storage is not supported by your browser. Please disable "Private Mode", or upgrade to a modern browser.')
-            return
-        }
-        
-    }*/
-
-    // log helper
-    var log = (function() {
-    	var log = "";
-
-    	return {
-    		add: function (msg) { log += msg + "\n"},
-    		show: function () {alert(log); log = "";}
-    	}
-    })();
-
-
-    var StorageProxy = (function(Cookies) {
-    	supportCheck();
-
-    	function supportCheck() {
-    		// check the browser support
-    		return;
-    	}
-
-
-    	function set(key, value, cfg) {
-			var cfg = cfg || {};
-			if (typeof value == "object")
-				value = JSON.stringify(value);
-
-			Cookies.set(key, value, cfg);
-		}
-
-		function get(key, cfg) {
-			var cfg = cfg || {};
-			var obj = Cookies.get(key);
-			if (typeof obj == "string")
-				obj = JSON.parse(obj);
-
-			return obj; 
-		}
-
-		function remove(key, cfg) {
-			var cfg = cfg || {};
-			Cookies.remove(subordersCookie, cfg);
-		}
-
-    	return {
-    		set: set,
-    		get: get,
-    		remove: remove
-    	}
-    })(Cookies);
-
-
 	// image path for component
 	var rightImg = '<?php echo $this->Html->image("right.png", array('alt' => "right")); ?>';
 	var cardImg = '<?php echo $this->Html->image("card.png", array('alt' => "card")); ?>';
@@ -296,14 +236,8 @@ echo $this->fetch('script');
 		order = loadOrder(order_no);
 		suborders = new Suborders();
 
-		/*Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });*/
-
-		StorageProxy.remove(orderCookie, { path: '' });
-		StorageProxy.remove(subordersCookie, { path: '' });
-
-		// store.remove(orderCookie);
-		// store.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 	}
 
 	drawUI();
@@ -314,7 +248,6 @@ echo $this->fetch('script');
 
 		// check whether cookie exist
 		var tempOrder = Cookies.getJSON(orderCookie); 
-		// var tempOrder = store.get(orderCookie);
 
 		if (tempOrder != undefined) {
 			order = Order.fromJSON(tempOrder);
@@ -340,8 +273,6 @@ echo $this->fetch('script');
 		}
 
 		var tempSuborders = Cookies.getJSON(subordersCookie);
-		// var tempSuborders = store.get(subordersCookie);
-		// console.log(tempSuborders);
 		if (tempSuborders != undefined) {
 			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
 				var temp_no = tempSuborders.suborders[i].suborder_no;
@@ -354,32 +285,16 @@ echo $this->fetch('script');
 	}	
 
 	function deleteAllCookies () {
-		// Cookies.remove(orderCookie, { path: '' });
-		// Cookies.remove(subordersCookie, { path: '' });
-		StorageProxy.remove(orderCookie, { path: '' });
-		StorageProxy.remove(subordersCookie, { path: '' });
-		// store.remove(orderCookie);
-		// store.remove(subordersCookie);
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
 	}
 
 
 	function persistentOrder(callback) {
-		// Cookies.remove(orderCookie, { path: '' });
-		// Cookies.remove(subordersCookie, { path: '' });
-		// Cookies.set(orderCookie, order, { expires: 3, path: '' });
-		// Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
-
-		StorageProxy.remove(orderCookie, { path: '' });
-		StorageProxy.remove(subordersCookie, { path: '' });
-		StorageProxy.set(orderCookie, order, { expires: 3, path: '' });
-		StorageProxy.set(subordersCookie, suborders, { expires: 3, path: '' });
-		// store.remove(orderCookie);
-		// store.remove(subordersCookie);
-		// store.set(orderCookie, order);
-		// store.set(subordersCookie, suborders);
-
-
-
+		Cookies.remove(orderCookie, { path: '' });
+		Cookies.remove(subordersCookie, { path: '' });
+		Cookies.set(orderCookie, order, { expires: 3, path: '' });
+		Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
 		// Cookies.set(discountCookie, discount);
 
 		if (typeof callback === "function") {

@@ -141,8 +141,17 @@ class PrintLib {
 
 
 
-    public function printHeaderPage($handle, $order_no, $table_no, $print_zh=true, $header_type) {
+    public function printHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh=true, $header_type) {
         printer_start_page($handle);
+
+        $table_type_str = "";
+        if ($table_type == 'D') {
+            $table_type_str = '[[堂食]]';
+        } else if ($table_type == 'T') {
+            $table_type_str = '[[外卖]]';
+        } else if ($table_type == 'W') {
+            $table_type_str = '[[等候]]';
+        }
 
         $y = 10;
 
@@ -169,14 +178,16 @@ class PrintLib {
         printer_draw_text($handle, "Order Number: #" . $order_no, 32, $y);
 
         $y += 35;
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $y);
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $table_no), 32, $y);
         //End
 
         $y += 35;
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($this->handle, $pen);
-        printer_draw_line($this->handle, 21, $y, 600, $y);
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $y, 600, $y);
 
+
+        printer_delete_font($font);
         printer_end_page($handle);
     }
 
@@ -190,22 +201,82 @@ class PrintLib {
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
         printer_draw_line($handle, 21, $print_y, 600, $print_y);
-        printer_end_page($handle);
         
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, $date_time, 80, $print_y);
 
-
+        printer_delete_font($font);
         printer_end_page($handle);
+    }
+
+    public function printKitchenItemsPage($handle, $item_detail) {
+        foreach ($item_detail as $item) {
+            printer_start_page($handle);
+
+            $font1H = 32;
+            $font2H = 38;
+            $font3H = 32; 
+            $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font2 = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $font2H, 16, PRINTER_FW_BOLD, false, false, false, 0);
+            
+            $font3 = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
+            
+
+            $name_zh = $item['order_items']['name_xh'];
+            $name_en = $item['order_items']['name_en'];
+            // $price = $item['order_items']['price'];
+            $selected_extras = $item['order_items']['selected_extras'];
+
+            if ($item['order_items']['is_takeout'] == 'Y') {
+                $name_zh = "(外卖)" . $name_zh;
+                $name_en = "(Take out)" . $name_en;
+            }
+
+            $y = 10;
+            
+            printer_select_font($handle, $font1);
+            printer_draw_text($handle, $name_en, 80, $y);
+            $y += $font1H + 3;
+        
+            printer_select_font($handle, $font2);
+            printer_draw_text($handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);
+            $y += $font2H + 3;
+            
+            printer_select_font($handle, $font3);
+
+            if (strlen($selected_extras) > 0) {
+                $selected_extras_arr = $this->mbStrSplit($selected_extras, 14);
+                foreach($selected_extras_arr as $line) {
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $line), 80, $y);
+                    $y += $font3H;
+                }
+            }
+
+            printer_delete_font($font1);
+            printer_delete_font($font2);
+            printer_delete_font($font3);
+
+            printer_end_page($handle);
+        }    
+    }
+
+    public function mbStrSplit($string, $len=1) {
+        $start = 0;
+        $strlen = mb_strlen($string);
+        while ($strlen) {
+            $array[] = mb_substr($string,$start,$len,"utf8");
+            $string = mb_substr($string, $len, $strlen,"utf8");
+            $strlen = mb_strlen($string);
+        }
+        return $array;
     }
 
 
 
-
     // print all items with cancelled tag
-    public function printCancelledItems($order_no, $table_no, $printer_name, $item_detail, $print_zh=true, $print_en=true) {
+    public function printCancelledItems($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
         // do not check $item_id_list 
 
         if (!function_exists('printer_open')) {
@@ -228,17 +299,31 @@ class PrintLib {
 
         }
 
+        // add cancel for each item
+        for ($i = 0; $i < count($item_detail); ++$i) {
+            $item_detail[$i]['order_items']['name_xh'] = "(取消)" .  $item_detail[$i]['order_items']['name_xh'];
+            $item_detail[$i]['order_items']['name_en'] = "(Cancel)" . $item_detail[$i]['order_items']['name_en'];
+        }
+
+
+
         $handle = printer_open($printer_name);
         printer_start_doc($handle, "kitchen");
 
         // print header
-        $this->printHeaderPage($handle, $order_no, $table_no, true, );
+        $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
 
-        printer_start_page($handle);
+        // print items
+        $this->printKitchenItemsPage($handle, $item_detail);
+    
+        // print footer
+        $this->printFooterPage($handle);
 
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-        printer_select_font($handle, $font);
 
+        printer_end_doc($handle);
+        printer_close($handle);
+
+        // send feedback to server
         $test_str = "";
 
         foreach ($item_detail as $item) {
@@ -252,19 +337,9 @@ class PrintLib {
             }
 
             $test_str .= $name_zh . $name_en . '(取消)' . '    ' . $selected_extras;
-
-            printer_draw_text($handle, $test_str, 80, $print_y);
         }
 
-
-
-        // print footer
-        $this->printFooterPage($handle);
-
-
-        printer_delete_font($font);
-        printer_end_doc($handle);
-        printer_close($handle);
+        return $test_str;
     }
 
 

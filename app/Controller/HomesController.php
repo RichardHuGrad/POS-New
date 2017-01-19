@@ -1094,6 +1094,15 @@ class HomesController extends AppController {
             $printer = $item_detail[0]['categories']['printer'];
             if ($is_print == 'Y') {
 
+                $selected_extras_list = json_decode($item_detail[0]['order_items']['selected_extras'], true);
+                $selected_extras_arr = array();
+                if (!empty($selected_extras_list)) {
+                    foreach ($selected_extras_list as $selected_extra) {
+                        array_push($selected_extras_arr, $selected_extra['name']);
+                    }
+                }
+                
+                $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
                 array_push($cancel_items[$printer], $item_detail[0]);
 
             } // else do nothing
@@ -1106,10 +1115,11 @@ class HomesController extends AppController {
 
         // echo json_encode($cancel_items);
         // echo empty($cancel_items['K']);
-
         if (!empty($cancel_items['K'])) {
+
+            $printerName = $this->Cashier->getKitchenPrinterName( $this->Session->read('Front.id'));
             $print = new PrintLib();
-            echo $print->printCancelledItems($order_no, $table, $cancel_items['K'], 'K',true, true);
+            echo $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
         }
 
         $Order_detail = $this->Order->find("first", array(
