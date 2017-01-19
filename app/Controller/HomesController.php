@@ -1104,10 +1104,13 @@ class HomesController extends AppController {
             $this->OrderItem->delete($data);
         }
 
-        print_r ($cancel_items);
+        // echo json_encode($cancel_items);
+        // echo empty($cancel_items['K']);
 
-        $print = new PrintLib();
-        // $print->printCancelledItems($cancel_items['K'], 'K',true, true);
+        if (!empty($cancel_items['K'])) {
+            $print = new PrintLib();
+            echo $print->printCancelledItems($order_no, $table, $cancel_items['K'], 'K',true, true);
+        }
 
         $Order_detail = $this->Order->find("first", array(
                 'fields' => array('Order.id', 'Order.tax'),

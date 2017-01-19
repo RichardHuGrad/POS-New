@@ -236,7 +236,7 @@
 </script>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js', 'notify.min.js'));
 echo $this->fetch('script');
 ?>
 
@@ -1206,6 +1206,7 @@ echo $this->fetch('script');
     $('body').on('click', '#order-component li',function() {
         console.log('click');
         if ($('#order-component li.selected.is-print').length > 0) {
+            $.notify("If you want to modify items which have been sent to kitchen, please delete it and readd it. \n 已选项中包含已送厨菜品，若要修改已送厨菜品，请删除后重新添加",{ position: "top center", className:"info"});
             $('#button-group .btn').not('#delete-btn').attr('disabled', true);
         } else {
             $('#button-group .btn').not('#delete-btn').attr('disabled', false);
