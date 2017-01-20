@@ -1108,16 +1108,24 @@ echo $this->fetch('script');
     // when part of selected items are printed, only allow delete action
     $('body').on('click contentChanged', '#order-component',function() {
         // console.log('click');
-        ChangeBtnDisabled(['#delete-btn', '#change-price-btn', '#urge-btn']);
+        ChangeBtnDisabled(['#delete-btn, #change-price-btn', '#urge-btn']);
     });
 
     function ChangeBtnDisabled(selectors) {
-        var selectorStr = selectors.join(',');
+        // 
+        // var selectorStr = selectors.join(',');
         if ($('#order-component li.selected.is-print').length > 0) {
             $.notify("If you want to modify items which have been sent to kitchen, please delete it and readd it. \n 已选项中包含已送厨菜品，若要修改已送厨菜品，请删除后重新添加",{ position: "top center", className:"info"});
-            $('#button-group .btn').not(selectorStr).attr('disabled', true);
+            $('#button-group .btn').not(selectors[0]).attr('disabled', true);
         } else {
-            $('#button-group .btn').not(selectorStr).attr('disabled', false);
+            $('#button-group .btn').not(selectors[0]).attr('disabled', false);
+        }
+
+        // only enable when all selected items are printed
+        if ( $('#order-component li.selected').length > 0 && $('#order-component li.selected').length == $('#order-component li.selected.is-print').length) {
+            $(selectors[1]).attr('disabled', false);
+        } else {
+            $(selectors[1]).attr('disabled', true);
         }
     }
 
