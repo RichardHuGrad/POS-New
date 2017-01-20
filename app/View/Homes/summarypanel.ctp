@@ -127,12 +127,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     </div>
 
     <div class="clearfix subtotal-btn-wrap">
-        <button type="submit" class="submitbtn <?php
-if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
-    ?>" id="submit" alt="<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['id'] ?>">Send to kitchen 发送到厨房</button>
-        <button type="submit" class="paybtn <?php
-if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
-    ?>" id="pay" alt="<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['id'] ?>">Pay 结账</button>
+
     </div>
 </div>
 <!-- Modified by Yishou Liao -->
@@ -190,8 +185,6 @@ var orderStr = "";
             });
           };
         }
-
-
 
         function loadOrder(order_no) {
 

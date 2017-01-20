@@ -356,71 +356,6 @@ echo $this->fetch('script');
     }
 
 
-
-    $(document).on('click', ".waimai-link", function () {
-        var item_id = $(this).attr("alt");
-        var order_id = $(this).attr("order_id");
-        var message = $("#Message").val();
-        $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'waimaiitem')); ?>",
-            method: "post",
-            data: {item_id: item_id, order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
-            success: function (html) {
-                $(".summary_box").html(html);
-                $(".summary_box").removeClass('load1 csspinner');
-				Order_Item_Printer = Array();
-				if ($('#Order_Item').val() != ""){
-	                var arrtmp = $('#Order_Item').val().split("#");
-				};
-                for (var i = 0; i < arrtmp.length; i++) {
-                    Order_Item_Printer.push(arrtmp[i].split("*"));
-                }
-            },
-            beforeSend: function () {
-                $(".summary_box").addClass('load1 csspinner');
-            }
-        })
-    })
-
-    $(document).on('click', ".add_extras", function () {
-        var item_id = $(this).attr("item_id");
-        var price = $(this).attr("price");
-        var name = $(this).attr("name");
-        var extra_id = $(this).attr("alt");
-		//MOdified by Yishou Liao @ Dec 15 2016
-		var category_id = $(this).attr("category_id");
-
-		var numcomb = $("#numofcomb").val().split(",");
-		var str_search = $("#block" + item_id).html();
-		var current_num = 0;
-		var count_num=0;
-		while (current_num != -1){
-			current_num = str_search.indexOf('category_id=\"'+numcomb[0]+'\"',(current_num+1));
-			if (current_num!=-1){count_num++;};
-		};
-		if (count_num<parseInt(numcomb[1])||category_id!=numcomb[0]) {
-		//End @ Dec 15 2016
-		
-        var html = '<div class="extras_inner" category_id="' + category_id + '" alt="' + extra_id + '"><span>' + name + '</span><span>' + (price != 0 ? price : "") + '</span><a class="fa fa-times remove_extra" href="javascript:void(0)"> </a></div>';
-
-        $("#block" + item_id).append(html);
-		};//MOdified by Yishou Liao @ Dec 15 2016
-
-    })
-
-
-
-    $(document).on('click', ".remove_extra", function () {
-        $(this).parent(".extras_inner").remove();
-
-    })
-
-
-
-    $(document).on("click", '.sub-items', function (e) {
-        e.stopPropagation();
-    })
-
     function getCurrentItems () {
         var current_items = []; // store order-item-id
         $('#order-component li').each(function() {
@@ -432,95 +367,17 @@ echo $this->fetch('script');
 
     $("#send-to-kitchen-btn").on('click', function() {
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printToKitchen',1,0)); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printToKitchen')); ?>",
             method: "post",
             data: {
-                current_items: getCurrentItems(),
-                Printer: {"K": "<?php echo $cashier_detail['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $cashier_detail['Admin']['service_printer_device']; ?>"},
-                order_no: $("#Order_no").val(),//Modified by Yishou Liao @ Dec 12 2016
-                order_type: '<?php echo isset($Order_detail['Order']['order_type']) ? $Order_detail['Order']['order_type'] : "" ?>',
-                table_no: '<?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table ?>',
+                order_no: $("#Order_no").val(),
+                type: "<?php echo $type ?>",
                 table: '<?php echo $table ?>',
             },
-        }); 
-    });
-
-    $(document).on("click", "#submit", function () {
-        //Modified by Yishou Liao @ Oct 26 2016.
-        var ext_arr;
-        for (var i = 0; i < Order_Item_Printer.length; i++) {
-            if (Order_Item_Printer[i][10] != "") {
-                ext_arr = JSON.parse(Order_Item_Printer[i][10]);
-                Order_Item_Printer[i][10] = "";
-                for (var j = 0; j < ext_arr.length; j++) {
-					//Modified by Yishou Liao @ Nov 16 2016
-					if (ext_arr[j]['price'] == "-1") {
-						Order_Item_Printer[i][16] = "#T#";
-					}else{
-	                    Order_Item_Printer[i][10] += ext_arr[j]['name'] + "  ";
-					};
-					//End
-                };
-            };
-        };
-
-        //Modified by Yishou Liao @ Nov 01 2016.
-        $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTokitchen',1,0)); ?>",
-            method: "post",
-            data: {
-                Print_Item: Order_Item_Printer,
-                Printer: {"K": "<?php echo $cashier_detail['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $cashier_detail['Admin']['service_printer_device']; ?>"},
-                order_no: $("#Order_no").val(),//Modified by Yishou Liao @ Dec 12 2016
-                order_type: '<?php echo isset($Order_detail['Order']['order_type']) ? $Order_detail['Order']['order_type'] : "" ?>',
-                table_no: '<?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table ?>',
-                table: '<?php echo $table ?>',
-            },
-            dataType: "html",
-            async: false,
-            success: function (html) {
-                // update order message here
-                if (!$(this).hasClass('disabled')) {
-                    var order_id = $(this).attr("alt");
-                    $.ajax({
-                        url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'updateordermessage')); ?>",
-                        method: "post",
-                        data: {order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", message: $("#Message").val(), is_kitchen: "Y"},
-                        success: function (html) {
-                            window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
-                        },
-                        beforeSend: function () {
-                            $(".summary_box").addClass('load1 csspinner');
-                        }
-                    })
-                }
-            },
-            error: function (html) {
-                alert("error");
+            success: function(html) {
+                $(".summary_box").html(html);
             }
-        })
-        //End.
-    });
-    $(document).on("click", "#pay", function () {
-		//Modified by Yishou Liao @ Jan 07 2017
-		$("#submit").trigger("click");
-		//End @ Jan 07 2017
-		
-        // update order message here
-        if (!$(this).hasClass('disabled')) {
-            var order_id = $(this).attr("alt");
-            $.ajax({
-                url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'updateordermessage')); ?>",
-                method: "post",
-                data: {order_id: order_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", message: $("#Message").val(), is_kitchen: "N"},
-                success: function (html) {
-                    window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'pay', 'table' => $table, 'type' => $type)); ?>";
-                },
-                beforeSend: function () {
-                    $(".summary_box").addClass('load1 csspinner');
-                }
-            })
-        }
+        }); 
     });
 	
 	//Modified by Yishou Liao @ Nov 10 2016
@@ -1214,7 +1071,12 @@ echo $this->fetch('script');
     });
 
 
+    $('#pay-btn').on('click', function () {
+        // if message exist save message
 
+
+        window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'pay', 'table' => $table, 'type' => $type)); ?>";
+    });
 
 
 </script>

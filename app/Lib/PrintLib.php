@@ -224,12 +224,12 @@ class PrintLib {
             $font3 = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
             
 
-            $name_zh = $item['order_items']['name_xh'];
-            $name_en = $item['order_items']['name_en'];
-            // $price = $item['order_items']['price'];
-            $selected_extras = $item['order_items']['selected_extras'];
+            $name_zh = $item['name_xh'];
+            $name_en = $item['name_en'];
+            // $price = $item['price'];
+            $selected_extras = $item['selected_extras'];
 
-            if ($item['order_items']['is_takeout'] == 'Y') {
+            if ($item['is_takeout'] == 'Y') {
                 $name_zh = "(外卖)" . $name_zh;
                 $name_en = "(Take out)" . $name_en;
             }
@@ -279,30 +279,16 @@ class PrintLib {
     public function printCancelledItems($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
         // do not check $item_id_list 
 
+        $debug_str = json_encode($item_detail);
+
         if (!function_exists('printer_open')) {
-            $test_str = "";
-
-            foreach ($item_detail as $item) {
-                $name_zh = $item['order_items']['name_xh'];
-                $name_en = $item['order_items']['name_en'];
-                // $price = $item['order_items']['price'];
-                $selected_extras = $item['order_items']['selected_extras'];
-
-                if ($item['order_items']['is_takeout']) {
-                    $test_str .= "(外卖)";
-                }
-
-                $test_str .= $name_zh . $name_en . '(取消)' . '    ' . $selected_extras;
-            }
-
-            return $test_str;
-
+            return $debug_str;
         }
 
         // add cancel for each item
         for ($i = 0; $i < count($item_detail); ++$i) {
-            $item_detail[$i]['order_items']['name_xh'] = "(取消)" .  $item_detail[$i]['order_items']['name_xh'];
-            $item_detail[$i]['order_items']['name_en'] = "(Cancel)" . $item_detail[$i]['order_items']['name_en'];
+            $item_detail[$i]['name_xh'] = "(取消)" .  $item_detail[$i]['name_xh'];
+            $item_detail[$i]['name_en'] = "(Cancel)" . $item_detail[$i]['name_en'];
         }
 
 
@@ -324,22 +310,36 @@ class PrintLib {
         printer_close($handle);
 
         // send feedback to server
-        $test_str = "";
+        return $debug_str;
+    }
 
-        foreach ($item_detail as $item) {
-            $name_zh = $item['order_items']['name_xh'];
-            $name_en = $item['order_items']['name_en'];
-            // $price = $item['order_items']['price'];
-            $selected_extras = $item['order_items']['selected_extras'];
 
-            if ($item['order_items']['is_takeout']) {
-                $test_str .= "(外卖)";
-            }
+    public function printKitchenItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
 
-            $test_str .= $name_zh . $name_en . '(取消)' . '    ' . $selected_extras;
+        $debug_str = json_encode($item_detail);
+
+        if (!function_exists('printer_open')) {
+            return $debug_str;
         }
 
-        return $test_str;
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "kitchen");
+
+        // print header
+        $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
+
+        // print items
+        $this->printKitchenItemsPage($handle, $item_detail);
+
+        // print footer
+        $this->printFooterPage($handle);
+
+        printer_end_doc($handle);
+        printer_close($handle);
+
+        return $debug_str;
+
     }
 
 

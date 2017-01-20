@@ -16,6 +16,16 @@ class Category extends AppModel {
         // ),
     );
 
+    public function getPrinterById($id) {
+        $item = $this->find('first', array(
+                'fields' => array('Category.printer'),
+                'conditions' => array('Category.id' => $id)
+            )   
+        );
+
+        return $item['Category']['printer'];
+    }
+
 }
 
 ?>

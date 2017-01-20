@@ -1084,6 +1084,7 @@ class HomesController extends AppController {
 
         $cancel_items = array('K'=> array(), 'C'=>array());
 
+
         foreach ($item_id_list as $item_id) {
             // if the item is printed
             // send to kitchen print
@@ -1103,7 +1104,7 @@ class HomesController extends AppController {
                 }
                 
                 $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
-                array_push($cancel_items[$printer], $item_detail[0]);
+                array_push($cancel_items[$printer], $item_detail[0]['order_items']);
 
             } // else do nothing
 
@@ -1119,7 +1120,13 @@ class HomesController extends AppController {
 
             $printerName = $this->Cashier->getKitchenPrinterName( $this->Session->read('Front.id'));
             $print = new PrintLib();
-            echo $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
+            $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
+        }
+        if (!empty($cancel_items['C'])) {
+
+            $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+            $print = new PrintLib();
+            $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
         }
 
         $Order_detail = $this->Order->find("first", array(
@@ -2352,188 +2359,98 @@ class HomesController extends AppController {
 	}
 
     public function printTokitchen() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $this->loadModel('Order');
+        $this->loadModel('OrderItem');
+        $this->loadModel('Category');
+        $this->loadModel('Cashier');
         // according to order_id
         // find all items in order, print all items which is not print
+        if (!isset($this->data['order_no']) || !isset($this->data['type']) || !isset( $this->data['table'])) {
+            return;
+        }
+
+        $order_no = $this->data['order_no'];
+        $type = $this->data['type'];
+        $table = $this->data['table'];
+
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+
+
+        // get all un printed items
+        $orderItemsDetail = $this->OrderItem->find('all', array(
+                'fields' => array(
+                    'OrderItem.id',
+                    'OrderItem.name_en',
+                    'OrderItem.name_xh',
+                    'OrderItem.category_id',
+                    'OrderItem.qty',
+                    'OrderItem.selected_extras',
+                    'OrderItem.is_takeout',
+                    'OrderItem.is_print',
+                    ),
+                'conditions' => array(
+                    'OrderItem.order_id' => $order_id, 
+                    'OrderItem.is_print' => 'N'
+                    ),
+            ));
+
+        // print_r ($orderItemsDetail);
         
-    }
-    
-    
-    //End.
-    //Modified by Yishou Liao @ Nov 15 2016.
-    public function printTokitchen1($print_zh = false, $splitItme = false) {
-        //Modified by Yishou Liao @ Nov 28 2016
-        if ($splitItme == false) {
-            $Print_Item = $this->data['Print_Item'];
-        } else {
-            $Print_Item_split = $this->data['Print_Item'];
-            $Print_Item = array();
-        };
-        //End
-
-        for ($x = 0; $x < (isset($Print_Item_split) ? count($Print_Item_split) : 1); $x++) {//Modified by Yishou Liao @ Nov 28 2016
-            if (isset($Print_Item_split)) {
-                $Print_Item[0] = $Print_Item_split[$x];
-            }; //Modified by Yishou Liao @ Nov 28 2016
-            $Printer = $this->data['Printer'];
-            $order_no = $this->data['order_no'];
-            $order_type = $this->data['order_type'];
-            $table_no = $this->data['table_no'];
-            $table = $this->data['table'];
-
-            foreach (array_keys($Printer) as $key) {
-                $printer_name = $Printer[$key];
-                $printer_loca = $key;
-
-                $check_print_flag = false;
-                for ($i = 0; $i < count($Print_Item); $i++) {
-                    if ($Print_Item[$i][count($Print_Item[$i]) - 1] == $printer_loca) {
-                        $check_print_flag = true;
-                    };
-                };
-
-                if ($check_print_flag) {
-
-                    date_default_timezone_set("America/Toronto");
-                    $date_time = date("l M d Y h:i:s A");
-
-                    $handle = printer_open($printer_name);
-                    printer_start_doc($handle, "my_Receipt");
-                    printer_start_page($handle);
-
-                    if ($print_zh == true) {
-                        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-                        printer_select_font($handle, $font);
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
-                    } else {
-                        $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-                        printer_select_font($handle, $font);
-                        printer_draw_text($handle, "Kitchen", 138, 20);
-                    };
 
 
-                    //Print order information
-                    $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-                    printer_select_font($handle, $font);
-                    printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
-                    printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
-                    //End
+        // seperate items by printer
+        $printItems = array();
+        foreach ($orderItemsDetail as $itemDetail) {
+            $category_id = $itemDetail['OrderItem']['category_id'];
+            $printer = $this->Category->getPrinterById($category_id);
 
-                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-                    printer_select_pen($handle, $pen);
-                    printer_draw_line($handle, 21, 160, 600, 160);
-
-                    //Print order items
-                    $print_y = 180;
-                    for ($i = 0; $i < count($Print_Item); $i++) {
-                        if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
-                            if ($print_zh == true) {
-                                $font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-                            } else {
-                                $font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-                            };
-                            printer_select_font($handle, $font);
-
-                            printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
-
-                            $print_str = $Print_Item[$i][3];
-                            if ($Print_Item[$i][17] == 'Y') $print_str = '(Takeaway) ' .  $print_str;
-                            $print_str_save = $print_str;
-                            $len = 0;
-                            while (strlen($print_str) != 0) {
-                                $print_str = substr($print_str_save, $len, 16);
-                                printer_draw_text($handle, $print_str, 122, $print_y);
-                                $len+=16;
-                                if (strlen($print_str) != 0) {
-                                    $print_y+=32;
-                                };
-                            };
-                            $print_y-=32;
-
-                            if ($print_zh == true) {
-                                $print_y += 32;
-                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
-                                printer_select_font($handle, $font);
-
-                                $print_str = $Print_Item[$i][4];
-	                            if ($Print_Item[$i][17] == 'Y') $print_str = '(外卖) ' .  $print_str;
-
-	                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
+            $selected_extras_list = json_decode($itemDetail['OrderItem']['selected_extras'], true);
+            $selected_extras_arr = array();
+                if (!empty($selected_extras_list)) {
+                    foreach ($selected_extras_list as $selected_extra) {
+                        array_push($selected_extras_arr, $selected_extra['name']);
+                    }
+                }
+                
+            $itemDetail['OrderItem']['selected_extras'] = join(',', $selected_extras_arr);
 
 
-                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 366, $print_y);
-                                };
-                                if ($Print_Item[$i][13] == "C") {
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
-                                };
-                                $print_y+=38;
-                            } else {
-                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
-                                    printer_draw_text($handle, "(Takeout)", 366, $print_y);
-                                };
-                                if ($Print_Item[$i][13] == "C") {
-                                    printer_draw_text($handle, "(Cancel)", 366, $print_y);
-                                };
-                                $print_y += 32;
-                            };
-                            if (strlen($Print_Item[$i][10]) > 0) {
-                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
-                                printer_select_font($handle, $font);
-                                $print_str = $Print_Item[$i][10];
-                                $len = mb_strlen($print_str, 'UTF-8');
-                                $strb = 0;
-                                while ($len > $strb) {
-                                    $subStr = mb_substr($print_str, $strb, 16);
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $subStr), 120, $print_y);
-                                    $strb += 16;
-                                    $print_y+=32;
-                                }
-                                /*
-                                die("XXXX[".$len."]XXXXXXXX");
-                                $len = 0;
-                                $print_y+=32;
-                                while (strlen($print_str) != 0) {
-                                    $print_str = substr($Print_Item[$i][10], $len, 16);
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
-                                    $len+=16;
-                                    if (strlen($print_str) != 0) {
-                                        $print_y+=32;
-                                    };
-                                };
-                                */
-                                $print_y-=32;
-                            };
-                            $print_y += 46;
-                        };
-                    };
-                    //End.
-                    $print_y += 10;
-                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-                    printer_select_pen($handle, $pen);
-                    printer_draw_line($handle, 21, $print_y, 600, $print_y);
+            if (!isset($printItems[$printer])) {
+                $printItems[$printer] = array();
+            }
 
-                    $print_y += 10;
-                    $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                    printer_select_font($handle, $font);
-                    printer_draw_text($handle, $date_time, 80, $print_y);
+            array_push($printItems[$printer], $itemDetail['OrderItem']);
+        }
 
-                    printer_delete_font($font);
+        // print_r($printItems);
 
-                    printer_end_page($handle);
-                    printer_end_doc($handle);
-                    printer_close($handle);
-                };
-            };
+        if (!empty($printItems['K'])) {
 
-            if (isset($_SESSION['DELEITEM_' . $table])) {
-                unset($_SESSION['DELEITEM_' . $table]);
-            };
+            $printerName = $this->Cashier->getKitchenPrinterName( $this->Session->read('Front.id'));
+            $print = new PrintLib();
+            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false);
+        }
 
-            echo $Print_Item;
+        if (!empty($printItems['C'])) {
+            $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+            $print = new PrintLib();
+            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['C'], true, false);
+        }
 
-            echo true;
-        }; //End @ Nov 28 2016
-        exit;
+
+        
+
+        // change all items is_print to 'Y'
+        foreach ($orderItemsDetail as $itemDetail) {
+            $itemDetail['OrderItem']['is_print'] = 'Y';
+            $this->OrderItem->save($itemDetail, false);
+        }
+
+        $this->set($this->getAllDBInfo($table, $type));
+        $this->render('summarypanel');
     }
 
 
