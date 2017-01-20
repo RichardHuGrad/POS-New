@@ -1153,6 +1153,82 @@ class HomesController extends AppController {
     }
 
 
+    public function urgeItem() {
+        
+        $this->layout = false;
+        // get cashier details        
+        $this->loadModel('Cashier');
+        $this->loadModel('OrderItem');
+        $this->loadModel('Order');
+
+        // get all params
+        $item_id_list = $this->data['selected_item_id_list'];
+        $table = $this->data['table'];
+        $type = $this->data['type'];
+        $order_no = $this->data['order_no'];
+
+        if (empty($item_id_list)) {
+            return false;
+        }
+
+
+
+        $cancel_items = array('K'=> array(), 'C'=>array());
+
+
+        foreach ($item_id_list as $item_id) {
+            // if the item is printed
+            // send to kitchen print
+            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            // print_r($item_detail);
+
+            $is_print = $item_detail[0]['order_items']['is_print'];
+            $printer = $item_detail[0]['categories']['printer'];
+            if ($is_print == 'Y') {
+
+                $selected_extras_list = json_decode($item_detail[0]['order_items']['selected_extras'], true);
+                $selected_extras_arr = array();
+                if (!empty($selected_extras_list)) {
+                    foreach ($selected_extras_list as $selected_extra) {
+                        array_push($selected_extras_arr, $selected_extra['name']);
+                    }
+                }
+                
+                $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
+                array_push($cancel_items[$printer], $item_detail[0]['order_items']);
+
+            } // else do nothing
+
+        }
+
+        // echo json_encode($cancel_items);
+        // echo empty($cancel_items['K']);
+        if (!empty($cancel_items['K'])) {
+
+            $printerName = $this->Cashier->getKitchenPrinterName( $this->Session->read('Front.id'));
+            $print = new PrintLib();
+            $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
+        }
+        if (!empty($cancel_items['C'])) {
+
+            $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+            $print = new PrintLib();
+            $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
+        }
+
+        // send removed items to kitchen printer
+        // $order_id, $item_list
+ 
+        // update order amount
+        // para: order_id, tax_rate
+        // $this->Order->updateBillInfo($Order_detail['Order']['id']);
+
+
+        $this->set($this->getAllDBInfo($table, $type));
+        $this->render('summarypanel');
+    }
+
+
 
 
 
@@ -1185,6 +1261,50 @@ class HomesController extends AppController {
         
         return compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories');
 
+    }
+
+    public function changePrice() {
+        $this->layout = false;
+        // get cashier details        
+        $this->loadModel('Cashier');
+        $this->loadModel('OrderItem');
+        $this->loadModel('Order');
+
+        // get all params
+        $item_id_list = $this->data['selected_item_id_list'];
+        $table = $this->data['table'];
+        $type = $this->data['type'];
+        $order_no = $this->data['order_no'];
+        $price = $this->data['price'];
+
+
+        if (empty($item_id_list)) {
+            return false;
+        }
+
+        
+        foreach ($item_id_list as $item_id) {
+            $itemDetail = $this->OrderItem->find('first',
+                    array(
+                        'conditions' => array(
+                            'OrderItem.id' => $item_id 
+                            )
+                        )
+                );
+            $itemDetail['OrderItem']['price'] = $price;
+
+            // print_r($itemDetail);
+
+            $this->OrderItem->save($itemDetail, false);
+        }
+
+        // recalculate price
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $this->Order->updateBillInfo($order_id);
+
+
+        $this->set($this->getAllDBInfo($table, $type));
+        $this->render('summarypanel');
     }
 
 
