@@ -18,8 +18,13 @@
 
 <div class="clearfix marginB15 cashierbox">
     <div class="order-summary-indent clearfix">
+    </div>
 
-        
+    <div class="clearfix">
+        <button class="btn" id="select-all">全选</button>
+        <button class="btn" id="select-unprint">未送厨</button>
+        <button class="btn" id="select-printed">已送厨</button>
+        <button class="btn" id="select-revert">反选</button>
     </div>
 </div>
 <?php// }?>
@@ -330,7 +335,40 @@ var orderStr = "";
         <?php } ?>
 
         
-        
+        $('#select-all').on('click', function() {
+            $('#order-component li').each(function() {
+                if(!$(this).hasClass('selected')) {
+                    $(this).addClass('selected');
+                }
+            });
+        });
+
+        $('#select-revert').on('click', function() {
+            $('#order-component li').each(function() {
+                if($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    $(this).addClass('selected');
+                }
+            });
+        });
+
+        $('#select-printed').on('click', function() {
+            $('#order-component li.is-print').each(function() {
+                if(!$(this).hasClass('selected')) {
+                    $(this).addClass('selected');
+                }
+            });
+        });
+
+
+        $('#select-unprint').on('click', function() {
+            $('#order-component li').each(function() {
+                if(!$(this).hasClass('is-print') && !$(this).hasClass('selected')) {
+                    $(this).addClass('selected');
+                }
+            });
+        });
 
 	})
 
