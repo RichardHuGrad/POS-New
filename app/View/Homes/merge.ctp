@@ -583,76 +583,67 @@ echo number_format($total, 2)
             $("#selected_card").val(type);
             })
                     $(".select_tip").click(function () {
-            $(".select_card").removeClass("active");
-                    $(this).toggleClass("active");
-                    var val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
-                    $("#screen").attr('buffer', val);
-                    $("#screen").val($("#tip_val").val());
-            })
+                        $(".select_card").removeClass("active");
+                            $(this).toggleClass("active");
+                            var val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+                            $("#screen").attr('buffer', val);
+                            $("#screen").val($("#tip_val").val());
+                        });
                     //Modified by Yishou Liao @ Oct 16 2016
                     $("#submit").click(function () {
-            if ($("#selected_card").val()) {
-            if (parseFloat($(".change_price").attr("amount")) >= 0) {
-
-            // submit form for complete payment process
-            $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'donemergepayment', $table, $type)); ?>",
-                    method: "post",
-                    data: {
-                    pay: $(".received_price").attr("amount"),
-                            paid_by: $("#selected_card").val(),
-                            change: $(".change_price").attr("amount"),
-                            table: "<?php echo $table ?>",
-                            table_merge: "<?php echo implode(",", $tablemerge); ?>",
-                            type: "<?php echo $type ?>",
-                            main_order_id:"<?php
-$main_order_id = "";
-for ($i = 0; $i < count($Order_detail); $i++) {
-    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $main_order_id = $Order_detail[$i]['Order']['id'];
-    };
-};
-echo $main_order_id;
-?>",
-                            order_id: "<?php
-$order_id = "";
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $order_id .= $Order_detail[$i]['Order']['id'] . ",";
-};
-$order_id = substr($order_id, 0, (strlen($order_id) - 1));
-echo $order_id;
-?>",
-                            card_val: $("#card_val").val(),
-                            cash_val: $("#cash_val").val(),
-                            tip_val: $("#tip_val").val(),
-                    },
-                    success: function (html) {
-                    $(".alert-warning").hide();
-                            $(".reprint").trigger("click");
-                            window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
-                    },
-                    beforeSend: function () {
-                    $(".RIGHT-SECTION").addClass('load1 csspinner');
-                            $(".alert-warning").show();
-                    }
-            })
-            } else {
-                $.notify("Invalid amount, please check and verfy again \n 金额无效，请检查并再次验证.", {
-                                position: "top center", 
-                                className:"warn"
-                            });
-            // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
-                    return false;
-            }
-            } else {
-                $.notify("Please select card or cash payment method \n 请选择卡或现金付款方式. ", {
-                                position: "top center", 
-                                className:"warn"
-                            });
-            // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
-                    return false;
-            }
-            })
+                        if ($("#selected_card").val()) {
+                            if (parseFloat($(".change_price").attr("amount")) >= 0) {
+                                // submit form for complete payment process
+                                $.ajax({
+                                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'donemergepayment', $table, $type)); ?>",
+                                    method: "post",
+                                    data: {
+                                        pay: $(".received_price").attr("amount"),
+                                        paid_by: $("#selected_card").val(),
+                                        change: $(".change_price").attr("amount"),
+                                        table: "<?php echo $table ?>",
+                                        table_merge: "<?php echo implode(",", $tablemerge); ?>",
+                                        type: "<?php echo $type ?>",
+                                        main_order_id:"<?php
+                                                        $main_order_id = "";
+                                                        for ($i = 0; $i < count($Order_detail); $i++) {
+                                                            if ($Order_detail[$i]['Order']['table_no'] == $table) {
+                                                                $main_order_id = $Order_detail[$i]['Order']['id'];
+                                                            };
+                                                        };
+                                                        echo $main_order_id;
+                                                        ?>",
+                                        order_id: "<?php
+                                                    $order_id = "";
+                                                    for ($i = 0; $i < count($Order_detail); $i++) {
+                                                        $order_id .= $Order_detail[$i]['Order']['id'] . ",";
+                                                    };
+                                                    $order_id = substr($order_id, 0, (strlen($order_id) - 1));
+                                                    echo $order_id;
+                                                    ?>",
+                                        card_val: $("#card_val").val(),
+                                        cash_val: $("#cash_val").val(),
+                                        tip_val: $("#tip_val").val(),
+                                    },
+                                    success: function (html) {
+                                        $(".alert-warning").hide();
+                                        $(".reprint").trigger("click");
+                                        window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                                    },
+                                    beforeSend: function () {
+                                        $(".RIGHT-SECTION").addClass('load1 csspinner');
+                                        $(".alert-warning").show();
+                                    }
+                                });
+                            } else {
+                                $.notify("Invalid amount, please check and verfy again \n 金额无效，请检查并再次验证.", { position: "top center", className:"warn"});
+                                    return false;
+                            }
+                        } else {
+                            $.notify("Please select card or cash payment method \n 请选择卡或现金付款方式. ", { position: "top center", className:"warn"});
+                            return false;
+                        }
+                    })
                     //End.
 
                     $(".card-indent li").click(function () {
@@ -718,7 +709,7 @@ echo $order_id;
             }
 
             } else {
-            return false;
+                return false;
             }
             })
                     $("#rc1").click(function (E) {
@@ -814,25 +805,25 @@ echo $order_id;
 						promocode: promocode,
 //Modified by Yishou Liao @ Nov 18 2016
 						mainorder_id: "<?php
-for ($i = 0; $i < count($Order_detail); $i++) {
-    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-        $order_id = $Order_detail[$i]['Order']['id'];
-    };
-};
-echo $order_id;
-?>",
-//End
+                                        for ($i = 0; $i < count($Order_detail); $i++) {
+                                            if ($Order_detail[$i]['Order']['table_no'] == $table) {
+                                                $order_id = $Order_detail[$i]['Order']['id'];
+                                            };
+                                        };
+                                        echo $order_id;
+                                        ?>",
+                                        //End
 						order_id: "<?php
-//Modified by Yishou Liao @ Nov 18 2016
-$order_id = "";
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $order_id .= $Order_detail[$i]['Order']['id'].',';
-};
-$order_id = substr($order_id,0,strlen($order_id)-1);
-echo $order_id;
-//End
-?>",
-},
+                                    //Modified by Yishou Liao @ Nov 18 2016
+                                    $order_id = "";
+                                    for ($i = 0; $i < count($Order_detail); $i++) {
+                                        $order_id .= $Order_detail[$i]['Order']['id'].',';
+                                    };
+                                    $order_id = substr($order_id,0,strlen($order_id)-1);
+                                    echo $order_id;
+                                    //End
+                                    ?>",
+                    },
                     success: function (html) {
                     if (html.error) {
                     // alert(html.message);
@@ -872,14 +863,14 @@ echo $order_id;
                     //Modified by Yishou @ Oct 16 2016.
                     $(document).on('click', ".remove_discount", function () {
             var order_id = "<?php
-//Modified by Yishou Liao @ Nov 18 2016
-$order_id = "";
-for ($i = 0; $i < count($Order_detail); $i++) {
-	$order_id .= $Order_detail[$i]['Order']['id'] . ',';
-};
-echo $order_id;
-//End
-?>";
+                            //Modified by Yishou Liao @ Nov 18 2016
+                            $order_id = "";
+                            for ($i = 0; $i < count($Order_detail); $i++) {
+                            	$order_id .= $Order_detail[$i]['Order']['id'] . ',';
+                            };
+                            echo $order_id;
+                            //End
+                            ?>";
                     var message = $("#Message").val();
                     $.ajax({
                     url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'remove_discount')); ?>",

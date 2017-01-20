@@ -74,6 +74,7 @@ html,body {
 
 #button-group button {
     /*border-radius: 8px;*/
+    font-weight: 1000;
 }
 
 #send-to-kitchen-btn {

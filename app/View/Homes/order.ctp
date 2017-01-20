@@ -122,14 +122,17 @@
 
         
     </div>
-    <div class="col-md-12 col-sm-12 col-xs-12" id="button-group">
-        <button id="send-to-kitchen-btn" class="btn btn-lg">Send to Kitchen</button>
-        <button id="pay-btn" class="btn btn-lg">Pay</button>
-        <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal">Batch Add Taste</button>
-        <button id="add-taste-btn" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#single-extra-component-modal">Add Taste</button>
-        <button id="delete-btn" class="btn btn-lg">Delete</button>
-        <button id="quantity-btn" class="btn btn-lg">Quantity</button>
-        <button id="take-out-btn" class="btn btn-lg">Take Out</button> 
+    <div class="col-md-12 col-sm-12 col-xs-12 " id="button-group">
+        <button id="send-to-kitchen-btn" class="btn btn-lg"><strong>送厨</strong></button>
+        <button id="pay-btn" class="btn btn-lg"><strong>付款</strong></button>
+        <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong>批量加口味</strong></button>
+        <button id="add-taste-btn" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#single-extra-component-modal"><strong>改口味</strong></button>
+        <button id="delete-btn" class="btn btn-lg"><strong>删除</strong></button>
+        <button id="quantity-btn" class="btn btn-lg"><strong>Quantity</strong></button>
+        <button id="take-out-btn" class="btn btn-lg"><strong>外卖</strong></button> 
+        <button id="urge-btn" class="btn btn-lg"><strong>加急</strong></button>
+        <button id="change-price-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-price-component-modal"><strong>改价格</strong></button>
+        <!-- <button id="free-price-btn" class="btn btn-lg"><strong>免费</strong></button> -->
         <!-- <button id="add-discount-btn" class="btn btn-lg">Add Discount</button>  -->
     </div>
 
@@ -226,6 +229,26 @@
 </script>
 
 
+<script id="change-price-component" type="text/template">
+    <div class="modal fade clearfix" id="change-price-component-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content clearfix">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{0}</h4>
+                </div>
+                <div class="modal-body clearfix">
+                    <div></div>
+                </div>
+                <div class="modal-footer clearfix">
+                    <input id="change-price-component-price" type="number" min="0" step="1" placeholder="eg. 0.00">
+                    <button type="button" id="change-price-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
 <!-- <script id="taste-component" type="text/template"></script> -->
 <script id="selected-extra-item-component" type="text/template">
     <li class="selected-extra-item clearfix" data-extra-id="{0}" data-extra-category-id="{1}">
@@ -317,12 +340,8 @@ echo $this->fetch('script');
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>", order_no: $("#Order_no").val()},
             success: function(html) {
-                // console.log(html);
                 $(".summary_box").html(html);
-                // $(".summary_box").removeClass('load1 csspinner');
 
-                // TODO
-                // add printer array
             }
         });
 
@@ -633,8 +652,6 @@ echo $this->fetch('script');
 
 
 
-    
-
 
     $('#take-out-btn').on('click', function() {
         var selected_item_id_list = getSelectedItem();
@@ -853,6 +870,24 @@ echo $this->fetch('script');
         }
     })();
 
+    var ChangePriceComponent = (function() {
+        var createDom = function() {
+            var changePriceComponent = $($('#change-price-component').html().format('改价格'));
+
+            return changePriceComponent;
+        }
+
+        var init = function() {
+            var changePriceComponent = createDom();
+
+            return changePriceComponent;
+        }
+
+        return {
+            init: init
+        }
+    })();
+
 
 
     var SelectedExtraItemComponent = (function() {
@@ -991,7 +1026,7 @@ echo $this->fetch('script');
             data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
                 $(".summary_box").html(html);
-                $('.modal-header .close').trigger('click');
+                $('#taste-component-modal .close').trigger('click');
             }
         });
     });
@@ -1045,8 +1080,8 @@ echo $this->fetch('script');
             selected_extras_id.push($(this).attr('data-extra-id'));
         });
 
-        console.log(selected_extras_id);
-        console.log(selected_item_id);
+        // console.log(selected_extras_id);
+        // console.log(selected_item_id);
 
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'addExtras')); ?>",
@@ -1059,23 +1094,112 @@ echo $this->fetch('script');
         })
     }); 
 
+    // listen to ajax send
+    ! function () {
+        var ulContent;
+        $(document).ajaxStop(function () {
+            var $ul = $('#order-component');
+            if(ulContent !== $ul.html()){
+                ulContent = $ul.html();
+                $ul.trigger('contentChanged');
+            }
+        });
+    }();
     // when part of selected items are printed, only allow delete action
-    $('body').on('click', '#order-component li',function() {
-        console.log('click');
+    $('body').on('click contentChanged', '#order-component',function() {
+        // console.log('click');
+        ChangeBtnDisabled(['#delete-btn', '#change-price-btn', '#urge-btn']);
+    });
+
+    function ChangeBtnDisabled(selectors) {
+        var selectorStr = selectors.join(',');
         if ($('#order-component li.selected.is-print').length > 0) {
             $.notify("If you want to modify items which have been sent to kitchen, please delete it and readd it. \n 已选项中包含已送厨菜品，若要修改已送厨菜品，请删除后重新添加",{ position: "top center", className:"info"});
-            $('#button-group .btn').not('#delete-btn').attr('disabled', true);
+            $('#button-group .btn').not(selectorStr).attr('disabled', true);
         } else {
-            $('#button-group .btn').not('#delete-btn').attr('disabled', false);
+            $('#button-group .btn').not(selectorStr).attr('disabled', false);
         }
-    });
+    }
 
 
     $('#pay-btn').on('click', function () {
         // if message exist save message
-
+        // $('#send-to-kitchen-btn').trigger('click');
 
         window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'pay', 'table' => $table, 'type' => $type)); ?>";
+    });
+
+
+    $('#change-price-btn').on('click', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        }
+
+        //popup an input for new price
+        $('#change-price-component-modal').modal('hide').remove();
+        var changePriceComponent = ChangePriceComponent.init();
+        $('body').append(changePriceComponent);
+        
+
+
+        // $.ajax({
+        //     url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'removeitem')); ?>",
+        //     method: "post",
+        //     data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>", order_no: $("#Order_no").val()},
+        //     success: function(html) {
+        //         $(".summary_box").html(html);
+        //     }
+        // });
+        
+    });
+
+    $('body').on('click', '#change-price-component-save', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        var price = $('#change-price-component-price').val();
+        price = Math.round(parseFloat(price) * 100) / 100;
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'changePrice')); ?>",
+            method: "post",
+            data: {
+                selected_item_id_list: selected_item_id_list, 
+                price: price,
+                table: "<?php echo $table ?>", 
+                type: "<?php echo $type ?>", 
+                order_no: $("#Order_no").val()
+            },
+            success: function(html) {
+                $(".summary_box").html(html);
+                $('#change-price-component-modal .close').trigger('click');
+            }
+        });
+    });
+
+    $('body').on('click', '#urge-btn', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        } 
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'urgeItem')); ?>",
+            method: "post",
+            data: {
+                selected_item_id_list: selected_item_id_list, 
+                table: "<?php echo $table ?>", 
+                type: "<?php echo $type ?>", 
+                order_no: $("#Order_no").val()
+            },
+            success: function(html) {
+                $(".summary_box").html(html);
+            }
+        });
     });
 
 

@@ -21,10 +21,10 @@
     </div>
 
     <div class="clearfix">
-        <button class="btn" id="select-all">全选</button>
-        <button class="btn" id="select-unprint">未送厨</button>
-        <button class="btn" id="select-printed">已送厨</button>
-        <button class="btn" id="select-revert">反选</button>
+        <button class="btn btn-info" id="select-all"><strong>全选</strong></button>
+        <button class="btn btn-info" id="select-unprint"><strong>未送厨</strong></button>
+        <button class="btn btn-info" id="select-printed"><strong>已送厨</strong></button>
+        <button class="btn btn-info" id="select-revert"><strong>反选</strong></button>
     </div>
 </div>
 <?php// }?>

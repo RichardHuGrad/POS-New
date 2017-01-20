@@ -342,6 +342,41 @@ class PrintLib {
 
     }
 
+    public function printUrgeItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
+        $debug_str = json_encode($item_detail);
+
+        if (!function_exists('printer_open')) {
+            return $debug_str;
+        }
+
+        // add cancel for each item
+        for ($i = 0; $i < count($item_detail); ++$i) {
+            $item_detail[$i]['name_xh'] = "(加急)" .  $item_detail[$i]['name_xh'];
+            $item_detail[$i]['name_en'] = "(Hurry)" . $item_detail[$i]['name_en'];
+        }
+
+
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "kitchen");
+
+        // print header
+        $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
+
+        // print items
+        $this->printKitchenItemsPage($handle, $item_detail);
+    
+        // print footer
+        $this->printFooterPage($handle);
+
+
+        printer_end_doc($handle);
+        printer_close($handle);
+
+        // send feedback to server
+        return $debug_str;
+    }
+
 
 }
 
