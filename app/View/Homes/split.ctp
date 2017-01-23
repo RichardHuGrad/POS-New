@@ -591,28 +591,38 @@ echo $this->fetch('script');
 			            }
 			        }
 	        ?>
+	        		var qty = parseInt('<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>');
+	        		console.log("quantity");
+	        		console.log(qty);
 
-	        		var temp_item = new Item(item_id = '<?php echo $i ?>',
-	        			image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
-	        			name_en = '<?php echo $value['name_en']; ?>',
-	        			name_zh = '<?php echo $value['name_xh']; ?>',
-	        			selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
-	        			price = '<?php echo $value['price'] ?>',
-	        			extras_amount = '<?php echo $value['extras_amount'] ?>',
-	        			quantity = '<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>',
-	        			order_item_id = '<?php echo $value['id'] ?>',
-	        			state = "keep",
-	        			shared_suborders = null,
-                        assigned_suborder = null,
-                        is_takeout = '<?php echo $value["is_takeout"] ?>',
-                        comb_id = '<?php echo $value["comb_id"] ?>',
-                        selected_extras_json = '<?php echo $value['selected_extras'] ?>',
-                        is_print = '<?php echo $value['is_print']?>');
+	        		for (var i = 0; i < qty; ++i) {
+	        			var temp_item = new Item(
+		        			item_id = '<?php echo $i ?>',
+		        			image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
+		        			name_en = '<?php echo $value['name_en']; ?>',
+		        			name_zh = '<?php echo $value['name_xh']; ?>',
+		        			selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
+		        			price = '<?php echo $value['price'] ?>',
+		        			extras_amount = '<?php echo $value['extras_amount'] ?>',
+		        			quantity = 1,
+		        			order_item_id = '<?php echo $value['id'] ?>',
+		        			state = "keep",
+		        			shared_suborders = null,
+	                        assigned_suborder = null,
+	                        is_takeout = '<?php echo $value["is_takeout"] ?>',
+	                        comb_id = '<?php echo $value["comb_id"] ?>',
+	                        selected_extras_json = '<?php echo $value['selected_extras'] ?>',
+	                        is_print = '<?php echo $value['is_print']?>');
 
-	        		tempOrder.addItem(temp_item);
+		        		tempOrder.addItem(temp_item);
+
+						<?php $i++; ?>
+	        		}
+
+	        		
 
 		    <?php
-				   	$i++;
+				   	// $i++;
 			 	} // line 563 foreach
 		    ?>
 
