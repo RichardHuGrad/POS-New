@@ -305,7 +305,7 @@ echo $this->fetch('script');
         var message = $("#Message").val();
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'addItem')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'addItem')); ?>",
             method: "post",
             data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
@@ -356,7 +356,7 @@ echo $this->fetch('script');
         }
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'removeitem')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'removeitem')); ?>",
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>", order_no: $("#Order_no").val()},
             success: function(html) {
@@ -406,7 +406,7 @@ echo $this->fetch('script');
 
     $("#send-to-kitchen-btn").on('click', function() {
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printToKitchen')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'printToKitchen')); ?>",
             method: "post",
             data: {
                 order_no: $("#Order_no").val(),
@@ -420,73 +420,73 @@ echo $this->fetch('script');
     });
 	
 	//Modified by Yishou Liao @ Nov 10 2016
-	$(document).on("click", ".clearbtn", function () {
-		var item_id = $(this).attr("alt");
-		$("#ext_memo"+item_id).val("");
-	});
-	$(document).on("click", "#extnobtn", function () {
-		var item_id = $(this).attr("alt");
-		$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"No ");
-	});
-	$(document).on("click", "#extmorebtn", function () {
-		var item_id = $(this).attr("alt");
-		$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"More ");
-	});
-	$(document).on("click", "#extlessbtn", function () {
-		var item_id = $(this).attr("alt");
-		$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"Less ");
-	});
+	// $(document).on("click", ".clearbtn", function () {
+	// 	var item_id = $(this).attr("alt");
+	// 	$("#ext_memo"+item_id).val("");
+	// });
+	// $(document).on("click", "#extnobtn", function () {
+	// 	var item_id = $(this).attr("alt");
+	// 	$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"No ");
+	// });
+	// $(document).on("click", "#extmorebtn", function () {
+	// 	var item_id = $(this).attr("alt");
+	// 	$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"More ");
+	// });
+	// $(document).on("click", "#extlessbtn", function () {
+	// 	var item_id = $(this).attr("alt");
+	// 	$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"Less ");
+	// });
 	//End
 
-    $(document).on("click", ".savebtn", function () {
-        var id = $(this).attr("alt");
-        var message = $("#Message").val();
-        var array = new Array();
+  //   $(document).on("click", ".savebtn", function () {
+  //       var id = $(this).attr("alt");
+  //       var message = $("#Message").val();
+  //       var array = new Array();
 
-        // get all selected extras items of menu
-        $("#block" + id + " div.extras_inner").each(function () {
-            array.push($(this).attr('alt'));
-        });
-        var input_value = array.toString();
-        var element = $(this).parent("ul.dropdown-menu");
+  //       // get all selected extras items of menu
+  //       $("#block" + id + " div.extras_inner").each(function () {
+  //           array.push($(this).attr('alt'));
+  //       });
+  //       var input_value = array.toString();
+  //       var element = $(this).parent("ul.dropdown-menu");
 
-		var var_inputext;
-		if ($("#ext_memo").val()!=""){
-			if (input_value!=""){
-				var_inputext = input_value+","+$("#ext_memo"+id).val();
-			}else{
-				var_inputext = $("#ext_memo"+id).val();
-			};
-		}else{
-			var_inputext = input_value;
-		};
-        $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_extras')); ?>",
-            method: "post",
-            data: {item_id: id, extras: var_inputext, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
-            success: function (html) {
-                $(".summary_box").html(html);
-                $(".products-panel").removeClass('load1 csspinner');
-                $(".clearfix.cart-wrap").removeClass("csspinner");
+		// var var_inputext;
+		// if ($("#ext_memo").val()!=""){
+		// 	if (input_value!=""){
+		// 		var_inputext = input_value+","+$("#ext_memo"+id).val();
+		// 	}else{
+		// 		var_inputext = $("#ext_memo"+id).val();
+		// 	};
+		// }else{
+		// 	var_inputext = input_value;
+		// };
+  //       $.ajax({
+  //           url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_extras')); ?>",
+  //           method: "post",
+  //           data: {item_id: id, extras: var_inputext, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+  //           success: function (html) {
+  //               $(".summary_box").html(html);
+  //               $(".products-panel").removeClass('load1 csspinner');
+  //               $(".clearfix.cart-wrap").removeClass("csspinner");
 
-                // Modified by Yishou Liao @ Oct 28 2016.
-                Order_Item_Printer = Array();
-				// Modified by Yishou Liao @ Nov 16 2016.
-				if ($('#Order_Item').val() != ""){
-	                var arrtmp = $('#Order_Item').val().split("#");
-				};
-				//End
-                for (var i = 0; i < arrtmp.length; i++) {
-                    Order_Item_Printer.push(arrtmp[i].split("*"));
-                };
-                //End.
+  //               // Modified by Yishou Liao @ Oct 28 2016.
+  //               Order_Item_Printer = Array();
+		// 		// Modified by Yishou Liao @ Nov 16 2016.
+		// 		if ($('#Order_Item').val() != ""){
+	 //                var arrtmp = $('#Order_Item').val().split("#");
+		// 		};
+		// 		//End
+  //               for (var i = 0; i < arrtmp.length; i++) {
+  //                   Order_Item_Printer.push(arrtmp[i].split("*"));
+  //               };
+  //               //End.
 
-            },
-            beforeSend: function () {
-                element.addClass('load1 csspinner');
-            }
-        })
-    })
+  //           },
+  //           beforeSend: function () {
+  //               element.addClass('load1 csspinner');
+  //           }
+  //       })
+  //   })
 
     $(document).ready(function () {
 
@@ -514,7 +514,7 @@ echo $this->fetch('script');
 
         $.ajax({
             // async: false, 
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'summarypanel', $table, $type)); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
             method: "post",
             success: function (html) {
                 $(".summary_box").html(html);
@@ -639,23 +639,6 @@ echo $this->fetch('script');
     });
 
 
-   
-
-    // todo
-    $('#add-discount-btn').on('click', function() {
-        // console.log(order);
-
-        // if (order.discount.type == "unknown") {
-        //     // allow discount
-        //     console.log("no discount");
-        // } else {
-        //     // show discount information
-        //     console.log("has discount");
-        // }
-
-        // use ajax update page information
-    });
-
 
     $('#batch-add-taste-btn').on('click', function() {
         var selected_item_id_list = getSelectedItem();
@@ -682,7 +665,7 @@ echo $this->fetch('script');
         }
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'takeout')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'takeout')); ?>",
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
@@ -1059,7 +1042,7 @@ echo $this->fetch('script');
         // console.log(selected_extras_amount);
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'batchAddExtras')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'batchAddExtras')); ?>",
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
@@ -1122,7 +1105,7 @@ echo $this->fetch('script');
         // console.log(selected_item_id);
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'addExtras')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'addExtras')); ?>",
             method: "post",
             data: {selected_item_id: selected_item_id, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function(html) {
@@ -1198,7 +1181,7 @@ echo $this->fetch('script');
         price = Math.round(parseFloat(price) * 100) / 100;
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'changePrice')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'changePrice')); ?>",
             method: "post",
             data: {
                 selected_item_id_list: selected_item_id_list, 
@@ -1223,7 +1206,7 @@ echo $this->fetch('script');
         } 
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'urgeItem')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'urgeItem')); ?>",
             method: "post",
             data: {
                 selected_item_id_list: selected_item_id_list, 
@@ -1260,7 +1243,7 @@ echo $this->fetch('script');
         console.log(quantity);
 
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'changeQuantity')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'changeQuantity')); ?>",
             method: "post",
             data: {
                 selected_item_id_list: selected_item_id_list, 
