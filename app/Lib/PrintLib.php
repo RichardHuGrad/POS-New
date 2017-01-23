@@ -238,7 +238,7 @@ class PrintLib {
             $y = 10;
 
             printer_select_font($handle, $font1);
-            printer_draw_text($handle, $qty, 0, $y);
+            printer_draw_text($handle, $qty, 10, $y);
             printer_draw_text($handle, $name_en, 80, $y);
             $y += $font1H + 3;
         

@@ -128,7 +128,7 @@
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong>批量加口味</strong></button>
         <button id="add-taste-btn" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#single-extra-component-modal"><strong>改口味</strong></button>
         <button id="delete-btn" class="btn btn-lg"><strong>删除</strong></button>
-        <button id="quantity-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-quantity-component-modal"><strong>Quantity</strong></button>
+        <button id="quantity-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-quantity-component-modal"><strong>改数量</strong></button>
         <button id="take-out-btn" class="btn btn-lg"><strong>外卖</strong></button> 
         <button id="urge-btn" class="btn btn-lg"><strong>加急</strong></button>
         <button id="change-price-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-price-component-modal"><strong>改价格</strong></button>
