@@ -1128,7 +1128,7 @@ echo $this->fetch('script');
     }();
     // when part of selected items are printed, only allow delete action
     $('body').on('click contentChanged', '#order-component',function() {
-        // console.log('click');
+        console.log('click');
         ChangeBtnDisabled(['#delete-btn, #change-price-btn', '#urge-btn']);
     });
 

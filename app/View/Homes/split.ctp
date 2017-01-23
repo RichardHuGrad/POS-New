@@ -601,7 +601,13 @@ echo $this->fetch('script');
 	        			extras_amount = '<?php echo $value['extras_amount'] ?>',
 	        			quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
 	        			order_item_id = '<?php echo $value['id'] ?>',
-	        			state = "keep");
+	        			state = "keep",
+	        			shared_suborders = null,
+                        assigned_suborder = null,
+                        is_takeout = '<?php echo $value["is_takeout"] ?>',
+                        comb_id = '<?php echo $value["comb_id"] ?>',
+                        selected_extras_json = '<?php echo $value['selected_extras'] ?>',
+                        is_print = '<?php echo $value['is_print']?>');
 
 	        		tempOrder.addItem(temp_item);
 
