@@ -1,4 +1,4 @@
-<?php
+      <?php
 
 class Order extends AppModel {
 
@@ -79,8 +79,7 @@ class Order extends AppModel {
         
 
         foreach ($order_item_list as $order_item) {
-            $data['Order']['subtotal'] += $order_item['OrderItem']['price'] + ($order_item['OrderItem']['extras_amount'] ? $order_item['OrderItem']['extras_amount'] : 0);
-
+            $data['Order']['subtotal'] += ($order_item['OrderItem']['price'] + ($order_item['OrderItem']['extras_amount'] ? $order_item['OrderItem']['extras_amount'] : 0)) * $order_item['OrderItem']['qty'];
         }
         
         if ($Order_detail['Order']['fix_discount'] && $Order_detail['Order']['fix_discount'] > 0) {

@@ -226,6 +226,7 @@ class PrintLib {
 
             $name_zh = $item['name_xh'];
             $name_en = $item['name_en'];
+            $qty = $item['qty'];
             // $price = $item['price'];
             $selected_extras = $item['selected_extras'];
 
@@ -235,8 +236,9 @@ class PrintLib {
             }
 
             $y = 10;
-            
+
             printer_select_font($handle, $font1);
+            printer_draw_text($handle, $qty, 0, $y);
             printer_draw_text($handle, $name_en, 80, $y);
             $y += $font1H + 3;
         
@@ -352,7 +354,7 @@ class PrintLib {
         // add cancel for each item
         for ($i = 0; $i < count($item_detail); ++$i) {
             $item_detail[$i]['name_xh'] = "(加急)" .  $item_detail[$i]['name_xh'];
-            $item_detail[$i]['name_en'] = "(Hurry)" . $item_detail[$i]['name_en'];
+            $item_detail[$i]['name_en'] = "(Urgent)" . $item_detail[$i]['name_en'];
         }
 
 

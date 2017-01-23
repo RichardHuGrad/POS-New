@@ -1307,6 +1307,50 @@ class HomesController extends AppController {
         $this->render('summarypanel');
     }
 
+    public function changeQuantity() {
+        $this->layout = false;
+
+        $this->loadModel('Cashier');
+        $this->loadModel('OrderItem');
+        $this->loadModel('Order');
+
+        // get all params
+        $item_id_list = $this->data['selected_item_id_list'];
+        $quantity = $this->data['quantity'];
+        $table = $this->data['table'];
+        $type = $this->data['type'];
+        $order_no = $this->data['order_no'];
+
+        if (empty($item_id_list)) {
+            return false;
+        }
+
+
+        foreach ($item_id_list as $item_id) {
+            $itemDetail = $this->OrderItem->find('first',
+                    array(
+                        'conditions' => array(
+                            'OrderItem.id' => $item_id 
+                            )
+                        )
+                );
+            $itemDetail['OrderItem']['qty'] = $quantity;
+
+            // print_r($itemDetail);
+
+            $this->OrderItem->save($itemDetail, false);
+        }
+        
+        // recalculate price
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $this->Order->updateBillInfo($order_id);
+
+
+        $this->set($this->getAllDBInfo($table, $type));
+        $this->render('summarypanel');
+
+    }
+
 
     public function takeout() {
         $this->layout = false;

@@ -128,7 +128,7 @@
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong>批量加口味</strong></button>
         <button id="add-taste-btn" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#single-extra-component-modal"><strong>改口味</strong></button>
         <button id="delete-btn" class="btn btn-lg"><strong>删除</strong></button>
-        <button id="quantity-btn" class="btn btn-lg"><strong>Quantity</strong></button>
+        <button id="quantity-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-quantity-component-modal"><strong>Quantity</strong></button>
         <button id="take-out-btn" class="btn btn-lg"><strong>外卖</strong></button> 
         <button id="urge-btn" class="btn btn-lg"><strong>加急</strong></button>
         <button id="change-price-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-price-component-modal"><strong>改价格</strong></button>
@@ -243,6 +243,26 @@
                 <div class="modal-footer clearfix">
                     <input id="change-price-component-price" type="number" min="0" step="1" placeholder="eg. 0.00">
                     <button type="button" id="change-price-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="change-quantity-component" type="text/template">
+    <div class="modal fade clearfix" id="change-quantity-component-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content clearfix">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{0}</h4>
+                </div>
+                <div class="modal-body clearfix">
+                    <div></div>
+                </div>
+                <div class="modal-footer clearfix">
+                    <input name="quantity" type="number" min="1" step="1">
+                    <button type="button" id="change-quantity-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
                 </div>
             </div>
         </div>
@@ -888,6 +908,24 @@ echo $this->fetch('script');
         }
     })();
 
+    var ChangeQuantityComponent = (function() {
+        var createDom = function() {
+            var changeQuantityComponent = $($('#change-quantity-component').html().format('改数量'));
+
+            return changeQuantityComponent;
+        }
+
+        var init = function() {
+            var changeQuantityComponent = createDom();
+
+            return changeQuantityComponent;
+        }
+
+        return {
+            init: init
+        }
+    })();
+
 
 
     var SelectedExtraItemComponent = (function() {
@@ -1151,17 +1189,6 @@ echo $this->fetch('script');
         var changePriceComponent = ChangePriceComponent.init();
         $('body').append(changePriceComponent);
         
-
-
-        // $.ajax({
-        //     url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'removeitem')); ?>",
-        //     method: "post",
-        //     data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>", order_no: $("#Order_no").val()},
-        //     success: function(html) {
-        //         $(".summary_box").html(html);
-        //     }
-        // });
-        
     });
 
     $('body').on('click', '#change-price-component-save', function() {
@@ -1210,5 +1237,43 @@ echo $this->fetch('script');
         });
     });
 
+
+    $('body').on('click', '#quantity-btn', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        if (selected_item_id_list.length == 0) {
+            alert("No item selected");
+            return false;
+        } 
+
+        //popup an input for new price
+        $('#change-quantity-component-modal').modal('hide').remove();
+        var changeQuantityComponent = ChangeQuantityComponent.init();
+        $('body').append(changeQuantityComponent);
+    });
+
+    $('body').on('click', '#change-quantity-component-save', function() {
+        var selected_item_id_list = getSelectedItem();
+
+        var quantity = $('input[name="quantity"]').val();
+        quantity = Math.round(parseInt(quantity));
+        console.log(quantity);
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'changeQuantity')); ?>",
+            method: "post",
+            data: {
+                selected_item_id_list: selected_item_id_list, 
+                quantity: quantity,
+                table: "<?php echo $table ?>",
+                type: "<?php echo $type ?>",
+                order_no: $("#Order_no").val()
+            },
+            success: function(html) {
+                $(".summary_box").html(html);
+                $('#change-quantity-component-modal .close').trigger('click');
+            }
+        });
+    });
 
 </script>
