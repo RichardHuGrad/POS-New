@@ -599,7 +599,7 @@ echo $this->fetch('script');
 	        			selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
 	        			price = '<?php echo $value['price'] ?>',
 	        			extras_amount = '<?php echo $value['extras_amount'] ?>',
-	        			quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
+	        			quantity = '<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>',
 	        			order_item_id = '<?php echo $value['id'] ?>',
 	        			state = "keep",
 	        			shared_suborders = null,

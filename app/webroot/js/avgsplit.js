@@ -1,6 +1,16 @@
 
 
-
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
 
 function areOrdersSame(order1, order2) {
 	var same = false;
@@ -820,22 +830,33 @@ var OrderComponent = function(order, cfg) {
 
 var OrderItemComponent = function(item, cfg) {
 
+	var template = `
+		<li class="order-item" id="{0}">
+			<div class="order-item-qty col-md-1 col-sm-1 col-xs-1">{1}</div>
+			<div class="col-md-8 col-sm-8 col-xs-7">
+				<div class="col-md-12 col-sm-12 col-xs-12">{2}</div>
+				<div class="col-md-12 col-sm-12 col-xs-12 os-extra">{3}</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-4 os-price">{4}</div>
+		</li>
+	`;
+
 	var cfg = cfg || {};
 	var item_id = item["item_id"];
 
-	var orderItemComponent = $('<li class="order-item" id="order-item-' + item_id + '">');
-	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
-	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
-	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
+	var orderItemComponent = $(template.format('order-item-' + item_id, item['quantity'], item["name_en"] + '\n' + item["name_zh"], item["selected_extras_name"], '$' + item["price"]))
+
+	// var orderItemComponent = $('<li class="order-item" id="order-item-' + item_id + '">');
+	// var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
+	// var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
+	// var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
 	
 	// TODO merge nameDiv and extraDiv
 	// var nameAndExtraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">');
 
-	if (item["selected_extras_name"] != "") {
-		orderItemComponent.append(nameDiv).append(priceDiv).append(extraDiv);
-	} else {
-		orderItemComponent.append(nameDiv).append(priceDiv);
-	}
+	if (item["selected_extras_name"] == "") {
+		orderItemComponent.find('.os-extra').hide();
+	} 
 
 	// orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
