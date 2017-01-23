@@ -149,31 +149,16 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
  -->
 
 <script id="item-component" type="text/template">
-    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{7}'>
-        <div class="col-md-8 col-sm-8 col-xs-7 item-name">{4}
+    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{4}'>
+        <div class="col-md-1 col-sm-1 col-xs-1 item-quantity">{5}</div>
+        <div class="col-md-9 col-sm-9 col-xs-8">
+            <div class="col-md-12 col-sm-12 col-xs-12 item-name">{6}</div>
+            <div class="col-md-12 col-sm-12 col-xs-12 item-selected-extra">{8}</div>
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-5 item-price">{5}</div>
-        <div class="col-md-8 col-sm-8 col-xs-7 item-selected-extra">{6}</div>
+        <div class="col-md-2 col-sm-2 col-xs-3 item-price">{7}</div>
     </li>
 </script>
 
-
-
-
-<script type="text/javascript">
-var orderStr = "";
-<?php for ($i=0;$i<count(@$Order_detail_print);$i++) {
-	if ($i == (count(@$Order_detail_print)-1)) {?>;
-	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';
-	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>';
-<?php } else { ?>
-	orderStr += '<?php echo implode("*",@$Order_detail_print[$i]['order_items']); ?>';
-	orderStr += '*' + '<?php echo @$Order_detail_print[$i]['categories']['printer']; ?>'+'#';
-<?php }; ?>
-
-	$('#Order_Item').val(orderStr);
-<?php } ?>
-</script>
 
 <script>
 
@@ -236,7 +221,7 @@ var orderStr = "";
                                 selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
                                 price = '<?php echo $value['price'] ?>',
                                 extras_amount = '<?php echo $value['extras_amount'] ?>',
-                                quantity = '<?php echo $value['qty'] > 1 ? "x" . $value['qty'] : "" ?>',
+                                quantity = '<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>',
                                 order_item_id = '<?php echo $value['id'] ?>',
                                 state = "keep", 
                                 shared_suborders = null,
@@ -264,7 +249,7 @@ var orderStr = "";
         var ItemComponent = (function() {
 
             var createDom = function(item) {
-                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name, item.is_print));
+                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.quantity, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
                 if (item.is_print == 'Y') {
                     itemComponent.addClass('is-print');
                 }
