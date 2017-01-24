@@ -127,6 +127,39 @@ class SplitController extends AppController {
 
     }
 
+
+    public function setCookie() {
+        $this->layout = false;
+        $this->autoRender = NULL;   
+        $this->loadModel('Cookie');
+
+
+        $key = $this->data['key'];
+        $value = $this->data['value'];
+
+        $this->Cookie->setCookie($key, $value);
+
+    }
+
+    public function getCookie() {
+        $this->layout = false;
+        $this->autoRender = NULL;   
+        $this->loadModel('Cookie');
+
+        $key = $this->data['key'];
+
+        return $this->Cookie->getCookie($key);
+    }
+
+    public function removeCookie() {
+        $this->layout = false;
+        $this->autoRender = NULL;   
+        $this->loadModel('Cookie');
+
+        $key = $this->data['key'];
+
+        $this->Cookie->removeCookie($key);
+    }
 }
 
 

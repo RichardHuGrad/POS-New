@@ -186,6 +186,78 @@ echo $this->fetch('script');
 
 	$('#customer-select-alert').hide();
 
+
+	var KVStorage = (function() {
+
+		function set(key, value, cfg={}) {
+			Cookies.set(key, value, cfg);
+			// $.ajax({
+			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'setCookie')); ?>",
+	  //           method: "post",
+	  //           data: {
+	  //           	key: key, 
+	  //           	value: JSON.stringify(value)
+	  //           },
+	  //           async: false,
+	  //           success: function (data) {
+
+	  //           }
+			// })
+
+			// return false;+
+		}
+
+		function get(key) {
+
+			// $.ajax({
+			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
+	  //           method: "post",
+	  //           data: {
+	  //           	key: key
+	  //           },
+	  //           async: false,
+	  //           success: function (value) {
+	  //           	// console.log(JSON.parse(value));
+	  //           	// console.log(JSON.parse(value));
+
+	  //           	if (value) {
+	  //           		return JSON.parse(value);
+	  //           	} else {
+	  //           		return {};
+	  //           	}
+	            	
+	  //           }
+			// })
+
+			// return false;
+			return Cookies.getJSON(key);
+		}
+
+		function remove(key, cfg={}) {
+			// $.ajax({
+			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'removeCookie')); ?>",
+	  //           method: "post",
+	  //           data: {
+	  //           	key: key
+	  //           },
+	  //           async: false,
+	  //           success: function (value) {
+
+	  //           }
+			// })
+
+			// return false;
+
+			Cookies.remove(key, cfg);
+		}
+
+		return {
+			set: set,
+			get: get,
+			remove: remove
+		}
+	})()
+
     //  initialize
 
     var current_person = '0';
@@ -203,51 +275,61 @@ echo $this->fetch('script');
 	var current_suborder = 0;
 	// order = loadOrder(order_no);
 
-	restoreFromCookie();
+	
 
 	// if order changed, delete all cookies
 
+	init();
 
-	if (isOrderChanged()) {
-		console.log('order has changed');
-		// alert("由于订单修改，请重新分菜");
+	function init() {
+		restoreFromCookie();
+		
+		if (isOrderChanged()) {
+			console.log('order has changed');
+			// alert("由于订单修改，请重新分菜");
 
-		if (suborders.isAnySuborderPaid()) {
-			var info = "由于订单改变，且有部分子单支付, 请重新录入已付款信息\n";
+			if (suborders.isAnySuborderPaid()) {
+				var info = "由于订单改变，且有部分子单支付, 请重新录入已付款信息\n";
 
-			for (var i = 0; i < suborders.suborders.length; ++i) {
-				var tempSuborderInfo = suborders.suborders[i].receiptInfo;
-				var tempInfo = "子单号:" + tempSuborderInfo.suborder_no + ",  总计:" + tempSuborderInfo.total + ", 实收 卡:" + tempSuborderInfo.received_card + " 现金:" + tempSuborderInfo.received_cash + " , 小费: " + tempSuborderInfo.tip_amount + ", 找零:" + tempSuborderInfo.change;
+				for (var i = 0; i < suborders.suborders.length; ++i) {
+					var tempSuborderInfo = suborders.suborders[i].receiptInfo;
+					var tempInfo = "子单号:" + tempSuborderInfo.suborder_no + ",  总计:" + tempSuborderInfo.total + ", 实收 卡:" + tempSuborderInfo.received_card + " 现金:" + tempSuborderInfo.received_cash + " , 小费: " + tempSuborderInfo.tip_amount + ", 找零:" + tempSuborderInfo.change;
 
-				var tempItemInfo = " 菜:";
-				for (var j = 0; j < tempSuborderInfo.items.length; ++j) {
-					tempItemInfo += tempSuborderInfo.items[j].name_zh;
-					tempItemInfo += ' ' + tempSuborderInfo.items[j].selected_extras_name;
+					var tempItemInfo = " 菜:";
+					for (var j = 0; j < tempSuborderInfo.items.length; ++j) {
+						tempItemInfo += tempSuborderInfo.items[j].name_zh;
+						tempItemInfo += ' ' + tempSuborderInfo.items[j].selected_extras_name;
+					}
+					tempInfo += tempItemInfo;
+
+					info += tempInfo + '\n';
 				}
-				tempInfo += tempItemInfo;
 
-				info += tempInfo + '\n';
+				$('#dangerous-notice').text(info);
+				$('#dangerous-notice').html($('#dangerous-notice').html().replace(/\n/g,'<br/>'));
 			}
 
-			$('#dangerous-notice').text(info);
-			$('#dangerous-notice').html($('#dangerous-notice').html().replace(/\n/g,'<br/>'));
+			order = loadOrder(order_no);
+			suborders = new Suborders();
+
+			KVStorage.remove(orderCookie, { path: '' });
+			KVStorage.remove(subordersCookie, { path: '' });
 		}
 
-		order = loadOrder(order_no);
-		suborders = new Suborders();
-
-		Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });
+		drawUI();
 	}
 
-	drawUI();
+	
 
+	
 
 	// construct suborders by order
-	function restoreFromCookie() {
+	function restoreFromCookie(orderObj, suborderObj) {
 
 		// check whether cookie exist
-		var tempOrder = Cookies.getJSON(orderCookie); 
+		var tempOrder = KVStorage.get(orderCookie); 
+		console.log('tempOrder');
+		console.log(tempOrder);
 
 		if (tempOrder != undefined) {
 			order = Order.fromJSON(tempOrder);
@@ -272,7 +354,7 @@ echo $this->fetch('script');
 			}
 		}
 
-		var tempSuborders = Cookies.getJSON(subordersCookie);
+		var tempSuborders = KVStorage.get(subordersCookie);
 		if (tempSuborders != undefined) {
 			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
 				var temp_no = tempSuborders.suborders[i].suborder_no;
@@ -285,16 +367,16 @@ echo $this->fetch('script');
 	}	
 
 	function deleteAllCookies () {
-		Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });
+		KVStorage.remove(orderCookie, { path: '' });
+		KVStorage.remove(subordersCookie, { path: '' });
 	}
 
 
 	function persistentOrder(callback) {
-		Cookies.remove(orderCookie, { path: '' });
-		Cookies.remove(subordersCookie, { path: '' });
-		Cookies.set(orderCookie, order, { expires: 3, path: '' });
-		Cookies.set(subordersCookie, suborders, { expires: 3, path: '' });
+		KVStorage.remove(orderCookie, { path: '' });
+		KVStorage.remove(subordersCookie, { path: '' });
+		KVStorage.set(orderCookie, order, { expires: 3, path: '' });
+		KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
 		// Cookies.set(discountCookie, discount);
 
 		if (typeof callback === "function") {
@@ -571,6 +653,7 @@ echo $this->fetch('script');
 				} else if (fix_discount != 0) {
 					tempOrder.discount = {"type": "fixed", "value": fix_discount}
 				}
+				var cnt = 0;
 			<?php
 
 			    $i = 0;
@@ -597,7 +680,7 @@ echo $this->fetch('script');
 
 	        		for (var i = 0; i < qty; ++i) {
 	        			var temp_item = new Item(
-		        			item_id = '<?php echo $i ?>',
+		        			item_id = cnt++,
 		        			image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
 		        			name_en = '<?php echo $value['name_en']; ?>',
 		        			name_zh = '<?php echo $value['name_xh']; ?>',
@@ -615,8 +698,6 @@ echo $this->fetch('script');
 	                        is_print = '<?php echo $value['is_print']?>');
 
 		        		tempOrder.addItem(temp_item);
-
-						<?php $i++; ?>
 	        		}
 
 	        		
