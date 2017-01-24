@@ -534,7 +534,7 @@ class HomesController extends AppController {
             array_push($extra_categories, $category['extrascategories']);
         }
 
-        print_r ($Order_detail);
+        // print_r ($Order_detail);
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);
