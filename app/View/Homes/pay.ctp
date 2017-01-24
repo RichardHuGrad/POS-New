@@ -601,37 +601,33 @@ if (!empty($Order_detail['OrderItem'])) {
 
             var card_extra_tip = 0;
 
+            var amount = cash_val + card_val;
+
+            $(".received_price").html("$" + amount.toFixed(2));
+            $(".received_price").attr('amount', amount.toFixed(2));
 
 
             if (card_val >= total_price) {
-                $(".received_price").html("$" + total_price.toFixed(2));
-
+                
                 card_extra_tip = card_val - total_price;
                 tip += card_extra_tip;
                 
-                if (cash_val > 0) {
+                $(".change_price_txt").html("Change 找零");
+                $(".change_price").html("$" + cash_val.toFixed(2));
+
+
+            } else { // card_val < total_price
+
+                $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
+                $(".change_price").attr('amount', (amount - total_price).toFixed(2));
+
+                if (amount < total_price) {
+                    $(".change_price_txt").html("Remaining 其余");
+                } else { // amount >= total_price
                     $(".change_price_txt").html("Change 找零");
-                    $(".change_price").html("$" + cash_val.toFixed(2));
-                }
-
-                // $(".tip_price").html("$" + tip.toFixed(2));
-            } else {
-                amount = cash_val + card_val;
-                if (amount) {
-                    $(".received_price").html("$" + amount.toFixed(2));
-                    $(".received_price").attr('amount', amount.toFixed(2));
-                    $(".change_price").html("$" + (amount - total_price).toFixed(2));
-                    $(".change_price").attr('amount', (amount - total_price).toFixed(2));
-
-                    if ((amount - total_price) < 0) {
-                        $(".change_price_txt").html("Remaining 其余");
-                        $(".change_price").html("$" + (total_price - amount).toFixed(2));
-                    } else {
-                        $(".change_price_txt").html("Change 找零");
-                    }
-
                 }
             }
+
             $(".tip_price").html("$" + tip.toFixed(2));
         }
 
@@ -667,7 +663,7 @@ if (!empty($Order_detail['OrderItem'])) {
             var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
 
 
-            return recalculateAmount(cash_val, card_val, tip_val, total_price);
+            recalculateAmount(cash_val, card_val, tip_val, total_price);
             
         })
 
@@ -697,7 +693,7 @@ if (!empty($Order_detail['OrderItem'])) {
             var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
             var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
 
-            return recalculateAmount(cash_val, card_val, tip_val, total_price);
+            recalculateAmount(cash_val, card_val, tip_val, total_price);
 
             $("#screen").attr('buffer', 0);
             $("#screen").val("");

@@ -454,7 +454,7 @@ echo $this->fetch('script');
                 method: "post",
                 dataType: "json",
                 data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: $("#Order_id").text()},
-                success: function (html) {
+                success: function (res) {
 
                     $.ajax({
                         url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
@@ -466,8 +466,8 @@ echo $this->fetch('script');
                         }
                     })
 
-                    if (html.error) {
-                        alert(html.message);
+                    if (res.error) {
+                        alert(res.message);
                     }
                 },
                 beforeSend: function () {

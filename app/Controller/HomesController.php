@@ -1116,6 +1116,11 @@ class HomesController extends AppController {
             }
         }; //Modified by Yishou Liao @ Nov 18 2016 (for };)
 
+
+        // print_r($data);
+        $this->loadModel('Order');
+        $this->Order->updateBillInfo($order_id);
+
         echo json_encode($response);
     }
 
@@ -1182,6 +1187,9 @@ class HomesController extends AppController {
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
         //End
         
+        $this->loadModel('Order');
+        $this->Order->updateBillInfo($order_id);
+
         $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
         // $this->render('summarypanel');
     }
