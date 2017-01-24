@@ -539,7 +539,7 @@ echo $this->fetch('script');
                 url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: $("#Order_no").val()},
+                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: $("#Order_id").text()},
                 success: function (html) {
                     // if (html.error) {
                     //     alert(html.message);

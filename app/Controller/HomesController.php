@@ -942,8 +942,9 @@ class HomesController extends AppController {
         //End
         // get all params
         // $order_id = $this->data['order_id'];
-        $order_no = $this->data['order_no'];
-        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        // $order_no = $this->data['order_no'];
+        // $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $order_id = $this->data['order_id'];
         $mainorder_id = isset($this->data['mainorder_id']) ? $this->data['mainorder_id'] : $order_id;
         $fix_discount = $this->data['fix_discount'];
         $percent_discount = $this->data['discount_percent'];

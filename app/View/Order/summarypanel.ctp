@@ -1,6 +1,7 @@
 <?php 
     echo $this->Html->css('summarypanel.css');
 ?>
+<div id="Order_id" style="display:none"><?php echo $Order_detail['Order']['id']; ?></div>
 
  <div class="clearfix marginB15 cashierbox" style="display:none">
     <div class="pull-left marginR5">
