@@ -167,6 +167,13 @@ class HomesController extends AppController {
                 )
         );
 
+        $orders_total = $this->Order->find("list", array(
+            'fields' => array('Order.order_no', 'Order.total'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => false
+                )
+        );
+
         // get all order times.
         $orders_time = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.created', 'Order.table_no'),
@@ -181,7 +188,9 @@ class HomesController extends AppController {
             'V' => 'notpaidwrap',
         );
 
-        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no', 'orders_time','admin_passwd'));
+        // print_r($orders_total);
+
+        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no', 'orders_time', 'orders_total','admin_passwd'));
     }
 
     public function allorders() {

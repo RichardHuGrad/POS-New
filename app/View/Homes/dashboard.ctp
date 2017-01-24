@@ -229,13 +229,21 @@
                                 <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
                                     <div class="number-txt for-dine">Dine<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                    
-                                    <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+                                    <!-- <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                     	<?php
                                 	 	if(!@$dinein_tables_status[$i]) 
                                     		echo "&nbsp;";
                                 		else
                                 			echo @$orders_no[$i]['D'];
                                     	?>
+                                    </div> -->
+                                    <div class="order_total_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
+                                        <?php
+                                        if(!@$dinein_tables_status[$i]) 
+                                            echo "&nbsp;";
+                                        else
+                                            echo '$' . @round($orders_total[$orders_no[$i]['D']], 2);
+                                        ?>
                                     </div>
                                     <div class="txt12 text-center <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php if(@$dinein_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['D']?date("H:i", strtotime(@$orders_time[$i]['D'])):"" ?><?php }?>
                                 </div>
