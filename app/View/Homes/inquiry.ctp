@@ -88,7 +88,7 @@ $(document).ready(function(){
       return false;
 
     var digit =  parseInt($(this).html());
-    for(i = 1; i <= 5; i++) {
+    for(i = 1; i <= 9; i++) {
       if(!$(".order"+i).val()) {
         $(".order"+i).val(digit);
         $(".order"+(i+1)).focus();

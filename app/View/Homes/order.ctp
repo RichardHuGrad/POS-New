@@ -297,8 +297,6 @@ echo $this->fetch('script');
       };
     }
 
-    var Order_Item_Printer = Array();
-
 
     $(".add_items").on("click", function () {
         var item_id = $(this).attr("alt");
@@ -316,13 +314,6 @@ echo $this->fetch('script');
                 $(".products-panel").removeClass('load1 csspinner');
 
                 $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
-
-                
-
-                // if ($("#show_extras_flag").val() ==  true) {
-                //     $(".dropdown-toggle").trigger("click");
-                // }
-
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
@@ -402,75 +393,6 @@ echo $this->fetch('script');
         }); 
     });
 	
-	//Modified by Yishou Liao @ Nov 10 2016
-	// $(document).on("click", ".clearbtn", function () {
-	// 	var item_id = $(this).attr("alt");
-	// 	$("#ext_memo"+item_id).val("");
-	// });
-	// $(document).on("click", "#extnobtn", function () {
-	// 	var item_id = $(this).attr("alt");
-	// 	$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"No ");
-	// });
-	// $(document).on("click", "#extmorebtn", function () {
-	// 	var item_id = $(this).attr("alt");
-	// 	$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"More ");
-	// });
-	// $(document).on("click", "#extlessbtn", function () {
-	// 	var item_id = $(this).attr("alt");
-	// 	$("#ext_memo"+item_id).val($("#ext_memo"+item_id).val()+"Less ");
-	// });
-	//End
-
-  //   $(document).on("click", ".savebtn", function () {
-  //       var id = $(this).attr("alt");
-  //       var message = $("#Message").val();
-  //       var array = new Array();
-
-  //       // get all selected extras items of menu
-  //       $("#block" + id + " div.extras_inner").each(function () {
-  //           array.push($(this).attr('alt'));
-  //       });
-  //       var input_value = array.toString();
-  //       var element = $(this).parent("ul.dropdown-menu");
-
-		// var var_inputext;
-		// if ($("#ext_memo").val()!=""){
-		// 	if (input_value!=""){
-		// 		var_inputext = input_value+","+$("#ext_memo"+id).val();
-		// 	}else{
-		// 		var_inputext = $("#ext_memo"+id).val();
-		// 	};
-		// }else{
-		// 	var_inputext = input_value;
-		// };
-  //       $.ajax({
-  //           url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_extras')); ?>",
-  //           method: "post",
-  //           data: {item_id: id, extras: var_inputext, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
-  //           success: function (html) {
-  //               $(".summary_box").html(html);
-  //               $(".products-panel").removeClass('load1 csspinner');
-  //               $(".clearfix.cart-wrap").removeClass("csspinner");
-
-  //               // Modified by Yishou Liao @ Oct 28 2016.
-  //               Order_Item_Printer = Array();
-		// 		// Modified by Yishou Liao @ Nov 16 2016.
-		// 		if ($('#Order_Item').val() != ""){
-	 //                var arrtmp = $('#Order_Item').val().split("#");
-		// 		};
-		// 		//End
-  //               for (var i = 0; i < arrtmp.length; i++) {
-  //                   Order_Item_Printer.push(arrtmp[i].split("*"));
-  //               };
-  //               //End.
-
-  //           },
-  //           beforeSend: function () {
-  //               element.addClass('load1 csspinner');
-  //           }
-  //       })
-  //   })
-
     $(document).ready(function () {
 
         $(".search-clear").click(function () {
@@ -502,14 +424,6 @@ echo $this->fetch('script');
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".products-panel").removeClass('load1 csspinner');
-
-                // Modified by Yishou Liao @ Nov 16 2016.
-				if ($('#Order_Item').val() != ""){
-	                var arrtmp = $('#Order_Item').val().split("#");
-					for (var i = 0; i < arrtmp.length; i++) {
-						Order_Item_Printer.push(arrtmp[i].split("*"));
-					};
-				};
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
@@ -541,24 +455,6 @@ echo $this->fetch('script');
                 dataType: "json",
                 data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: $("#Order_id").text()},
                 success: function (html) {
-                    // if (html.error) {
-                    //     alert(html.message);
-                    //     $(".discount_section").val("").removeAttr("disabled");
-                    //     $(".products-panel").removeClass('load1 csspinner');
-                    //     $(".summary_box").removeClass('load1 csspinner');
-                    //     return false;
-                    // } else {
-                    //     $.ajax({
-                    //         url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
-                    //         method: "post",
-                    //         success: function (html) {
-                    //             $(".summary_box").html(html);
-                    //             $(".products-panel").removeClass('load1 csspinner');
-                    //             $(".summary_box").removeClass('load1 csspinner');
-                    //         }
-                    //     })
-                    // }
-
 
                     $.ajax({
                         url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
@@ -659,9 +555,6 @@ echo $this->fetch('script');
         }
 
     });
-
-
-
 
 
     $('#take-out-btn').on('click', function() {
