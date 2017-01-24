@@ -550,13 +550,15 @@ echo $this->fetch('script');
         var discount_percent = $("#discount_percent").val();
         var promocode = $("#promocode").val();
 
+        var order_id = '<?php echo isset($Order_detail["Order"]["id"]) ? $Order_detail["Order"]["id"] : ""; ?>';
+
         if (fix_discount || discount_percent || promocode) {
             // apply promocode here
             $.ajax({
                 url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: '<?php echo $Order_detail["Order"]["id"]; ?>'},
+                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: order_id},
                 success: function (html) {
                     if (html.error) {
                         alert(html.message);
