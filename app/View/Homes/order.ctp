@@ -313,27 +313,10 @@ echo $this->fetch('script');
                 $(".summary_box").html(html);
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
 
-                /*$('.less-title').flowtype({
-                    // fontRatio : 15,
-                    // minimum: 500,
-                    minFont: 13,
-                    maxFont: 20
-                });*/
-
-
                 $(".products-panel").removeClass('load1 csspinner');
 
                 $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
- 
-                Order_Item_Printer = Array();
-                
-                if ($('#Order_Item').val() != ""){
-                    var arrtmp = $('#Order_Item').val().split("#");
-                }
 
-                for (var i = 0; i < arrtmp.length; i++) {
-                    Order_Item_Printer.push(arrtmp[i].split("*"));
-                }
                 
 
                 // if ($("#show_extras_flag").val() ==  true) {
@@ -550,32 +533,45 @@ echo $this->fetch('script');
         var discount_percent = $("#discount_percent").val();
         var promocode = $("#promocode").val();
 
-        var order_id = '<?php echo isset($Order_detail["Order"]["id"]) ? $Order_detail["Order"]["id"] : ""; ?>';
-
         if (fix_discount || discount_percent || promocode) {
             // apply promocode here
             $.ajax({
                 url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: order_id},
+                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: $("#Order_no").val()},
                 success: function (html) {
+                    // if (html.error) {
+                    //     alert(html.message);
+                    //     $(".discount_section").val("").removeAttr("disabled");
+                    //     $(".products-panel").removeClass('load1 csspinner');
+                    //     $(".summary_box").removeClass('load1 csspinner');
+                    //     return false;
+                    // } else {
+                    //     $.ajax({
+                    //         url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
+                    //         method: "post",
+                    //         success: function (html) {
+                    //             $(".summary_box").html(html);
+                    //             $(".products-panel").removeClass('load1 csspinner');
+                    //             $(".summary_box").removeClass('load1 csspinner');
+                    //         }
+                    //     })
+                    // }
+
+
+                    $.ajax({
+                        url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
+                        method: "post",
+                        success: function (html) {
+                            $(".summary_box").html(html);
+                            $(".products-panel").removeClass('load1 csspinner');
+                            $(".summary_box").removeClass('load1 csspinner');
+                        }
+                    })
+
                     if (html.error) {
                         alert(html.message);
-                        $(".discount_section").val("").removeAttr("disabled");
-                        $(".products-panel").removeClass('load1 csspinner');
-                        $(".summary_box").removeClass('load1 csspinner');
-                        return false;
-                    } else {
-                        $.ajax({
-                            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
-                            method: "post",
-                            success: function (html) {
-                                $(".summary_box").html(html);
-                                $(".products-panel").removeClass('load1 csspinner');
-                                $(".summary_box").removeClass('load1 csspinner');
-                            }
-                        })
                     }
                 },
                 beforeSend: function () {

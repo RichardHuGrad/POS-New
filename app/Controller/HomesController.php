@@ -534,7 +534,7 @@ class HomesController extends AppController {
             array_push($extra_categories, $category['extrascategories']);
         }
 
-        // print_r ($Order_detail);
+        print_r ($Order_detail);
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);
@@ -934,12 +934,16 @@ class HomesController extends AppController {
     public function add_discount() {
         $this->layout = false;
         $this->autoRender = NULL;
+
+        $this->loadModel('Order');
         //Modified by Yishou Liao @ Nov 19 2016
         $discount_type = -1;
         $discount_value = -1;
         //End
         // get all params
-        $order_id = $this->data['order_id'];
+        // $order_id = $this->data['order_id'];
+        $order_no = $this->data['order_no'];
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $mainorder_id = isset($this->data['mainorder_id']) ? $this->data['mainorder_id'] : $order_id;
         $fix_discount = $this->data['fix_discount'];
         $percent_discount = $this->data['discount_percent'];
@@ -957,7 +961,7 @@ class HomesController extends AppController {
             $order_id = $order_id_arr[$i];
             //End
             // get order details  
-            $this->loadModel('Order');
+            
             $Order_detail = $this->Order->find("first", array(
                 'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
                 'conditions' => array(
