@@ -117,7 +117,6 @@
 <?php } ?>
 
             <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
-            <div class="avoid-this text-center reprint_2"><button type="button" class="submitbtn">Print Kitchen 打印后厨单</button></div>
             <div class="order-summary">
                 <h3>Order Summary 订单摘要</h3>
                 <div class="order-summary-indent clearfix">
@@ -436,22 +435,6 @@ if (!empty($Order_detail['OrderItem'])) {
             }
         })
         //End.
-    });
-    $(document).on('click', '.reprint_2', function () {
-        //Print ele4 with custom options
-        $("#print_panel_2").print({
-            //Use Global styles
-            globalStyles: false,
-            //Add link with attrbute media=print
-            mediaPrint: true,
-            //Custom stylesheet
-            stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
-            //Print in a hidden iframe
-            iframe: false,
-            //Don't print this
-            noPrintSelector: ".avoid-this",
-            //Add this at top
-        });
     });
     $(document).ready(function () {
 

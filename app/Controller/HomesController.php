@@ -502,7 +502,7 @@ class HomesController extends AppController {
             'Order.order_type' => $type
         );
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.order_type'),
+            'fields' => array('Order.order_no', 'Order.order_type', 'Order.id'),
             'conditions' => $conditions,
             'recursive' => false
                 )
@@ -534,6 +534,7 @@ class HomesController extends AppController {
             array_push($extra_categories, $category['extrascategories']);
         }
 
+        // print_r ($Order_detail);
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);
@@ -1106,7 +1107,8 @@ class HomesController extends AppController {
 
     // remove items discount
     public function remove_discount() {
-
+        $this->layout = false;
+        $this->autoRender = NULL;
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -1167,7 +1169,7 @@ class HomesController extends AppController {
         //End
         
         $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
-        $this->render('summarypanel');
+        // $this->render('summarypanel');
     }
 
     //Modified by Yishou Liao @ Oct 13 2016.

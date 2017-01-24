@@ -556,7 +556,7 @@ echo $this->fetch('script');
                 url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: $("#pay").attr("alt")},
+                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: '<?php echo $Order_detail["Order"]["id"]; ?>'},
                 success: function (html) {
                     if (html.error) {
                         alert(html.message);
@@ -566,7 +566,7 @@ echo $this->fetch('script');
                         return false;
                     } else {
                         $.ajax({
-                            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'summarypanel', $table, $type)); ?>",
+                            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
                             method: "post",
                             success: function (html) {
                                 $(".summary_box").html(html);
@@ -599,6 +599,16 @@ echo $this->fetch('script');
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".summary_box").removeClass('load1 csspinner');
+
+                $.ajax({
+                    url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
+                    method: "post",
+                    success: function (html) {
+                        $(".summary_box").html(html);
+                        $(".products-panel").removeClass('load1 csspinner');
+                        $(".summary_box").removeClass('load1 csspinner');
+                    }
+                })
             },
             beforeSend: function () {
                 $(".summary_box").addClass('load1 csspinner');
