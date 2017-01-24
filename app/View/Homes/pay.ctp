@@ -170,7 +170,7 @@
                     <li class="clearfix">
                         <div class="row">
 	                        <!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total<?php 
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Subtotal<?php 
 							if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) { ?>小计(原价)<?php } else { ?> 小计 <?php } ?> </div>
 											<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php 
 							if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) {
@@ -267,7 +267,7 @@
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Total 总</div>
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="<?php echo $Order_detail['Order']['total']; ?>">$<?php echo number_format($Order_detail['Order']['total'], 2) ?></div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="<?php echo round($Order_detail['Order']['total'],2); ?>">$<?php echo number_format($Order_detail['Order']['total'], 2) ?></div>
                         </div>
                     </li>
 <?php
@@ -594,6 +594,48 @@ if (!empty($Order_detail['OrderItem'])) {
                 $("#screen").focus();
         })
 
+
+        function recalculateAmount(cash_val, card_val, tip, total_price) {
+
+            $("#tip_val").val(tip);
+
+            var card_extra_tip = 0;
+
+
+
+            if (card_val >= total_price) {
+                $(".received_price").html("$" + total_price.toFixed(2));
+
+                card_extra_tip = card_val - total_price;
+                tip += card_extra_tip;
+                
+                if (cash_val > 0) {
+                    $(".change_price_txt").html("Change 找零");
+                    $(".change_price").html("$" + cash_val.toFixed(2));
+                }
+
+                // $(".tip_price").html("$" + tip.toFixed(2));
+            } else {
+                amount = cash_val + card_val;
+                if (amount) {
+                    $(".received_price").html("$" + amount.toFixed(2));
+                    $(".received_price").attr('amount', amount.toFixed(2));
+                    $(".change_price").html("$" + (amount - total_price).toFixed(2));
+                    $(".change_price").attr('amount', (amount - total_price).toFixed(2));
+
+                    if ((amount - total_price) < 0) {
+                        $(".change_price_txt").html("Remaining 其余");
+                        $(".change_price").html("$" + (total_price - amount).toFixed(2));
+                    } else {
+                        $(".change_price_txt").html("Change 找零");
+                    }
+
+                }
+            }
+            $(".tip_price").html("$" + tip.toFixed(2));
+        }
+
+
         $("#Enter").click(function () {
             if (!$("#selected_card").val()) {
                 $.notify("Please select payment type card/cash.",  { 
@@ -617,30 +659,16 @@ if (!empty($Order_detail['OrderItem'])) {
             }
             if ($("#selected_card").val() == 'tip') {
                 $("#tip_val").val(amount.toFixed(2));
-                $(".tip_price").html("$" + amount.toFixed(2));
+                // $(".tip_price").html("$" + amount.toFixed(2));
             }
 
             var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
             var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+            var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
 
 
-            amount = cash_val + card_val;
-            if (amount) {
-                $(".received_price").html("$" + amount.toFixed(2));
-                $(".received_price").attr('amount', amount.toFixed(2));
-                $(".change_price").html("$" + (amount - total_price).toFixed(2));
-                $(".change_price").attr('amount', (amount - total_price).toFixed(2));
-
-                if ((amount - total_price) < 0) {
-                    $(".change_price_txt").html("Remaining 其余");
-                    $(".change_price").html("$" + (total_price - amount).toFixed(2));
-                } else {
-                    $(".change_price_txt").html("Change 找零");
-                }
-
-            } else {
-                return false;
-            }
+            return recalculateAmount(cash_val, card_val, tip_val, total_price);
+            
         })
 
         $("#rc1").click(function (E) {
@@ -652,58 +680,24 @@ if (!empty($Order_detail['OrderItem'])) {
             var selected_card = $("#selected_card").val();
             var total_price = parseFloat($(".total_price").attr("alt"));
             if (selected_card == 'cash') {
-                var amount = $("#cash_val").val();
-                $(".cash_price").html("Cash 现金: $00.00");
                 $("#cash_val").val(0);
-
-				var received_price = parseFloat($(".received_price").attr('amount'));
-				//Modified by Yishou Liao @ Dec 08 2016
-				if (typeof($(".received_price").attr('amount')) == "undefined") {
-					received_price = 0;
-				};
-				//End @ Dec 08 2016
-                var remaining = received_price - amount;
-
-                $(".received_price").html("$" + remaining.toFixed(2));
-                $(".received_price").attr('amount', remaining.toFixed(2));
-
-                if ((remaining - total_price) < 0) {
-                    $(".change_price_txt").html("Remaining 其余");
-                    $(".change_price").html("$" + (total_price - remaining).toFixed(2));
-                } else {
-                    $(".change_price_txt").html("Change 找零");
-                }
+                $(".cash_price").html("Cash 现金: $" + (0).toFixed(2));
             }
 
             if (selected_card == 'card') {
-                var amount = $("#card_val").val();
-                $(".card_price").html("Card 卡: $00.00");
                 $("#card_val").val(0);
-
-                var received_price = parseFloat($(".received_price").attr('amount'));
-				//Modified by Yishou Liao @ Dec 08 2016
-				if (typeof($(".received_price").attr('amount')) == "undefined") {
-					received_price = 0;
-				};
-				//End @ Dec 08 2016
-                var remaining = received_price - amount;
-
-                $(".received_price").html("$" + remaining.toFixed(2));
-                $(".received_price").attr('amount', remaining.toFixed(2));
-
-                if ((remaining - total_price) < 0) {
-                    $(".change_price_txt").html("Remaining 其余");
-                    $(".change_price").html("$" + (total_price - remaining).toFixed(2));
-                } else {
-                    $(".change_price_txt").html("Change 找零");
-                }
+                $(".card_price").html("Card 卡: $" + (0).toFixed(2));
+ 
             }
             if (selected_card == 'tip') {
-
-                $("#tip_val").val(0.00);
-                $(".tip_price").html("$0.00");
-
+                $("#tip_val").val(0);
             }
+
+            var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
+            var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+            var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
+
+            return recalculateAmount(cash_val, card_val, tip_val, total_price);
 
             $("#screen").attr('buffer', 0);
             $("#screen").val("");
