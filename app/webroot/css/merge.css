@@ -1,0 +1,7 @@
+.order-component {
+	margin-bottom: 20px;
+	border: 1px solid red;
+}
+.order-component li {
+	border-bottom: 1px solid red;
+}

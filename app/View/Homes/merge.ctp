@@ -23,7 +23,7 @@
     </div>
     <div class="order-wrap">
         <?php echo $this->Session->flash(); ?>
-        <div class="col-md-4 col-sm-4 col-xs-12 order-left">
+        <div class="col-md-3 col-sm-3 col-xs-12 order-left">
             <h2>Order 订单号 <?php
                 //Modified by Yishou Liao @ Oct 14 2016.
                 for ($i = 0; $i < count($Order_detail); $i++) {
@@ -113,7 +113,11 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
 
             </div>
         </div>
-        <div class="col-md-8 col-sm-8 col-xs-12 RIGHT-SECTION">
+        <div class="col-md-4 col-md-4 col-xs-12" id="mid-section">
+
+        </div>
+
+        <div class="col-md-5 col-sm-5 col-xs-12 RIGHT-SECTION">
             <div class="clearfix total-payment">
                 <ul>
                     <li class="clearfix">
@@ -126,85 +130,34 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                                 }; 
 							if($table_discount_value) { ?>小计(原价)<?php } else { ?> 小计 <?php } ?> </div>
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
-<?php
-//Modified by Yishou Liao @ Oct 14 2016.
-$subtotal = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $subtotal += $Order_detail[$i]['Order']['subtotal'];
-};
-echo number_format($subtotal, 2);
-//End.
-//End of Nov 25 2016
-?></div>
+                                <?php
+                                $subtotal = 0;
+                                for ($i = 0; $i < count($Order_detail); $i++) {
+                                    $subtotal += $Order_detail[$i]['Order']['subtotal'];
+                                };
+                                echo number_format($subtotal, 2);
+                                ?>
+                            </div>
 
                                 <?php
                                 //Modified by Yishou Liao @ Oct 14 2016.
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     if ($Order_detail[$i]['Order']['table_no'] == $table) {
                                         $table_status = $Order_detail[$i]['Order']['table_status'];
-                                        $table_discount_value = $Order_detail[$i]['Order']['discount_value'];
+                                        // $table_discount_value = $Order_detail[$i]['Order']['discount_value'];
                                     };
                                 };
-                                if ($table_status <> 'P' and ! $table_discount_value) {
+                                if ($table_status != 'P' and $table_discount_value == 0) {
                                     ?>
-                                <div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Discount 加入折扣</button></div>
                             <?php } //End.   ?>
                         </div>
                     </li>
 
-                            <?php
-//Modified by Yishou Liao @ Oct 14 2016.
-                            for ($i = 0; $i < count($Order_detail); $i++) {
-                                if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                    $table_discount_value = $Order_detail[$i]['Order']['discount_value'];
-                                };
-                            };
-                            if (!$table_discount_value) {
-//End.
-                                ?>
-                        <li class="clearfix discount_view" style="display:none;">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
-                                        <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">                                                    
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="discount_percent" style="font-size:11px;">Discount in %</label>
-                                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">                                                    
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="promocode" style="font-size:11px;">Promo Code</label>
-                                        <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">                                                    
-                                    </div>
-                                </div>
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="AdminTableSize" style="width:100%">&nbsp;</label>
-                                        <a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </li>
-<?php } ?>
-
-
-                                <?php
-                                //Modified by Yishou Liao @ Oct 14 2016.
-                                for ($i = 0; $i < count($Order_detail); $i++) {
-                                    if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                        $table_discount_value = $Order_detail[$i]['Order']['discount_value'];
-                                    };
-                                };
-                                if ($table_discount_value) {
-                                    //End.
-                                    ?>
+                    <?php
+                    if ($table_discount_value) {
+                        //End.
+                        ?>
                         <li class="clearfix">
                             <div class="row">
                                     <?php
@@ -234,15 +187,7 @@ echo number_format($subtotal, 2);
                         }
                         //End.
                         ?> 
-                                    <a aria-hidden="true" class="fa fa-times remove_discount" order_id="
-                                    <?php
-                                    for ($i = 0; $i < count($Order_detail); $i++) {
-                                        if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                            $order_id = $Order_detail[$i]['Order']['id'];
-                                        };
-                                    };
-                                    echo $order_id;
-                                    ?>" href="javascript:void(0)"></a>                       
+                                    
                                 </div>
 
                             </div>
@@ -255,16 +200,15 @@ echo number_format($subtotal, 2);
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">After Discount 打折后: </div>
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
 <?php
-//Modified by Yishou Liao @ Oct 14 2016.
-$subtotal = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $after_discount = max($Order_detail[$i]['Order']['subtotal'] - $Order_detail[$i]['Order']['discount_value'], 0);
 
-    $subtotal += $after_discount;
+$after_discount = 0;
+for ($i = 0; $i < count($Order_detail); $i++) {
+    $temp_after_discount = max($Order_detail[$i]['Order']['subtotal'] - $Order_detail[$i]['Order']['discount_value'], 0);
+
+    $after_discount += $temp_after_discount;
 };
-echo number_format($subtotal, 2);
-//End.
-//End of Nov 25 2016
+echo number_format($after_discount, 2);
+
 ?></div>
 </li>
 <!-- End -->
@@ -322,7 +266,7 @@ echo number_format($tax_amount, 2);
                         </div>
                     </li>
                     <?php
-//Modified by Yishou Liao @ Oct 14 2016.
+
                     for ($i = 0; $i < count($Order_detail); $i++) {
                         if ($Order_detail[$i]['Order']['table_no'] == $table) {
                             $table_status = $Order_detail[$i]['Order']['table_status'];
@@ -393,7 +337,7 @@ for ($i = 0; $i < count($Order_detail); $i++) {
         $table_status = $Order_detail[$i]['Order']['table_status'];
     };
 };
-if ($table_status <> 'P') {
+if ($table_status != 'P') {
 //End.
     ?>
                 <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13"></div>
@@ -436,91 +380,105 @@ if ($table_status <> 'P') {
 </div>
 
 <?php
+echo $this->Html->css(array('merge.css'));
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'notify.min.js'));
 echo $this->fetch('script');
 ?>
 
 <script>
+
+
+    if (!String.prototype.format) {
+      String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) { 
+          return typeof args[number] != 'undefined'
+            ? args[number]
+            : match
+          ;
+        });
+      };
+    }
+
             $(document).on('click', '.reprint', function () {
                     //Print ele4 with custom options
-
-            //Modified by Yishou Liao @ Oct 27 2016.
             var Order_print = new Array();
-            var oder_no = ""; 			<?php
-for ($i = 0; $i < count($Order_detail); $i++) {
-    ?>
+            var oder_no = ""; 			
+            <?php
+                for ($i = 0; $i < count($Order_detail); $i++) {
+                    ?>
 
-                oder_no += "<?php echo '#' . $Order_detail[$i]['Order']['order_no'] ?>" + " ";
-    <?php
-};
-//End.
-?>
+                                oder_no += "<?php echo '#' . $Order_detail[$i]['Order']['order_no'] ?>" + " ";
+                    <?php
+                };
+                //End.
+                ?>
             var y = 0;
-<?php
-for ($x = 0; $x < count($Order_detail); $x++) {//Modified by Yishou Liao @ Oct 16 2016.
-    if (!empty($Order_detail[$x]['OrderItem'])) {
-        ?>
-                    Order_print.push(Array());
-        <?php
-        foreach ($Order_detail[$x]['OrderItem'] as $key => $value) {
-            ?>
-                        Order_print[y].push('<?php echo implode("*", $value) . "*" . $Order_detail[$x]["Order"]["table_no"] . " BILL"; ?>'.split("*"));
-        <?php }; ?>
-                    y++;
-    <?php };
-}; ?>
+            <?php
+            for ($x = 0; $x < count($Order_detail); $x++) {//Modified by Yishou Liao @ Oct 16 2016.
+                if (!empty($Order_detail[$x]['OrderItem'])) {
+                    ?>
+                                Order_print.push(Array());
+                    <?php
+                    foreach ($Order_detail[$x]['OrderItem'] as $key => $value) {
+                        ?>
+                                    Order_print[y].push('<?php echo implode("*", $value) . "*" . $Order_detail[$x]["Order"]["table_no"] . " BILL"; ?>'.split("*"));
+                    <?php }; ?>
+                                y++;
+                <?php };
+            }; ?>
 
             <!--  Modified by Yishou Liao @ Nov 16 2016. -->
                     var   merge_str = '<?php
-echo " and ";
-for ($i = 0; $i < count($tablemerge); $i++) {
-    if ($i > 0) {
-        echo "#" . $tablemerge[$i] . " ";
-    };
-};
-echo "merge";
-?>'
-<!-- End. -- >
+                        echo " and ";
+                        for ($i = 0; $i < count($tablemerge); $i++) {
+                            if ($i > 0) {
+                                echo "#" . $tablemerge[$i] . " ";
+                            };
+                        };
+                        echo "merge";
+                        ?>'
+                        <!-- End. -- >
 
-                    var  subtotal  =  '<?php
-//Modified by Yishou Liao @ Oct 16 2016.
-$subtotal = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $subtotal += $Order_detail[$i]['Order']['subtotal'];
-};
-echo number_format($subtotal, 2);
-//End
-?>';
+                                            var  subtotal  =  '<?php
+                        //Modified by Yishou Liao @ Oct 16 2016.
+                        $subtotal = 0;
+                        for ($i = 0; $i < count($Order_detail); $i++) {
+                            $subtotal += $Order_detail[$i]['Order']['subtotal'];
+                        };
+                        echo number_format($subtotal, 2);
+                        //End
+                        ?>';
 
-//Modified by Yishou Liao @ Nov 29 2016
-                    var  discount  =  '<?php
-//Modified by Yishou Liao @ Oct 16 2016.
-$discount_value = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $discount_value += $Order_detail[$i]['Order']['discount_value'];
-};
-echo number_format($discount_value, 2);
-//End
-?>';
-//End
+                        //Modified by Yishou Liao @ Nov 29 2016
+                                            var  discount  =  '<?php
+                        //Modified by Yishou Liao @ Oct 16 2016.
+                        $discount_value = 0;
+                        for ($i = 0; $i < count($Order_detail); $i++) {
+                            $discount_value += $Order_detail[$i]['Order']['discount_value'];
+                        };
+                        echo number_format($discount_value, 2);
+                        //End
+                        ?>';
+                        //End
 
-                    var tax_amount = '<?php
-//Modified by Yishou Liao @ Oct 16 2016.
-$tax_amount = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
-};
-echo number_format($tax_amount, 2);
-//End.
-?>';
-                    var total = '<?php
-//Modified by Yishou Liao @ Oct 16 2016.
-$total = 0;
-for ($i = 0; $i < count($Order_detail); $i++) {
-    $total += $Order_detail[$i]['Order']['total'];
-};
-echo number_format($total, 2)
-?>';
+                                            var tax_amount = '<?php
+                        //Modified by Yishou Liao @ Oct 16 2016.
+                        $tax_amount = 0;
+                        for ($i = 0; $i < count($Order_detail); $i++) {
+                            $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
+                        };
+                        echo number_format($tax_amount, 2);
+                        //End.
+                        ?>';
+                                            var total = '<?php
+                        //Modified by Yishou Liao @ Oct 16 2016.
+                        $total = 0;
+                        for ($i = 0; $i < count($Order_detail); $i++) {
+                            $total += $Order_detail[$i]['Order']['total'];
+                        };
+                        echo number_format($total, 2)
+                        ?>';
                     //Modified by Yishou Liao @ Nov 08 2016.
                     $.ajax({
                     url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printMergeReceipt', (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
@@ -547,41 +505,45 @@ echo number_format($total, 2)
                     //End.
 
             });
+
+
                     $(document).on('click', '.reprint_2', function () {
-            //Print ele4 with custom options
-            $("#print_panel_2").print({
-            //Use Global styles
-            globalStyles: false,
-                    //Add link with attrbute media=print
-                    mediaPrint: true,
-                    //Custom stylesheet
-                    stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
-                    //Print in a hidden iframe
-                    iframe: false,
-                    //Don't print this
-                    noPrintSelector: ".avoid-this",
-                    //Add this at top
-            });
-            });
+                        //Print ele4 with custom options
+                        $("#print_panel_2").print({
+                        //Use Global styles
+                        globalStyles: false,
+                                //Add link with attrbute media=print
+                                mediaPrint: true,
+                                //Custom stylesheet
+                                stylesheet: "<?php echo Router::url('/', true) ?>css/styles.css",
+                                //Print in a hidden iframe
+                                iframe: false,
+                                //Don't print this
+                                noPrintSelector: ".avoid-this",
+                                //Add this at top
+                        });
+                        });
+
+
                     $(document).ready(function () {
-            $(".select_card").click(function () {
-            $(".select_card").removeClass("active")
-                    $(this).addClass("active")
-                    var type = $(this).attr("id");
-                    if (type == 'card') {
-            $("#cash").removeClass("active");
-                    var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
-                    $("#screen").attr('buffer', card_val);
-                    $("#screen").val($("#card_val").val());
-            } else if (type == 'cash') {
-            var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
-                    $("#screen").attr('buffer', cash_val);
-                    $("#screen").val($("#cash_val").val());
-            } else {
-            var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
-                    $("#screen").attr('buffer', tip_val);
-                    $("#screen").val($("#tip_val").val());
-            }
+                        $(".select_card").click(function () {
+                        $(".select_card").removeClass("active")
+                                $(this).addClass("active")
+                                var type = $(this).attr("id");
+                                if (type == 'card') {
+                        $("#cash").removeClass("active");
+                                var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
+                                $("#screen").attr('buffer', card_val);
+                                $("#screen").val($("#card_val").val());
+                        } else if (type == 'cash') {
+                        var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
+                                $("#screen").attr('buffer', cash_val);
+                                $("#screen").val($("#cash_val").val());
+                        } else {
+                        var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+                                $("#screen").attr('buffer', tip_val);
+                                $("#screen").val($("#tip_val").val());
+                        }
             $("#selected_card").val(type);
             })
                     $(".select_tip").click(function () {
@@ -790,105 +752,205 @@ echo number_format($total, 2)
                     });
                     //End.
 
-                    //Modified by Yishou Liao @ Oct 16 2016.
-                    $(document).on("click", "#apply-discount", function () {
-            var fix_discount = $("#fix_discount").val();
-                    var discount_percent = $("#discount_percent").val();
-                    var promocode = $("#promocode").val();
-                    if (fix_discount || discount_percent || promocode) {
-            // apply promocode here
-            $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
-                    method: "post",
-                    dataType: "json",
-                    data: {
-						fix_discount: fix_discount,
-						discount_percent: discount_percent,
-						promocode: promocode,
-//Modified by Yishou Liao @ Nov 18 2016
-						mainorder_id: "<?php
-                                        for ($i = 0; $i < count($Order_detail); $i++) {
-                                            if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                                $order_id = $Order_detail[$i]['Order']['id'];
-                                            };
-                                        };
-                                        echo $order_id;
-                                        ?>",
-                                        //End
-						order_id: "<?php
-                                    //Modified by Yishou Liao @ Nov 18 2016
-                                    $order_id = "";
-                                    for ($i = 0; $i < count($Order_detail); $i++) {
-                                        $order_id .= $Order_detail[$i]['Order']['id'].',';
-                                    };
-                                    $order_id = substr($order_id,0,strlen($order_id)-1);
-                                    echo $order_id;
-                                    //End
-                                    ?>",
-                    },
-                    success: function (html) {
-                    if (html.error) {
-                    // alert(html.message);
-                    $.notify(html.message, {
-                                position: "top center", 
-                                className:"warn"
-                            });
-                            $(".discount_section").val("").removeAttr("disabled");
-                            $(".RIGHT-SECTION").removeClass('load1 csspinner');
-                            return false;
+  
+   
+
+    });
+
+    
+
+
+    var OrderComponent = (function() {
+        var template = `
+            <ul class="order-component col-md-12 col-sm-12 col-xs-12 clearfix" id="order-component-id-{0}">
+                <li>Order No. 订单号 {1}</li>
+                <li>Table No. 桌号 {2}</li>
+                <li>Type 类型 {3}</li>
+                <li class="order-component-subtotal">Subtotal 小计 $ {4}</li>
+                <li class="order-component-discount"><div>Discount 折扣 $ {5}</div> <div class="order-component-discount-type">{6}</div></li>
+                <li class="order-component-after-discount">After Discount 打折后 $ {7}</li>
+                <li class="order-component-tax">Tax 税({8}%) $ {9}</li>
+                <li class="order-component-total">Total 总价 $ {10}</li>
+            </ul>
+        `;
+
+        var discountInputTemplate = `
+            <div id="discount-input-group={0}" data-id="{0}">
+                <label for="fix-discount-{0}">Fix Discount</label>
+                <input type="number" id="fix-discount-{0}">
+                <label for="percent-discount-{0}">Discount in %</label>
+                <input type="number" id="percent-discount-{0}">
+                <label for="promo-discount-{0}">Promo Code</label>
+                <input type="text" id="promo-discount-{0}">
+                <button class="btn btn-info apply-discount-btn" data-id="{0}">Apply</button>
+            </div>
+        `;
+
+        var addDiscountTemplate = `
+            <button class="add-discount-component btn btn-success" data-id="{0}">加入折扣</button>
+        `;
+
+        var removeDiscountTemplate = `
+            <button class="remove-discount-component btn btn-danger" data-id="{0}">删除折扣</button>
+        `;
+
+        var createDom = function(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total) {
+            if (percent_discount > 0) {
+                discount_type_str = "(" + percent_discount + "%)";
+            } else {
+                discount_type_str = "";
+            }
+            console.log(template.format(id, order_no, table_no, type, subtotal, discount_value, discount_type_str, after_discount, tax_rate, tax_amount, total));
+
+            var orderComponent = $(template.format(id, order_no, table_no, type, subtotal, discount_value, discount_type_str, after_discount, tax_rate, tax_amount, total));
+            var discountInputGroup = $(discountInputTemplate.format(id));
+            var addDiscountBtn = $(addDiscountTemplate.format(id));
+            var removeDiscountBtn = $(removeDiscountTemplate.format(id));
+
+            orderComponent.append(addDiscountBtn).append(removeDiscountBtn).append(discountInputGroup);
+
+            addDiscountBtn.on('click', function() {
+                // $(this).hide();
+                discountInputGroup.toggle();
+            })
+
+            // discountInputGroup.on()
+
+            discountInputGroup.find('input').each(function() {
+                $(this).on('keyup', function() {
+                    var val = $(this).val();
+
+                    if (val != '') {
+                        discountInputGroup.find('input').not($(this)).prop('disabled', true)
                     } else {
-                    window.location.reload();
+                        discountInputGroup.find('input').prop('disabled', false);
                     }
-                    },
-                    beforeSend: function () {
-                    $(".RIGHT-SECTION").addClass('load1 csspinner');
-                    }
-            })
-            } else {
-                $.notify("Please add discount first.", {
-                                position: "top center", 
-                                className:"warn"
-                            });
-            // alert("Please add discount first.");
-                    return false;
-            }
-            })
-                    //End.
-                    $(document).on("keyup", ".discount_section", function () {
-            if ($(this).val()) {
-            $(".discount_section").attr("disabled", "disabled");
-                    $(this).removeAttr("disabled");
-            } else {
-            $(".discount_section").removeAttr("disabled");
-            }
-            })
-                    //Modified by Yishou @ Oct 16 2016.
-                    $(document).on('click', ".remove_discount", function () {
-            var order_id = "<?php
-                            //Modified by Yishou Liao @ Nov 18 2016
-                            $order_id = "";
-                            for ($i = 0; $i < count($Order_detail); $i++) {
-                            	$order_id .= $Order_detail[$i]['Order']['id'] . ',';
-                            };
-                            echo $order_id;
-                            //End
-                            ?>";
-                    var message = $("#Message").val();
+                });
+                
+            });
+
+            discountInputGroup.find('.apply-discount-btn').on('click', function() {
+                var fix_discount = $("#fix-discount-" + id).val();
+                var discount_percent = $("#percent-discount-" + id).val();
+                var promocode = $("#promo-discount-" + id).val();
+                console.log("#promo-discount-" + id);
+                console.log(fix_discount);
+
+                if (fix_discount || discount_percent || promocode) {
+                    // apply promocode here
                     $.ajax({
-                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'remove_discount')); ?>",
-                            method: "post",
-    data: {order_id: order_id},
-                success: function (html) {
-                    window.location.reload();
-                },
-                beforeSend: function () {
-                    $(".RIGHT-SECTION").addClass('load1 csspinner');
+                        url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
+                        method: "post",
+                        dataType: "json",
+                        data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: order_no},
+                        success: function (res) {
+
+                            if (res.error) {
+                                alert(res.message);
+                            } else {
+                                window.location.reload();
+                            }
+                        }
+                    })
+
+
+                } else {
+                    alert("Please add discount first.");
+                    return false;
                 }
             });
+
+            removeDiscountBtn.on('click', function() {
+                $.ajax({
+                    url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'removeDiscount')); ?>",
+                    method: "post",
+                    data: {order_no:  order_no},
+                    success: function (html) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+
+            if (discount_value == 0) {
+                orderComponent.find('.order-component-discount').hide();
+                orderComponent.find('.order-component-after-discount').hide();
+                removeDiscountBtn.hide();
+                discountInputGroup.hide();
+            } else {
+                discountInputGroup.hide();
+                addDiscountBtn.hide();
+            }
+
+
+
+            return orderComponent
+        }
+
+        var bindEvent = function() {
+
+        }
+
+        var init = function(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total) {
+            return createDom(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total);
+        }
+
+        return {
+            init: init
+        }
+    })();
+
+
+
+
+    function loadOrders() {
+        var order_ids = [];
+        <?php 
+            foreach ($order_id_merge as $o) {
+        ?>
+                order_ids.push(parseInt('<?php echo $o?>'));
+        <?php
+            }
+         ?>
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'getOrdersAmount')); ?>",
+            method: "post",
+            data: {order_ids: order_ids},
+            success: function (json) {
+                var orders = JSON.parse(json);
+                console.log(orders);
+
+                $('#mid-section').empty();
+
+                for (var i = 0; i < orders.length; ++i) {
+                    var order_no = orders[i]['order_no'];
+                    var table_no = orders[i]['table_no'];
+                    var type = orders[i]['order_type'];
+                    var id = orders[i]['id'];
+                    var subtotal = round2(parseFloat(orders[i]['subtotal']));
+                    var total = round2(parseFloat(orders[i]['total']));
+                    var fix_discount = round2(orders[i]['fix_discount'] ? orders[i]['fix_discount'] : 0);
+                    var discount_value = round2(orders[i]['discount_value'] ? orders[i]['discount_value']  : 0);
+                    var percent_discount = round2(orders[i]['percent_discount'] ? orders[i]['percent_discount'] : 0);
+                    
+                    var after_discount = round2(subtotal - discount_value);
+                    var tax_rate = parseFloat(orders[i]['tax']);
+                    var tax_amount = round2(parseFloat(orders[i]['tax_amount']));
+
+                    var orderComponent = OrderComponent.init(id, order_no, table_no, type,subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total);
+
+                    $('#mid-section').append(orderComponent);
+                }
+                
+            }
         });
-        //End.
-        $(document).on('click', ".add-discount", function () {
-            $(".discount_view").toggle();
-        });
-    });
+    }
+
+    loadOrders();
+
+    function round2(number) {
+        return Math.round(number * 100) / 100
+    }
+    
 </script>
