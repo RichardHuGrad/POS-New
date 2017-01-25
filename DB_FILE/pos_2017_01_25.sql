@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD COLUMN `after_discount` float DEFAULT 0;

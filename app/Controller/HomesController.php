@@ -543,6 +543,11 @@ class HomesController extends AppController {
             array_push($extra_categories, $category['extrascategories']);
         }
 
+
+        if (!empty($Order_detail['Order']['id'])) {
+            $this->Order->updateBillInfo($Order_detail['Order']['id']);
+        }
+        // $this->Order->updateBillInfo($)
         // print_r ($Order_detail);
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 

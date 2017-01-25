@@ -450,10 +450,10 @@ echo $this->fetch('script');
         if (fix_discount || discount_percent || promocode) {
             // apply promocode here
             $.ajax({
-                url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
+                url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: $("#Order_id").text()},
+                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: $("#Order_no").val()},
                 success: function (res) {
 
                     $.ajax({
@@ -484,12 +484,11 @@ echo $this->fetch('script');
     })
 
     $(document).on('click', ".remove_discount", function () {
-        var order_id = $(this).attr("order_id");
         var message = $("#Message").val();
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'remove_discount')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'removeDiscount')); ?>",
             method: "post",
-            data: {order_id: order_id},
+            data: {order_no:  $("#Order_no").val()},
             success: function (html) {
                 $(".summary_box").html(html);
                 $(".summary_box").removeClass('load1 csspinner');

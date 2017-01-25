@@ -90,10 +90,13 @@ class Order extends AppModel {
 
         $after_discount = $data['Order']['subtotal'] - $data['Order']['discount_value'];
 
+        $after_discount = max(0, $after_discount);
+        $data['Order']['after_discount'] = $after_discount;
+
         // tax should be after discount
         $data['Order']['tax_amount'] = $after_discount * $data['Order']['tax'] / 100;
 
-        $data['Order']['total'] = $data['Order']['subtotal'] - $data['Order']['discount_value'] + $data['Order']['tax_amount'];
+        $data['Order']['total'] = $after_discount + $data['Order']['tax_amount'];
 
         $this->save($data, false);
     } 

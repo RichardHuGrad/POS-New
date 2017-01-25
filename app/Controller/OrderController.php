@@ -780,7 +780,7 @@ class OrderController extends AppController {
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.after_discount', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
                 'Order.table_no' => $table,
                 'Order.is_completed' => 'N',
