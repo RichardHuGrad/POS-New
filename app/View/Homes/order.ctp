@@ -308,15 +308,9 @@ echo $this->fetch('script');
             data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
                 // console.log(html);
-                $(".summary_box").html(html);
+                renderOrder();
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
-
-                $(".products-panel").removeClass('load1 csspinner');
-
                 $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
-            },
-            beforeSend: function () {
-                $(".products-panel").addClass('load1 csspinner');
             }
         });
     });
@@ -334,8 +328,7 @@ echo $this->fetch('script');
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>", order_no: $("#Order_no").val()},
             success: function(html) {
-                $(".summary_box").html(html);
-
+                renderOrder();
             }
         });
 
@@ -388,7 +381,8 @@ echo $this->fetch('script');
                 table: '<?php echo $table ?>',
             },
             success: function(html) {
-                $(".summary_box").html(html);
+                // $(".summary_box").html(html);
+                renderOrder();
             }
         }); 
     });
@@ -417,18 +411,7 @@ echo $this->fetch('script');
             });
         });
 
-        $.ajax({
-            // async: false, 
-            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
-            method: "post",
-            success: function (html) {
-                $(".summary_box").html(html);
-                $(".products-panel").removeClass('load1 csspinner');
-            },
-            beforeSend: function () {
-                $(".products-panel").addClass('load1 csspinner');
-            }
-        })
+        renderOrder();
     });
 
     $(document).on("keyup", ".discount_section", function () {
@@ -455,24 +438,11 @@ echo $this->fetch('script');
                 dataType: "json",
                 data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: $("#Order_no").val()},
                 success: function (res) {
-
-                    $.ajax({
-                        url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
-                        method: "post",
-                        success: function (html) {
-                            $(".summary_box").html(html);
-                            $(".products-panel").removeClass('load1 csspinner');
-                            $(".summary_box").removeClass('load1 csspinner');
-                        }
-                    })
+                    renderOrder();
 
                     if (res.error) {
                         alert(res.message);
                     }
-                },
-                beforeSend: function () {
-                    $(".products-panel").addClass('load1 csspinner');
-                    $(".summary_box").addClass('load1 csspinner');
                 }
             })
 
@@ -490,21 +460,7 @@ echo $this->fetch('script');
             method: "post",
             data: {order_no:  $("#Order_no").val()},
             success: function (html) {
-                $(".summary_box").html(html);
-                $(".summary_box").removeClass('load1 csspinner');
-
-                $.ajax({
-                    url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
-                    method: "post",
-                    success: function (html) {
-                        $(".summary_box").html(html);
-                        $(".products-panel").removeClass('load1 csspinner');
-                        $(".summary_box").removeClass('load1 csspinner');
-                    }
-                })
-            },
-            beforeSend: function () {
-                $(".summary_box").addClass('load1 csspinner');
+                renderOrder();
             }
         })
     })
@@ -569,8 +525,7 @@ echo $this->fetch('script');
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
-                $(".summary_box").html(html);
-                // $(".summary_box").removeClass('load1 csspinner');
+                renderOrder();
             },
         });
     });
@@ -946,7 +901,7 @@ echo $this->fetch('script');
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (html) {
-                $(".summary_box").html(html);
+                renderOrder();
                 $('#taste-component-modal .close').trigger('click');
             }
         });
@@ -1009,7 +964,7 @@ echo $this->fetch('script');
             method: "post",
             data: {selected_item_id: selected_item_id, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function(html) {
-                $(".summary_box").html(html);
+                renderOrder();
                 $('.modal-header .close').trigger('click');
             }
         })
@@ -1091,7 +1046,8 @@ echo $this->fetch('script');
                 order_no: $("#Order_no").val()
             },
             success: function(html) {
-                $(".summary_box").html(html);
+                // $(".summary_box").html(html);
+                renderOrder();
                 $('#change-price-component-modal .close').trigger('click');
             }
         });
@@ -1115,7 +1071,8 @@ echo $this->fetch('script');
                 order_no: $("#Order_no").val()
             },
             success: function(html) {
-                $(".summary_box").html(html);
+                // $(".summary_box").html(html);
+                renderOrder();
             }
         });
     });
@@ -1153,10 +1110,23 @@ echo $this->fetch('script');
                 order_no: $("#Order_no").val()
             },
             success: function(html) {
-                $(".summary_box").html(html);
+                // $(".summary_box").html(html);
                 $('#change-quantity-component-modal .close').trigger('click');
+                renderOrder();
             }
         });
     });
+
+
+    function renderOrder() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
+            method: "post",
+            success: function(html) {
+                $(".summary_box").html(html);
+                $('#change-quantity-component-modal .close').trigger('click');
+            }
+        })
+    }
 
 </script>

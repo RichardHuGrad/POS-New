@@ -176,14 +176,6 @@ class OrderController extends AppController {
         }
 
 
-        $all_extras = $this->Order->query($query_str);
-        $extras = array();
-        foreach ($all_extras as $exts){
-            array_push($extras,$exts['extras']);
-        }
-        // print_r($all_extras);
-        // print_r($extras);
-
         // print_r($Order_detail['Order']);
 
         // add items to order items db table
@@ -199,41 +191,10 @@ class OrderController extends AppController {
                 'conditions' => array('Cousine.id' => $item_id)
             ))['Cousine']['comb_num'];
         
-        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1, $comb_id);
+        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], $tax_rate, $tax_amount, 1, $comb_id);
 
 
         $this->Order->updateBillInfo($order_id);
-
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $restaurant_id,
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $restaurant_id . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-        
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        // print_r($data);
-        // print_r($Order_detail);
-        // print_r ($Order_detail_print);
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','show_extras_flag')); //Modified by Yishou Liao @ Dec 13 2016.
-        $this->render('summarypanel');
-
     }
 
 
@@ -262,6 +223,7 @@ class OrderController extends AppController {
     public function removeitem() {
         
         $this->layout = false;
+        $this->autoRender = NULL;
         // get cashier details        
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
@@ -343,15 +305,12 @@ class OrderController extends AppController {
         // update order amount
         // para: order_id, tax_rate
         $this->Order->updateBillInfo($Order_detail['Order']['id']);
-
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
     }
 
     public function urgeItem() {
         
         $this->layout = false;
+        $this->autoRender = NULL;
         // get cashier details        
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
@@ -411,54 +370,11 @@ class OrderController extends AppController {
             $print = new PrintLib();
             $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
         }
-
-        // send removed items to kitchen printer
-        // $order_id, $item_list
- 
-        // update order amount
-        // para: order_id, tax_rate
-        // $this->Order->updateBillInfo($Order_detail['Order']['id']);
-
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
     }
-
-
-    public function getAllDBInfo($table, $type) {
-        $this->loadModel('Cashier');
-        $this->loadModel('OrderItem');
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-        
-
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-        
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-
-        
-        return compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories');
-
-    }
-
 
     public function changePrice() {
         $this->layout = false;
+        $this->autoRender = NULL;
         // get cashier details        
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
@@ -496,14 +412,12 @@ class OrderController extends AppController {
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $this->Order->updateBillInfo($order_id);
 
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
     }
 
 
     public function changeQuantity() {
         $this->layout = false;
+        $this->autoRender = NULL;
 
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
@@ -540,16 +454,13 @@ class OrderController extends AppController {
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $this->Order->updateBillInfo($order_id);
 
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
-
     }
 
 
 
     public function takeout() {
         $this->layout = false;
+        $this->autoRender = NULL;
 
          // get cashier details        
         $this->loadModel('Cashier');
@@ -601,35 +512,13 @@ class OrderController extends AppController {
 
         }
 
-
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-        
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount','Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-
-        
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
-        $this->render('summarypanel');
     }
 
 
     public function batchAddExtras() {
 
         $this->layout = false;
+        $this->autoRender = NULL;
 
         $selected_item_id_list = $this->data['selected_item_id_list'];
         $selected_extras_id_list = $this->data['selected_extras_id'];
@@ -690,15 +579,12 @@ class OrderController extends AppController {
             $this->OrderItem->updateExtraAmount($item_id);
 
         }
-
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
     }
 
         // overwrite all extras of items
     public function addExtras() {
         $this->layout = false;
+        $this->autoRender = NULL;
 
         $item_id = $this->data['selected_item_id'];
         // selected_extras_id_list maybe empty
@@ -751,36 +637,27 @@ class OrderController extends AppController {
 
         // update extra amount will also incur the updateBillInfo() function
         $this->OrderItem->updateExtraAmount($item_id);
-
-
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
     }
 
 
     public function summarypanel($table, $type) {
 
-        // get cashier details        
+        $this->layout = false;
+
         $this->loadModel('Cashier');
+        $this->loadModel('OrderItem');
+        $this->loadModel('Order');
+        
+
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-
-        $this->layout = false;
-
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
+        
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.after_discount', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
                 'Order.table_no' => $table,
                 'Order.is_completed' => 'N',
@@ -788,27 +665,14 @@ class OrderController extends AppController {
             )
                 )
         );
-
-
-        //Modified by Yishou LIao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-
-        //Modified by Yishou Liao @ Dec 04 2016
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
         
-        //Modified by Yishou Liao @ Dec 09 & Dec 13 2016
-        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }*/
-        //End @ Dec 13 2016
 
+        if (!empty($Order_detail['Order']['id'])) {
+            $this->Order->updateBillInfo($Order_detail['Order']['id']);
+        }
 
-        
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
-        //End @ Dec 09 2016
+        $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
     }
 
 
@@ -902,9 +766,6 @@ class OrderController extends AppController {
             $itemDetail['OrderItem']['is_print'] = 'Y';
             $this->OrderItem->save($itemDetail, false);
         }
-
-        $this->set($this->getAllDBInfo($table, $type));
-        $this->render('summarypanel');
     }
 
 
