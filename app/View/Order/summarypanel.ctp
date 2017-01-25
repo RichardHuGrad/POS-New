@@ -109,7 +109,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             
             <div class="subtotalwrap"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
                 <div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                    <div class="col-xs-8 col-sm-8 col-md-8">After Discount 打折后: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['after_discount'], 2); else echo '0.00'; ?></strong> </div>
+                    <div class="col-xs-8 col-sm-8 col-md-8">After Discount 打折后: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></strong> </div>
         
                 </div>
             </div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
