@@ -24,7 +24,7 @@ class DiscountController extends AppController {
         	'fields' => array('Order.id', 'Order.fix_discount', 'Order.promocode', 'Order.percent_discount'),
         	'conditions' => array('Order.id' => $order_id)
         	));
-		if ($percent_discount > 100) {
+		if ($discount_value > 100) {
     		$response = array('error' => true,'message' => 'Please add valid discount');
     	} else {
     		$response = array('error' => false, 'message' => 'Add discount successfully');

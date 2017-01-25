@@ -735,10 +735,10 @@ if (!empty($Order_detail['OrderItem'])) {
         if (fix_discount || discount_percent || promocode) {
             // apply promocode here
             $.ajax({
-                url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'add_discount')); ?>",
+                url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_id: "<?php echo $Order_detail['Order']['id'] ?>"},
+                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: "<?php echo $Order_detail['Order']['order_no'] ?>"},
                 success: function (html) {
                     if (html.error) {
                         $.notify(html.message,  { 
@@ -773,9 +773,9 @@ if (!empty($Order_detail['OrderItem'])) {
         var order_id = "<?php echo $Order_detail['Order']['id'] ?>";
         var message = $("#Message").val();
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'remove_discount')); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'removeDiscount')); ?>",
             method: "post",
-            data: {order_id: order_id},
+            data: {order_no: "<?php echo $Order_detail['Order']['order_no'] ?>"},
             success: function (html) {
                 window.location.reload();
             },
