@@ -174,7 +174,7 @@
 							if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) { ?>小计(原价)<?php } else { ?> 小计 <?php } ?> </div>
 											<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php 
 							if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) {
-								if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal']+$Order_detail['Order']['discount_value'], 2); else echo '0.00';  
+								if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00';  
 							}else{
 								if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00';  
 							};
@@ -247,7 +247,7 @@
                     <!-- Modified by Yishou Liao @ Nov 25 2016 -->
                     <li class="clearfix">
                         <div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">After Discount 打折后: </div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00'; ?></div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">After Discount 打折后: </div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></div>
                 
                         </div>
                     </li>

@@ -119,7 +119,7 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                     <li class="clearfix">
                         <div class="row">
                         	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Sub Total <?php
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Subtotal <?php
 							$table_discount_value = 0;
 							for ($i = 0; $i < count($Order_detail); $i++) {
 	                            $table_discount_value += $Order_detail[$i]['Order']['discount_value'];
@@ -132,7 +132,7 @@ $subtotal = 0;
 for ($i = 0; $i < count($Order_detail); $i++) {
     $subtotal += $Order_detail[$i]['Order']['subtotal'];
 };
-echo number_format($subtotal+$table_discount_value, 2);
+echo number_format($subtotal, 2);
 //End.
 //End of Nov 25 2016
 ?></div>
@@ -258,7 +258,9 @@ echo number_format($subtotal+$table_discount_value, 2);
 //Modified by Yishou Liao @ Oct 14 2016.
 $subtotal = 0;
 for ($i = 0; $i < count($Order_detail); $i++) {
-    $subtotal += $Order_detail[$i]['Order']['subtotal'];
+    $after_discount = max($Order_detail[$i]['Order']['subtotal'] - $Order_detail[$i]['Order']['discount_value'], 0);
+
+    $subtotal += $after_discount;
 };
 echo number_format($subtotal, 2);
 //End.
