@@ -150,7 +150,7 @@ class OrderController extends AppController {
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.id', 'Order.subtotal', 'Order.after_discount' ,'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $restaurant_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
                 )
         );
@@ -440,7 +440,7 @@ class OrderController extends AppController {
         
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
                 'Order.table_no' => $table,
                 'Order.is_completed' => 'N',
@@ -610,7 +610,7 @@ class OrderController extends AppController {
         
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount','Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
                 'Order.table_no' => $table,
                 'Order.is_completed' => 'N',
@@ -804,6 +804,8 @@ class OrderController extends AppController {
                 array_push($extras,$exts['extras']);
         }*/
         //End @ Dec 13 2016
+
+        $this->set($this->getAllDBInfo($table, $type));
         
         $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
         //End @ Dec 09 2016
