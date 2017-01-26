@@ -542,7 +542,14 @@ echo $this->fetch('script');
 				if (payOrTip == "pay") {
 					if (cardOrCash == "card") {
 						currentSuborder._received.card = inputNum;
-						
+
+						if (inputNum > currentSuborder.total) {
+							currentSuborder._tip.card = inputNum - currentSuborder.total;
+						} else {
+							currentSuborder._tip.card = 0;
+						}
+
+
 					} else if (cardOrCash == "cash") {
 						// give notification when the number is input into suborder
 						currentSuborder._received.cash = inputNum;
