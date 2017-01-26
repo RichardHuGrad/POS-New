@@ -349,15 +349,23 @@ class Suborders {
 			card_val += tempSuborder.received.card;
 			cash_val += tempSuborder.received.cash;
 			tip += tempSuborder.tip.card + tempSuborder.tip.cash;
-			if (tempSuborder.tip.type != "no tip")
-				tip_paid_by_set.add(tempSuborder.tip.type);
-			if (tip_paid_by_set.size == 1) {
-				tip_paid_by = tempSuborder.tip.type
-			} else {
-				tip_paid_by = "mixed";
-			}
+			// to be changed 
+			// if (tempSuborder.tip.type != "no tip")
+			// 	tip_paid_by_set.add(tempSuborder.tip.type);
+			// if (tip_paid_by_set.size == 1) {
+			// 	tip_paid_by = tempSuborder.tip.type
+			// } else {
+			// 	tip_paid_by = "mixed";
+			// }
 			paid += tempSuborder.received.card + tempSuborder.received.cash;
 			change += tempSuborder.change;
+		}
+
+		// to be delete
+		if (tip > 0) {
+			tip_paid_by = 'CARD';
+		} else {
+			tip_paid_by = 'NO TIP';
 		}
 
 		if (order.discount.type == "fixed") {
@@ -1278,7 +1286,8 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	
 
-	payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
+	// payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
+	payOrTipGroup.append(paySelect).find("input").on("change", function () {
 		if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
 			// enable payment buttons
 			typeGroup.empty();
@@ -1289,8 +1298,8 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 			// enable tip buttons
 			typeGroup.empty();
 			// typeGroup.append(tipCardButton).append(tipCashButton);
-			typeGroup.append(tipCashButton);
-			tipCashButton.trigger('click');
+			// typeGroup.append(tipCashButton);
+			// tipCashButton.trigger('click');
 			
 			console.log("tip is selected");
 		} else {
@@ -1322,7 +1331,6 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
     // should not change the suborder state directly
 	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
 												.on('click', function() {
-
 													enterInput();
 													screenClear.trigger('click');
 												});

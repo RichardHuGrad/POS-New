@@ -89,6 +89,7 @@ class SplitController extends AppController {
         $data['Order'] = $this->data;
         $data['Order']['id'] = $originalOrder['Order']['id'];
         $data['Order']['is_completed'] = 'Y';
+        $data['Order']['table_status'] = 'P';
         echo json_encode($data);
         // echo json_encode($originalOrder);
         $this->Order->save($data);

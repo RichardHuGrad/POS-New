@@ -323,18 +323,18 @@ if ($Order_detail['Order']['table_status'] == 'P') {
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price">$00.00</div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <div class="control-label col-md-4 sub-txt">Paid by:</div>
-                                        <div class="col-md-8 tip-paid-by text-center">
+                                        <!-- <div class="control-label col-md-4 sub-txt">Paid by:</div> -->
+                                        <!-- <div class="col-md-8 tip-paid-by text-center"> -->
                                             
                                                 
                                                     <!-- <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
                                                     <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label> -->
                                                
                                                 
-                                                    <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
-                                                    <label for="tip-cash" class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?><div>Cash 现金</div></label>
+                                                    <!-- <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
+                                                    <label for="tip-cash" class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?><div>Cash 现金</div></label> -->
                                             
-                                        </div>
+                                        <!-- </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -373,7 +373,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
                     <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> Card 卡</button>
                     <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> Cash 现金</button>
 
-                    <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button>
+                    <!-- <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button> -->
 
                     <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
                     
@@ -394,7 +394,7 @@ echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCus
 echo $this->fetch('script');
 ?>
 <script>
-    $('#tip-cash').trigger('click');
+    // $('#tip-cash').trigger('click');
 
     $(document).on('click', '.reprint', function () {
         //Print ele4 with custom options
@@ -633,6 +633,11 @@ if (!empty($Order_detail['OrderItem'])) {
             }
 
             $(".tip_price").html("$" + tip.toFixed(2));
+            $("#tip_val").val(tip.toFixed(2));
+            if (card_extra_tip > 0) {
+                $("#tip_paid_by").val("CARD");
+            }
+            
         }
 
 
