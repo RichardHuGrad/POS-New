@@ -549,6 +549,7 @@ class HomesController extends AppController {
         }
         // $this->Order->updateBillInfo($)
         // print_r ($Order_detail);
+        // print_r($all_extras);
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);

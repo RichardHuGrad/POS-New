@@ -827,7 +827,9 @@ echo $this->fetch('script');
                 $i = 0;
                 foreach ($extras as $extra) {
             ?>
-                    var temp_extra = new Extra(
+                    var status = '<?php echo $extra["status"]; ?>';
+                    if (status == 'A') {
+                        var temp_extra = new Extra(
                             id = '<?php echo $extra["id"]; ?>',
                             cousine_id = '<?php echo $extra["cousine_id"]; ?>',
                             name_en = '<?php echo $extra["name"]; ?>',
@@ -835,7 +837,9 @@ echo $this->fetch('script');
                             price = '<?php echo $extra["price"]; ?>',
                             category_id = '<?php echo $extra["category_id"]; ?>');
 
-                    extras.push(temp_extra);
+                        extras.push(temp_extra);
+                    }
+                    
             <?php
                 }
             ?>

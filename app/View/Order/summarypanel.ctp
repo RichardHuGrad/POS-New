@@ -202,19 +202,19 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                     foreach ($Order_detail['OrderItem'] as $key => $value) {
 
                         $selected_extras_name = [];
-                        if ($value['all_extras']) {
-                            $extras = json_decode($value['all_extras'], true);
-                            $selected_extras = json_decode($value['selected_extras'], true);
+                    // if ($value['all_extras']) {
+                        $extras = json_decode($value['all_extras'], true);
+                        $selected_extras = json_decode($value['selected_extras'], true);
 
-                            // prepare extras string
-                            $selected_extras_id = [];
-                            if (!empty($selected_extras)) {
-                                foreach ($selected_extras as $k => $v) {
-                                    $selected_extras_name[] = $v['name'];
-                                    $selected_extras_id[] = $v['id'];
-                                }
+                        // prepare extras string
+                        $selected_extras_id = [];
+                        if (!empty($selected_extras)) {
+                            foreach ($selected_extras as $k => $v) {
+                                $selected_extras_name[] = $v['name'];
+                                $selected_extras_id[] = $v['id'];
                             }
                         }
+                    // }
                 ?>
                         var temp_item = new Item(
                                 item_id = '<?php echo $i ?>',
