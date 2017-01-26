@@ -641,6 +641,8 @@ echo $this->fetch('script');
 
                 var card_extra_tip = 0;
 
+                console.log(cash_val);
+
                 var amount = cash_val + card_val;
 
                 $(".received_price").html("$" + amount.toFixed(2));
@@ -654,7 +656,7 @@ echo $this->fetch('script');
                     
                     $(".change_price_txt").html("Change 找零");
                     $(".change_price").html("$" + cash_val.toFixed(2));
-
+                    $(".change_price").attr('amount', (cash_val).toFixed(2));
 
                 } else { // card_val < total_price
 
