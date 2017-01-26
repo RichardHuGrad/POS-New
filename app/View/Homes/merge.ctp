@@ -175,16 +175,16 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                         };
                         echo number_format($table_discount_value, 2);
 
-                        for ($i = 0; $i < count($Order_detail); $i++) {
-                            if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                $table_percent_discount = $Order_detail[$i]['Order']['percent_discount'];
-                                $table_promocode = $Order_detail[$i]['Order']['promocode'];
-                            };
-                        };
-                        if ($table_percent_discount) {
-                            //echo "<span class='txt12'> " . $table_percent_discount . " (" . $table_percent_discount . "%)</span>";
-							echo "<span class='txt12'> " . " (" . $table_percent_discount . "%)</span>";
-                        }
+       //                  for ($i = 0; $i < count($Order_detail); $i++) {
+       //                      if ($Order_detail[$i]['Order']['table_no'] == $table) {
+       //                          $table_percent_discount = $Order_detail[$i]['Order']['percent_discount'];
+       //                          $table_promocode = $Order_detail[$i]['Order']['promocode'];
+       //                      };
+       //                  };
+       //                  if ($table_percent_discount) {
+       //                      //echo "<span class='txt12'> " . $table_percent_discount . " (" . $table_percent_discount . "%)</span>";
+							// echo "<span class='txt12'> " . " (" . $table_percent_discount . "%)</span>";
+       //                  }
                         //End.
                         ?> 
                                     

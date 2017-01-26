@@ -479,6 +479,27 @@ class Suborder {
 	}
 
 	get receiptInfo() {
+
+		// to be changed
+		var remain = 0,
+			change = 0,
+			tip_amount = 0,
+			tip_card = 0;
+
+		if (this.received.card > this.total) {
+			change = this.received.cash;
+			remain = 0;
+			tip_card = round2(this.received.card - this.total + this.tip.card);
+			tip_amount = tip_card + this.tip.cash;
+		} else {
+			remain = this.remain;
+			change = this.change;
+			tip_card = this.tip.card;
+			tip_amount = this.tip.amount;
+		}
+
+
+
 		var items = [];
 		for (var i = 0; i < this.items.length; ++i) {
 			items.push(this.items[i].printInfo);
@@ -496,10 +517,13 @@ class Suborder {
 			'received_card': this.received.card,
 			'received_cash': this.received.cash,
 			'received_total': this.received.total,
-			'tip_card': this.tip.card,
+			// 'tip_card': this.tip.card,
+			'tip_card': tip_card,
 			'tip_cash': this.tip.cash,
-			'tip_amount': this.tip.amount,
-			'change': this.change,
+			// 'tip_amount': this.tip.amount,
+			'tip_amount': tip_amount,
+			// 'change': this.change,
+			'change': change,
 			'items': items
 		}
 	}
@@ -595,6 +619,16 @@ class Suborder {
 	}
 
 	get tip() {
+		// var tip_card;
+		// if (round2(this._received.card) > round2(this.total)) {
+		// 	tip_card = round2(this._tip.card) + round2(this._received.card) - round2(this.total);
+		// } else {
+		// 	tip_card = round2(this._tip.card);
+		// }
+
+
+
+
 		var type;
 		if (this._tip.card > 0 && this._tip.cash) {
 			type = "mixed";
@@ -611,14 +645,32 @@ class Suborder {
 					"amount": round2(this._tip.card + this._tip.cash),
 					"type": type 
 				};
+
+		// return {
+		// 	"card": round2(tip_card),
+		// 	"cash": round2(this._tip.cash),
+		// 	"amount": round2(tip_card+ this._tip.cash),
+		// 	"type": type 
+		// }
 	}
 
 	get remain() {
 		return this.total > this.received.total ? round2(this.total - this.received.total) : 0;
+		// if (this.received.card >= this.total) {
+		// 	return 0;
+		// } else {
+		// 	return this.total > this.received.total ? round2(this.total - this.received.total) : 0;
+		// }
 	}
 
 	get change() {
 		return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
+
+		// if (this.received.card >= this.total) {
+		// 	return round2(this.received.cash);
+		// } else {
+		// 	return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
+		// }
 	}
 
 	// paid or unpaid
@@ -986,6 +1038,24 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		}
 		
 	}
+
+	var remain = 0,
+		change = 0,
+		tip_amount = 0,
+		tip_card = 0;
+
+	if (suborder.received.card > suborder.total) {
+		change = suborder.received.cash;
+		remain = 0;
+		tip_card = round2(suborder.received.card - suborder.total + suborder.tip.card);
+		tip_amount = tip_card + suborder.tip.cash;
+	} else {
+		remain = suborder.remain;
+		change = suborder.change;
+		tip_card = suborder.tip.card;
+		tip_amount = suborder.tip.amount;
+	}
+
 	
 	var suborderDetailComponent = $(template.format(
 		suborderId, 
@@ -999,12 +1069,23 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		suborder.received.total,
 		suborder.received.cash,
 		suborder.received.card,
-		suborder.remain,
-		suborder.change,
-		suborder.tip.amount,
+		// suborder.remain,
+		// suborder.change,
+		// suborder.tip.amount,
+		remain,
+		change,
+		tip_amount,
 		suborder.tip.cash,
-		suborder.tip.card
+		// suborder.tip.card
+		tip_card
 	));
+
+	if (suborder.remain == 0) {
+		suborderDetailComponent.find(".suborder-remain").hide();
+	} else {
+		suborderDetailComponent.find(".suborder-change").hide();
+	}
+
 
 	// set css accounding to the state
 	suborderDetailComponent.css("background-image", "url(" + imgPath + suborder.state + ")");
@@ -1142,6 +1223,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	var submitButton = $('<button class="btn btn-success btn-lg" id="input-submit">').text('Submit 提交');
 
+
+
+
 	
 	if (order.availableItems.length == 0) {
 		submitButton.on('click', function(){
@@ -1152,6 +1236,25 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 				// iterator all suborder
 				for (var i = 0; i < suborders.suborders.length; ++i) {
 					var tempSuborder = suborders.suborders[i];
+
+					// to be changed
+					var remain = 0,
+						change = 0,
+						tip_amount = 0,
+						tip_card = 0;
+
+					if (tempSuborder.received.card > tempSuborder.total) {
+						change = tempSuborder.received.cash;
+						remain = 0;
+						tip_card = round2(tempSuborder.received.card - tempSuborder.total + tempSuborder.tip.card);
+						tip_amount = tip_card + tempSuborder.tip.cash;
+					} else {
+						remain = tempSuborder.remain;
+						change = tempSuborder.change;
+						tip_card = tempSuborder.tip.card;
+						tip_amount = tempSuborder.tip.amount;
+					}
+
 
 					$.ajax({
 						url: store_suborder_url,
@@ -1168,9 +1271,11 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 			                "total": tempSuborder.total,
 			                "paid_card": tempSuborder.received.card,
 			                "paid_cash": tempSuborder.received.cash,
-			                "tip_card": tempSuborder.tip.card,
+			                // "tip_card": tempSuborder.tip.card,
+			                "tip_card": tip_card,
 			                "tip_cash": tempSuborder.tip.cash,
-			                "change": tempSuborder.change,
+			                // "change": tempSuborder.change,
+			                "change": change,
 			                "items": JSON.stringify(tempSuborder.items),
 						}
 					}).done(function() {
