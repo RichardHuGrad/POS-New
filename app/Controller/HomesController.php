@@ -6,7 +6,7 @@
  */
 App::uses('PrintLib', 'Lib');
 class HomesController extends AppController {
-
+    public $fontStr1 = "simsun";
 
 
     public $components = array('Paginator');
@@ -1464,10 +1464,10 @@ class HomesController extends AppController {
 			printer_start_page($handle);
 			
 			if ($print_zh == true) {
-				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+				$font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
 				printer_select_font($handle, $font);
 				printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 108, 20);
-				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+				$font = printer_create_font($this->fontStr1, 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
 			} else {
 				$font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
 				printer_select_font($handle, $font);
@@ -1795,7 +1795,7 @@ class HomesController extends AppController {
 
         $print_y = 244;
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
             $print_y+=40;
@@ -1821,10 +1821,11 @@ class HomesController extends AppController {
         printer_select_pen($handle, $pen);
         printer_draw_line($handle, 21, $print_y, 600, $print_y);
 
-
+        printer_end_page($handle);
         
+        printer_start_page($handle);
         //Print order items
-        $print_y += 20;
+        $print_y = 20;
         for ($i = 0; $i < count($Print_Item); $i++) {
             $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
@@ -1838,15 +1839,16 @@ class HomesController extends AppController {
                 printer_draw_text($handle, $print_str, 122, $print_y);
                 $len+=18;
                 if (strlen($print_str) != 0) {
-                    $print_y+=40;
-                };
-            };
+                    $print_y+=30;
+                }
+                break;
+            }
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
 
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 136, $print_y);
-                $print_y += 40;
+                $print_y += 30;
             };
         };
         //End.
@@ -1867,7 +1869,7 @@ class HomesController extends AppController {
         };
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
         };
@@ -1889,7 +1891,7 @@ class HomesController extends AppController {
             };
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "折扣："), 148, $print_y);
             };
@@ -1909,7 +1911,7 @@ class HomesController extends AppController {
             };
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "折后价："), 148, $print_y);
             };
@@ -1924,7 +1926,7 @@ class HomesController extends AppController {
         printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
         };
@@ -1948,7 +1950,7 @@ class HomesController extends AppController {
         };
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
         };
@@ -1964,7 +1966,7 @@ class HomesController extends AppController {
             printer_draw_text($handle, "Average", 58, $print_y);
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
             };
@@ -1991,7 +1993,7 @@ class HomesController extends AppController {
             };
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "付款："), 148, $print_y);
             };
@@ -2009,7 +2011,7 @@ class HomesController extends AppController {
             };
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "找零："), 148, $print_y);
             };
@@ -2074,7 +2076,7 @@ class HomesController extends AppController {
 
         $print_y = 244;
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
             $print_y+=40;
@@ -2118,15 +2120,16 @@ class HomesController extends AppController {
                     printer_draw_text($handle, $print_str, 122, $print_y);
                     $len+=18;
                     if (strlen($print_str) != 0) {
-                        $print_y+=40;
+                        $print_y+=30;
                     };
+                    break;
                 };
                 if ($print_zh == true) {
-                    $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                    $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                     printer_select_font($handle, $font);
 
                     printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$key][$i][4]), 136, $print_y);
-                    $print_y += 40;
+                    $print_y += 30;
                 };
             };
         };
@@ -2148,7 +2151,7 @@ class HomesController extends AppController {
         }
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
         };
@@ -2171,7 +2174,7 @@ class HomesController extends AppController {
         }
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
         };
@@ -2191,7 +2194,7 @@ class HomesController extends AppController {
         }
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
         };
@@ -2208,7 +2211,7 @@ class HomesController extends AppController {
         printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
         };
@@ -2231,7 +2234,7 @@ class HomesController extends AppController {
         };
 
         if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
         };
@@ -2257,7 +2260,7 @@ class HomesController extends AppController {
             };
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "付款："), 148, $print_y);
             };
@@ -2275,7 +2278,7 @@ class HomesController extends AppController {
             };
 
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "找零："), 148, $print_y);
             };

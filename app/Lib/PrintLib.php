@@ -1,7 +1,7 @@
 <?php 
 
 class PrintLib {
-
+    public $fontStr1 = "simsun"; 
     public $handle;
     public $fontH = 28; // font height
     public $fontW = 10; // font width
@@ -55,7 +55,7 @@ class PrintLib {
 
 
     public function switchZh() {
-        $fontZh = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $fontZh = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $fontZh);
     }
 
@@ -66,14 +66,14 @@ class PrintLib {
 
 
     public function printZh($str, $x, $y) {
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
         printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
         printer_delete_font($font);
     }
 
     public function printBigZh ($str, $x, $y) {
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font($this->fontStr1, 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
         printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
         printer_delete_font($font);
@@ -81,7 +81,7 @@ class PrintLib {
 
     // each chinese character take two byte
     public function printItemZh($str, $x, &$y) {
-        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
 
         // change the str to chinese string
@@ -157,7 +157,7 @@ class PrintLib {
 
         if ($header_type == "kitchen") {
             if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+                $font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
             } else {
@@ -219,9 +219,9 @@ class PrintLib {
             $font2H = 38;
             $font3H = 32; 
             $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-            $font2 = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $font2H, 16, PRINTER_FW_BOLD, false, false, false, 0);
+            $font2 = printer_create_font($this->fontStr1, $font2H, 16, PRINTER_FW_BOLD, false, false, false, 0);
             
-            $font3 = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
+            $font3 = printer_create_font($this->fontStr1, $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
             
 
             $name_zh = $item['name_xh'];
