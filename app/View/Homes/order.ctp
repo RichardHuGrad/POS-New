@@ -1124,7 +1124,7 @@ echo $this->fetch('script');
             method: "post",
             success: function(html) {
                 $(".summary_box").html(html);
-                $('#change-quantity-component-modal .close').trigger('click');
+                // $('#change-quantity-component-modal .close').trigger('click');
             }
         })
     }

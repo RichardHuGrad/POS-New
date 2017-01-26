@@ -253,6 +253,8 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
             var createDom = function(item) {
                 var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.quantity, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
+
+                console.log(item);
                 if (item.is_print == 'Y') {
                     itemComponent.addClass('is-print');
                 }

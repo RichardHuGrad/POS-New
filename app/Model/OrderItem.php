@@ -17,7 +17,7 @@ class OrderItem extends AppModel {
 
     }
 
-    public function insertOrderItem($order_id, $item_id, $name_en, $name_xh, $price, $category_id, $tax, $tax_amount, $qty, $comb_id) {
+    public function insertOrderItem($order_id, $item_id, $name_en, $name_xh, $price, $category_id, $all_extras, $tax, $tax_amount, $qty, $comb_id) {
     	$insert_data = array(
             'order_id' => $order_id,
             'item_id' => $item_id,
@@ -26,7 +26,7 @@ class OrderItem extends AppModel {
             'price' => $price,
             'category_id' => $category_id,
             'created' => date('Y-m-d H:i:s'),
-            // 'all_extras' => $all_extras, 
+            'all_extras' => $all_extras, 
             'tax' => $tax,
             'tax_amount' => $tax_amount,
             'qty' => $qty,

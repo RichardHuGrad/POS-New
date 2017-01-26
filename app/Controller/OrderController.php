@@ -101,6 +101,103 @@ class OrderController extends AppController {
     }
 
 
+    // public function addItem() {
+    //     $this->layout = false;
+    //     $this->autoRender = NULL;
+
+    //     // get parameters
+    //     $item_id = $this->data['item_id'];
+    //     $table = $this->data['table'];
+    //     $type = $this->data['type'];
+
+    //     //get tax_rate
+    //     $this->loadModel('Cashier');
+
+    //     $admin_detail = $this->Cashier->find("first", array(
+    //         'fields' => array('Admin.tax', 'Admin.id'),
+    //         'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+    //             )
+    //     );
+
+    //     $tax_rate = $admin_detail['Admin']['tax']; // 13
+    //     $restaurant_id = $admin_detail['Admin']['id'];
+    //     // print_r($tax_rate);
+    //     // print_r($restaurant_id);
+
+    //     // get item details        
+    //     $this->loadModel('Cousine');
+    //     $item_detail = $this->Cousine->find("first", array(
+    //         'fields' => array('Cousine.price', 'Category.id', 'Cousine.is_tax', 'Cousine.comb_num'),
+    //         'conditions' => array('Cousine.id' => $item_id)
+    //             )
+    //     );
+
+    //     // print_r($item_detail['Cousine']['comb_num']);
+
+    //     // get comb num
+    //     // ['Cousine']['comb_num'] namely extrascategories.id
+    //     // $get_comb_flag to $item_comb_num
+    //     $get_comb_flag = $this->Cousine->query("SELECT extras_num FROM extrascategories WHERE id = " . $item_detail['Cousine']['comb_num']);
+    //     $show_extras_flag = false;
+    //     if (count($get_comb_flag)>0){
+    //         if ($get_comb_flag[0]['extrascategories']['extras_num']>0){
+    //             $show_extras_flag = true;
+    //         }
+    //     };
+    //     // print_r($get_comb_flag);
+
+
+    //     $this->loadModel('Order');
+    //     $this->loadModel('OrderItem');
+    //     $Order_detail = $this->Order->find("first", array(
+    //         'fields' => array('Order.id', 'Order.subtotal', 'Order.after_discount' ,'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+    //         'conditions' => array('Order.cashier_id' => $restaurant_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
+    //             )
+    //     );
+
+    //     // print_r($Order_detail);
+
+    //     if (empty($Order_detail)) {
+    //         // to create a new order
+    //         $order_id = $this->Order->insertOrder($restaurant_id, $this->Session->read('Front.id'), $table, $type, $tax_rate);
+    //     } else {
+    //         $order_id = $Order_detail['Order']['id'];
+    //     }
+
+    //     $this->loadModel('Cousine');
+    //     $query_str = "SELECT comb_num FROM cousines WHERE id = " . $item_id;
+    //     $comb_num = $this->Cousine->query($query_str);
+    //     $query_str = "SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A'";
+    //     $extras_categories = $this->Order->query($query_str);
+    //     if ($comb_num[0]['cousines']['comb_num'] == 0) {
+    //         $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND extrascategories.extras_num = 0 ";
+    //     }else{
+    //         $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND (extrascategories.extras_num = 0 " . " OR extrascategories.id = " . $comb_num[0]['cousines']['comb_num'] . ")";
+    //     }
+
+
+    //     // print_r($Order_detail['Order']);
+
+    //     // add items to order items db table
+
+    //     if ($item_detail['Cousine']['is_tax'] == 'Y') {
+    //         $tax_amount = $tax_rate * $item_detail['Cousine']['price'] / 100;
+    //     } else {
+    //         $tax_amount = 0;
+    //     }
+
+
+    //     $comb_id = $this->Cousine->find("first", array(
+    //             'conditions' => array('Cousine.id' => $item_id)
+    //         ))['Cousine']['comb_num'];
+        
+    //     $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], $tax_rate, $tax_amount, 1, $comb_id);
+
+
+    //     $this->Order->updateBillInfo($order_id);
+    // }
+
+
     public function addItem() {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -150,7 +247,7 @@ class OrderController extends AppController {
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.after_discount' ,'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $restaurant_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
                 )
         );
@@ -176,6 +273,14 @@ class OrderController extends AppController {
         }
 
 
+        $all_extras = $this->Order->query($query_str);
+        $extras = array();
+        foreach ($all_extras as $exts){
+            array_push($extras,$exts['extras']);
+        }
+        // print_r($all_extras);
+        // print_r($extras);
+
         // print_r($Order_detail['Order']);
 
         // add items to order items db table
@@ -191,10 +296,11 @@ class OrderController extends AppController {
                 'conditions' => array('Cousine.id' => $item_id)
             ))['Cousine']['comb_num'];
         
-        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], $tax_rate, $tax_amount, 1, $comb_id);
+        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1, $comb_id);
 
 
         $this->Order->updateBillInfo($order_id);
+
     }
 
 
@@ -657,7 +763,7 @@ class OrderController extends AppController {
         
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            // 'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
                 'Order.table_no' => $table,
                 'Order.is_completed' => 'N',
@@ -671,6 +777,7 @@ class OrderController extends AppController {
         if (!empty($Order_detail['Order']['id'])) {
             $this->Order->updateBillInfo($Order_detail['Order']['id']);
         }
+        // print_r($Order_detail);
 
         $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
     }
