@@ -488,9 +488,9 @@ echo $this->fetch('script');
                             data:{
                             logo_name:"../webroot/img/logo.bmp",
                                     Print_Item:Order_print,
-                                    subtotal:(parseFloat(subtotal)+parseFloat(discount)).toFixed(2),
+                                    subtotal:subtotal, 
 									discount:discount,
-									after_discount:subtotal,
+									after_discount:(parseFloat(subtotal)-parseFloat(discount)).toFixed(2),
 									//Modified by Yishou Liao @ Nov 29 2016
 									tax_Amount: tax_amount,
 									paid: $(".received_price").attr("amount"),
@@ -638,48 +638,56 @@ echo $this->fetch('script');
             })
 
 
-            function recalculateAmount(cash_val, card_val, tip, total_price) {
+             function recalculateAmount(cash_val, card_val, tip, total_price) {
 
-                $("#tip_val").val(tip);
+            $("#tip_val").val(tip);
 
-                var card_extra_tip = 0;
+            var card_extra_tip = 0;
 
-                console.log(cash_val);
+            console.log(cash_val);
 
-                var amount = cash_val + card_val;
+            var amount = cash_val + card_val;
 
-                $(".received_price").html("$" + amount.toFixed(2));
-                $(".received_price").attr('amount', amount.toFixed(2));
+            $(".received_price").html("$" + amount.toFixed(2));
+            $(".received_price").attr('amount', amount.toFixed(2));
 
 
-                if (card_val >= total_price) {
-                    
-                    card_extra_tip = card_val - total_price;
-                    tip += card_extra_tip;
-                    
-                    $(".change_price_txt").html("Change 找零");
-                    $(".change_price").html("$" + cash_val.toFixed(2));
-                    $(".change_price").attr('amount', (cash_val).toFixed(2));
+            if (card_val >= total_price) {
+                
+                card_extra_tip = card_val - total_price;
+                tip += card_extra_tip;
+                
+                $(".change_price_txt").html("Change 找零");
+                $(".change_price").html("$" + cash_val.toFixed(2));
+                $(".change_price").attr('amount', (cash_val).toFixed(2));
 
-                } else { // card_val < total_price
-
-                    $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
-                    $(".change_price").attr('amount', (amount - total_price).toFixed(2));
-
-                    if (amount < total_price) {
-                        $(".change_price_txt").html("Remaining 其余");
-                    } else { // amount >= total_price
-                        $(".change_price_txt").html("Change 找零");
-                    }
-                }
-
-                $(".tip_price").html("$" + tip.toFixed(2));
-                $("#tip_val").val(tip.toFixed(2));
+                $(".tip_price").html("$" + card_extra_tip.toFixed(2));
+                $("#tip_val").val(card_extra_tip.toFixed(2));
                 if (card_extra_tip > 0) {
                     $("#tip_paid_by").val("CARD");
                 }
-                
+
+            } else { // card_val < total_price
+
+                $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
+                $(".change_price").attr('amount', (amount - total_price).toFixed(2));
+
+                if (amount < total_price) {
+                    $(".change_price_txt").html("Remaining 其余");
+                } else { // amount >= total_price
+                    $(".change_price_txt").html("Change 找零");
+                }
+
+                $(".tip_price").html("$" + (0).toFixed(2));
+                $("#tip_val").val((0).toFixed(2));
+                if (card_extra_tip > 0) {
+                    $("#tip_paid_by").val("NO TIP");
+                }
             }
+
+            
+            
+        }
 
             $("#Enter").click(function () {
                 if (!$("#selected_card").val()) {

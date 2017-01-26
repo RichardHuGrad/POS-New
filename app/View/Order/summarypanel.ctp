@@ -128,9 +128,9 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6">Total 总额: <strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>
 
-            <div class="col-xs-6 col-sm-6 col-md-6">
+          <!--   <div class="col-xs-6 col-sm-6 col-md-6">
                 <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['message'] ?></textarea>
-            </div>
+            </div> -->
         </div>
     </div>
 

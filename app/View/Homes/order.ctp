@@ -168,12 +168,12 @@
                     </ul>
                 </div>
                 <div class="modal-footer clearfix">
-                    <div class="clearfix">
+                    <div class="clearfix" style="display:none;">
                         <label class="pull-left" for="taset-component-special">Special Instructions:</label>
                         <input class="pull-left" id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
                     </div>
                     <div class="clearfix">
-                         <button type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
+                         <button style="display:none;" type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
                         <button type="button" id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
                     </div>
                 </div>
@@ -214,12 +214,12 @@
 
                 </div>
                 <div class="modal-footer clearfix">
-                    <div class="clearfix">
+                    <div class="clearfix" style="display:none;">
                         <label class="pull-left" for="single-extra-component-special">Special Instructions:</label>
                         <input class="pull-left" id="single-extra-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
                     </div>
                     <div class="clearfix">
-                         <button type="button" id="single-extra-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
+                         <button style="display:none;" type="button" id="single-extra-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
                         <button type="button" id="single-extra-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
                     </div>
                 </div>

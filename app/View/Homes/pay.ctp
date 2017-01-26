@@ -419,9 +419,9 @@ if (!empty($Order_detail['OrderItem'])) {
                 logo_name: "../webroot/img/logo.bmp",
                 Print_Item: Order_print,//!empty($Order_detail) and $Order_detail['Order']['discount_value']
 				//Modified by Yishou Liao @ Nov 29 2016
-                subtotal:<?php echo (!empty($Order_detail) and $Order_detail['Order']['discount_value'])?($Order_detail['Order']['subtotal']+$Order_detail['Order']['discount_value']):$Order_detail['Order']['subtotal'] ?>,
+                subtotal: <?php echo $Order_detail['Order']['subtotal'] ?>,
 				discount: <?php echo (!empty($Order_detail) and $Order_detail['Order']['discount_value'])?($Order_detail['Order']['discount_value']):0.00 ?>,
-				after_discount: <?php echo $Order_detail['Order']['subtotal'] ?>,
+				after_discount: <?php echo $Order_detail['Order']['after_discount'] ?>,
 				//End
                 tax:<?php echo $Order_detail['Order']['tax'] ?>,
 				//Modified by Yishou Liao @ Nov 29 2016
@@ -620,6 +620,12 @@ if (!empty($Order_detail['OrderItem'])) {
                 $(".change_price").html("$" + cash_val.toFixed(2));
                 $(".change_price").attr('amount', (cash_val).toFixed(2));
 
+                $(".tip_price").html("$" + card_extra_tip.toFixed(2));
+                $("#tip_val").val(card_extra_tip.toFixed(2));
+                if (card_extra_tip > 0) {
+                    $("#tip_paid_by").val("CARD");
+                }
+
             } else { // card_val < total_price
 
                 $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
@@ -630,13 +636,15 @@ if (!empty($Order_detail['OrderItem'])) {
                 } else { // amount >= total_price
                     $(".change_price_txt").html("Change 找零");
                 }
+
+                $(".tip_price").html("$" + (0).toFixed(2));
+                $("#tip_val").val((0).toFixed(2));
+                if (card_extra_tip > 0) {
+                    $("#tip_paid_by").val("NO TIP");
+                }
             }
 
-            $(".tip_price").html("$" + tip.toFixed(2));
-            $("#tip_val").val(tip.toFixed(2));
-            if (card_extra_tip > 0) {
-                $("#tip_paid_by").val("CARD");
-            }
+            
             
         }
 
