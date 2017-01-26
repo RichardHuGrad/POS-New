@@ -327,8 +327,8 @@ if ($Order_detail['Order']['table_status'] == 'P') {
                                         <div class="col-md-8 tip-paid-by text-center">
                                             
                                                 
-                                                    <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
-                                                    <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label>
+                                                    <!-- <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
+                                                    <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label> -->
                                                
                                                 
                                                     <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
@@ -394,6 +394,8 @@ echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCus
 echo $this->fetch('script');
 ?>
 <script>
+    $('#tip-cash').trigger('click');
+
     $(document).on('click', '.reprint', function () {
         //Print ele4 with custom options
 

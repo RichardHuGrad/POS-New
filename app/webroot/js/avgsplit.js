@@ -1290,6 +1290,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 			typeGroup.empty();
 			// typeGroup.append(tipCardButton).append(tipCashButton);
 			typeGroup.append(tipCashButton);
+			tipCashButton.trigger('click');
 			
 			console.log("tip is selected");
 		} else {
