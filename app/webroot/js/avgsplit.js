@@ -955,25 +955,24 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	var cfg = cfg || {};
 	var suborderId = suborder.suborder_no;
 
-	// var suborderTab = $('');
-	var suborderDetailComponent = $('<ul class="suborder-detail">').attr("id", "suborder-detail-" + suborderId);
-	// var suborderTabCompoenent = $('<a class="suborder-tab">');
-	var titleComponent = $('<li class="suborder-title">').text("Suborder #" + order_no + '-' + suborder.suborder_no);
+	var template = `
+		<ul class="suborder-detail" id="suborder-detail-{0}">
+		   <li class="suborder-title">Suborder # {1}</li>
+		   <li class="suborder-subtotal">Subtotal 小计: $ {2}</li>
+		   <li class="suborder-discount">{3}</li>
+		   <li class="suborder-after-discount">After Discount 打折后: $ {4}</li>
+		   <li class="suborder-tax">Tax 税 ({5}%): $ {6}</li>
+		   <li class="suborder-total">Total 总: $ {7}</li>
+		   <li class="suborder-received">Received 收到: $ {8} Cash 现金: $ {9} Card 卡: $ {10}</li>
+		   <li class="suborder-remain">Remaining 其余: $ {11}</li>
+		   <li class="suborder-change">Change 找零: $ {12}</li>
+		   <li class="suborder-tip">Tip 小费: $ {13} Cash 现金: $ {14} Card 卡: $ {15}</li>
+		</ul>
+	`;
 
-	// var stateComponent = $('<li class="suborder-state">').text("State :" + suborder.state);
 
-	var subtotalComponent = $('<li class="suborder-subtotal">').text("Subtotal 小计:" + suborder.subtotal);
-
-	
 
 	var discountText = function(type, value) { 
-
-		String.prototype.format = function () {
-	        var args = [].slice.call(arguments);
-	        return this.replace(/(\{\d+\})/g, function (a){
-	            return args[+(a.substr(1,a.length-2))||0];
-	        });
-		};
 		var discountAmount;
 		if (type == "unknown") {
 			discountAmount = 0;
@@ -987,27 +986,28 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		}
 		
 	}
-	var discountComponent = $('<li class="suborder-discount">').text(discountText(suborder.discount.type, suborder.discount.value));	
-
-	var afterDiscountComponent = $('<li class="suborder-after-discount">').text("After Discount 打折后: " + suborder.afterDiscount);
-
-	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
-
-	var totalComponent = $('<li class="suborder-total">').text("Total 总: " + suborder.total);
-
-	var receivedComponent = $('<li class="suborder-received">').text("Received 收到: " + suborder.received.total + " Cash 现金: " + suborder.received.cash + " Card 卡: " + suborder.received.card);
-
-	var remainComponenet = $('<li class="suborder-remain">').text("Remaining 其余: " + suborder.remain);
-
-	var changeComponent = $('<li class="suborder-change">').text("Change 找零: " + suborder.change);
-
-	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Cash 现金:" + suborder.tip.cash + " Card 卡: " + suborder.tip.card);
-
-	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(discountComponent).append(afterDiscountComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
+	
+	var suborderDetailComponent = $(template.format(
+		suborderId, 
+		order_no + '-' + suborder.suborder_no, 
+		suborder.subtotal, 
+		discountText(suborder.discount.type, suborder.discount.value),
+		suborder.afterDiscount,
+		suborder.tax.tax * 100,
+		suborder.tax.amount,
+		suborder.total,
+		suborder.received.total,
+		suborder.received.cash,
+		suborder.received.card,
+		suborder.remain,
+		suborder.change,
+		suborder.tip.amount,
+		suborder.tip.cash,
+		suborder.tip.card
+	));
 
 	// set css accounding to the state
 	suborderDetailComponent.css("background-image", "url(" + imgPath + suborder.state + ")");
-
 	return suborderDetailComponent;
 }
 

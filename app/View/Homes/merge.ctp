@@ -113,11 +113,11 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
 
             </div>
         </div>
-        <div class="col-md-4 col-md-4 col-xs-12" id="mid-section">
+        <div class="col-md-3 col-md-3 col-xs-12" id="mid-section">
 
         </div>
 
-        <div class="col-md-5 col-sm-5 col-xs-12 RIGHT-SECTION">
+        <div class="col-md-6 col-sm-6 col-xs-12 RIGHT-SECTION">
             <div class="clearfix total-payment">
                 <ul>
                     <li class="clearfix">
@@ -633,107 +633,110 @@ echo $this->fetch('script');
                     else
                     $("#screen").focus();
             })
-                    $("#Enter").click(function () {
-            if (!$("#selected_card").val()) {
-                $.notify("Please select payment type card/cash.", {
-                                position: "top center", 
-                                className:"warn"
-                            });
-            // alert("Please select payment type card/cash.");
-                    return false;
-            }
-            var amount = $("#screen").val() ? parseFloat($("#screen").val()) : 0;
-                    var total_price = parseFloat($(".total_price").attr("alt"));
-                    if ($("#selected_card").val() == 'cash') {
-            $("#cash_val").val(amount.toFixed(2));
-                    $(".cash_price").html("Cash 现金: $" + amount.toFixed(2));
-            }
-            if ($("#selected_card").val() == 'card') {
-            $("#card_val").val(amount.toFixed(2));
-                    $(".card_price").html("Card 卡: $" + amount.toFixed(2));
-            }
-            if ($("#selected_card").val() == 'tip') {
-            $("#tip_val").val(amount.toFixed(2));
-                    $(".tip_price").html("$" + amount.toFixed(2));
-            }
 
-            var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
-                    var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
-                    amount = cash_val + card_val;
-                    if (amount) {
-            $(".received_price").html("$" + amount.toFixed(2));
-                    $(".received_price").attr('amount', amount.toFixed(2));
-                    $(".change_price").html("$" + (amount - total_price).toFixed(2));
+
+            function recalculateAmount(cash_val, card_val, tip, total_price) {
+
+                $("#tip_val").val(tip);
+
+                var card_extra_tip = 0;
+
+                var amount = cash_val + card_val;
+
+                $(".received_price").html("$" + amount.toFixed(2));
+                $(".received_price").attr('amount', amount.toFixed(2));
+
+
+                if (card_val >= total_price) {
+                    
+                    card_extra_tip = card_val - total_price;
+                    tip += card_extra_tip;
+                    
+                    $(".change_price_txt").html("Change 找零");
+                    $(".change_price").html("$" + cash_val.toFixed(2));
+
+
+                } else { // card_val < total_price
+
+                    $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
                     $(".change_price").attr('amount', (amount - total_price).toFixed(2));
-                    if ((amount - total_price) < 0) {
-            $(".change_price_txt").html("Remaining 其余");
-                    $(".change_price").html("$" + (total_price - amount).toFixed(2));
-            } else {
-            $(".change_price_txt").html("Change 找零");
+
+                    if (amount < total_price) {
+                        $(".change_price_txt").html("Remaining 其余");
+                    } else { // amount >= total_price
+                        $(".change_price_txt").html("Change 找零");
+                    }
+                }
+
+                $(".tip_price").html("$" + tip.toFixed(2));
             }
 
-            } else {
-                return false;
-            }
-            })
-                    $("#rc1").click(function (E) {
-            E.preventDefault();
-            })
-                    $("#Clear").click(function () {
+            $("#Enter").click(function () {
+                if (!$("#selected_card").val()) {
+                    $.notify("Please select payment type card/cash.", {
+                                    position: "top center", 
+                                    className:"warn"
+                                });
+                // alert("Please select payment type card/cash.");
+                        return false;
+                }
+                var amount = $("#screen").val() ? parseFloat($("#screen").val()) : 0;
+                var total_price = parseFloat($(".total_price").attr("alt"));
 
-            var selected_card = $("#selected_card").val();
-                    var total_price = parseFloat($(".total_price").attr("alt"));
-                    if (selected_card == 'cash') {
-            var amount = $("#cash_val").val();
-                    $(".cash_price").html("Cash 现金: $00.00");
+                if ($("#selected_card").val() == 'cash') {
+                    $("#cash_val").val(amount.toFixed(2));
+                    $(".cash_price").html("Cash 现金: $" + amount.toFixed(2));
+                }
+                if ($("#selected_card").val() == 'card') {
+                    $("#card_val").val(amount.toFixed(2));
+                    $(".card_price").html("Card 卡: $" + amount.toFixed(2));
+                }
+                if ($("#selected_card").val() == 'tip') {
+                    $("#tip_val").val(amount.toFixed(2));
+                    // $(".tip_price").html("$" + amount.toFixed(2));
+                }
+
+                var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
+                var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+                var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
+
+
+                recalculateAmount(cash_val, card_val, tip_val, total_price);
+            })
+            $("#rc1").click(function (E) {
+                E.preventDefault();
+            })
+
+
+            $("#Clear").click(function () {
+                var selected_card = $("#selected_card").val();
+                var total_price = parseFloat($(".total_price").attr("alt"));
+                if (selected_card == 'cash') {
                     $("#cash_val").val(0);
-                    var received_price = parseFloat($(".received_price").attr('amount'));
-					//Modified by Yishou Liao @ Dec 08 2016
-					if (typeof($(".received_price").attr('amount')) == "undefined") {
-						received_price = 0;
-					};
-					//End @ Dec 08 2016
-                    var remaining = received_price - amount;
-                    $(".received_price").html("$" + remaining.toFixed(2));
-                    $(".received_price").attr('amount', remaining.toFixed(2));
-                    if ((remaining - total_price) < 0) {
-            $(".change_price_txt").html("Remaining 其余");
-                    $(".change_price").html("$" + (total_price - remaining).toFixed(2));
-            } else {
-            $(".change_price_txt").html("Change 找零");
-            }
-            }
+                    $(".cash_price").html("Cash 现金: $" + (0).toFixed(2));
+                }
 
-            if (selected_card == 'card') {
-            var amount = $("#card_val").val();
-                    $(".card_price").html("Card 卡: $00.00");
+                if (selected_card == 'card') {
                     $("#card_val").val(0);
-                    var received_price = parseFloat($(".received_price").attr('amount'));
-					//Modified by Yishou Liao @ Dec 08 2016
-					if (typeof($(".received_price").attr('amount')) == "undefined") {
-						received_price = 0;
-					};
-					//End @ Dec 08 2016
-                    var remaining = received_price - amount;
-                    $(".received_price").html("$" + remaining.toFixed(2));
-                    $(".received_price").attr('amount', remaining.toFixed(2));
-                    if ((remaining - total_price) < 0) {
-            $(".change_price_txt").html("Remaining 其余");
-                    $(".change_price").html("$" + (total_price - remaining).toFixed(2));
-            } else {
-            $(".change_price_txt").html("Change 找零");
-            }
-            }
-            if (selected_card == 'tip') {
+                    $(".card_price").html("Card 卡: $" + (0).toFixed(2));
+     
+                }
+                if (selected_card == 'tip') {
+                    $("#tip_val").val(0);
+                }
 
-            $("#tip_val").val(0.00);
-                    $(".tip_price").html("$0.00");
-            }
+                var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
+                var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+                var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
 
-            $("#screen").attr('buffer', 0);
-                    $("#screen").val("");
-                    $("#screen").focus();
+                recalculateAmount(cash_val, card_val, tip_val, total_price);
+
+                $("#screen").attr('buffer', 0);
+                $("#screen").val("");
+                $("#screen").focus();
             })
+
+
                     //Modified by Yishou Liao @ Oct 16 2016
                     $("#screen").keydown(function (e) {
             // Allow: backspace, delete, tab, escape, enter and .
@@ -751,10 +754,6 @@ echo $this->fetch('script');
                     }
                     });
                     //End.
-
-  
-   
-
     });
 
     
@@ -763,25 +762,44 @@ echo $this->fetch('script');
     var OrderComponent = (function() {
         var template = `
             <ul class="order-component col-md-12 col-sm-12 col-xs-12 clearfix" id="order-component-id-{0}">
-                <li>Order No. 订单号 {1}</li>
-                <li>Table No. 桌号 {2}</li>
-                <li>Type 类型 {3}</li>
-                <li class="order-component-subtotal">Subtotal 小计 $ {4}</li>
-                <li class="order-component-discount"><div>Discount 折扣 $ {5}</div> <div class="order-component-discount-type">{6}</div></li>
-                <li class="order-component-after-discount">After Discount 打折后 $ {7}</li>
-                <li class="order-component-tax">Tax 税({8}%) $ {9}</li>
-                <li class="order-component-total">Total 总价 $ {10}</li>
+                <li class="order-component-title">订单号 {1}, 桌号 {2}, 类型 {3}</li>
+                <li class="order-component-subtotal clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12">Subtotal 小计 </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">$ {4}</div>
+                </li>
+                <li class="order-component-discount clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12">Discount 折扣 </div> 
+                    <div class="col-md-6 col-sm-6 col-xs-12">$ {5}<div class="order-component-discount-type">{6}</div></div>
+                </li>
+                <li class="order-component-after-discount clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12">After Discount 打折后 </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">$ {7} </div>
+                </li>
+                <li class="order-component-tax clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12">Tax 税({8}%)</div> 
+                    <div class="col-md-6 col-sm-6 col-xs-12">$ {9}</div>
+                </li>
+                <li class="order-component-total clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12">Total 总价 </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">$ {10} </div>
+                </li>
             </ul>
         `;
 
         var discountInputTemplate = `
-            <div id="discount-input-group={0}" data-id="{0}">
-                <label for="fix-discount-{0}">Fix Discount</label>
-                <input type="number" id="fix-discount-{0}">
-                <label for="percent-discount-{0}">Discount in %</label>
-                <input type="number" id="percent-discount-{0}">
-                <label for="promo-discount-{0}">Promo Code</label>
-                <input type="text" id="promo-discount-{0}">
+            <div class="col-md-12 col-sm-12 col-xs-12" id="discount-input-group={0}" data-id="{0}">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label for="fix-discount-{0}">Fix Discount</label>
+                    <input type="number" id="fix-discount-{0}">
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label for="percent-discount-{0}">Discount in %</label>
+                    <input type="number" id="percent-discount-{0}">
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label for="promo-discount-{0}">Promo Code</label>
+                    <input type="text" id="promo-discount-{0}">
+                </div>
                 <button class="btn btn-info apply-discount-btn" data-id="{0}">Apply</button>
             </div>
         `;

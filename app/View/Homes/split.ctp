@@ -105,9 +105,9 @@
 
     <div class="col-md-9 col-sm-8 col-xs-12" id="right-side">
 
-	    <div class="clearfix" id="suborders-detail-component-placeholder"></div>
+	    <div class="clearfix col-md-6 col-sm-6 col-xs-12" id="suborders-detail-component-placeholder"></div>
 
-	    <div id="input-placeholder" class="clearfix"> </div>
+	    <div class="clearfix col-md-6 col-sm-6 col-xs-12" id="input-placeholder"> </div>
     </div>
 </div>
 

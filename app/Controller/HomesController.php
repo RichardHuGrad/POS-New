@@ -1260,7 +1260,7 @@ class HomesController extends AppController {
             array_push($order_id_merge, $O['Order']['id']);
         }
 
-        print_r($order_id_merge);
+        // print_r($order_id_merge);
 
         $this->set(compact('Order_detail', 'order_id_merge', 'cashier_detail', 'type', 'table', 'tablemerge', 'orders_no'));
     }
