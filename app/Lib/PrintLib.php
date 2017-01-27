@@ -211,7 +211,7 @@ class PrintLib {
         printer_end_page($handle);
     }
 
-    public function printKitchenItemsPage($handle, $item_detail) {
+    public function printKitchenItemsPage($handle, $item_detail, $table_type) {
         foreach ($item_detail as $item) {
             printer_start_page($handle);
 
@@ -230,7 +230,7 @@ class PrintLib {
             // $price = $item['price'];
             $selected_extras = $item['selected_extras'];
 
-            if ($item['is_takeout'] == 'Y') {
+            if ($item['is_takeout'] == 'Y' || $table_type == "T") {
                 $name_zh = "(外卖)" . $name_zh;
                 $name_en = "(Take out)" . $name_en;
             }
@@ -302,7 +302,7 @@ class PrintLib {
         $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
 
         // print items
-        $this->printKitchenItemsPage($handle, $item_detail);
+        $this->printKitchenItemsPage($handle, $item_detail, $table_type);
     
         // print footer
         $this->printFooterPage($handle);
@@ -332,7 +332,7 @@ class PrintLib {
         $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
 
         // print items
-        $this->printKitchenItemsPage($handle, $item_detail);
+        $this->printKitchenItemsPage($handle, $item_detail, $table_type);
 
         // print footer
         $this->printFooterPage($handle);
@@ -366,7 +366,7 @@ class PrintLib {
         $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
 
         // print items
-        $this->printKitchenItemsPage($handle, $item_detail);
+        $this->printKitchenItemsPage($handle, $item_detail, $table_type);
     
         // print footer
         $this->printFooterPage($handle);
