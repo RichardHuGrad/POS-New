@@ -115,7 +115,7 @@ html,body {
 }
 
 .order-item.is-print {
-    color: #ccc;
+    color: #000;
     background-color: #ECE7E7;
 }
 

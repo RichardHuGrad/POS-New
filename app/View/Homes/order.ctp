@@ -311,6 +311,10 @@ echo $this->fetch('script');
                 renderOrder();
                 $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
+                $(".products-panel").removeClass('load1 csspinner');
+            },
+            beforeSend: function () {
+                $(".products-panel").addClass('load1 csspinner');
             }
         });
     });
@@ -382,7 +386,11 @@ echo $this->fetch('script');
             },
             success: function(html) {
                 // $(".summary_box").html(html);
-                renderOrder();
+                // renderOrder();
+                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+            },
+            beforeSend: function () {
+                $(".summary_box").addClass('load1 csspinner');
             }
         }); 
     });
@@ -1127,8 +1135,13 @@ echo $this->fetch('script');
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
             method: "post",
             success: function(html) {
+
                 $(".summary_box").html(html);
+                $(".summary_box").removeClass('load1 csspinner');
                 // $('#change-quantity-component-modal .close').trigger('click');
+            },
+            beforeSend: function () {
+                $(".summary_box").addClass('load1 csspinner');
             }
         })
     }
