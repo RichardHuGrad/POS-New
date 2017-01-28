@@ -323,7 +323,8 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected 没有选择菜");
+             $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         }
 
@@ -456,7 +457,8 @@ echo $this->fetch('script');
 
 
         } else {
-            alert("Please add discount first.");
+            // alert("Please add discount first. 请加入折扣。");
+            $.notify("Please add discount first. 请加入折扣。",  { position: "top center", className:"warn"});
             return false;
         }
     })
@@ -511,7 +513,8 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected 没有选择菜");
+             $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         } else {
             $("#selected-extra").empty();
@@ -524,7 +527,8 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected");
+            $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         }
 
@@ -925,10 +929,12 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected");
+            $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         } else if (selected_item_id_list.length > 1) {
-            alert("Please select only one item");
+            // alert("Please select only one item");
+            $.notify("Please select only one item 请只选择一个菜。",  { position: "top center", className:"warn"});
             return false;
         }
 
@@ -1030,7 +1036,8 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected");
+             $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         }
 
@@ -1069,7 +1076,8 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected");
+             $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         } 
 
@@ -1094,7 +1102,8 @@ echo $this->fetch('script');
         var selected_item_id_list = getSelectedItem();
 
         if (selected_item_id_list.length == 0) {
-            alert("No item selected");
+            // alert("No item selected");
+            $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
         } 
 
