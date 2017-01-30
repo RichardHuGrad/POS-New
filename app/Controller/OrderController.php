@@ -55,7 +55,7 @@ class OrderController extends AppController {
         $type = $this->params['named']['type'];
         $table = $this->params['named']['table'];
 
-        // get order detail
+        // get order detailr    
         $this->loadModel('Order');
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.table_no' => $table,
@@ -273,11 +273,11 @@ class OrderController extends AppController {
         }
 
 
-        $all_extras = $this->Order->query($query_str);
-        $extras = array();
-        foreach ($all_extras as $exts){
-            array_push($extras,$exts['extras']);
-        }
+        // $all_extras = $this->Order->query($query_str);
+        // $extras = array();
+        // foreach ($all_extras as $exts){
+        //     array_push($extras,$exts['extras']);
+        // }
         // print_r($all_extras);
         // print_r($extras);
 
@@ -296,7 +296,7 @@ class OrderController extends AppController {
                 'conditions' => array('Cousine.id' => $item_id)
             ))['Cousine']['comb_num'];
         
-        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], !empty($extras) ? json_encode($extras) : "", $tax_rate, $tax_amount, 1, $comb_id);
+        $this->OrderItem->insertOrderItem($order_id, $item_id, $item_detail['CousineLocal'][0]['name'], $item_detail['CousineLocal'][1]['name'], $item_detail['Cousine']['price'], $item_detail['Category']['id'], /*!empty($extras) ? json_encode($extras) : "",*/ $tax_rate, $tax_amount, 1, $comb_id);
 
 
         $this->Order->updateBillInfo($order_id);
@@ -778,6 +778,8 @@ class OrderController extends AppController {
             $this->Order->updateBillInfo($Order_detail['Order']['id']);
         }
         // print_r($Order_detail);
+        // print_r($cashier_detail);
+        // print_r($extras_categories);
 
         $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
     }

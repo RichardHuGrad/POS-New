@@ -126,8 +126,8 @@
                             foreach ($Order_detail['OrderItem'] as $key => $value) {
                                 # code...
                                 $selected_extras_name = [];
-                                if ($value['all_extras']) {
-                                    $extras = json_decode($value['all_extras'], true);
+                                // if ($value['all_extras']) {
+                                    // $extras = json_decode($value['all_extras'], true);
                                     $selected_extras = json_decode($value['selected_extras'], true);
 
                                     // prepare extras string
@@ -138,7 +138,7 @@
                                             $selected_extras_id[] = $v['id'];
                                         }
                                     }
-                                }
+                                // }
                                 ?>
                                 <li class="clearfix">
                                     <div class="row">

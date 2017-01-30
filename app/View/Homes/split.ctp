@@ -667,8 +667,8 @@ echo $this->fetch('script');
 			    foreach ($Order_detail['OrderItem'] as $key => $value) {
 
 			        $selected_extras_name = [];
-			        if ($value['all_extras']) {
-			            $extras = json_decode($value['all_extras'], true);
+			        // if ($value['all_extras']) {
+			        //     $extras = json_decode($value['all_extras'], true);
 			            $selected_extras = json_decode($value['selected_extras'], true);
 
 			            // prepare extras string
@@ -679,7 +679,7 @@ echo $this->fetch('script');
 			                    $selected_extras_id[] = $v['id'];
 			                }
 			            }
-			        }
+			        // }
 	        ?>
 	        		var qty = parseInt('<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>');
 	        		console.log("quantity");

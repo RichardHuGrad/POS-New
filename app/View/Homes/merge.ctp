@@ -73,8 +73,8 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
         foreach ($Order_detail[$x]['OrderItem'] as $key => $value) {
             # code...
             $selected_extras_name = [];
-            if ($value['all_extras']) {
-                $extras = json_decode($value['all_extras'], true);
+            // if ($value['all_extras']) {
+            //     $extras = json_decode($value['all_extras'], true);
                 $selected_extras = json_decode($value['selected_extras'], true);
 
                 // prepare extras string
@@ -85,7 +85,7 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                         $selected_extras_id[] = $v['id'];
                     }
                 }
-            }
+            // }
             ?>
                                     <li class="clearfix">
                                         <div class="row">
