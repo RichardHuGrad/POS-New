@@ -25,6 +25,29 @@ class Cousine extends AppModel {
         )
     );
 
+
+    public function getCousineInfo($id) {
+        $CousineDetail = $this->find("first", array(
+            "recursive" => -1,
+            "fields" => array('Cousine.price', 'Cousine.is_tax', 'Cousine.comb_num', 'Cousine.category_id'),
+            "conditions" => array('Cousine.id' => $id)
+            )
+        );
+        // $CousineLocalDetail = $this->CousineLocal->find("first", array(
+        //         "recursive" => -1,
+        //         "fields" => array("CousineLocal.name"),
+        //         'conditions' => array("CousineLocal.id" => $category_id, "CousineLocal.id"=> "en")
+        //     ))
+
+        $enName = $this->CousineLocal->getEnName($id);
+        $zhName = $this->CousineLocal->getZhName($id);
+        // combine the data
+        $CousineDetail['Cousine']['en'] = $enName;
+        $CousineDetail['Cousine']['zh'] = $zhName;
+
+        return $CousineDetail;
+    }
+
 }
 
 ?>
