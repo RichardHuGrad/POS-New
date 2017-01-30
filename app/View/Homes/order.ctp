@@ -168,7 +168,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer clearfix">
-                    <div class="clearfix" style="display:none;">
+                    <div class="clearfix">
                         <label class="pull-left" for="taset-component-special">Special Instructions:</label>
                         <input class="pull-left" id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
                     </div>
@@ -214,7 +214,7 @@
 
                 </div>
                 <div class="modal-footer clearfix">
-                    <div class="clearfix" style="display:none;">
+                    <div class="clearfix">
                         <label class="pull-left" for="single-extra-component-special">Special Instructions:</label>
                         <input class="pull-left" id="single-extra-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
                     </div>
@@ -995,19 +995,19 @@ echo $this->fetch('script');
                     combo_num = extraCategories[i].combo_num;
                 }
             }
-            // console.log(combo_num);            
+            //  must match the combo_num then can save the page
+            if ( $("#single-selected-combo li").length != combo_num ) {
+                $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
+                return false;
+            }
+
         }
 
-        //  must match the combo_num then can save the page
-        if ( $("#single-selected-combo li").length != combo_num ) {
-            $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
-            return false;
-        }
 
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'addExtras')); ?>",
             method: "post",
-            data: {selected_item_id: selected_item_id, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            data: {selected_item_id: selected_item_id, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", special: $("#single-extra-component-special").val()},
             success: function(html) {
                 renderOrder();
                 $('.modal-header .close').trigger('click');

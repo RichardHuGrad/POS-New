@@ -675,7 +675,7 @@ class OrderController extends AppController {
         }
     }
 
-        // overwrite all extras of items
+        // overwrite all extras of items and special instruction
     public function addExtras() {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -685,6 +685,7 @@ class OrderController extends AppController {
         $selected_extras_id_list = isset($this->data['selected_extras_id']) ?  $this->data['selected_extras_id'] : [];
         $table = $this->data['table'];
         $type = $this->data['type'];
+        $special = $this->data['special'];
 
 
         // get cashier details        
@@ -720,12 +721,14 @@ class OrderController extends AppController {
 
 
         $item_detail = $this->OrderItem->find("first", array(
+            'recursive' => -1,
             'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
             'conditions' => array('OrderItem.id' => $item_id)
                 )
         );
 
         $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
+        $item_detail['OrderItem']['special_instruction'] = $special;
 
         $this->OrderItem->save($item_detail, false);
 
