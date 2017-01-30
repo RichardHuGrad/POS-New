@@ -1,20 +1,17 @@
-<?php 
-    echo $this->Html->css('summarypanel.css');
-?>
 <div id="Order_id" style="display:none"><?php echo $Order_detail['Order']['id']; ?></div>
 
  <div class="clearfix marginB15 cashierbox" style="display:none">
-    <div class="pull-left marginR5">
+    <!-- <div class="pull-left marginR5">
         <?php if ($cashier_detail['Cashier']['image']) { ?>
             <?php echo $this->Html->image(TIMB_PATH."timthumb.php?src=".CASHIER_IMAGE_PATH . $cashier_detail['Cashier']['image']."&h=60&w=60&&zc=4&Q=100", array('class'=>'img-circle img-responsive')); ?>
         <?php } else { ?>
             <?php echo $this->Html->image(TIMB_PATH."timthumb.php?src=".TIMB_PATH . 'no_image.jpg'."&h=60&w=60&&zc=4&Q=100", array('class'=>'img-circle img-responsive'));  ?>
         <?php } ?>
-    </div>
-    <div class="pull-left marginL5 clearfix">
+    </div> -->
+    <!-- <div class="pull-left marginL5 clearfix">
         <div class="txt16 marginB5 marginT5"><?php echo ucfirst($cashier_detail['Cashier']['firstname'])." ".$cashier_detail['Cashier']['lastname']; ?></div>
         <div class="txt15"><?php echo str_pad($cashier_detail['Cashier']['id'], 4, 0, STR_PAD_LEFT); ?></div>
-    </div>
+    </div> -->
 </div>
 
 <div class="clearfix marginB15 cashierbox">
@@ -28,7 +25,6 @@
         <button class="btn btn-info" id="select-revert"><strong>反选</strong></button>
     </div>
 </div>
-<?php// }?>
 
 <div class="bgwhite clearfix">
     <?php if(empty($Order_detail) OR !$Order_detail['Order']['discount_value']) { ?>
@@ -165,7 +161,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 <script>
 
-	$(document).ready(function() {
+	
 
         if (!String.prototype.format) {
           String.prototype.format = function() {
@@ -188,11 +184,11 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                     var percent_discount = '<?php echo $Order_detail['Order']['percent_discount'] ;?>';
                     var fix_discount = '<?php echo $Order_detail['Order']['fix_discount']; ?>';
 
-                    console.log(percent_discount);
-                    console.log(fix_discount);
+                    // console.log(percent_discount);
+                    // console.log(fix_discount);
                     if (percent_discount != 0) {
                         tempOrder.discount = {"type": "percent", "value": percent_discount}
-                        console.log(tempOrder.discount)
+                        // console.log(tempOrder.discount)
                     } else if (fix_discount != 0) {
                         tempOrder.discount = {"type": "fixed", "value": fix_discount}
                     }
@@ -254,7 +250,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             var createDom = function(item) {
                 var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.quantity, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
 
-                console.log(item);
+                // console.log(item);
                 if (item.is_print == 'Y') {
                     itemComponent.addClass('is-print');
                 }
@@ -318,7 +314,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     		var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
     		order = loadOrder(order_no);
 
-    		console.log(order);
+    		// console.log(order);
 
     		$('.order-summary-indent').append(OrderComponent.init(order, ItemComponent))
 
@@ -360,7 +356,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             });
         });
 
-	})
+	
 
 </script>
 

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <?php echo $this->Html->css(array('order', 'components/TastesComponent')); ?>
+    <?php echo $this->Html->css(array('order', 'components/TastesComponent', 'summarypanel')); ?>
 </head>
     
 
