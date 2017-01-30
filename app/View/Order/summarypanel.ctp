@@ -135,17 +135,11 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     </div>
 </div>
 <!-- Modified by Yishou Liao -->
-<input type="hidden" name="Order_Item" id="Order_Item" value="" />
+<!-- <input name="Order_Item" id="Order_Item" value="" /> -->
 <!-- End -->
 <!-- Modified by Yishou Liao @ Dec 12 2016 -->
 <input type="hidden" name="Order_no" id="Order_no" value="<?php echo @$Order_detail['Order']['order_no']; ?>" />
-<!-- End @ Dec 12 2016 -->
-<!-- Modified by Yishou Liao @ Dec 15 2016 -->
-<!-- <input type="hidden" name="show_extras_flag" id="show_extras_flag" value="<?php echo $show_extras_flag; ?>" /> -->
-<!-- End @ Dec 15 2016 -->
-<!-- Modified by Yishou Liao @ Dec 15 2016 -->
-<!-- <input type="hidden" name="numofcomb" id="numofcomb" value="<?php echo $numofcomb; ?>" />
- -->
+
 
 <script id="item-component" type="text/template">
     <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{4}'>

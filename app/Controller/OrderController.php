@@ -280,10 +280,14 @@ class OrderController extends AppController {
                 'conditions' => array('Cousine.id' => $item_id)
             ))['Cousine']['comb_num'];
 
-        $this->OrderItem->insertOrderItem($order_id, $item_id, $CousineDetail['Cousine']['en'], $CousineDetail['Cousine']['zh'], $CousineDetail['Cousine']['price'], $CousineDetail['Cousine']['category_id'], /*!empty($extras) ? json_encode($extras) : "",*/ $tax_rate, $tax_amount, 1, $comb_id);
+        $order_item_id = $this->OrderItem->insertOrderItem($order_id, $item_id, $CousineDetail['Cousine']['en'], $CousineDetail['Cousine']['zh'], $CousineDetail['Cousine']['price'], $CousineDetail['Cousine']['category_id'], /*!empty($extras) ? json_encode($extras) : "",*/ $tax_rate, $tax_amount, 1, $comb_id);
 
 
         $this->Order->updateBillInfo($order_id);
+
+        $json['order_item_id'] = $order_item_id;
+        $json['comb_id'] = $comb_id;
+        return json_encode($json);
 
     }
 

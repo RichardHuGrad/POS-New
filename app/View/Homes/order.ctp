@@ -298,6 +298,7 @@ echo $this->fetch('script');
     }
 
 
+
     $(".add_items").on("click", function () {
         var item_id = $(this).attr("alt");
         var message = $("#Message").val();
@@ -306,12 +307,22 @@ echo $this->fetch('script');
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'addItem')); ?>",
             method: "post",
             data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
-            success: function (html) {
+            success: function (json) {
                 // console.log(html);
-                renderOrder();
-                $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
+                
+                // $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
                 $(".products-panel").removeClass('load1 csspinner');
+
+                var obj = JSON.parse(json);
+
+                renderOrder(function() {
+                    if (obj.comb_id != 0) {
+                        $("#order-component li[data-order-item-id=" + obj.order_item_id + "]").trigger("click");
+                        $("#add-taste-btn").trigger("click");
+                    }
+                    
+                });
             },
             beforeSend: function () {
                 $(".products-panel").addClass('load1 csspinner');
@@ -723,7 +734,7 @@ echo $this->fetch('script');
                 })
             });
             
-            singleExtraComponent.find('#single-extra-component-categories li').first().click();
+            singleExtraComponent.find('#single-extra-component-categories li').last().click();
             return singleExtraComponent;
         }
 
@@ -899,7 +910,7 @@ echo $this->fetch('script');
 
     // save button, send ajax to the backend and store the data in database
     $('body').on('click', '#taste-component-save', function() {
-        console.log($('#selected-extra li'));
+        // console.log($('#selected-extra li'));
         // save all selected-extra to all selected items
         var selected_item_id_list = getSelectedItem();
         var selected_extras_id = [];
@@ -908,8 +919,8 @@ echo $this->fetch('script');
             // selected_extras_amount += parseFloat($(this).find(".selected-extra-item-price").text());
         });
         // selected_extras_id = selected_extras_id.join(',');
-        console.log(selected_extras_id);
-        console.log(selected_item_id_list);
+        // console.log(selected_extras_id);
+        // console.log(selected_item_id_list);
         // console.log(selected_extras_amount);
 
         $.ajax({
@@ -947,7 +958,7 @@ echo $this->fetch('script');
             selected_extras = JSON.parse(getSelectedItemDetails()[0]['selected-extras']);
         }
 
-        console.log(selected_extras);
+        // console.log(selected_extras);
 
 
         // combo_id = 0 mean no combo
@@ -974,8 +985,24 @@ echo $this->fetch('script');
             selected_extras_id.push($(this).attr('data-extra-id'));
         });
 
-        // console.log(selected_extras_id);
-        // console.log(selected_item_id);
+        var combo_id = $("#order-component li[data-order-item-id=" + selected_item_id + "]").attr("data-comb-id");
+        // console.log(combo_id);
+
+        if (combo_id != 0) {
+            var combo_num = 0;
+            for (var i = 0; i < extraCategories.length; ++i) {
+                if(extraCategories[i].category_id == combo_id) {
+                    combo_num = extraCategories[i].combo_num;
+                }
+            }
+            // console.log(combo_num);            
+        }
+
+        //  must match the combo_num then can save the page
+        if ( $("#single-selected-combo li").length != combo_num ) {
+            $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
+            return false;
+        }
 
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'addExtras')); ?>",
@@ -1001,7 +1028,7 @@ echo $this->fetch('script');
     }();
     // when part of selected items are printed, only allow delete action
     $('body').on('click contentChanged', '#order-component',function() {
-        console.log('click');
+        // console.log('click');
         ChangeBtnDisabled(['#delete-btn, #change-price-btn', '#urge-btn']);
     });
 
@@ -1139,7 +1166,7 @@ echo $this->fetch('script');
     });
 
 
-    function renderOrder() {
+    function renderOrder(callback) {
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'summarypanel', $table, $type)); ?>",
             method: "post",
@@ -1148,6 +1175,9 @@ echo $this->fetch('script');
                 $(".summary_box").html(html);
                 $(".summary_box").removeClass('load1 csspinner');
                 // $('#change-quantity-component-modal .close').trigger('click');
+                if (typeof callback == "function") {
+                    callback();
+                }
             },
             beforeSend: function () {
                 $(".summary_box").addClass('load1 csspinner');

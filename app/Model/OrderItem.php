@@ -34,7 +34,10 @@ class OrderItem extends AppModel {
         );
 
 
-        $this->save($insert_data, false);
+        if($this->save($insert_data, false)) {
+            $lastId = $this->id;
+            return $lastId;
+        }
     }
 
     public function updateExtraAmount($id) {
