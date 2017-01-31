@@ -227,6 +227,7 @@ class PrintLib {
             $name_zh = $item['name_xh'];
             $name_en = $item['name_en'];
             $qty = $item['qty'];
+            $special = $item['special_instruction'];
             // $price = $item['price'];
             $selected_extras = $item['selected_extras'];
 
@@ -251,6 +252,14 @@ class PrintLib {
             if (strlen($selected_extras) > 0) {
                 $selected_extras_arr = $this->mbStrSplit($selected_extras, 14);
                 foreach($selected_extras_arr as $line) {
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $line), 80, $y);
+                    $y += $font3H;
+                }
+            }
+            if (strlen($special) > 0) {
+                $special = '特:' . $special;
+                $special_arr = $this->mbStrSplit($special, 14);
+                foreach($special_arr as $line) {
                     printer_draw_text($handle, iconv("UTF-8", "gb2312", $line), 80, $y);
                     $y += $font3H;
                 }

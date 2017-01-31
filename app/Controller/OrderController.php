@@ -805,6 +805,7 @@ class OrderController extends AppController {
 
         // get all un printed items
         $orderItemsDetail = $this->OrderItem->find('all', array(
+                'recursive' => -1,
                 'fields' => array(
                     'OrderItem.id',
                     'OrderItem.name_en',
@@ -814,6 +815,7 @@ class OrderController extends AppController {
                     'OrderItem.selected_extras',
                     'OrderItem.is_takeout',
                     'OrderItem.is_print',
+                    'OrderItem.special_instruction'
                     ),
                 'conditions' => array(
                     'OrderItem.order_id' => $order_id, 
