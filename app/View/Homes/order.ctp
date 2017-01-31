@@ -169,8 +169,8 @@
                 </div>
                 <div class="modal-footer clearfix">
                     <div class="clearfix">
-                        <label class="pull-left" for="taset-component-special">Special Instructions:</label>
-                        <input class="pull-left" id="taset-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
+                        <label class="pull-left" for="taste-component-special">Special Instructions:</label>
+                        <input class="pull-left" id="taste-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
                     </div>
                     <div class="clearfix">
                          <button style="display:none;" type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
@@ -366,6 +366,7 @@ echo $this->fetch('script');
 
         $('#order-component .order-item.selected').each(function() {
             var temp = {
+                "special": $(this).attr('data-special'),
                 "selected-extras": $(this).attr('data-selected-extras'),
                 "combo_id": $(this).attr('data-comb-id'),
             }
@@ -622,7 +623,7 @@ echo $this->fetch('script');
 
     var SingleExtraComponent = (function() {
         
-        var createDom = function (tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent) {
+        var createDom = function (tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special) {
 
             var singleExtraComponent = $($('#single-extra-component').html());
             
@@ -657,6 +658,8 @@ echo $this->fetch('script');
                     itemsUl.append(itemComponent);
                 }
             }
+
+            singleExtraComponent.find('#single-extra-component-special').val(special);
 
 
             // build selected item list
@@ -738,8 +741,8 @@ echo $this->fetch('script');
             return singleExtraComponent;
         }
 
-        var init = function(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent) {
-            var singleExtraComponent = createDom(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent);
+        var init = function(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special) {
+            var singleExtraComponent = createDom(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special);
             singleExtraComponent = bindEvent(singleExtraComponent, categories, combo_id, SelectedExtraItemComponent);
 
             return singleExtraComponent;
@@ -926,7 +929,7 @@ echo $this->fetch('script');
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'batchAddExtras')); ?>",
             method: "post",
-            data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
+            data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", special: $("#taste-component-special").val()},
             success: function (html) {
                 renderOrder();
                 $('#taste-component-modal .close').trigger('click');
@@ -965,9 +968,12 @@ echo $this->fetch('script');
         // other combo_id means the different extra.category_id
         var combo_id = getSelectedItemDetails()[0]['combo_id'];
 
+        var special = getSelectedItemDetails()[0]['special'];
+        console.log(special);
+
         // remove existing modal
         $('#single-extra-component-modal').modal('hide').remove();
-        var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent);
+        var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special);
         $('body').append(singleExtraComponent);
 
         

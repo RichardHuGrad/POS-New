@@ -677,7 +677,7 @@ class Suborder {
 }
 
 class Item {
-	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder, is_takeout, comb_id=0, selected_extras_json="", is_print='Y') {
+	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder, is_takeout, comb_id=0, selected_extras_json="", is_print='Y', special="") {
 		this.item_id = item_id;
 		this.image = image;
 		this._name_en = name_en;
@@ -694,6 +694,7 @@ class Item {
 		this.comb_id = comb_id;
 		this.selected_extras_json = selected_extras_json;
 		this.is_print = is_print;
+		this.special = special;
 	}
 
 	toJSON() {

@@ -142,13 +142,15 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 
 <script id="item-component" type="text/template">
-    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{4}'>
-        <div class="col-md-1 col-sm-1 col-xs-1 item-quantity">{5}</div>
+    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{4}' data-special='{5}'>
+        <div class="col-md-1 col-sm-1 col-xs-1 item-quantity">{6}</div>
         <div class="col-md-9 col-sm-9 col-xs-8">
-            <div class="col-md-12 col-sm-12 col-xs-12 item-name">{6}</div>
-            <div class="col-md-12 col-sm-12 col-xs-12 item-selected-extra">{8}</div>
+            <div class="col-md-12 col-sm-12 col-xs-12 item-name-en">{7}</div>
+            <div class="col-md-12 col-sm-12 col-xs-12 item-name-zh">{8}</div>
+            <div class="col-md-12 col-sm-12 col-xs-12 item-selected-extra">{9}</div>
+            <div class="col-md-12 col-sm-12 col-xs-12 item-special">Special: {5}</div>
         </div>
-        <div class="col-md-2 col-sm-2 col-xs-3 item-price">{7}</div>
+        <div class="col-md-2 col-sm-2 col-xs-3 item-price">{10}</div>
     </li>
 </script>
 
@@ -222,7 +224,8 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                                 is_takeout = '<?php echo $value["is_takeout"] ?>',
                                 comb_id = '<?php echo $value["comb_id"] ?>',
                                 selected_extras_json = '<?php echo $value['selected_extras'] ?>',
-                                is_print = '<?php echo $value['is_print']?>');
+                                is_print = '<?php echo $value['is_print']?>',
+                                special = '<?php echo  $value["special_instruction"]?>');
 
                         tempOrder.addItem(temp_item);
                 <?php
@@ -242,11 +245,15 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         var ItemComponent = (function() {
 
             var createDom = function(item) {
-                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.quantity, item.name_en + '\n' + item.name_zh, item.price, item.selected_extras_name));
+                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.special, item.quantity, item.name_en,item.name_zh, item.selected_extras_name, item.price));
 
                 // console.log(item);
                 if (item.is_print == 'Y') {
                     itemComponent.addClass('is-print');
+                }
+
+                if (!$.trim(item.special)) {
+                    itemComponent.find(".item-special").hide();
                 }
 
                 return itemComponent;

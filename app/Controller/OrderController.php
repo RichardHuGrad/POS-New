@@ -618,6 +618,7 @@ class OrderController extends AppController {
         $selected_extras_id_list = $this->data['selected_extras_id'];
         $table = $this->data['table'];
         $type = $this->data['type'];
+        $special = $this->data['special'];
 
 
         // get cashier details        
@@ -666,6 +667,11 @@ class OrderController extends AppController {
                 $item_detail['OrderItem']['selected_extras'] = json_decode($item_detail['OrderItem']['selected_extras'], true);
                 $item_detail['OrderItem']['selected_extras'] = json_encode(array_merge($item_detail['OrderItem']['selected_extras'], $selected_extras_list));
             }
+
+            if (!empty($special)) {
+                $item_detail['OrderItem']['special_instruction'] = $special;
+            }
+            
 
             $this->OrderItem->save($item_detail, false);
 
