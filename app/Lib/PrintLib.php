@@ -464,17 +464,17 @@ class KitchenStrategy implements PrintStrategyInterface {
 
         $y = 10;
 
-        if ($header_type == "kitchen") {
-            if ($print_zh == true) {
-                $font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
-            } else {
-                $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, "Kitchen", 138, $y);
-            }
+
+        if ($print_zh == true) {
+            $font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
+        } else {
+            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, "Kitchen", 138, $y);
         }
+            
         printer_end_page($handle);
         
 
