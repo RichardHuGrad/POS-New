@@ -483,7 +483,7 @@ echo $this->fetch('script');
                         ?>';
                     //Modified by Yishou Liao @ Nov 08 2016.
                     $.ajax({
-                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printMergeReceipt', (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
+                    url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'printMergeReceipt', (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
                             method:"post",
                             data:{
                             logo_name:"../webroot/img/logo.bmp",
@@ -561,7 +561,7 @@ echo $this->fetch('script');
                             if (parseFloat($(".change_price").attr("amount")) >= 0) {
                                 // submit form for complete payment process
                                 $.ajax({
-                                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'donemergepayment', $table, $type)); ?>",
+                                    url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'donemergepayment', $table, $type)); ?>",
                                     method: "post",
                                     data: {
                                         pay: $(".received_price").attr("amount"),

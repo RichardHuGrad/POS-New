@@ -59,14 +59,16 @@ class Order extends AppModel {
     public function updateBillInfo($order_id) {
 
         $Order_detail = $this->find('first', array(
+                'recursive' => -1,
                 'conditions' => array('Order.id' => $order_id)
             ));
 
 
         // get all items from OrderItem
         $order_item_list = $this->OrderItem->find('all', array(
-                            'conditions' => array('OrderItem.order_id' => $order_id)
-                        ));
+                'recursive' => -1,
+                'conditions' => array('OrderItem.order_id' => $order_id)
+            ));
 
         $data = array();
         $data['Order']['id'] = $order_id;
@@ -100,7 +102,6 @@ class Order extends AppModel {
 
         $this->save($data, false);
     } 
-
 
 }
 

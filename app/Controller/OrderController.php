@@ -855,7 +855,7 @@ class OrderController extends AppController {
 
         if (!empty($printItems['K'])) {
 
-            $printerName = $this->Cashier->getKitchenPrinterName( $this->Session->read('Front.id'));
+            $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
             $print = new PrintLib();
             $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false);
         }

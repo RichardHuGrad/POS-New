@@ -397,40 +397,15 @@ echo $this->fetch('script');
     // $('#tip-cash').trigger('click');
 
     $(document).on('click', '.reprint', function () {
-        //Print ele4 with custom options
 
-        //Modified by Yishou Liao @ Oct 27 2016.
-        var Order_print = Array();
-<?php
-if (!empty($Order_detail['OrderItem'])) {
-    foreach ($Order_detail['OrderItem'] as $key => $value) {
-        ?>
-                Order_print.push('<?php echo implode("*", $value); ?>'.split("*"));
-    <?php };
-}; ?>
-
-        //End.
-
-        //Modified by Yishou Liao @ Nov 08 2016.
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'printBill')); ?>",
             method: "post",
             data: {
+                order_no: "<?php echo $Order_detail['Order']['order_no']; ?>",
+                table_no: "<?php echo $table; ?>",
+                type: "<?php echo $type; ?>",
                 logo_name: "../webroot/img/logo.bmp",
-                Print_Item: Order_print,//!empty($Order_detail) and $Order_detail['Order']['discount_value']
-				//Modified by Yishou Liao @ Nov 29 2016
-                subtotal: <?php echo $Order_detail['Order']['subtotal'] ?>,
-				discount: <?php echo (!empty($Order_detail) and $Order_detail['Order']['discount_value'])?($Order_detail['Order']['discount_value']):0.00 ?>,
-				after_discount: <?php echo $Order_detail['Order']['after_discount'] ?>,
-				//End
-                tax:<?php echo $Order_detail['Order']['tax'] ?>,
-				//Modified by Yishou Liao @ Nov 29 2016
-				tax_Amount: <?php echo $Order_detail['Order']['tax_amount'] ?>,
-                //paid_by: $("#selected_card").val(),
-				paid: $(".received_price").attr("amount"),
-				change: $(".change_price").attr("amount"),
-				//End
-                total:<?php echo $Order_detail['Order']['total'] ?>,
             },
             success: function (html) {
 
@@ -438,6 +413,8 @@ if (!empty($Order_detail['OrderItem'])) {
         })
         //End.
     });
+
+
     $(document).ready(function () {
 
         $(".select_card").click(function () {
@@ -470,45 +447,6 @@ if (!empty($Order_detail['OrderItem'])) {
             $("#screen").attr('buffer', val);
             $("#screen").val($("#tip_val").val());
         })
-
-        // modified by Yu 15 Dev, 2016
-
-
-        /*$('#next').click(function () {
-            if ($("#selected_card").val()) {
-                if (parseFloat($(".change_price").attr("amount")) >= 0) {
-                    
-                    $('#submit').addClass('card-ok');
-                    $('#submit').prop("disabled", false);
-                    $('#cash').prop("disabled", true);
-                    $('#card').prop("disabled", true);
-                    $('#tip').click();
-                    $('#next').prop("disabled", true);
-                    $('#next').removeClass('card-ok');
-                    $('#tip').prop("disabled", false);
-                    $('#tip-cash').prop("disabled", false);
-                    $('#tip-card').prop("disabled", false);
-                }
-                else {
-                    // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
-                    $('#next').notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.",  { 
-                        position: "top center", 
-                        className:"warn",
-                    });
-                    // return false;
-                }
-            } else {
-                $('#next').notify("Please select card or cash payment method 请选择卡或现金付款方式. ",  { 
-                    position: "top center", 
-                    className:"warn",
-                });
-                // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
-                return false;
-            }
-        });*/
-
-
-
 
         $("#submit").click(function () {
             if ($("#selected_card").val()) {
@@ -544,8 +482,20 @@ if (!empty($Order_detail['OrderItem'])) {
                         },
                         success: function (html) {
                             $(".alert-warning").hide();
-                            $(".reprint").trigger("click");
-                            window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                            // $(".reprint").trigger("click");
+                            $.ajax({
+                                url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'printReceipt')); ?>",
+                                method: "post",
+                                data: {
+                                    order_no: "<?php echo $Order_detail['Order']['order_no']; ?>",
+                                    table_no: "<?php echo $table; ?>",
+                                    type: "<?php echo $type; ?>",
+                                    logo_name: "../webroot/img/logo.bmp",
+                                },
+                                success: function (html) {
+                                    window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                                }
+                            })
                         },
                         beforeSend: function () {
                             $(".RIGHT-SECTION").addClass('load1 csspinner');
