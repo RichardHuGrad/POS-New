@@ -33,27 +33,6 @@ class PrintController extends AppController {
     }
 
 
-
-    public function header() {
-        $this->layout = false;
-        $this->autoRender = NULL;
-
-        $header = "";
-
-        return $header;
-    }
-
-
-    public function footer() {
-        $this->layout = false;
-        $this->autoRender = NULL;
-
-        $footer = "";
-
-        return $footer;
-    }
-
-
     public function switchZh() {
         $fontZh = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $fontZh);
