@@ -140,8 +140,7 @@ class PrintLib {
     }
 
 
-
-    public function printHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh=true, $header_type) {
+    public function printKitchenHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh=true, $header_type) {
         printer_start_page($handle);
 
         $table_type_str = "";
@@ -191,7 +190,46 @@ class PrintLib {
         printer_end_page($handle);
     }
 
-    public function printFooterPage($handle) {
+    public function printReceiptHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh=true, $header_type) {
+        printer_start_page($handle);
+
+        // print Logo image
+        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
+
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        // print address line
+        printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
+        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
+        printer_draw_text($handle, "647-352-5333", 156, 206);
+
+        $print_y = 244;
+        if ($print_zh == true) {
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
+            $print_y+=40;
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            $print_y+=40;
+        };
+
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+
+        printer_draw_text($handle, "Order Number: #" . $order_no . $split_no, 32, $print_y);
+        $print_y+=40;
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $print_y);
+        $print_y+=38;
+
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+
+        printer_end_page($handle);
+    }
+
+    public function printKitchenFooterPage($handle) {
         printer_start_page($handle);
 
         date_default_timezone_set("America/Toronto");
@@ -308,13 +346,13 @@ class PrintLib {
         printer_start_doc($handle, "kitchen");
 
         // print header
-        $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
+        $this->printKitchenHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
 
         // print items
         $this->printKitchenItemsPage($handle, $item_detail, $table_type);
     
         // print footer
-        $this->printFooterPage($handle);
+        $this->printKitchenFooterPage($handle);
 
 
         printer_end_doc($handle);
@@ -337,14 +375,16 @@ class PrintLib {
         $handle = printer_open($printer_name);
         printer_start_doc($handle, "kitchen");
 
+        $strategy = new KitchenStrategy();
+
         // print header
-        $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
+        $strategy->printHeaderPage($handle, $order_no, $table_no, $table_type, true);
 
         // print items
         $this->printKitchenItemsPage($handle, $item_detail, $table_type);
 
         // print footer
-        $this->printFooterPage($handle);
+        $this->printKitchenFooterPage($handle);
 
         printer_end_doc($handle);
         printer_close($handle);
@@ -372,13 +412,13 @@ class PrintLib {
         printer_start_doc($handle, "kitchen");
 
         // print header
-        $this->printHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
+        $this->printKitchenHeaderPage($handle, $order_no, $table_no, $table_type, true, "kitchen");
 
         // print items
         $this->printKitchenItemsPage($handle, $item_detail, $table_type);
     
         // print footer
-        $this->printFooterPage($handle);
+        $this->printKitchenFooterPage($handle);
 
 
         printer_end_doc($handle);
@@ -389,6 +429,117 @@ class PrintLib {
     }
 
 
+    public function printPayReceiptDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
+        $debug_str = json_encode($item_detail);
+
+        if (!function_exists('printer_open')) {
+            return $debug_str;
+        }
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "my_Receipt");
+
+        // print header
+    }
+
+
+}
+
+interface PrintStrategyInterface {
+    public function printHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh);
+}
+
+class KitchenStrategy implements PrintStrategyInterface {
+    public function printHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh) {
+        printer_start_page($handle);
+
+        $table_type_str = "";
+        if ($table_type == 'D') {
+            $table_type_str = '[[堂食]]';
+        } else if ($table_type == 'T') {
+            $table_type_str = '[[外卖]]';
+        } else if ($table_type == 'W') {
+            $table_type_str = '[[等候]]';
+        }
+
+        $y = 10;
+
+        if ($header_type == "kitchen") {
+            if ($print_zh == true) {
+                $font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
+            } else {
+                $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+                printer_select_font($handle, $font);
+                printer_draw_text($handle, "Kitchen", 138, $y);
+            }
+        }
+        printer_end_page($handle);
+        
+
+        printer_start_page($handle);
+
+        $y = 0;
+        //Print order information
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "Order Number: #" . $order_no, 32, $y);
+
+        $y += 35;
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $table_no), 32, $y);
+        //End
+
+        $y += 35;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $y, 600, $y);
+
+
+        printer_delete_font($font);
+        printer_end_page($handle);
+    }
+}
+
+class PayStrategy implements PrintStrategyInterface {
+    public function printHeaderPage($handle, $order_no, $table_no, $table_type, $print_zh) {
+        printer_start_page($handle);
+
+        // print Logo image
+        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
+
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        // print address line
+        printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
+        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
+        printer_draw_text($handle, "647-352-5333", 156, 206);
+
+        $print_y = 244;
+        if ($print_zh == true) {
+            $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
+            $print_y+=40;
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            $print_y+=40;
+        };
+
+        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+
+        printer_draw_text($handle, "Order Number: #" . $order_no . $split_no, 32, $print_y);
+        $print_y+=40;
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $print_y);
+        $print_y+=38;
+
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+
+        printer_end_page($handle);
+    }
 }
 
 

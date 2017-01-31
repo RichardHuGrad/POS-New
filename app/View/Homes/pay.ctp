@@ -413,7 +413,7 @@ if (!empty($Order_detail['OrderItem'])) {
 
         //Modified by Yishou Liao @ Nov 08 2016.
         $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
+            url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'printReceipt', $Order_detail['Order']['order_no'], (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
             method: "post",
             data: {
                 logo_name: "../webroot/img/logo.bmp",
@@ -528,7 +528,7 @@ if (!empty($Order_detail['OrderItem'])) {
 
                     // submit form for complete payment process
                     $.ajax({
-                        url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'donepayment', $table, $type)); ?>",
+                        url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'donepayment', $table, $type)); ?>",
                         method: "post",
                         data: {
                             pay: $(".received_price").attr("amount"),
