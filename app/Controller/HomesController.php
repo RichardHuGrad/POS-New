@@ -733,147 +733,16 @@ class HomesController extends AppController {
         return $amount;
     }
 
-
-
-    //Modified by Yishou Liao @ Oct 13 2016.
-    public function merge() {
-        // get cashier details
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-        
-        $order_no = @$this->params['url']['order_no'];
-
-        // get all params
-        $type = @$this->params['named']['type'];
-        $table = @$this->params['named']['table'];
-        $tablemerge = explode(",", ($table . "," . @$this->params['named']['tablemerge']));
-
-
-        if ($order_no) {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.order_no' => $order_no
-            );
-        } else {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $tablemerge,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            );
-        }
-
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("all", array(
-            'fields' => array('Order.table_no', 'Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount','Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => $conditions
-                )
-        );
-
-        if (empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-        $type = @$Order_detail['Order']['order_type'] ? @$Order_detail['Order']['order_type'] : $type;
-        $table = @$Order_detail['Order']['table_no'] ? @$Order_detail['Order']['table_no'] : $table;
-
-        // get all order no.
-        $orders_no = $this->Order->find("list", array(
-            'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
-                )
-        );
-
-        $order_id_merge = array();
-        foreach ($Order_detail as $O) {
-            array_push($order_id_merge, $O['Order']['id']);
-        }
-
-        // print_r($order_id_merge);
-
-        $this->set(compact('Order_detail', 'order_id_merge', 'cashier_detail', 'type', 'table', 'tablemerge', 'orders_no'));
-    }
-
-    //End.
-    //Modified by Yishou Liao @ Oct 16 2016.
-    
-
-    //End.
-    //Modified by Yishou Liao @ Oct 17 2016.
-    function split() {
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        $order_no = @$this->params['url']['order_no'];
-
-        // get all params
-        $type = $this->params['named']['type'];
-        $table = $this->params['named']['table'];
-        $split_method = @$this->params['named']['split_method'];
-
-        if ($order_no) {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.order_no' => $order_no
-            );
-        } else {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            );
-        }
-
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => $conditions
-                )
-        );
-
-        if (empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-        $type = @$Order_detail['Order']['order_type'] ? @$Order_detail['Order']['order_type'] : $type;
-        $table = @$Order_detail['Order']['table_no'] ? @$Order_detail['Order']['table_no'] : $table;
-
-        // get all order no.
-        $orders_no = $this->Order->find("list", array(
-            'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
-                )
-        );
-
-        // print_r ($Order_detail);
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
-    }
-
-    
-    //End.
     //Modified by Jack @2017-01-05
     public function printTodayOrders($print_zh = false) {
         // $this->loadModel('Cashier');
     	if (empty($this->data['Printer'])) {
     		die("No Printer");
     	}
+
+        $this->loadModel('Order');
+        print_r($this->Order->getDailyOrderInfo() );
+
 
 		date_default_timezone_set("America/Toronto");
 		$date_time = date("l M d Y h:i:s A");

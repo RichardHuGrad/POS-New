@@ -147,6 +147,57 @@ class Order extends AppModel {
         return $data;
     } 
 
+
+    public function getDailyOrderInfo() {
+        date_default_timezone_set("America/Toronto");
+        $date_time = date("l M d Y h:i:s A");
+        $timeline = strtotime(date("Y-m-d 11:00:00"));
+        $nottm = time();
+        if ($timeline < $nowtm) {
+            // before 11 am
+            $timeline -= 86400;
+        }
+        $tm11 = $timeline;
+        $timeline += 3600 * 6;
+        $tm17 = $timeline;
+        $timeline += 3600 * 6;
+        $tm23 = $timeline;
+        $timeline += 3600 * 5;
+        $tm04 = $timeline;
+
+        $fields = array(
+            'Order.order_no',
+            'Order.cashier_id',
+            'Order.table_no',
+            'Order.total',
+            'Order.paid',
+            'Order.cash_val',
+            'Order.card_val',
+            'Order.tax_amount',
+            'Order.discount_value',
+            'Order.percent_discount',
+            'Order.paid_by',
+            'Order.tip',
+            'Order.tip_paid_by'
+        );
+
+        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm11), 'Order.created <' => date('c', $tm17));
+        $Orders1 = $this->find("all", array('conditions' => $conditions , 'fields' => $fields ));
+
+        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm17), 'Order.created <' => date('c', $tm23));
+        $Orders2 = $this->find("all", array('conditions' => $conditions , 'fields' => $fields ));
+
+        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm23), 'Order.created <' => date('c', $tm04));
+        $Orders3 = $this->find("all", array('conditions' => $conditions , 'fields' => $fields ));
+        //print_r($Printer);
+
+        array_push($data, $Order1);
+        array_push($data, $Order2);
+        array_push($data, $Order3);
+
+        return $data;
+    }
+
 }
 
 ?>
