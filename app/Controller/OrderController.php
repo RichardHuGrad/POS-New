@@ -4,7 +4,14 @@ class OrderController extends AppController {
 
     public $components = array('Paginator');
 
-    public function order() {
+    public function beforeFilter() {
+
+        parent::beforeFilter();
+        $this->Auth->allow('index', 'forgot_password');
+        $this->layout = "default";
+    }
+
+    public function index() {
         // get all recepie items according to category
         $this->loadModel('Category');
         $this->loadModel('Cousine');
@@ -55,7 +62,7 @@ class OrderController extends AppController {
         $type = $this->params['named']['type'];
         $table = $this->params['named']['table'];
 
-        // get order detailr    
+        // get order detail
         $this->loadModel('Order');
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.table_no' => $table,
@@ -63,7 +70,7 @@ class OrderController extends AppController {
             'Order.order_type' => $type
         );
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.order_type'),
+            'fields' => array('Order.order_no', 'Order.order_type', 'Order.id'),
             'conditions' => $conditions,
             'recursive' => false
                 )
@@ -95,6 +102,13 @@ class OrderController extends AppController {
             array_push($extra_categories, $category['extrascategories']);
         }
 
+
+        if (!empty($Order_detail['Order']['id'])) {
+            $this->Order->updateBillInfo($Order_detail['Order']['id']);
+        }
+        // $this->Order->updateBillInfo($)
+        // print_r ($Order_detail);
+        // print_r($all_extras);
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);

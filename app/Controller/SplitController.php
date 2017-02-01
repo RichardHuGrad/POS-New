@@ -2,7 +2,16 @@
 App::uses('PrintLib', 'Lib');
 class SplitController extends AppController {
 
-    public function split() {
+    public $components = array('Paginator');
+
+    public function beforeFilter() {
+
+        parent::beforeFilter();
+        $this->Auth->allow('index', 'forgot_password');
+        $this->layout = "default";
+    }
+
+    public function index() {
         // get cashier details        
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(

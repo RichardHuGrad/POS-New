@@ -130,7 +130,7 @@
                             	<ul class="dine-tables">
                                     <!--<div class="arrow"></div>-->
                                     <li class="dropdown-title">堂食<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
-                                    <li <?php if(@$dinein_tables_status[$i] == 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'P')echo $this->Html->url(array('controller'=>'homes', 'action'=>'order', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)"; ?>">Order <br/>点餐</a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] == 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] <> 'P')echo $this->Html->url(array('controller'=>'order', 'action'=>'index', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)"; ?>">Order <br/>点餐</a></li>
 
                                     <li class="dropdown-submenu <?php if(!@$dinein_tables_status[$i])echo 'disabled';?>">
                                         <a class="test" tabindex="-1" href="<?php if(@$dinein_tables_status[$i])echo $this->Html->url(array('controller'=>'homes', 'action'=>'changetable', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Change Table<br/>换桌</a>
@@ -169,7 +169,7 @@
                                             </ul>
                                         <?php }?>
                                     </li>
-                                    <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
 
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D']));?>');">Completed<br/>变空桌</a></li>
 
@@ -205,7 +205,7 @@
                                                     <input type="button" onclick="mergebill(<?php echo $i ?>,'<?php
                                                     //Modified by Yishou Liao @ Oct 16 2016.
                                                      if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V'){
-                                                         echo $this->Html->url(array('controller'=>'homes', 'action'=>'merge', 'table'=>$i, 'tablemerge'=>"Merge_table",'type'=>'D'));
+                                                         echo $this->Html->url(array('controller'=>'merge', 'action'=>'index', 'table'=>$i, 'tablemerge'=>"Merge_table",'type'=>'D'));
                                                      }else{
                                                          echo "javascript:void(0)";
                                                      };
@@ -218,7 +218,7 @@
                                 </li>
 
                                 <li <?php if (@$dinein_tables_status[$i] <> 'N' and @ $dinein_tables_status[$i] <> 'V') echo 'class="disabled"'; else echo 'class=" bottom-submenu"' ?>><a class="test" tabindex="-1" href="<?php
-                                    echo $this->Html->url(array('controller'=>'homes', 'action'=>'split', 'table'=>$i, 'type'=>'D', 'split_method' =>'1'));
+                                    echo $this->Html->url(array('controller'=>'split', 'action'=>'index', 'table'=>$i, 'type'=>'D', 'split_method' =>'1'));
                                     ?>">Split Bill<br />分单</a>
                                 </li>
                                 <!-- End. -->
@@ -274,7 +274,7 @@
                                     <li class="dropdown-title">外卖<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if (@$takeway_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                         if (@$takeway_tables_status[$i] <> 'P')
-                                            echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'T'));
+                                            echo $this->Html->url(array('controller' => 'order', 'action' => 'index', 'table' => $i, 'type' => 'T'));
                                         else
                                             echo "javascript:void(0)";
                                         ?>">Order<br>点餐</a></li>
@@ -326,7 +326,7 @@
                                                 </ul>
     	                                        <?php }?>
     	                                    </li>
-                                            <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
+                                            <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
     	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$takeway_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T']));?>');">Completed<br/>变空桌</a></li>
                                             
     		                        	</ul>
@@ -372,7 +372,7 @@
                                     <li class="dropdown-title">等待<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                         if (@$waiting_tables_status[$i] <> 'P')
-                                            echo $this->Html->url(array('controller' => 'homes', 'action' => 'order', 'table' => $i, 'type' => 'W'));
+                                            echo $this->Html->url(array('controller' => 'order', 'action' => 'index', 'table' => $i, 'type' => 'W'));
                                         else
                                             echo "javascript:void(0)";
                                         ?>">Order<br/>点餐</a></li>
@@ -425,7 +425,7 @@
                                                 </ul>
                                             <?php }?>
                                         </li>
-                                        <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay', 'table'=>$i, 'type'=>'W')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
+                                        <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'W')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
                                         <li <?php if(@$waiting_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$waiting_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'W', 'order'=>@$orders_no[$i]['W']));?>');">Completed<br/>变空桌</a></li>
                                     </ul>
                                     </div>
@@ -608,7 +608,8 @@ echo $this->fetch('script');
         });
         table_merge = table_merge.substring(0,(table_merge.length-1));
         
-        document.location = "merge/table:"+tableId+"/tablemerge:"+table_merge+"/type:D";
+        document.location = "../merge/index/table:"+tableId+"/tablemerge:"+table_merge+"/type:D";
+
     }
 	
 	//Modified by Yishou Liao @ Nov 18 2016.
