@@ -25,9 +25,6 @@ class PayController extends AppController {
         $printItems = $Order_detail['OrderItem'];
         $billInfo = $Order_detail['Order'];
 
-
-        
-        // $printItems = array();
         $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
         $print = new PrintLib();
         echo $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logo_name,true, false);
@@ -66,7 +63,7 @@ class PayController extends AppController {
     }
 
 
-    public function donepayment() {
+    public function complete() {
 
         $this->layout = false;
         $this->autoRender = NULL;

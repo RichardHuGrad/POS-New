@@ -430,85 +430,32 @@ echo $this->fetch('script');
                 <?php };
             }; ?>
 
-            <!--  Modified by Yishou Liao @ Nov 16 2016. -->
-                    var   merge_str = '<?php
-                        echo " and ";
-                        for ($i = 0; $i < count($tablemerge); $i++) {
-                            if ($i > 0) {
-                                echo "#" . $tablemerge[$i] . " ";
-                            };
-                        };
-                        echo "merge";
-                        ?>'
-                        <!-- End. -- >
-
-                                            var  subtotal  =  '<?php
-                        //Modified by Yishou Liao @ Oct 16 2016.
-                        $subtotal = 0;
-                        for ($i = 0; $i < count($Order_detail); $i++) {
-                            $subtotal += $Order_detail[$i]['Order']['subtotal'];
-                        };
-                        echo number_format($subtotal, 2);
-                        //End
-                        ?>';
-
-                        //Modified by Yishou Liao @ Nov 29 2016
-                                            var  discount  =  '<?php
-                        //Modified by Yishou Liao @ Oct 16 2016.
-                        $discount_value = 0;
-                        for ($i = 0; $i < count($Order_detail); $i++) {
-                            $discount_value += $Order_detail[$i]['Order']['discount_value'];
-                        };
-                        echo number_format($discount_value, 2);
-                        //End
-                        ?>';
-                        //End
-
-                                            var tax_amount = '<?php
-                        //Modified by Yishou Liao @ Oct 16 2016.
-                        $tax_amount = 0;
-                        for ($i = 0; $i < count($Order_detail); $i++) {
-                            $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
-                        };
-                        echo number_format($tax_amount, 2);
-                        //End.
-                        ?>';
-                                            var total = '<?php
-                        //Modified by Yishou Liao @ Oct 16 2016.
-                        $total = 0;
-                        for ($i = 0; $i < count($Order_detail); $i++) {
-                            $total += $Order_detail[$i]['Order']['total'];
-                        };
-                        echo number_format($total, 2)
-                        ?>';
-                    //Modified by Yishou Liao @ Nov 08 2016.
+           
+                    var order_ids = [];
+                    <?php 
+                        foreach ($order_id_merge as $o) {
+                    ?>
+                            order_ids.push(parseInt('<?php echo $o?>'));
+                    <?php
+                        }
+                     ?>
                     $.ajax({
-                    url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'printMergeReceipt', (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))) . ' #' . $table, $cashier_detail['Admin']['service_printer_device'],1)); ?>",
-                            method:"post",
-                            data:{
+                        url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'printBill')); ?>",
+                        method:"post",
+                        data:{
+                            type: "<?php echo $type; ?>",
                             logo_name:"../webroot/img/logo.bmp",
-                                    Print_Item:Order_print,
-                                    subtotal:subtotal, 
-									discount:discount,
-									after_discount:(parseFloat(subtotal)-parseFloat(discount)).toFixed(2),
-									//Modified by Yishou Liao @ Nov 29 2016
-									tax_Amount: tax_amount,
-									paid: $(".received_price").attr("amount"),
-									change: $(".change_price").attr("amount"),
-									//End
-                                    total:total,
-                                    order_no:oder_no,
-                                    merge_str:merge_str,
-                            },
-                            success:function(html) {
+                            order_ids: order_ids,
+                        },
+                        success:function(html) {
 
-                            }
-                    })
+                        }
+                    });
                     //End.
 
             });
 
-
+/*
                     $(document).on('click', '.reprint_2', function () {
                         //Print ele4 with custom options
                         $("#print_panel_2").print({
@@ -524,7 +471,7 @@ echo $this->fetch('script');
                                 noPrintSelector: ".avoid-this",
                                 //Add this at top
                         });
-                        });
+                        });*/
 
 
                     $(document).ready(function () {
@@ -561,7 +508,7 @@ echo $this->fetch('script');
                             if (parseFloat($(".change_price").attr("amount")) >= 0) {
                                 // submit form for complete payment process
                                 $.ajax({
-                                    url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'donemergepayment', $table, $type)); ?>",
+                                    url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'complete', $table, $type)); ?>",
                                     method: "post",
                                     data: {
                                         pay: $(".received_price").attr("amount"),
@@ -594,8 +541,28 @@ echo $this->fetch('script');
                                     },
                                     success: function (html) {
                                         $(".alert-warning").hide();
-                                        $(".reprint").trigger("click");
-                                        window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                                        // $(".reprint").trigger("click");
+
+                                        var order_ids = [];
+                                        <?php 
+                                            foreach ($order_id_merge as $o) {
+                                        ?>
+                                                order_ids.push(parseInt('<?php echo $o?>'));
+                                        <?php
+                                            }
+                                         ?>
+                                        $.ajax({
+                                            url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'printReceipt')); ?>",
+                                            method:"post",
+                                            data:{
+                                                type: "<?php echo $type; ?>",
+                                                logo_name:"../webroot/img/logo.bmp",
+                                                order_ids: order_ids,
+                                            },
+                                            success:function(html) {
+                                                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                                            }
+                                        });
                                     },
                                     beforeSend: function () {
                                         $(".RIGHT-SECTION").addClass('load1 csspinner');
@@ -638,56 +605,53 @@ echo $this->fetch('script');
             })
 
 
-             function recalculateAmount(cash_val, card_val, tip, total_price) {
+            function recalculateAmount(cash_val, card_val, tip, total_price) {
 
-            $("#tip_val").val(tip);
+                $("#tip_val").val(tip);
 
-            var card_extra_tip = 0;
+                var card_extra_tip = 0;
 
-            console.log(cash_val);
+                console.log(cash_val);
 
-            var amount = cash_val + card_val;
+                var amount = cash_val + card_val;
 
-            $(".received_price").html("$" + amount.toFixed(2));
-            $(".received_price").attr('amount', amount.toFixed(2));
+                $(".received_price").html("$" + amount.toFixed(2));
+                $(".received_price").attr('amount', amount.toFixed(2));
 
 
-            if (card_val >= total_price) {
-                
-                card_extra_tip = card_val - total_price;
-                tip += card_extra_tip;
-                
-                $(".change_price_txt").html("Change 找零");
-                $(".change_price").html("$" + cash_val.toFixed(2));
-                $(".change_price").attr('amount', (cash_val).toFixed(2));
-
-                $(".tip_price").html("$" + card_extra_tip.toFixed(2));
-                $("#tip_val").val(card_extra_tip.toFixed(2));
-                if (card_extra_tip > 0) {
-                    $("#tip_paid_by").val("CARD");
-                }
-
-            } else { // card_val < total_price
-
-                $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
-                $(".change_price").attr('amount', (amount - total_price).toFixed(2));
-
-                if (amount < total_price) {
-                    $(".change_price_txt").html("Remaining 其余");
-                } else { // amount >= total_price
+                if (card_val >= total_price) {
+                    
+                    card_extra_tip = card_val - total_price;
+                    tip += card_extra_tip;
+                    
                     $(".change_price_txt").html("Change 找零");
-                }
+                    $(".change_price").html("$" + cash_val.toFixed(2));
+                    $(".change_price").attr('amount', (cash_val).toFixed(2));
 
-                $(".tip_price").html("$" + (0).toFixed(2));
-                $("#tip_val").val((0).toFixed(2));
-                if (card_extra_tip > 0) {
-                    $("#tip_paid_by").val("NO TIP");
+                    $(".tip_price").html("$" + card_extra_tip.toFixed(2));
+                    $("#tip_val").val(card_extra_tip.toFixed(2));
+                    if (card_extra_tip > 0) {
+                        $("#tip_paid_by").val("CARD");
+                    }
+
+                } else { // card_val < total_price
+
+                    $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
+                    $(".change_price").attr('amount', (amount - total_price).toFixed(2));
+
+                    if (amount < total_price) {
+                        $(".change_price_txt").html("Remaining 其余");
+                    } else { // amount >= total_price
+                        $(".change_price_txt").html("Change 找零");
+                    }
+
+                    $(".tip_price").html("$" + (0).toFixed(2));
+                    $("#tip_val").val((0).toFixed(2));
+                    if (card_extra_tip > 0) {
+                        $("#tip_paid_by").val("NO TIP");
+                    }
                 }
             }
-
-            
-            
-        }
 
             $("#Enter").click(function () {
                 if (!$("#selected_card").val()) {

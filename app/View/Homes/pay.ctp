@@ -466,7 +466,7 @@ echo $this->fetch('script');
 
                     // submit form for complete payment process
                     $.ajax({
-                        url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'donepayment', $table, $type)); ?>",
+                        url: "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'complete')); ?>",
                         method: "post",
                         data: {
                             pay: $(".received_price").attr("amount"),

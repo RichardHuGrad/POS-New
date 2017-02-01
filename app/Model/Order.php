@@ -101,6 +101,50 @@ class Order extends AppModel {
         $data['Order']['total'] = $after_discount + $data['Order']['tax_amount'];
 
         $this->save($data, false);
+    }
+
+
+    public function getMergeOrderInfo($order_ids) {
+        $data = array(
+                "order_nos" => "",
+                "table_nos" => "",
+                "print_items" => array(),
+                "subtotal" => 0, 
+                "discount_value" => 0, 
+                "after_discount" => 0,
+                "tax" => 0, 
+                "tax_amount" => 0,
+                "total" => 0,
+                "paid" => 0,
+                "change" => 0,
+            );
+
+
+        $order_nos = array();
+        $table_nos = array();
+        $printItems = array();
+
+        foreach ($order_ids as $order_id) {
+            $Order_detail = $this->find('first', array(
+                    'conditions' => array('Order.id' => $order_id)
+                ));
+            array_push($data['print_items'], $Order_detail['OrderItem']);
+            $data['subtotal'] += $Order_detail['Order']['subtotal'];
+            $data['discount_value'] += $Order_detail['Order']['discount_value'];
+            $data['after_discount'] += $Order_detail['Order']['after_discount'];
+            $data['tax'] = $Order_detail['Order']['tax'];
+            $data['tax_amount'] += $Order_detail['Order']['tax_amount'];
+            $data['total'] += $Order_detail['Order']['total'];
+            $data['paid'] += $Order_detail['Order']['paid'];
+            $data['change'] += $Order_detail['Order']['change'];
+            array_push($order_nos, $Order_detail['Order']['order_no']);
+            array_push($table_nos, $Order_detail['Order']['table_no']);
+        }
+
+        $data['order_nos'] = implode(",", $order_nos);
+        $data['table_nos'] = implode(",", $table_nos);
+
+        return $data;
     } 
 
 }
