@@ -71,6 +71,15 @@ class OrderItem extends AppModel {
     	$this->Order->updateBillInfo($item_detail['OrderItem']['order_id']);
     }
 
+
+    /**
+     * return
+        Array ( [0] => Array ( 
+        [items] => Array ( 
+            [0] => Array ( [item_id] => 10 [name_en] => Noodles w/Beef Sirloin [name_xh] => 宋嫂牛肉面 [item_id_count] => 1 ) [1] => Array ( [item_id] => 14 [name_en] => Noodles w/Tomatoes & Beef Sirloin [name_xh] => 番茄牛肉面 [item_id_count] => 1 ) [2] => Array ( [item_id] => 16 [name_en] => Chongqing-style Noodles [name_xh] => 麻辣小面 [item_id_count] => 1 ) [3] => Array ( [item_id] => 30 [name_en] => Noodles w/Grilled Hot Peppers [name_xh] => 特色烧椒面 [item_id_count] => 1 ) [4] => Array ( [item_id] => 31 [name_en] => Classic Noodles w/Minced Meat [name_xh] => 经典干拌面 [item_id_count] => 1 ) ) 
+        [start_time] => 1486051200 
+        [end_time] => 1486112400 ) ) 
+     */
     public function getDailyItemCount($timeline_arr) {
         $data = array();
         $this->virtualFields = array('item_id_count' => 'COUNT(OrderItem.item_id)');
@@ -99,10 +108,6 @@ class OrderItem extends AppModel {
                 $tempItem['OrderItem']['item_id_count'] = $item['OrderItem']['item_id_count'];
                 array_push($arr['items'], $tempItem['OrderItem']);
             }
-
-            // $arr['items'] = $items;
-            // $items['start_time'] = $timeline_arr[$i];
-            // $items['end_time'] = $timeline_arr[$i + 1];
 
             array_push($data, $arr);
         }

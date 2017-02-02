@@ -181,36 +181,23 @@ class Order extends AppModel {
 
             foreach ($Orders as $o) {
                 $order = $o['Order'];
-                if (!isset($cashierArr[$order['cashier_id']])) {
-                    $cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
-                }
-                $cashierArr[$order['cashier_id']]['total'] += $order['total'];
-                $totalArr['total'] += $order['total'];
                 $totalArr['paid_cash_total'] += $order['cash_val'];
                 $totalArr['paid_card_total'] += $order['card_val'];
 
                 if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-                    $cashierArr[$order['cashier_id']]['cash_total'] += $order['total'];
                     $totalArr['cash_total'] += $order['total'];
                 } else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP
-                    $cashierArr[$order['cashier_id']]['card_total'] += $order['total'];
                     $totalArr['card_total'] += $order['total'];
                 } else {
-                    $cashierArr[$order['cashier_id']]['card_mix_total'] += $order['card_val'];
                     $totalArr['card_mix_total'] += $order['card_val'];
-                    $cashierArr[$order['cashier_mix_id']]['cash_total'] += $order['total'] - $order['card_val'];
                     $totalArr['cash_mix_total'] += $order['total'] - $order['card_val'];
                 }
-                $cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
                 $totalArr['total_tip'] += $order['tip'];
                 if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-                    $cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
                     $totalArr['cash_tip_total'] += $order['tip'];
                 } else if ($order['tip_paid_by'] == 'CARD') {
-                    $cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
                     $totalArr['card_tip_total'] += $order['tip'];
                 } else { // MIX
-                    $cashierArr[$order['cashier_id']]['mix_tip_total'] += $order['tip'];
                     $totalArr['mix_tip_total'] += $order['tip'];
                 }
                 $totalArr['tax'] += $order['tax_amount'];
