@@ -765,9 +765,9 @@ class HomesController extends AppController {
         // print_r($dailyItems);
 
 
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printDailyReportDoc($printerName, $dailyAmount, $dailyItems);
+        // $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        // $print = new PrintLib();
+        // echo $print->printDailyReportDoc($printerName, $dailyAmount, $dailyItems);
 
 
 
