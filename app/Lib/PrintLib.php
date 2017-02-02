@@ -200,18 +200,20 @@ class PrintLib {
         if (!function_exists('printer_open')) {
             return $debug_str;
         }
-        $handle = printer_open($printer_name);
-        printer_start_doc($handle, "my_Receipt");
+        // $handle = printer_open($printer_name);
+        // printer_start_doc($handle, "my_Receipt");
 
-        $strategy = new MergeDoc();
+        $strategy = new MergeDoc($order_nos, $table_nos, $table_type, $printer_name, $item_details, $bill_info, $logo_name, $is_receipt=true);
+        $strategy->printDoc();
+
         // print header
-        $strategy->printHeaderPage($handle, $order_nos, $table_nos, $table_type, $logo_name, true);
-        $strategy->printItemsPage($handle, $item_details);
-        $strategy->printBillInfoPage($handle, $bill_info, true);
-        $strategy->printFooterPage($handle);
+        // $strategy->printHeaderPage($handle, $order_nos, $table_nos, $table_type, $logo_name, true);
+        // $strategy->printItemsPage($handle, $item_details);
+        // $strategy->printBillInfoPage($handle, $bill_info, true);
+        // $strategy->printFooterPage($handle);
 
-        printer_end_doc($handle);
-        printer_close($handle);
+        // printer_end_doc($handle);
+        // printer_close($handle);
     }
 
 
@@ -536,74 +538,101 @@ class PayStrategy {
 
 class MergeDoc {
     public $fontStr1 = "simsun";
-    private $titleFontZh;
-    private $titleFontEn;
-    private $fontZh;
-    private $fontEn;
+    private $order_nos;
+    private $table_nos;
+    private $table_type;
+    private $printer_name;
+    private $item_details;
+    private $bill_info;
+    private $logo_name;
+    private $print_zh;
+    private $print_en;
+    private $handle;
+    private $is_receipt;
     
+    public function __construct($order_nos, $table_nos, $table_type, $printer_name, $item_details, $bill_info, $logo_name, $is_receipt,$print_zh=true, $print_en=false) {
+        $this->order_nos = $order_nos;
+        $this->table_nos = $table_nos;
+        $this->table_type = $table_type;
+        $this->printer_name = $printer_name;
+        $this->item_details = $item_details;
+        $this->bill_info = $bill_info;
+        $this->logo_name = $logo_name;
+        $this->print_zh = $print_zh;
+        $this->print_en = $print_en;
+        $this->is_receipt = $is_receipt;
+    }
+
+    public function printDoc() {
+        $this->handle = printer_open($this->printer_name);
+        printer_start_doc($this->handle, "Merge Receipt");
+        
+        $this->printHeaderPage();
+        $this->printItemsPage();
+        $this->printBillInfoPage();
+        $this->printFooterPage();
+
+        printer_end_doc($this->handle);
+        printer_close($this->handle);
+        
+    }
+
     // order_nos
     // table_nos
-    public function printHeaderPage($handle, $order_nos, $table_nos, $table_type, $logo_name, $print_zh=true) {
-        printer_start_page($handle);
+    public function printHeaderPage() {
+        printer_start_page($this->handle);
 
-
-        $table_type_str = "";
-        if ($table_type == 'D') {
-            $table_type_str = '[[堂食]]';
-        } else if ($table_type == 'T') {
-            $table_type_str = '[[外卖]]';
-        } else if ($table_type == 'W') {
-            $table_type_str = '[[等候]]';
-        }
+        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[等候]]');
+        $table_type_str = $type_map[$this->table_type];
 
         // print Logo image
-        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
+        printer_draw_bmp($this->handle, $this->logo_name, 100, 20, 263, 100);
 
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
+        printer_select_font($this->handle, $font);
         // print address line
-        printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
-        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
-        printer_draw_text($handle, "647-352-5333", 156, 206);
+        printer_draw_text($this->handle, "3700 Midland Ave. #108", 156, 130);
+        printer_draw_text($this->handle, "Scarborogh ON M1V 0B3", 110, 168);
+        printer_draw_text($this->handle, "647-352-5333", 156, 206);
 
         $print_y = 244;
-        if ($print_zh == true) {
+        if ($this->print_zh == true) {
             $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
+            printer_select_font($this->handle, $font);
+            printer_draw_text($this->handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
             $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            printer_draw_text($this->handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
             $print_y+=40;
         };
 
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
+        printer_select_font($this->handle, $font);
 
-        printer_draw_text($handle, "Order Number: #" . $order_nos, 32, $print_y);
+        printer_draw_text($this->handle, "Order Number: #" . $this->order_nos, 32, $print_y);
         $print_y+=40;
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $table_nos), 32, $print_y);
+        printer_draw_text($this->handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $this->table_nos), 32, $print_y);
         $print_y+=38;
 
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+        printer_select_pen($this->handle, $pen);
+        printer_draw_line($this->handle, 21, $print_y, 600, $print_y);
 
-        printer_end_page($handle);
+        printer_end_page($this->handle);
     }
 
-    public function printItemsPage($handle, $item_details/*, $table_type*/) {
+    public function printItemsPage(/*, $table_type*/) {
         $i = 0;
-        foreach($item_details as $item_detail) {
-            printer_start_page($handle);
+        foreach($this->item_details as $item_detail) {
+            printer_start_page($this->handle);
             $font = printer_create_font($this->fontStr1, 28, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
+            printer_select_font($this->handle, $font);
 
-            printer_draw_text($handle, '#' . $i++, 10, $y);
+            printer_draw_text($this->handle, '#' . $i++, 10, $y);
 
             printer_delete_font($font);
-            printer_end_page($handle);
+            printer_end_page($this->handle);
             foreach ($item_detail as $item) {
-                printer_start_page($handle);
+                printer_start_page($this->handle);
 
                 
                 $font = printer_create_font($this->fontStr1, 28, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
@@ -623,16 +652,16 @@ class MergeDoc {
                 $y = 10;
                 $origin_y = $y;
 
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, mbStrSplit($name_en, 20)[0], 80, $y);
+                printer_select_font($this->handle, $font);
+                printer_draw_text($this->handle, mbStrSplit($name_en, 20)[0], 80, $y);
                 $y += 30;
             
-                printer_select_font($handle, $font);
-                printer_draw_text($handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);
+                printer_select_font($this->handle, $font);
+                printer_draw_text($this->handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);
                 $y += 30;
 
-                printer_draw_text($handle, $qty, 10, $origin_y);
-                printer_draw_text($handle, number_format($price, 2), 400, $origin_y);
+                printer_draw_text($this->handle, $qty, 10, $origin_y);
+                printer_draw_text($this->handle, number_format($price, 2), 400, $origin_y);
                 
 
                /* if (strlen($selected_extras) > 0) {
@@ -646,27 +675,28 @@ class MergeDoc {
 
                 printer_delete_font($font);
 
-                printer_end_page($handle);
+                printer_end_page($this->handle);
             }
         }
     }
-    private function formatBillItem($handle, $str1, $str2, $num) {
-        printer_start_page($handle);
+    private function formatBillItem($str1, $str2, $num) {
+        printer_start_page($this->handle);
         $font = printer_create_font($this->fontStr1, 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
+        printer_select_font($this->handle, $font);
         
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", $str1), 58, 0);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", $str2), 148, 0);
+        printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str1), 58, 0);
+        printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str2), 148, 0);
 
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($num, 2)), 400, 0);
+        printer_draw_text($this->handle, iconv("UTF-8", "gb2312", number_format($num, 2)), 400, 0);
         
         printer_delete_font($font);
-        printer_end_page($handle);
+        printer_end_page($this->handle);
     }
 
-    public function printBillInfoPage($handle, $bill_info, $is_receipt) {
+    public function printBillInfoPage() {
         // $billArr = array()`
-        
+        $bill_info = $this->bill_info;
+        $is_receipt = $this->is_receipt;
         $subtotal = $bill_info['subtotal'];
         $discount_amount = $bill_info['discount_value'];
         $after_discount = $bill_info['after_discount'];
@@ -677,31 +707,62 @@ class MergeDoc {
         $change = $bill_info['change'];
 
 
-        printer_start_page($handle);
+        printer_start_page($this->handle);
         $print_y = 10;
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
-        printer_end_page($handle);
+        printer_select_pen($this->handle, $pen);
+        printer_draw_line($this->handle, 21, $print_y, 600, $print_y);
+        printer_end_page($this->handle);
 
-        $this->formatBillItem($handle, "Subtotal", "小计:", $subtotal);
+        $this->formatBillItem("Subtotal", "小计:", $subtotal);
 
         if (floatval($discount_amount) > 0 ) {
-            $this->formatBillItem($handle, "Discount", "折扣:", $discount_amount);
-            $this->formatBillItem($handle, "After Discount", "折后价:", $after_discount);
+            $this->formatBillItem("Discount", "折扣:", $discount_amount);
+            $this->formatBillItem("After Discount", "折后价:", $after_discount);
         }
-        $this->formatBillItem($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
+        $this->formatBillItem("Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
 
-        $this->formatBillItem($handle, "Total", "总计:", $total);
+        $this->formatBillItem("Total", "总计:", $total);
 
         if ($is_receipt == true) {
-            $this->formatBillItem($handle, "Paid", "付款:", $paid);
-            $this->formatBillItem($handle, "Change", "找零:", $change);
+            $this->formatBillItem("Paid", "付款:", $paid);
+            $this->formatBillItem("Change", "找零:", $change);
         }
 
     }
 
-    public function printFooterPage($handle) {
+    public function printFooterPage() {
+        printer_start_page($this->handle);
+
+        date_default_timezone_set("America/Toronto");
+        $date_time = date("l M d Y h:i:s A");
+
+        $print_y = 10;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($this->handle, $pen);
+        printer_draw_line($this->handle, 21, $print_y, 600, $print_y);
+        
+        $print_y += 10;
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($this->handle, $font);
+        printer_draw_text($this->handle, $date_time, 80, $print_y);
+
+        printer_delete_font($font);
+        printer_end_page($this->handle);
+    }
+}
+
+
+class DailyReportDoc {
+
+}
+
+interface HeaderPage {
+    public function printHeaderPage();
+}
+
+Class FooterPage {
+    public function printTimeFooterPage($handle) {
         printer_start_page($handle);
 
         date_default_timezone_set("America/Toronto");
@@ -723,17 +784,6 @@ class MergeDoc {
 }
 
 
-class DailyReportDoc {
-
-}
-
-interface HeaderPage {
-    public function printHeaderPage();
-}
-
-interface FooterPage {
-    public function printFooterPage();
-}
 
 
 // class HeaderPage {

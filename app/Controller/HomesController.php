@@ -924,7 +924,7 @@ class HomesController extends AppController {
             printer_end_page($handle);
 
             foreach($dailyItems as $spanItems) {
-                foreach($spanItems as $item) {
+                foreach($spanItems['items'] as $item) {
                     printer_start_page($handle);
                     if ($print_zh) {
                         printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['OrderItem']['name_xh']) , 32, 0);
