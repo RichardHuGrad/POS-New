@@ -85,12 +85,22 @@ class OrderItem extends AppModel {
 
             $items = $this->find("all", array(
                     'recursive' => -1,
-                    'fields' =>  array('OrderItem.item_id', 'OrderItem.name_en', 'OrderItem.name_xh', 'OrderItem.item_id_count'),
-                    'conditions' => array('is_print' => 'Y','OrderItem.created >=' => date('c', $timeline_arr[$i]), 'OrderItem.created <' => date('c', $timeline_arr[$i + 1])),
+                    'fields' =>  array('OrderItem.item_id', 'OrderItem.item_id_count'),
+                    'conditions' => array('OrderItem.is_print' => 'Y','OrderItem.created >=' => date('c', $timeline_arr[$i]), 'OrderItem.created <' => date('c', $timeline_arr[$i + 1])),
                     'group' => array('OrderItem.item_id'),
                 ));
+            
+            foreach ($items as $item) {
+                $tempItem = $this->find('first', array(
+                        'recursive' => -1,
+                        'fields' => array('OrderItem.item_id','OrderItem.name_en', 'OrderItem.name_xh'),
+                        'conditions' => array('OrderItem.item_id' => $item['OrderItem']['item_id'])
+                    ));
+                $tempItem['OrderItem']['item_id_count'] = $item['OrderItem']['item_id_count'];
+                array_push($arr['items'], $tempItem['OrderItem']);
+            }
 
-            $arr['items'] = $items;
+            // $arr['items'] = $items;
             // $items['start_time'] = $timeline_arr[$i];
             // $items['end_time'] = $timeline_arr[$i + 1];
 

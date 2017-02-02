@@ -927,11 +927,11 @@ class HomesController extends AppController {
                 foreach($spanItems['items'] as $item) {
                     printer_start_page($handle);
                     if ($print_zh) {
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['OrderItem']['name_xh']) , 32, 0);
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总共: " . $item['OrderItem']['item_id_count']) , 300, 0);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['name_xh']) , 32, 0);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总共: " . $item['item_id_count']) , 300, 0);
                     } else {
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['OrderItem']['name_en']) , 32, 0);
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Count" . $item['OrderItem']['item_id_count']) , 32, 0);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['name_en']) , 32, 0);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Count" . $item['item_id_count']) , 32, 0);
                     }
                     printer_end_page($handle);
                 }
