@@ -722,8 +722,17 @@ class MergeDoc {
     }
 }
 
+
+class DailyReportDoc {
+
+}
+
 interface HeaderPage {
     public function printHeaderPage();
+}
+
+interface FooterPage {
+    public function printFooterPage();
 }
 
 

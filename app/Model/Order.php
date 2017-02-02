@@ -148,52 +148,78 @@ class Order extends AppModel {
     } 
 
 
-    public function getDailyOrderInfo() {
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00"));
-        $nottm = time();
-        if ($timeline < $nowtm) {
-            // before 11 am
-            $timeline -= 86400;
+    public function getDailyOrderInfo($timeline_arr) {
+
+        $data = array();
+        for ($i = 0; $i < count($timeline_arr) - 1; ++$i) {
+            $conditions = 
+            $Orders = $this->find("all", array(
+                'recursive' => -1,
+                'fields' =>  array('Order.order_no', 'Order.cashier_id', 'Order.table_no', 'Order.total', 'Order.paid', 'Order.cash_val', 'Order.card_val', 'Order.tax_amount', 'Order.discount_value', 'Order.percent_discount','Order.paid_by', 'Order.tip','Order.tip_paid_by'),
+                'conditions' => array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $timeline_arr[$i]), 'Order.created <' => date('c', $timeline_arr[$i + 1]))
+
+                ));
+
+            $totalArr = array(
+                'total' => 0,
+                'cash_total' => 0,
+                'card_total' => 0,
+                'cash_mix_total' => 0,
+                'card_mix_total' => 0,
+                'paid_cash_total' => 0,
+                'paid_card_total' => 0,
+                'total_tip' => 0,
+                'cash_tip_total' => 0,
+                'card_tip_total' => 0,
+                'mix_tip_total' => 0,
+                'tax' => 0,
+                'real_total' => 0,
+                'order_num' => sizeof($Orders),
+                'start_time' => $timeline_arr[$i],
+                'end_time' => $timeline_arr[$i + 1],
+                );
+
+            foreach ($Orders as $o) {
+                $order = $o['Order'];
+                if (!isset($cashierArr[$order['cashier_id']])) {
+                    $cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
+                }
+                $cashierArr[$order['cashier_id']]['total'] += $order['total'];
+                $totalArr['total'] += $order['total'];
+                $totalArr['paid_cash_total'] += $order['cash_val'];
+                $totalArr['paid_card_total'] += $order['card_val'];
+
+                if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+                    $cashierArr[$order['cashier_id']]['cash_total'] += $order['total'];
+                    $totalArr['cash_total'] += $order['total'];
+                } else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP
+                    $cashierArr[$order['cashier_id']]['card_total'] += $order['total'];
+                    $totalArr['card_total'] += $order['total'];
+                } else {
+                    $cashierArr[$order['cashier_id']]['card_mix_total'] += $order['card_val'];
+                    $totalArr['card_mix_total'] += $order['card_val'];
+                    $cashierArr[$order['cashier_mix_id']]['cash_total'] += $order['total'] - $order['card_val'];
+                    $totalArr['cash_mix_total'] += $order['total'] - $order['card_val'];
+                }
+                $cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
+                $totalArr['total_tip'] += $order['tip'];
+                if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+                    $cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
+                    $totalArr['cash_tip_total'] += $order['tip'];
+                } else if ($order['tip_paid_by'] == 'CARD') {
+                    $cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
+                    $totalArr['card_tip_total'] += $order['tip'];
+                } else { // MIX
+                    $cashierArr[$order['cashier_id']]['mix_tip_total'] += $order['tip'];
+                    $totalArr['mix_tip_total'] += $order['tip'];
+                }
+                $totalArr['tax'] += $order['tax_amount'];
+            }
+
+            $totalArr['real_total'] = $totalArr['paid_cash_total'] + $totalArr['paid_card_total'];
+
+            array_push($data, $totalArr);
         }
-        $tm11 = $timeline;
-        $timeline += 3600 * 6;
-        $tm17 = $timeline;
-        $timeline += 3600 * 6;
-        $tm23 = $timeline;
-        $timeline += 3600 * 5;
-        $tm04 = $timeline;
-
-        $fields = array(
-            'Order.order_no',
-            'Order.cashier_id',
-            'Order.table_no',
-            'Order.total',
-            'Order.paid',
-            'Order.cash_val',
-            'Order.card_val',
-            'Order.tax_amount',
-            'Order.discount_value',
-            'Order.percent_discount',
-            'Order.paid_by',
-            'Order.tip',
-            'Order.tip_paid_by'
-        );
-
-        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm11), 'Order.created <' => date('c', $tm17));
-        $Orders1 = $this->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-
-        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm17), 'Order.created <' => date('c', $tm23));
-        $Orders2 = $this->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-
-        $conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm23), 'Order.created <' => date('c', $tm04));
-        $Orders3 = $this->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-        //print_r($Printer);
-
-        array_push($data, $Order1);
-        array_push($data, $Order2);
-        array_push($data, $Order3);
 
         return $data;
     }

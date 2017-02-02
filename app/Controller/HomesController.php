@@ -736,19 +736,17 @@ class HomesController extends AppController {
     //Modified by Jack @2017-01-05
     public function printTodayOrders($print_zh = false) {
         // $this->loadModel('Cashier');
+        $this->loadModel('Order');
+        $this->loadModel('OrderItem');
     	if (empty($this->data['Printer'])) {
     		die("No Printer");
     	}
 
-        $this->loadModel('Order');
-        print_r($this->Order->getDailyOrderInfo() );
-
-
 		date_default_timezone_set("America/Toronto");
 		$date_time = date("l M d Y h:i:s A");
-		$timeline = strtotime(date("Y-m-d 11:00:00"));
-		$nottm = time();
-		if ($timeline < $nowtm) {
+		$timeline = strtotime(date("Y-m-d 11:00:00")); 
+		$nowtm = time();
+		if ($timeline > $nowtm) {
 			// before 11 am
 			$timeline -= 86400;
 		}
@@ -760,35 +758,13 @@ class HomesController extends AppController {
 		$timeline += 3600 * 5;
 		$tm04 = $timeline;
 
+        $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
+        $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
+
+        print_r($dailyItems);
+
     	$Printer = $this->data['Printer'];
-    	$this->loadModel('Order');
-        $fields = array(
-        		'Order.order_no',
-        		'Order.cashier_id',
-        		'Order.table_no',
-        		'Order.total',
-        		'Order.paid',
-        		'Order.cash_val',
-        		'Order.card_val',
-        		'Order.tax_amount',
-        		'Order.discount_value',
-        		'Order.percent_discount',
-        		'Order.paid_by',
-        		'Order.tip',
-        		'Order.tip_paid_by'
-        );
-
-    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm11), 'Order.created <' => date('c', $tm17));
-        $Orders1 = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-
-    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm17), 'Order.created <' => date('c', $tm23));
-        $Orders2 = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-
-    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm23), 'Order.created <' => date('c', $tm04));
-        $Orders3 = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-        //print_r($Printer);
-
-		$printer_name = $Printer['C'];
+        $printer_name = $Printer['C'];
 		$handle = '';
 		if ($printer_name) {
 			$handle = printer_open($printer_name);
@@ -838,90 +814,33 @@ class HomesController extends AppController {
 			//Print orders
 			//$cashierArr = array();
 			$print_y = 120;
-			$tmArr[0] = date("Y-m-d H:i", $tm11);
-			$tmArr[1] = date("Y-m-d H:i", $tm17);
-			$tmArr[2] = date("Y-m-d H:i", $tm23);
-			$tmArr[3] = date("Y-m-d H:i", $tm04);
-			$tmidx = 0;
-			foreach (array($Orders1, $Orders2, $Orders3) as $Orders) {
-				printer_draw_text($handle, $tmArr[$tmidx] . " - " . $tmArr[$tmidx + 1], $c1, $print_y);
-				$tmidx++;
+            // print_r($dailyAmount);
+			foreach ($dailyAmount as $spanAmount) {
+                // print time title
+
+				printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), $c1, $print_y);
 				$print_y+=32;
-				$totalArr = array(
-					'total' => 0,
-					'cash_total' => 0,
-					'card_total' => 0,
-					'cash_mix_total' => 0,
-					'card_mix_total' => 0,
-					'paid_cash_total' => 0,
-					'paid_card_total' => 0,
-					'total_tip' => 0,
-					'cash_tip_total' => 0,
-					'card_tip_total' => 0,
-					'mix_tip_total' => 0,
-					'tax' => 0);
-				foreach ($Orders as $o) {
-					$order = $o['Order'];
-					//printer_draw_text($handle, $order['order_no'], $c1, $print_y);
-					//printer_draw_text($handle, $order['paid_by'], $c2, $print_y);
-					//printer_draw_text($handle, number_format($order['total'], 2), $c3, $print_y);
-					//$print_y+=32;
-					if (!isset($cashierArr[$order['cashier_id']])) {
-						$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
-					}
-					$cashierArr[$order['cashier_id']]['total'] += $order['total'];
-					$totalArr['total'] += $order['total'];
-					$totalArr['paid_cash_total'] += $order['cash_val'];
-					$totalArr['paid_card_total'] += $order['card_val'];
-	
-					if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-						$cashierArr[$order['cashier_id']]['cash_total'] += $order['total'];
-						$totalArr['cash_total'] += $order['total'];
-					} else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP
-						$cashierArr[$order['cashier_id']]['card_total'] += $order['total'];
-						$totalArr['card_total'] += $order['total'];
-					} else {
-						$cashierArr[$order['cashier_id']]['card_mix_total'] += $order['card_val'];
-						$totalArr['card_mix_total'] += $order['card_val'];
-						$cashierArr[$order['cashier_mix_id']]['cash_total'] += $order['total'] - $order['card_val'];
-						$totalArr['cash_mix_total'] += $order['total'] - $order['card_val'];
-					}
-					$cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
-					$totalArr['total_tip'] += $order['tip'];
-					if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-						$cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
-						$totalArr['cash_tip_total'] += $order['tip'];
-					} else if ($order['tip_paid_by'] == 'CARD') {
-						$cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
-						$totalArr['card_tip_total'] += $order['tip'];
-					} else { // MIX
-						$cashierArr[$order['cashier_id']]['mix_tip_total'] += $order['tip'];
-						$totalArr['mix_tip_total'] += $order['tip'];
-					}
-					$totalArr['tax'] += $order['tax_amount'];
-				}
-				$print_y+=16;
+
 				printer_draw_line($handle, 21, $print_y, 600, $print_y);
 				$print_y+=32;
 				
-				$real_total = $totalArr['paid_cash_total'] + $totalArr['paid_card_total'];
-				if ($real_total > 0) {
-					$paid_cash_percent = " " . number_format($totalArr['paid_cash_total'] * 100 / $real_total, 2) . '%';
-					$paid_card_percent = " " . number_format($totalArr['paid_card_total'] * 100 / $real_total, 2) . '%';
+				if ($spanAmount['real_total'] > 0) {
+					$paid_cash_percent = " " . number_format($spanAmount['paid_cash_total'] * 100 / $spanAmount['real_total'], 2) . '%';
+					$paid_card_percent = " " . number_format($spanAmount['paid_card_total'] * 100 / $spanAmount['real_total'], 2) . '%';
 				} else {
 					$paid_cash_percent = "-";
 					$paid_card_percent = "-";
 				}
 				if ($print_zh == true) {
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金额 : ') . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类额 : ') . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和现金额 : ') . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和卡类额 : ') . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $totalArr['total']) . " ( " . sizeof($Orders) . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $real_total), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $totalArr['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $totalArr['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
 					//$print_y+=16;
 					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金小费总计 : ') . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类小费总计 : ') . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
@@ -950,15 +869,15 @@ class HomesController extends AppController {
 					}
 				*/
 				} else {
-					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']) . " ( " . sizeof($Orders) . " sales ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $real_total), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $totalArr['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $totalArr['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . sizeof($Orders) . " sales ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+					printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
 					//$print_y+=16;
 					//printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
 					//printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
@@ -985,9 +904,43 @@ class HomesController extends AppController {
 				}
 				$print_y+=60;
 			}
+
+            printer_end_page($handle);
+
+            printer_start_page($handle);
+            // print title 
+            $y = 10;
+            $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+            printer_select_pen($handle, $pen);
+            printer_draw_line($handle, 21, $y, 600, $y);
+            $y += 10;
+            $font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Sales Statistics 销量统计"), 30, $y);
+            $font = printer_create_font($this->fontStr1, 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+
+
+            printer_end_page($handle);
+
+            foreach($dailyItems as $spanItems) {
+                foreach($spanItems as $item) {
+                    printer_start_page($handle);
+                    if ($print_zh) {
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['OrderItem']['name_xh']) , 32, 0);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总共: " . $item['OrderItem']['item_id_count']) , 300, 0);
+                    } else {
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['OrderItem']['name_en']) , 32, 0);
+                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Count" . $item['OrderItem']['item_id_count']) , 32, 0);
+                    }
+                    printer_end_page($handle);
+                }
+                
+            }
+
+
 			printer_delete_font($font);
-			printer_end_page($handle);
-			printer_end_doc($handle);
+            printer_end_doc($handle);
 			printer_close($handle);
 		};
 		exit;

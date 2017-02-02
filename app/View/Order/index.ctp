@@ -1061,7 +1061,7 @@ echo $this->fetch('script');
         // if message exist save message
         // $('#send-to-kitchen-btn').trigger('click');
 
-        window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'pay', 'table' => $table, 'type' => $type)); ?>";
+        window.location = "<?php echo $this->Html->url(array('controller' => 'pay', 'action' => 'index', 'table' => $table, 'type' => $type)); ?>";
     });
 
 

@@ -12,6 +12,8 @@ class OrderItem extends AppModel {
         ),
     );
 
+    public  $virtualFields = array('item_id_count' => 'COUNT(OrderItem.item_id)');
+
 
 	public function getOrderItemPrintStatus($order_id) {
 
@@ -67,6 +69,28 @@ class OrderItem extends AppModel {
 
     	// notice: keep update order at the end
     	$this->Order->updateBillInfo($item_detail['OrderItem']['order_id']);
+    }
+
+    public function getDailyItemCount($timeline_arr) {
+        $data = array();
+
+       
+        for ($i = 0; $i < count($timeline_arr) - 1; ++$i) {
+
+            $items = $this->find("all", array(
+                    'recursive' => -1,
+                    'fields' =>  array('OrderItem.item_id', 'OrderItem.name_en', 'OrderItem.name_xh', 'OrderItem.item_id_count'),
+                    'conditions' => array('is_print' => 'Y','OrderItem.created >=' => date('c', $timeline_arr[$i]), 'OrderItem.created <' => date('c', $timeline_arr[$i + 1])),
+                    'group' => array('OrderItem.item_id'),
+                ));
+            $items['OrderItem']['start_time'] = $timeline_arr[$i];
+            $items['OrderItem']['end_time'] = $timeline_arr[$i + 1];
+
+            array_push($data, $items);
+        }
+
+        return $data;
+
     }
 
 
