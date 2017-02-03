@@ -101,6 +101,7 @@ class PayController extends AppController {
 
         $this->loadModel('Cashier');
         $this->loadModel('Order');
+        $this->loadModel('OrderItem');
 
         $order_no = $this->data['order_no'];
         $table_no = $this->data['table_no']; 
@@ -116,6 +117,9 @@ class PayController extends AppController {
         // print_r($Order_detail);
         $printItems = $Order_detail['OrderItem'];
         $billInfo = $Order_detail['Order'];
+
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        // $printItems = $this->OrderItem->getOrderItemMerge($order_id);
 
 
         

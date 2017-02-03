@@ -116,6 +116,33 @@ class OrderItem extends AppModel {
 
     }
 
+    public function getOrderItemMerge($order_id) {
+        $data = array();
+        $this->virtualFields['item_id_count'] = 'COUNT(OrderItem.item_id)';
+        $items = $this->find("all", array(
+                    'recursive' => -1,
+                    'fields' =>  array('OrderItem.item_id', 'OrderItem.item_id_count', 'OrderItem.price'),
+                    'conditions' => array('OrderItem.order_id' => $order_id),
+                    'group' => array('OrderItem.item_id, OrderItem.price'),
+                ));
+
+        // return $items;
+
+        foreach ($items as $item) {
+            $tempItem = $this->find('first', array(
+                    'recursive' => -1,
+                    // 'fields' => array('OrderItem.item_id','OrderItem.name_en', 'OrderItem.name_xh'),
+                    'conditions' => array('OrderItem.order_id' => $order_id, 'OrderItem.item_id' => $item['OrderItem']['item_id']/*, 'OrderItem.price' => $item['OrderItem']['price']*/)
+                ));
+
+            // return $tempItem;
+            $tempItem['OrderItem']['qty'] = $item['OrderItem']['item_id_count'];
+            array_push($data, $tempItem['OrderItem']);
+        }
+
+        return $data;
+    }
+
 
 }
 

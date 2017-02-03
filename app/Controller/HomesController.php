@@ -734,14 +734,13 @@ class HomesController extends AppController {
     }
 
     //Modified by Jack @2017-01-05
-    public function printTodayOrders($print_zh = false) {
-        // $this->loadModel('Cashier');
+    public function printTodayOrders() {
+        $this->layout = false;
+        $this->autoRender = false;
+
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
         $this->loadModel('Cashier');
-    	if (empty($this->data['Printer'])) {
-    		die("No Printer");
-    	}
 
 		date_default_timezone_set("America/Toronto");
 		$date_time = date("l M d Y h:i:s A");
@@ -765,120 +764,9 @@ class HomesController extends AppController {
         // print_r($dailyItems);
 
 
-        // $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        // $print = new PrintLib();
-        // echo $print->printDailyReportDoc($printerName, $dailyAmount, $dailyItems);
-
-
-
-        $printer_name = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-		if ($printer_name) {
-			$handle = printer_open($printer_name);
-		} else {
-			die("Can't open printer");
-		}
-		if ($handle) {
-			printer_start_doc($handle, "All Orders");
-			printer_start_page($handle);
-			
-			if ($print_zh == true) {
-				$font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-				printer_select_font($handle, $font);
-				printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 108, 20);
-				$font = printer_create_font($this->fontStr1, 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-			} else {
-				$font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-				printer_select_font($handle, $font);
-				printer_draw_text($handle, "All Orders", 138, 20);
-				$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-			};
-			
-			//Print order information
-			printer_select_font($handle, $font);
-			$c1 = 30;
-
-			$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-			printer_select_pen($handle, $pen);
-			//printer_draw_line($handle, 21, 160, 600, 160);
-			//Print orders
-			//$cashierArr = array();
-			$print_y = 120;
-            // print_r($dailyAmount);
-			foreach ($dailyAmount as $spanAmount) {
-                // print time title
-
-				printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), $c1, $print_y);
-				$print_y+=32;
-
-				printer_draw_line($handle, 21, $print_y, 600, $print_y);
-				$print_y+=32;
-				
-				if ($spanAmount['real_total'] > 0) {
-					$paid_cash_percent = " " . number_format($spanAmount['paid_cash_total'] * 100 / $spanAmount['real_total'], 2) . '%';
-					$paid_card_percent = " " . number_format($spanAmount['paid_card_total'] * 100 / $spanAmount['real_total'], 2) . '%';
-				} else {
-					$paid_cash_percent = "-";
-					$paid_card_percent = "-";
-				}
-				if ($print_zh == true) {
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
-
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-			
-				} else {
-					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
-					
-					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . sizeof($Orders) . " sales ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-					
-				}
-				$print_y+=60;
-			}
-
-            printer_end_page($handle);
-
-            printer_start_page($handle);
-            // print title 
-            $y = 10;
-            $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-            printer_select_pen($handle, $pen);
-            printer_draw_line($handle, 21, $y, 600, $y);
-            $y += 10;
-            $font = printer_create_font($this->fontStr1, 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Sales Statistics 销量统计"), 30, $y);
-            $font = printer_create_font($this->fontStr1, 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-
-
-            printer_end_page($handle);
-
-            foreach($dailyItems as $spanItems) {
-                foreach($spanItems['items'] as $item) {
-                    printer_start_page($handle);
-                    if ($print_zh) {
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['name_xh']) , 32, 0);
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "总共: " . $item['item_id_count']) , 300, 0);
-                    } else {
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['name_en']) , 32, 0);
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Count" . $item['item_id_count']) , 32, 0);
-                    }
-                    printer_end_page($handle);
-                }
-                
-            }
-
-
-			printer_delete_font($font);
-            printer_end_doc($handle);
-			printer_close($handle);
-		};
-		exit;
+        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        $print = new PrintLib();
+        echo $print->printDailyReportDoc($printerName, $dailyAmount, $dailyItems);
 	}
 
    

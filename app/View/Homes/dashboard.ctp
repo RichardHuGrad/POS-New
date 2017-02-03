@@ -567,13 +567,9 @@ echo $this->fetch('script');
         	pass = hex_md5(pass);
         	if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
 				$.ajax({
-					url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders', 1)); ?>",
+					url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders')); ?>",
 					method: "post",
-					data: {
-			               Printer: {"K": "<?php echo $tables['Admin']['kitchen_printer_device']; ?>", "C": "<?php echo $tables['Admin']['service_printer_device']; ?>"},
-					},
-					dataType: "html",
-					async: false,
+					// async: false,
 					success: function (html) {
 						alert("Finished");
 					},

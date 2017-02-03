@@ -174,9 +174,12 @@ class PrintLib {
             return $debug_str;
         }
 
-        $headerPage = new ReportHeaderPage();
+        $headerPage = new TextHeaderPage("All Orders (总单)", 108);
+        $dailyAmountPage = new ReportCountPage($dailyAmount);
+        $dailyItemHeaderPage = new TextHeaderPage("Sales Statistics 销量统计", 30, 50);
+        $dailyItemsPage = new ReportItemsPage($dailyItems);
 
-        $doc = new BasicDoc($printer_name, array($headerPage));
+        $doc = new BasicDoc($printer_name, array($headerPage, $dailyAmountPage, $dailyItemHeaderPage, $dailyItemsPage));
         $doc->printDoc();
 
         return $debug_str;
@@ -299,35 +302,20 @@ class LogoHeaderPage extends HeaderPage {
     }
 }
 
-/**
-* 
-*/
-class ReportHeaderPage extends HeaderPage {
-    private $print_zh;
-    function __construct($print_zh=true) {
-        $this->print_zh = $print_zh;
+
+class TextHeaderPage extends HeaderPage {
+    private $text, $x, $y;
+    function __construct($text, $x, $y=0) {
+        $this->text = $text;
+        $this->x = $x;
+        $this->y = $y;
     }
 
     public function printPage($handle) {
         printer_start_page($handle);
-
-        if ($this->print_zh == true) {
-            $font = printer_create_font('simsun', 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 108, 0);
-        } else {
-            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, "All Orders", 138, 20);
-        }
-
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-            printer_select_pen($handle, $pen);
-
-        $y = 50;
-        printer_draw_line($handle, 21, $y, 600, $y);
-
-        printer_delete_font($font);
+        $font = printer_create_font('simsun', 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", $this->text), $this->x, $this->y);
         printer_end_page($handle);
     }
 }
@@ -533,6 +521,47 @@ class MergeItemsPage extends ItemsPage {
         
 }
 
+/**
+* 
+*/
+class ReportItemsPage extends ItemsPage {
+    private $item_detail, $print_zh, $pritn_en;
+    function __construct($item_detail, $print_zh=true, $print_en=false) {
+        $this->item_detail = $item_detail;
+        $this->print_zh = $print_zh;
+        $this->print_en = $print_en;
+    }
+
+    public function printPage($handle) {
+
+        $font = printer_create_font('simsun', 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+
+        foreach($this->item_detail as $spanItems) {
+            printer_start_page($handle);
+            $print_y = 20;
+            printer_draw_text($handle, date("Y-m-d H:i", $spanItems['start_time']) . " - " .date("Y-m-d H:i", $spanItems['end_time']), 30, $print_y);
+            $print_y+=32;
+
+            printer_draw_line($handle, 21, $print_y, 600, $print_y);
+            printer_end_page($handle);
+            foreach($spanItems['items'] as $item) {
+                printer_start_page($handle);
+                if ($this->print_zh) {
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['name_xh']) , 32, 0);
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "总共: " . $item['item_id_count']) , 300, 0);
+                } else {
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $item['name_en']) , 32, 0);
+                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "Count" . $item['item_id_count']) , 300, 0);
+                }
+                printer_end_page($handle);
+            }
+        }
+
+        printer_delete_font($font);
+    } 
+}
+
 
 abstract class CountPage {
     abstract function printPage($handle);
@@ -635,6 +664,79 @@ class ReceiptPage extends CountPage {
         $this->format3Columns($handle, "Paid", "付款:", $paid);
         $this->format3Columns($handle, "Change", "找零:", $change);
     }
+}
+
+/**
+* 
+*/
+class ReportCountPage extends CountPage
+{
+    private $dailyAmount, $print_zh, $print_en; 
+    public function __construct($dailyAmount, $print_zh=true, $print_en=false) {
+        $this->dailyAmount = $dailyAmount;
+        $this->print_zh = $print_zh;
+        $this->print_en = $print_en;
+    }
+
+    public function printPage($handle) {
+
+        $font = printer_create_font('simsun', 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        
+        foreach ($this->dailyAmount as $spanAmount) {
+            
+            printer_start_page($handle);   
+            
+            $print_y = 30;
+            // print time title
+            printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
+            $print_y+=32;
+
+            printer_draw_line($handle, 21, $print_y, 600, $print_y);
+            $print_y+=32;
+            
+            if ($spanAmount['real_total'] > 0) {
+                $paid_cash_percent = " " . number_format($spanAmount['paid_cash_total'] * 100 / $spanAmount['real_total'], 2) . '%';
+                $paid_card_percent = " " . number_format($spanAmount['paid_card_total'] * 100 / $spanAmount['real_total'], 2) . '%';
+            } else {
+                $paid_cash_percent = "-";
+                $paid_card_percent = "-";
+            }
+            if ($this->print_zh == true) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
+
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+        
+            } else {
+                printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
+                
+                printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+                
+            }
+            $print_y+=30;
+
+            printer_end_page($handle);
+        }
+        printer_start_page($handle);   
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        $y = 10;
+        printer_draw_line($handle, 21, $y, 600, $y);
+        printer_end_page($handle);
+
+
+        printer_delete_pen($pen);
+
+        printer_delete_font($font);
+    }
+
+   
 }
 
 abstract class FooterPage {

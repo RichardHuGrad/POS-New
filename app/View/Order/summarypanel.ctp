@@ -119,10 +119,10 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             <div class="col-xs-8 col-sm-8 col-md-8">Taxes 税 (<?php if(!empty($Order_detail) and !empty(@$Order_detail['Order'] )) echo $Order_detail['Order']['tax'] ?>%): </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['tax_amount'], 2); else echo '0.00'; ?></strong> </div>
 
         </div>
-    </div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
+    </div>
     <div class="subtotalwrap">
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6">Total 总额: <strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>
+            <div class="col-xs-8 col-sm-8 col-md-8">Total 总额: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>
 
           <!--   <div class="col-xs-6 col-sm-6 col-md-6">
                 <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['message'] ?></textarea>
