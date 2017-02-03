@@ -82,7 +82,10 @@ class OrderItem extends AppModel {
      */
     public function getDailyItemCount($timeline_arr) {
         $data = array();
-        $this->virtualFields = array('item_id_count' => 'COUNT(OrderItem.item_id)');
+        $this->virtualFields = array(
+            'item_id_count' => 'COUNT(OrderItem.item_id)',
+            'qty_sum' => 'SUM(OrderItem.qty)'
+            );
        
         for ($i = 0; $i < count($timeline_arr) - 1; ++$i) {
             $arr = array(
@@ -94,7 +97,7 @@ class OrderItem extends AppModel {
 
             $items = $this->find("all", array(
                     'recursive' => -1,
-                    'fields' =>  array('OrderItem.item_id', 'OrderItem.item_id_count'),
+                    'fields' =>  array('OrderItem.item_id', 'OrderItem.item_id_count', 'OrderItem.qty_sum'),
                     'conditions' => array('OrderItem.is_print' => 'Y','OrderItem.created >=' => date('c', $timeline_arr[$i]), 'OrderItem.created <' => date('c', $timeline_arr[$i + 1])),
                     'group' => array('OrderItem.item_id'),
                 ));
@@ -105,7 +108,7 @@ class OrderItem extends AppModel {
                         'fields' => array('OrderItem.item_id','OrderItem.name_en', 'OrderItem.name_xh'),
                         'conditions' => array('OrderItem.item_id' => $item['OrderItem']['item_id'])
                     ));
-                $tempItem['OrderItem']['item_id_count'] = $item['OrderItem']['item_id_count'];
+                $tempItem['OrderItem']['qty_sum'] = $item['OrderItem']['qty_sum'];
                 array_push($arr['items'], $tempItem['OrderItem']);
             }
 
@@ -116,12 +119,16 @@ class OrderItem extends AppModel {
 
     }
 
-    public function getOrderItemMerge($order_id) {
+    public function getMergedItems($order_id) {
         $data = array();
-        $this->virtualFields['item_id_count'] = 'COUNT(OrderItem.item_id)';
+        // $this->virtualFields['item_id_count'] = 'COUNT(OrderItem.item_id)';
+        $this->virtualFields = array(
+            'item_id_count' => 'COUNT(OrderItem.item_id)',
+            'qty_sum' => 'SUM(OrderItem.qty)'
+            );
         $items = $this->find("all", array(
                     'recursive' => -1,
-                    'fields' =>  array('OrderItem.item_id', 'OrderItem.item_id_count', 'OrderItem.price'),
+                    'fields' =>  array('OrderItem.qty_sum','OrderItem.item_id', 'OrderItem.item_id_count', 'OrderItem.price'),
                     'conditions' => array('OrderItem.order_id' => $order_id),
                     'group' => array('OrderItem.item_id, OrderItem.price'),
                 ));
@@ -136,7 +143,7 @@ class OrderItem extends AppModel {
                 ));
 
             // return $tempItem;
-            $tempItem['OrderItem']['qty'] = $item['OrderItem']['item_id_count'];
+            $tempItem['OrderItem']['qty'] = $item['OrderItem']['qty_sum'];
             array_push($data, $tempItem['OrderItem']);
         }
 

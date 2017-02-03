@@ -128,7 +128,8 @@ class Order extends AppModel {
             $Order_detail = $this->find('first', array(
                     'conditions' => array('Order.id' => $order_id)
                 ));
-            array_push($data['print_items'], $Order_detail['OrderItem']);
+            // array_push($data['print_items'], $Order_detail['OrderItem']);
+            array_push($data['print_items'], $this->OrderItem->getMergedItems($order_id));
             $data['subtotal'] += $Order_detail['Order']['subtotal'];
             $data['discount_value'] += $Order_detail['Order']['discount_value'];
             $data['after_discount'] += $Order_detail['Order']['after_discount'];
