@@ -1143,7 +1143,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	
 	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">');
 
-	var screenComponent = $('<input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00">');
+	var screenComponent = $('<input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00" readonly>');
 	// restrict the input type of screen by keyboard
 	screenComponent.keydown(function(e) {
 		// Allow: backspace, delete, tab, escape, enter and .

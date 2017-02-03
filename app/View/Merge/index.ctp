@@ -340,7 +340,7 @@ for ($i = 0; $i < count($Order_detail); $i++) {
 if ($table_status != 'P') {
 //End.
     ?>
-                <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13"></div>
+                <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13" readonly></div>
                 <div class="card-indent clearfix">
                     <ul>
                         <li>1</li>

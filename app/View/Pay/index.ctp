@@ -348,7 +348,7 @@ if ($Order_detail['Order']['table_status'] == 'P') {
 <?php
 if ($Order_detail['Order']['table_status'] <> 'P') {
     ?>
-                <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13"></div>
+                <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13" readonly></div>
                 <div class="card-indent clearfix">
                     <ul>
                         <li>1</li>
