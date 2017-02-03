@@ -74,11 +74,11 @@ class OrderItem extends AppModel {
 
     /**
      * return
-        Array ( [0] => Array ( 
-        [items] => Array ( 
-            [0] => Array ( [item_id] => 10 [name_en] => Noodles w/Beef Sirloin [name_xh] => 宋嫂牛肉面 [item_id_count] => 1 ) [1] => Array ( [item_id] => 14 [name_en] => Noodles w/Tomatoes & Beef Sirloin [name_xh] => 番茄牛肉面 [item_id_count] => 1 ) [2] => Array ( [item_id] => 16 [name_en] => Chongqing-style Noodles [name_xh] => 麻辣小面 [item_id_count] => 1 ) [3] => Array ( [item_id] => 30 [name_en] => Noodles w/Grilled Hot Peppers [name_xh] => 特色烧椒面 [item_id_count] => 1 ) [4] => Array ( [item_id] => 31 [name_en] => Classic Noodles w/Minced Meat [name_xh] => 经典干拌面 [item_id_count] => 1 ) ) 
-        [start_time] => 1486051200 
-        [end_time] => 1486112400 ) ) 
+     *  Array ( [0] => Array ( 
+     *   [items] => Array ( 
+     *       [0] => Array ( [item_id] => 10 [name_en] => Noodles w/Beef Sirloin [name_xh] => 宋嫂牛肉面 [item_id_count] => 1 ) [1] => Array ( [item_id] => 14 [name_en] => Noodles w/Tomatoes & Beef Sirloin [name_xh] => 番茄牛肉面 [item_id_count] => 1 ) [2] => Array ( [item_id] => 16 [name_en] => Chongqing-style Noodles [name_xh] => 麻辣小面 [item_id_count] => 1 ) [3] => Array ( [item_id] => 30 [name_en] => Noodles w/Grilled Hot Peppers [name_xh] => 特色烧椒面 [item_id_count] => 1 ) [4] => Array ( [item_id] => 31 [name_en] => Classic Noodles w/Minced Meat [name_xh] => 经典干拌面 [item_id_count] => 1 ) ) 
+     *   [start_time] => 1486051200 
+     *   [end_time] => 1486112400 ) ) 
      */
     public function getDailyItemCount($timeline_arr) {
         $data = array();
@@ -132,7 +132,7 @@ class OrderItem extends AppModel {
             $tempItem = $this->find('first', array(
                     'recursive' => -1,
                     // 'fields' => array('OrderItem.item_id','OrderItem.name_en', 'OrderItem.name_xh'),
-                    'conditions' => array('OrderItem.order_id' => $order_id, 'OrderItem.item_id' => $item['OrderItem']['item_id']/*, 'OrderItem.price' => $item['OrderItem']['price']*/)
+                    'conditions' => array('OrderItem.order_id' => $order_id, 'OrderItem.item_id' => $item['OrderItem']['item_id'], 'OrderItem.price' => $item['OrderItem']['price'])
                 ));
 
             // return $tempItem;
