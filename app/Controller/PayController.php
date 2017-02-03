@@ -88,6 +88,11 @@ class PayController extends AppController {
         $printItems = $Order_detail['OrderItem'];
         $billInfo = $Order_detail['Order'];
 
+        $this->loadModel('OrderItem');
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $printItems = $this->OrderItem->getMergedItems($order_id);
+
+
         $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
         $print = new PrintLib();
         echo $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logo_name,true, false);
@@ -101,7 +106,7 @@ class PayController extends AppController {
 
         $this->loadModel('Cashier');
         $this->loadModel('Order');
-        $this->loadModel('OrderItem');
+        
 
         $order_no = $this->data['order_no'];
         $table_no = $this->data['table_no']; 
@@ -118,9 +123,10 @@ class PayController extends AppController {
         $printItems = $Order_detail['OrderItem'];
         $billInfo = $Order_detail['Order'];
 
+        $this->loadModel('OrderItem');
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
-        // $printItems = $this->OrderItem->getOrderItemMerge($order_id);
-
+        $printItems = $this->OrderItem->getMergedItems($order_id);
+        // print_r($printItems);
 
         
         // $printItems = array();
