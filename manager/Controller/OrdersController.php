@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /**
  * Class OrdersController
@@ -225,16 +225,28 @@ class OrdersController extends AppController {
      * @param string $id
      * @return null
      */
-    public function admin_delete($id = '') {
+    public function admin_delete(/*$id = ''*/) {
 
-        $this->checkAccess('Order', 'can_delete');
-        $id = base64_decode($id);
-        $this->Order->updateAll(array('Order.status' => "'D'"), array('Order.id' => $id));
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $this->loadModel('Order');
+        // $this->checkAccess('Order', 'can_delete');
+        $order_nos = $this->data['order_nos'];
+        // print_r($order_nos);
+        foreach($order_nos as $order_no) {
+            $this->Order->deleteByOrderNo($order_no);
+        }
+
+        // $id = base64_decode($id);
+        // $this->Order->updateAll(array('Order.status' => "'D'"), array('Order.id' => $id));
 
         $this->Session->setFlash('Order has been deleted successfully', 'success');
         $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
 
+
     }
+
 
     /**
      * Listing of orders whom age proof document is pending for approval

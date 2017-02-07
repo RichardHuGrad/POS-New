@@ -248,8 +248,9 @@ $registered_till = @$search['registered_till'];
                                                     </td>
                                                 <?php } else {
                                                     ?>
-                                                    <td class="advance_panel"><input <?php if($customer['Order']['is_hide'] == 'N')echo "checked"; ?> value="<?php echo $customer['Order']['id']; ?>"  type="checkbox" name="data[Reorder][display][]" class="display" /></td>
-                                                    <td><a href="<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'vieworder', 'admin' => true, base64_encode($customer['Order']['id']))) ?>"><u>#<?php echo $customer['Order']['order_no']; ?></u></a></td>
+                                                    <!-- <td class="advance_panel"><input <?php if($customer['Order']['is_hide'] == 'N')echo "checked"; ?> value="<?php echo $customer['Order']['id']; ?>"  type="checkbox" name="data[Reorder][display][]" class="display" /></td> -->
+                                                    <td class="advance_panel"><input value="<?php echo $customer['Order']['id']; ?>"  type="checkbox" name="data[Reorder][display][]" class="display" /></td>
+                                                    <td><a href="<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'vieworder', 'admin' => true, base64_encode($customer['Order']['id']))) ?>"><u class="order_no"><?php echo $customer['Order']['order_no']; ?></u></a></td>
                                                     <td class="advance_panel">
                                                         <?php 
                                                         if($customer['Order']['is_hide'] == 'N')
@@ -295,17 +296,22 @@ $registered_till = @$search['registered_till'];
                                 if('Y' == $is_super_admin){
                                 ?>
                                 <div class="pull-left advance_panel col-md-8">
-                                    <div class="checkbox col-md-6" style="margin-left:0px; margin-top:0px">
+                                    <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
                                         <label id="select_all">Select All</label>
                                     </div>  
-                                    <div class="checkbox col-md-6" style="margin-left:0px; margin-top:0px">
+                                    <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
                                         <label  id="unselect_all"> Unselect All</label>
-                                    </div>                           
+                                    </div>          
+                                    <!-- <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
+                                        <label  id="delete_order"> Delete</label>
+                                    </div>    -->
+                                    <button class="btn btn-info" id="delete_order">Delete</button>                
                                 </div>
                                 <input type="hidden" name="data[Reorder][ids]" value=<?php echo implode(",", $ids); ?> />
                                 <?php
                                 echo $this->Form->button('Reorder <i class="fa fa-refresh"></i>',array('class' => 'btn btn-primary btn-wide pull-right margin-right-10 advance_panel','type' => 'submit','id' => 'reorder_button')) ?>
                             <?php }?>
+
                             </div>
                             <div class="col-md-6" style="margin-top: 22px;">
                                 <span class="btn btn-primary btn-wide pull-left margin-right-10">Total: $<?php echo number_format($total, 2); ?></span>
@@ -339,6 +345,18 @@ $(document).ready(function() {
     <?php }?>
     $("#advance_setting").click(function() {
         $(".advance_panel").show();
+    })
+
+    $('#delete_order').on('click', function () {
+        var order_nos = [];
+        $('.display:checked').parent().parent().find('.order_no').each(function() {
+            order_nos.push($(this).text());
+        });
+        $.ajax({
+            url:  "<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'delete', 'admin' => true)); ?>",
+            data: {order_nos: order_nos},
+            method: "post"
+        })
     })
 })
 </script>
