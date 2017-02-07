@@ -84,7 +84,8 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                    	<li><div id='print-today-all' class="pull-left paid-txt">Print orders 打印总单 </div></li>
+                        <li><div id='print-today-all' class="pull-left paid-txt">打印总单 </div></li>
+                    	<li><div id='print-today-items' class="pull-left paid-txt">打印销量</div></li>
                         <li>
                             <div class="clearfix marginB15">
                                 <div class="pull-left notpaid"></div>
@@ -581,6 +582,27 @@ echo $this->fetch('script');
             	alert("Wrong password");
         	}
 		});
+
+        $('#print-today-items').on('click', function(e) {
+            e.preventDefault();
+            var pass = prompt("Input Password","");
+            pass = hex_md5(pass);
+            if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
+                $.ajax({
+                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayItems')); ?>",
+                    method: "post",
+                    // async: false,
+                    success: function (html) {
+                        alert("Finished");
+                    },
+                    error: function (html) {
+                        alert("error");
+                    }
+                });
+            } else {
+                alert("Wrong password");
+            }
+        })
 	});
 
     $(window).load(function () {

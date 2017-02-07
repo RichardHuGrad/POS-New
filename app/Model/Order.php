@@ -185,6 +185,8 @@ class Order extends AppModel {
                 $totalArr['paid_cash_total'] += $order['cash_val'];
                 $totalArr['paid_card_total'] += $order['card_val'];
 
+                $totalArr['total'] += $order['total'];
+
                 if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
                     $totalArr['cash_total'] += $order['total'];
                 } else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP

@@ -94,7 +94,7 @@ class OrderItem extends AppModel {
                     'end_time' => $timeline_arr[$i + 1],
                 );
 
-
+            // Order.is_completed = 'Y'
             $items = $this->find("all", array(
                     'recursive' => -1,
                     'fields' =>  array('OrderItem.item_id', 'OrderItem.item_id_count', 'OrderItem.qty_sum'),

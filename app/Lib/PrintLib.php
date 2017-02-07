@@ -166,9 +166,9 @@ class PrintLib {
         $doc->printDoc();
     }
 
-    public function printDailyReportDoc($printer_name, $dailyAmount, $dailyItems) {
+    public function printDailyReportDoc($printer_name, $dailyAmount, $dailyAmountTotal) {
         $debug_str = json_encode($dailyAmount);
-        $debug_str .= json_encode($dailyItems);
+        // $debug_str .= json_encode($dailyItems);
 
         if (!function_exists('printer_open')) {
             return $debug_str;
@@ -176,10 +176,26 @@ class PrintLib {
 
         $headerPage = new TextHeaderPage("All Orders (总单)", 108);
         $dailyAmountPage = new ReportCountPage($dailyAmount);
-        $dailyItemHeaderPage = new TextHeaderPage("Sales Statistics 销量统计", 30, 50);
+        $dailyAmountDetailPage = new ReportCountDetailPage($dailyAmountTotal);
+
+        $doc = new BasicDoc($printer_name, array($headerPage, $dailyAmountPage, $dailyAmountDetailPage));
+        $doc->printDoc();
+
+        return $debug_str;
+    }
+
+    public function printDailyItemsDoc($printer_name, $dailyItems) {
+        // $debug_str = json_encode($dailyAmount);
+        $debug_str .= json_encode($dailyItems);
+
+        if (!function_exists('printer_open')) {
+            return $debug_str;
+        }
+
+        $dailyItemHeaderPage = new TextHeaderPage("Sales Statistics 销量统计", 30);
         $dailyItemsPage = new ReportItemsPage($dailyItems);
 
-        $doc = new BasicDoc($printer_name, array($headerPage, $dailyAmountPage, $dailyItemHeaderPage, $dailyItemsPage));
+        $doc = new BasicDoc($printer_name, array($dailyItemHeaderPage, $dailyItemsPage));
         $doc->printDoc();
 
         return $debug_str;
@@ -666,11 +682,7 @@ class ReceiptPage extends CountPage {
     }
 }
 
-/**
-* 
-*/
-class ReportCountPage extends CountPage
-{
+class ReportCountDetailPage extends CountPage {
     private $dailyAmount, $print_zh, $print_en; 
     public function __construct($dailyAmount, $print_zh=true, $print_en=false) {
         $this->dailyAmount = $dailyAmount;
@@ -679,7 +691,6 @@ class ReportCountPage extends CountPage
     }
 
     public function printPage($handle) {
-
         $font = printer_create_font('simsun', 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         
@@ -723,12 +734,63 @@ class ReportCountPage extends CountPage
 
             printer_end_page($handle);
         }
-        printer_start_page($handle);   
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        $y = 10;
-        printer_draw_line($handle, 21, $y, 600, $y);
-        printer_end_page($handle);
+
+
+        printer_delete_pen($pen);
+
+        printer_delete_font($font);
+    }
+}
+
+/**
+* only print tax and total
+*/
+class ReportCountPage extends CountPage
+{
+    private $dailyAmount, $print_zh, $print_en; 
+    public function __construct($dailyAmount, $print_zh=true, $print_en=false) {
+        $this->dailyAmount = $dailyAmount;
+        $this->print_zh = $print_zh;
+        $this->print_en = $print_en;
+    }
+
+    public function printPage($handle) {
+
+        $font = printer_create_font('simsun', 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        
+        foreach ($this->dailyAmount as $spanAmount) {
+            
+            printer_start_page($handle);   
+            
+            $print_y = 30;
+            // print time title
+            printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
+            $print_y+=32;
+
+            printer_draw_line($handle, 21, $print_y, 600, $print_y);
+            $print_y+=32;
+            
+            if ($spanAmount['real_total'] > 0) {
+                $paid_cash_percent = " " . number_format($spanAmount['paid_cash_total'] * 100 / $spanAmount['real_total'], 2) . '%';
+                $paid_card_percent = " " . number_format($spanAmount['paid_card_total'] * 100 / $spanAmount['real_total'], 2) . '%';
+            } else {
+                $paid_cash_percent = "-";
+                $paid_card_percent = "-";
+            }
+            if ($this->print_zh == true) {
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
+
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;        
+            } else {
+                printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
+                
+                printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;                
+            }
+            $print_y+=30;
+
+            printer_end_page($handle);
+        }
 
 
         printer_delete_pen($pen);
