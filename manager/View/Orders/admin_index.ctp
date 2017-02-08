@@ -209,13 +209,14 @@ $registered_till = @$search['registered_till'];
                                             <th class="advance_panel">Reorder Number</th>
                                             <?php
                                         }?>
-                                        <th>Time</th>
+                                        <th><?php echo $this->Paginator->sort('created'); ?></th>
                                         <th>Price</th>
                                         <th>Tip</th>
                                         <th>Card </th>
                                         <th>Cash </th>
                                         <th>Status</th>
                                         <th>Payment Type</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -271,6 +272,9 @@ $registered_till = @$search['registered_till'];
                                                 <td>$<?php echo number_format($customer['Order']['cash_val'], 2); ?></td>
                                                 <td><?php echo @$table_status[$customer['Order']['table_status']]; ?></td>
                                                 <td><?php echo $customer['Order']['paid_by']?$customer['Order']['paid_by']:"N/A"; ?></td>
+                                                <td class="actions">
+                                                    <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', 'admin' => true,$customer['Order']['id'])); ?>
+                                                </td>
                                             </tr>
                                             <?php
                                         }

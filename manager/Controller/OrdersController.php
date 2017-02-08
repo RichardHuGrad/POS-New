@@ -94,6 +94,32 @@ class OrdersController extends AppController {
     }
 
     /**
+     * edit method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_edit($id = null) {
+        if (!$this->Order->exists($id)) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        if ($this->request->is(array('post', 'put'))) {
+            if ($this->Order->save($this->request->data)) {
+                $this->Session->setFlash(__('The order has been saved.'));
+                return $this->redirect(array('action' => 'index', 'admin' => true));
+            } else {
+                $this->Session->setFlash(__('The order could not be saved. Please, try again.'));
+            }
+        } else {
+            $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
+            $this->request->data = $this->Order->find('first', $options);
+        }
+        $cashiers = $this->Order->Cashier->find('list');
+        $this->set(compact('cashiers'));
+    }
+
+    /**
      * To generate reorder
      * @param none
      * @return mixed
