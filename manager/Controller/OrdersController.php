@@ -309,6 +309,26 @@ class OrdersController extends AppController {
         return $this->redirect(array('action' => 'index'));
     }
 
+    public function admin_edit_log() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+        
+        $this->loadModel('OrderLog');
+        $this->loadModel('Order');
+
+        $order_no = $this->data['order_no'];
+
+        $order_detail = $this->Order->find('first', array(
+                            'recursive' => -1,
+                            'conditions' => array(
+                                    'Order.order_no' => $order_no
+                                )
+                        ));
+        print_r($order_detail);
+
+        $this->OrderLog->insertLog($order_detail, 'edit');
+    }
+
 
     /**
      * Listing of orders whom age proof document is pending for approval

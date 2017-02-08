@@ -15,10 +15,10 @@
 				<?php
 					echo $this->Form->input('id');
 					echo $this->Form->input('order_no');
-					echo $this->Form->input('reorder_no');
-					echo $this->Form->input('hide_no');
+					// echo $this->Form->input('reorder_no');
+					// echo $this->Form->input('hide_no');
 					echo $this->Form->input('cashier_id');
-					echo $this->Form->input('counter_id');
+					// echo $this->Form->input('counter_id');
 					echo $this->Form->input('table_no');
 					echo $this->Form->input('table_status');
 					echo $this->Form->input('tax');
@@ -32,18 +32,18 @@
 					echo $this->Form->input('paid');
 					echo $this->Form->input('change');
 					echo $this->Form->input('promocode');
-					echo $this->Form->input('message');
-					echo $this->Form->input('reason');
+					// echo $this->Form->input('message');
+					// echo $this->Form->input('reason');
 					echo $this->Form->input('order_type');
 					echo $this->Form->input('is_kitchen');
 					echo $this->Form->input('cooking_status');
-					echo $this->Form->input('is_hide');
+					// echo $this->Form->input('is_hide');
 					echo $this->Form->input('is_completed');
-					echo $this->Form->input('paid_by');
+					// echo $this->Form->input('paid_by');
 					echo $this->Form->input('fix_discount');
 					echo $this->Form->input('percent_discount');
 					echo $this->Form->input('discount_value');
-					echo $this->Form->input('merge_id');
+					// echo $this->Form->input('merge_id');
 					echo $this->Form->input('after_discount');
 				?>
 				</fieldset>
@@ -63,4 +63,17 @@
     </div>
 
 </div>
+
+<script>
+	$('form').submit(function(e) {
+		// e.preventDefault();
+		$.ajax({
+			url: "<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'edit_log', 'admin' => true)); ?>",
+			method: 'post',
+			data: {order_no: $('#OrderOrderNo').val()}
+		})
+		console.log($('#OrderOrderNo').val());
+	});
+	
+</script>
 
