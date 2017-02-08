@@ -28,15 +28,13 @@ class Order extends AppModel {
                         ));
         $order_id = $order_detail['Order']['id'];
 
-        $log_detail = array('OrderLog' => array('order_no' => $order_detail['Order']['order_no'], 'json' => json_encode($order_detail['Order']), 'operation' => 'delete'));
-        
-        print_r($log_detail);
         $OrderLog = ClassRegistry::init('OrderLog');
-        $OrderLog->create();
-        $OrderLog->save($log_detail, false);
+        $OrderLog->insertLog($order_detail, 'delete');
 
         $this->delete(array('Order.id' => $order_id), false);
     }
+
+
 
 }
 

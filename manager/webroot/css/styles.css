@@ -1459,6 +1459,7 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
   .main-content {
     margin-top: 65px;
     margin-left: 260px;
+    padding: 10px;
   }
   .app-navbar-fixed .main-content {
     margin-top: 0;

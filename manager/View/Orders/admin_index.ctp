@@ -201,20 +201,20 @@ $registered_till = @$search['registered_till'];
                                         <?php 
                                         if('Y' <> $is_super_admin){
                                         ?>
-                                            <th>Order Number</th>
+                                            <th><?php echo $this->Paginator->sort('order_no'); ?></th>
                                         <?php } else {
                                             ?>
                                             <th class="advance_panel">Display</th>
-                                            <th>Order Number</th>
+                                            <th><?php echo $this->Paginator->sort('order_no'); ?></th>
                                             <th class="advance_panel">Reorder Number</th>
                                             <?php
                                         }?>
                                         <th><?php echo $this->Paginator->sort('created'); ?></th>
-                                        <th>Price</th>
-                                        <th>Tip</th>
-                                        <th>Card </th>
-                                        <th>Cash </th>
-                                        <th>Status</th>
+                                        <th><?php echo $this->Paginator->sort('total'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('tip'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('card_val', 'Card'); ?> </th>
+                                        <th><?php echo $this->Paginator->sort('cash_val', 'Cash'); ?> </th>
+                                        <th><?php echo $this->Paginator->sort('table_status', 'Status'); ?></th>
                                         <th>Payment Type</th>
                                         <th>Action</th>
                                     </tr>
@@ -356,10 +356,11 @@ $(document).ready(function() {
         $('.display:checked').parent().parent().find('.order_no').each(function() {
             order_nos.push($(this).text());
         });
+        console.log(order_nos);
         $.ajax({
-            url:  "<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'delete', 'admin' => true)); ?>",
-            data: {order_nos: order_nos},
-            method: "post"
+            url:  "<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'batch_delete', 'admin' => true)); ?>",
+            method: "post",
+            data: {order_nos: order_nos}, 
         })
     })
 })

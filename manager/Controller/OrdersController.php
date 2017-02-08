@@ -251,17 +251,29 @@ class OrdersController extends AppController {
      * @param string $id
      * @return null
      */
-    public function admin_delete(/*$id = ''*/) {
+    public function admin_batch_delete(/*$id = ''*/) {
 
         $this->layout = false;
         $this->autoRender = NULL;
 
         $this->loadModel('Order');
+        $this->loadModel('OrderLog');
+        
         // $this->checkAccess('Order', 'can_delete');
         $order_nos = $this->data['order_nos'];
-        // print_r($order_nos);
+
         foreach($order_nos as $order_no) {
-            $this->Order->deleteByOrderNo($order_no);
+            $order_detail = $this->Order->find('first', array(
+                            'recursive' => -1,
+                            'conditions' => array(
+                                    'order_no' => $order_no
+                                )
+                        ));
+            $order_id = $order_detail['Order']['id'];
+
+            $this->OrderLog->insertLog($order_detail, 'delete');
+
+            $this->Order->delete(array('Order.id' => $order_id), false);
         }
 
         // $id = base64_decode($id);
@@ -271,6 +283,30 @@ class OrdersController extends AppController {
         $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
 
 
+    }
+
+    /**
+     * delete method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_delete($id = null) {
+        $this->loadModel('Order');
+        $this->loadModel('OrderLog');
+
+        $this->Order->id = $id;
+        if (!$this->Order->exists()) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        // $this->request->onlyAllow('post', 'delete');
+        $order_detail = $this->Order->find('first', array('recursive' => -1,'conditions' => array('Order.id'=> $id)));
+        // print_r($order_detail);
+        $this->OrderLog->insertLog($order_detail, 'delete');
+        $this->Order->delete(array('Order.id' => $id), false);
+
+        return $this->redirect(array('action' => 'index'));
     }
 
 
