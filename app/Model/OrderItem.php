@@ -150,7 +150,88 @@ class OrderItem extends AppModel {
         return $data;
     }
 
+    // get all unprint items and seperate them by printer id
+    public function getUnprintItemsByOrderId($order_id) {
+        $orderItemsDetail = $this->find('all', array(
+                'recursive' => -1,
+                'fields' => array(
+                    'OrderItem.id',
+                    'OrderItem.name_en',
+                    'OrderItem.name_xh',
+                    'OrderItem.category_id',
+                    'OrderItem.qty',
+                    'OrderItem.selected_extras',
+                    'OrderItem.is_takeout',
+                    'OrderItem.is_print',
+                    'OrderItem.special_instruction'
+                    ),
+                'conditions' => array(
+                    'OrderItem.order_id' => $order_id, 
+                    'OrderItem.is_print' => 'N'
+                    ),
+            ));
 
+        // seperate items by printer
+        $printItems = array();
+
+        $this->Category = ClassRegistry::init('Category');
+
+        foreach ($orderItemsDetail as $itemDetail) {
+            $category_id = $itemDetail['OrderItem']['category_id'];
+            $printer = $this->Category->getPrinterById($category_id);
+
+            $selected_extras_list = json_decode($itemDetail['OrderItem']['selected_extras'], true);
+            $selected_extras_arr = array();
+                if (!empty($selected_extras_list)) {
+                    foreach ($selected_extras_list as $selected_extra) {
+                        array_push($selected_extras_arr, $selected_extra['name']);
+                    }
+                }
+                
+            $itemDetail['OrderItem']['selected_extras'] = join(',', $selected_extras_arr);
+
+
+            if (!isset($printItems[$printer])) {
+                $printItems[$printer] = array();
+            }
+
+            array_push($printItems[$printer], $itemDetail['OrderItem']);
+        }
+
+        return $printItems;
+    }
+
+
+    public function setAllItemsToPrinted($order_id) {
+        $orderItemsDetail = $this->find('all', array(
+                'recursive' => -1,
+                'fields' => array(
+                    'OrderItem.id',
+                    'OrderItem.name_en',
+                    'OrderItem.name_xh',
+                    'OrderItem.category_id',
+                    'OrderItem.qty',
+                    'OrderItem.selected_extras',
+                    'OrderItem.is_takeout',
+                    'OrderItem.is_print',
+                    'OrderItem.special_instruction'
+                    ),
+                'conditions' => array(
+                    'OrderItem.order_id' => $order_id, 
+                    'OrderItem.is_print' => 'N'
+                    ),
+            ));
+
+                // change all items is_print to 'Y'
+        foreach ($orderItemsDetail as $itemDetail) {
+            $itemDetail['OrderItem']['is_print'] = 'Y';
+            $this->save($itemDetail, false);
+        }
+
+    }
+
+
+    
 }
 
 ?>

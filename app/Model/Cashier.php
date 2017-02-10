@@ -169,6 +169,17 @@ class Cashier extends AppModel {
         return $cashier_detail['Admin']['service_printer_device'];
     }
 
+    public function getRestaurantId($id) {
+        $cashier_detail = $this->find("first", array(
+            'recursive' => -1,
+            'fields' => array('Cashier.restaurant_id'),
+            'conditions' => array('Cashier.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Cashier']['restaurant_id'];
+    }
+
 }
 
 ?>

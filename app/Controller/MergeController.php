@@ -176,17 +176,8 @@ class MergeController extends AppController {
         $this->loadModel('Order');
 
         $order_ids = $this->data['order_ids'];
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
-
-        $mergeData = $this->Order->getMergeOrderInfo($order_ids);
-
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logo_name,true, false);
-
-        // print_r($mergeData);
-       
+        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
+        $this->Print->printMergeBill(array('restaurant_id'=> $restaurant_id, 'order_ids'=>$order_ids));
     }
 
 
@@ -198,16 +189,7 @@ class MergeController extends AppController {
         $this->loadModel('Order');
 
         $order_ids = $this->data['order_ids'];
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
-
-        $mergeData = $this->Order->getMergeOrderInfo($order_ids);
-
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printMergeReceiptDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logo_name,true, false);
-
-        print_r($mergeData);
-       
+        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
+        $this->Print->printMergeReceipt(array('restaurant_id'=> $restaurant_id, 'order_ids'=>$order_ids));
     }
 }

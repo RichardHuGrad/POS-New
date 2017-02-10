@@ -1,198 +1,430 @@
 <?php 
 
 App::uses('Component', 'Controller');
+App::uses('PrintLib', 'Lib');
 
 class PrintComponent extends Component {
 
 	public $components = array('Session');
 
+    public $status = 'success';
+
 	public function __construct() {
-		$this->Cashier = ClassRegistry::init('Cashier');
+        $this->Admin = ClassRegistry::init('Admin');
 		$this->Order = ClassRegistry::init('Order');
 		$this->OrderItem = ClassRegistry::init('OrderItem');
 		$this->Category = ClassRegistry::init('Category');
 	}
 
+    /**
+     * printPayReceipt
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     */
+	public function printPayReceipt($args) {
 
-	public function printPayReceipt() {
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+        if (empty($args['order_id'])) {
+            throw new Exception('Missing argument: order_id');
+        }
 
-	    $order_no = $this->data['order_no'];
-	    $table_no = $this->data['table_no']; 
-	    $type = $this->data['type'];
-	    $logo_name = $this->data['logo_name'];
+        $order_id = $args['order_id'];
 
+        $orderDetail = $this->Order->find('first', array(
+                // 'recursive' => -1,
+                'conditions' => array(
+                        'Order.id' => $order_id
+                    )
+            ));
 
-	    // get order bill info from database
-	    $Order_detail = $this->Order->find('first', array(
-	            // 'recursive' => -1,
-	            'conditions' => array('Order.order_no' => $order_no)
-	        ));
-	    // print_r($Order_detail);
-	    $printItems = $Order_detail['OrderItem'];
-	    $billInfo = $Order_detail['Order'];
+        $type = $orderDetail['Order']['order_type'];
+        $table_no = $orderDetail['Order']['table_no'];
+        $order_no = $orderDetail['Order']['order_no'];
+	    $logoPath = $this->Admin->getLogoPathByid($args['restaurant_id']);
 
-	    $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+	    $printItems = $orderDetail['OrderItem'];
+	    $billInfo = $orderDetail['Order'];
+
 	    $printItems = $this->OrderItem->getMergedItems($order_id);
 
 
-	    $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+	    $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
 	    $print = new PrintLib();
-	    echo $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logo_name,true, false);
+	    echo $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
 
 
 	}
 
-    public function printPayBill() {
-        $order_no = $this->data['order_no'];
-        $table_no = $this->data['table_no']; 
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
-
-
-        // get order bill info from database
-        $Order_detail = $this->Order->find('first', array(
-                // 'recursive' => -1,
-                'conditions' => array('Order.order_no' => $order_no)
-            ));
-        // print_r($Order_detail);
-        $printItems = $Order_detail['OrderItem'];
-        $billInfo = $Order_detail['Order'];
-
-        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
-        $printItems = $this->OrderItem->getMergedItems($order_id);
-        // print_r($printItems);
-
-        
-        // $printItems = array();
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logo_name,true, false); 
-    }
-
-
-    public function printTokitchen() {
-        // according to order_id
-        // find all items in order, print all items which is not print
-        if (!isset($this->data['order_no']) || !isset($this->data['type']) || !isset( $this->data['table'])) {
-            return;
+    /**
+     * printPayBill
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     */
+    public function printPayBill($args) {
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+        if (empty($args['order_id'])) {
+            throw new Exception('Missing argument: order_id');
         }
 
-        $order_no = $this->data['order_no'];
-        $type = $this->data['type'];
-        $table = $this->data['table'];
+        $order_id = $args['order_id'];
 
-        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $orderDetail = $this->Order->find('first', array(
+                // 'recursive' => -1,
+                'conditions' => array(
+                        'Order.id' => $order_id
+                    )
+            ));
+
+        $type = $orderDetail['Order']['order_type'];
+        $table_no = $orderDetail['Order']['table_no'];
+        $order_no = $orderDetail['Order']['order_no'];
+        $logoPath = $this->Admin->getLogoPathByid($args['restaurant_id']);
+
+        $printItems = $orderDetail['OrderItem'];
+        $billInfo = $orderDetail['Order'];
+
+        $printItems = $this->OrderItem->getMergedItems($order_id);
+
+
+        $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+        $print = new PrintLib();
+        echo $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false); 
+    }
+
+    /**
+     * printTokitchen
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     */
+    public function printTokitchen($args) {
+
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+
+        if (empty($args['order_id'])) {
+            throw new Exception('Missing argument: order_id');
+        }
+        // according to order_id
+        // find all items in order, print all items which is not print
+
+        $order_id = $args['order_id'];
+
+        $orderDetail = $this->Order->find('first', array(
+                'recursive' => -1,
+                'fields' => array(
+                        'Order.order_type',
+                        'Order.table_no',
+                        'Order.order_no'
+                    ),
+                'conditions' => array(
+                        'Order.id' => $order_id
+                    )
+            ));
+
+        $type = $orderDetail['Order']['order_type'];
+        $table = $orderDetail['Order']['table_no'];
+        $order_no = $orderDetail['Order']['order_no'];
 
 
         // get all un printed items
-        $orderItemsDetail = $this->OrderItem->find('all', array(
+        $printItems = $this->OrderItem->getUnprintItemsByOrderId($order_id);
+
+        // print_r($printItems);
+
+        if (!empty($printItems['K'])) {
+
+            $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
+            $print = new PrintLib();
+            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false);
+        }
+
+        if (!empty($printItems['C'])) {
+            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+            $print = new PrintLib();
+            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['C'], true, false);
+        }
+
+        $this->OrderItem->setAllItemsToPrinted($order_id);
+    }
+
+    /**
+     * printKitchenUrgeItem
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     *      $args['item_id_list']
+     */
+    public function printKitchenUrgeItem($args) {
+
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+        if (empty($args['order_id'])) {
+            throw new Exception('Missing argument: order_id');
+        }
+        if (empty($args['item_id_list'])) {
+            throw new Exception('Missing argument: item_id_list');
+        }
+
+        // get all params
+        $restaurant_id = $args['restaurant_id'];
+        $item_id_list = $args['item_id_list'];
+        $order_id = $arg['order_id'];
+
+        $orderDetail = $this->Order->find('first', array(
                 'recursive' => -1,
                 'fields' => array(
-                    'OrderItem.id',
-                    'OrderItem.name_en',
-                    'OrderItem.name_xh',
-                    'OrderItem.category_id',
-                    'OrderItem.qty',
-                    'OrderItem.selected_extras',
-                    'OrderItem.is_takeout',
-                    'OrderItem.is_print',
-                    'OrderItem.special_instruction'
+                        'Order.order_type',
+                        'Order.table_no',
+                        'Order.order_no'
                     ),
                 'conditions' => array(
-                    'OrderItem.order_id' => $order_id, 
-                    'OrderItem.is_print' => 'N'
-                    ),
+                        'Order.id' => $order_id
+                    )
             ));
 
-        // print_r ($orderItemsDetail);
-        
+        $type = $orderDetail['Order']['order_type'];
+        $table = $orderDetail['Order']['table_no'];
+        $order_no = $orderDetail['Order']['order_no'];
+
+        $cancel_items = array('K'=> array(), 'C'=>array());
 
 
-        // seperate items by printer
-        $printItems = array();
-        foreach ($orderItemsDetail as $itemDetail) {
-            $category_id = $itemDetail['OrderItem']['category_id'];
-            $printer = $this->Category->getPrinterById($category_id);
+        foreach ($item_id_list as $item_id) {
+            // if the item is printed
+            // send to kitchen print
+            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            // print_r($item_detail);
 
-            $selected_extras_list = json_decode($itemDetail['OrderItem']['selected_extras'], true);
-            $selected_extras_arr = array();
+            $is_print = $item_detail[0]['order_items']['is_print'];
+            $printer = $item_detail[0]['categories']['printer'];
+            if ($is_print == 'Y') {
+
+                $selected_extras_list = json_decode($item_detail[0]['order_items']['selected_extras'], true);
+                $selected_extras_arr = array();
                 if (!empty($selected_extras_list)) {
                     foreach ($selected_extras_list as $selected_extra) {
                         array_push($selected_extras_arr, $selected_extra['name']);
                     }
                 }
                 
-            $itemDetail['OrderItem']['selected_extras'] = join(',', $selected_extras_arr);
+                $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
+                array_push($cancel_items[$printer], $item_detail[0]['order_items']);
 
+            } // else do nothing
 
-            if (!isset($printItems[$printer])) {
-                $printItems[$printer] = array();
-            }
-
-            array_push($printItems[$printer], $itemDetail['OrderItem']);
         }
 
-        // print_r($printItems);
-
-        if (!empty($printItems['K'])) {
-
-            $printerName = $this->Cashier->getKitchenPrinterName( $this->Session->read('Front.id'));
+        // echo json_encode($cancel_items);
+        // echo empty($cancel_items['K']);
+        if (!empty($cancel_items['K'])) {
+            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false);
+            $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
         }
-
-        if (!empty($printItems['C'])) {
-            $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        if (!empty($cancel_items['C'])) {
+            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['C'], true, false);
-        }
-
-
-        
-
-        // change all items is_print to 'Y'
-        foreach ($orderItemsDetail as $itemDetail) {
-            $itemDetail['OrderItem']['is_print'] = 'Y';
-            $this->OrderItem->save($itemDetail, false);
+            $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
         }
     }
 
 
-    public function printMergeBill() {
+    /**
+     * printKitchenRemoveItem
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     *      $args['item_id_list']
+     */
+    public function printKitchenRemoveItem($args) {
 
-        $order_ids = $this->data['order_ids'];
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+        if (empty($args['order_id'])) {
+            throw new Exception('Missing argument: order_id');
+        }
+        if (empty($args['item_id_list'])) {
+            throw new Exception('Missing argument: item_id_list');
+        }
+
+        // get all params
+        $restaurant_id = $args['restaurant_id'];
+        $item_id_list = $args['item_id_list'];
+        $order_id = $args['order_id'];
+
+        $orderDetail = $this->Order->find('first', array(
+                'recursive' => -1,
+                'fields' => array(
+                        'Order.order_type',
+                        'Order.table_no',
+                        'Order.order_no'
+                    ),
+                'conditions' => array(
+                        'Order.id' => $order_id
+                    )
+            ));
+
+        $type = $orderDetail['Order']['order_type'];
+        $table = $orderDetail['Order']['table_no'];
+        $order_no = $orderDetail['Order']['order_no'];
+
+        $cancel_items = array('K'=> array(), 'C'=>array());
+
+
+        foreach ($item_id_list as $item_id) {
+            // if the item is printed
+            // send to kitchen print
+            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            // print_r($item_detail);
+
+            $is_print = $item_detail[0]['order_items']['is_print'];
+            $printer = $item_detail[0]['categories']['printer'];
+            if ($is_print == 'Y') {
+
+                $selected_extras_list = json_decode($item_detail[0]['order_items']['selected_extras'], true);
+                $selected_extras_arr = array();
+                if (!empty($selected_extras_list)) {
+                    foreach ($selected_extras_list as $selected_extra) {
+                        array_push($selected_extras_arr, $selected_extra['name']);
+                    }
+                }
+                
+                $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
+                array_push($cancel_items[$printer], $item_detail[0]['order_items']);
+
+            } // else do nothing
+        }
+
+        // echo json_encode($cancel_items);
+        // echo empty($cancel_items['K']);
+        if (!empty($cancel_items['K'])) {
+
+            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+            $print = new PrintLib();
+            echo $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
+        }
+        if (!empty($cancel_items['C'])) {
+
+            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+            $print = new PrintLib();
+            $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
+        }
+    }
+
+
+    /**
+     * printMergeBill
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     */
+    public function printMergeBill($args) {
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+        if (empty($args['order_ids'])) {
+            throw new Exception('Missing argument: order_ids');
+        }
+
+        $order_ids = $args['order_ids'];
+
+        $orderDetail = $this->Order->find('first', array(
+                'recursive' => -1,
+                'fields' => array(
+                        'Order.order_type',
+                        'Order.table_no',
+                        'Order.order_no'
+                    ),
+                'conditions' => array(
+                        'Order.id' => $order_ids[0]
+                    )
+            ));
+
+        $type = $orderDetail['Order']['order_type'];
+
+        $logoPath = $this->Admin->getLogoPathByid($args['restaurant_id']);
 
         $mergeData = $this->Order->getMergeOrderInfo($order_ids);
 
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
         $print = new PrintLib();
-        echo $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logo_name,true, false);
+        echo $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
 
         // print_r($mergeData);
        
     }
 
 
-    public function printMergeReceipt() {
-        $order_ids = $this->data['order_ids'];
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
+    /**
+     * printMergeReceipt
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     *      $args['order_id']
+     */
+    public function printMergeReceipt($args) {
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
+        if (empty($args['order_ids'])) {
+            throw new Exception('Missing argument: order_ids');
+        }
+
+        $order_ids = $args['order_ids'];
+
+        $orderDetail = $this->Order->find('first', array(
+                'recursive' => -1,
+                'fields' => array(
+                        'Order.order_type',
+                        'Order.table_no',
+                        'Order.order_no'
+                    ),
+                'conditions' => array(
+                        'Order.id' => $order_ids[0]
+                    )
+            ));
+
+        $type = $orderDetail['Order']['order_type'];
+
+        $logoPath = $this->Admin->getLogoPathByid($args['restaurant_id']);
 
         $mergeData = $this->Order->getMergeOrderInfo($order_ids);
 
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
         $print = new PrintLib();
-        echo $print->printMergeReceiptDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logo_name,true, false);
+        echo $print->printMergeReceiptDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
 
-        print_r($mergeData);
+        // print_r($mergeData);
        
     }
 
 
-        //Modified by Jack @2017-01-05
-    public function printTodayOrders() {
+    /**
+     * printTodayOrders
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     */
+    public function printTodayOrders($args) {
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
 
 		date_default_timezone_set("America/Toronto");
 		$date_time = date("l M d Y h:i:s A");
@@ -217,12 +449,23 @@ class PrintComponent extends Component {
         // print_r($dailyItems);
 
 
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
         $print = new PrintLib();
         echo $print->printDailyReportDoc($printerName, $dailyAmount, $dailyAmountTotal);
 	}
 
-    public function printTodayItems() {
+
+    /**
+     * printTodayItems
+     *
+     * Parameters:
+     *      $args['restaurant_id']
+     */
+    public function printTodayItems($args) {
+
+        if (empty($args['restaurant_id'])) {
+            throw new Exception('Missing argument: restaurant_id');
+        }
 
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
@@ -246,7 +489,7 @@ class PrintComponent extends Component {
         // print_r($dailyItems);
 
 
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
+        $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
         $print = new PrintLib();
         echo $print->printDailyItemsDoc($printerName, $dailyItems);
     }

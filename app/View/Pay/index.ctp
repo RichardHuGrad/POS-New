@@ -403,9 +403,6 @@ echo $this->fetch('script');
             method: "post",
             data: {
                 order_no: "<?php echo $Order_detail['Order']['order_no']; ?>",
-                table_no: "<?php echo $table; ?>",
-                type: "<?php echo $type; ?>",
-                logo_name: "../webroot/img/logo.bmp",
             },
             success: function (html) {
 
@@ -488,9 +485,6 @@ echo $this->fetch('script');
                                 method: "post",
                                 data: {
                                     order_no: "<?php echo $Order_detail['Order']['order_no']; ?>",
-                                    table_no: "<?php echo $table; ?>",
-                                    type: "<?php echo $type; ?>",
-                                    logo_name: "../webroot/img/logo.bmp",
                                 },
                                 success: function (html) {
                                     window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";

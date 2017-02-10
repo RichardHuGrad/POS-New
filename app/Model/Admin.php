@@ -190,4 +190,33 @@ class Admin extends AppModel {
 			return false;
 	
 	}
+
+    public function getLogoPathByid($id) {
+        $logo_path = $this->find('first', array(
+                'fields' => array('Admin.logo_path'),
+                'conditions' => array('Admin.id' => $id)
+            ))['Admin']['logo_path'];
+
+        return $logo_path;
+    }
+
+    public function getKitchenPrinterName($id) {
+        $cashier_detail = $this->find("first", array(
+            'fields' => array('Admin.kitchen_printer_device'),
+            'conditions' => array('Admin.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Admin']['kitchen_printer_device'];
+    }
+
+    public function getServicePrinterName($id) {
+        $cashier_detail = $this->find("first", array(
+            'fields' => array('Admin.service_printer_device'),
+            'conditions' => array('Admin.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Admin']['service_printer_device'];
+    }
 }

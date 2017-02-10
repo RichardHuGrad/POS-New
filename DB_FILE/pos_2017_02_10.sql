@@ -1,0 +1,1 @@
+ALTER TABLE `admins` ADD COLUMN `logo_path` varchar(100) NOT NULL;

@@ -72,32 +72,12 @@ class PayController extends AppController {
 
         $this->loadModel('Cashier');
         $this->loadModel('Order');
-
+        
         $order_no = $this->data['order_no'];
-        $table_no = $this->data['table_no']; 
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
-
-
-        // get order bill info from database
-        $Order_detail = $this->Order->find('first', array(
-                // 'recursive' => -1,
-                'conditions' => array('Order.order_no' => $order_no)
-            ));
-        // print_r($Order_detail);
-        $printItems = $Order_detail['OrderItem'];
-        $billInfo = $Order_detail['Order'];
-
-        $this->loadModel('OrderItem');
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
-        $printItems = $this->OrderItem->getMergedItems($order_id);
+        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logo_name,true, false);
-
-
+        $this->Print->printPayReceipt(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
     }
 
     public function printBill() {
@@ -107,32 +87,11 @@ class PayController extends AppController {
         $this->loadModel('Cashier');
         $this->loadModel('Order');
         
-
         $order_no = $this->data['order_no'];
-        $table_no = $this->data['table_no']; 
-        $type = $this->data['type'];
-        $logo_name = $this->data['logo_name'];
-
-
-        // get order bill info from database
-        $Order_detail = $this->Order->find('first', array(
-                // 'recursive' => -1,
-                'conditions' => array('Order.order_no' => $order_no)
-            ));
-        // print_r($Order_detail);
-        $printItems = $Order_detail['OrderItem'];
-        $billInfo = $Order_detail['Order'];
-
-        $this->loadModel('OrderItem');
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
-        $printItems = $this->OrderItem->getMergedItems($order_id);
-        // print_r($printItems);
+        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        
-        // $printItems = array();
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logo_name,true, false); 
+        $this->Print->printPayBill(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
     }
 
 

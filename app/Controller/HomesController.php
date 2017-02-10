@@ -738,71 +738,23 @@ class HomesController extends AppController {
         $this->layout = false;
         $this->autoRender = false;
 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
         $this->loadModel('Cashier');
 
-		date_default_timezone_set("America/Toronto");
-		$date_time = date("l M d Y h:i:s A");
-		$timeline = strtotime(date("Y-m-d 11:00:00")); 
-		$nowtm = time();
-		if ($timeline > $nowtm) {
-			// before 11 am
-			$timeline -= 86400;
-		}
-		$tm11 = $timeline;
-		$timeline += 3600 * 6;
-		$tm17 = $timeline;
-		$timeline += 3600 * 6;
-		$tm23 = $timeline;
-		$timeline += 3600 * 5;
-		$tm04 = $timeline;
+        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
-        $dailyAmountTotal = $this->Order->getDailyOrderInfo(array($tm11, $tm04));
-        // $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
+        $this->Print->printTodayOrders(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
 
-        // print_r($dailyItems);
-
-
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printDailyReportDoc($printerName, $dailyAmount, $dailyAmountTotal);
 	}
 
     public function printTodayItems() {
         $this->layout = false;
         $this->autoRender = false;
 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
         $this->loadModel('Cashier');
 
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00")); 
-        $nowtm = time();
-        if ($timeline > $nowtm) {
-            // before 11 am
-            $timeline -= 86400;
-        }
-        $tm11 = $timeline;
-        $timeline += 3600 * 6;
-        $tm17 = $timeline;
-        $timeline += 3600 * 6;
-        $tm23 = $timeline;
-        $timeline += 3600 * 5;
-        $tm04 = $timeline;
+        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        // $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
-        $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
-
-        // print_r($dailyItems);
-
-
-        $printerName = $this->Cashier->getServicePrinterName( $this->Session->read('Front.id'));
-        $print = new PrintLib();
-        echo $print->printDailyItemsDoc($printerName, $dailyItems);
+        $this->Print->printTodayItems(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
     }
 
    
