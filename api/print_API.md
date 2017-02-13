@@ -4,10 +4,10 @@
 the authentication use cashier's account which can be found in Database table cashiers
 
 ### 1.1 Generate Access token
-  url - /api/access/generateToken
-  method - POST
-  params - email(mandatory), password(mandatory)
-  return - access token
+- url - /api/access/generateToken
+- method - POST
+- params - email(mandatory), password(mandatory)
+- return - access token
 
 #### 1.1.1 Example
 BASE_URL/api/access/generateToken?email=cashier@pos_v1.com&password=123456

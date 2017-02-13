@@ -118,7 +118,7 @@ class AccessComponent extends Component {
     }
 
     $Cashier = ClassRegistry::init('Cashier');
-    
+
 
     $data = $Cashier->find('first', array(
       'recursive' => -1,
