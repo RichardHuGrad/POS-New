@@ -15,9 +15,8 @@ class CategoriesControllerTest extends ControllerTestCase {
 	public $fixtures = array(
 		'app.category',
 		'app.restaurant',
-		'app.cousine',
-		'app.order',
-		'app.category_locale'
+		'app.category_locale',
+		'app.cousine'
 	);
 
 /**

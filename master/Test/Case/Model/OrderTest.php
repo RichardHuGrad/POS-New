@@ -15,10 +15,6 @@ class OrderTest extends CakeTestCase {
 	public $fixtures = array(
 		'app.order',
 		'app.restaurant',
-		'app.category',
-		'app.category_locale',
-		'app.cousine',
-		'app.cousine_local',
 		'app.restaurant_order',
 		'app.merge'
 	);

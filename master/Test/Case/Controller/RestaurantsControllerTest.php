@@ -17,7 +17,7 @@ class RestaurantsControllerTest extends ControllerTestCase {
 		'app.category',
 		'app.category_locale',
 		'app.cousine',
-		'app.cousine_local',
+		'app.cousine_locale',
 		'app.order',
 		'app.restaurant_order',
 		'app.merge'

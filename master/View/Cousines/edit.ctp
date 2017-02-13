@@ -25,7 +25,7 @@
 		<li><?php echo $this->Html->link(__('New Restaurant'), array('controller' => 'restaurants', 'action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Categories'), array('controller' => 'categories', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Category'), array('controller' => 'categories', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Cousine Locals'), array('controller' => 'cousine_locals', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Cousine Local'), array('controller' => 'cousine_locals', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Cousine Locales'), array('controller' => 'cousine_locales', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Cousine Locale'), array('controller' => 'cousine_locales', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

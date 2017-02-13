@@ -17,8 +17,7 @@ class CousineTest extends CakeTestCase {
 		'app.restaurant',
 		'app.category',
 		'app.category_locale',
-		'app.order',
-		'app.cousine_local'
+		'app.cousine_locale'
 	);
 
 /**

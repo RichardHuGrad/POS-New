@@ -38,8 +38,8 @@ class CousineFixture extends CakeTestFixture {
 			'category_id' => 1,
 			'comb_num' => 1,
 			'status' => 'Lorem ipsum dolor sit ame',
-			'created' => '2017-02-13 16:56:19',
-			'modified' => '2017-02-13 16:56:19'
+			'created' => '2017-02-13 17:35:13',
+			'modified' => '2017-02-13 17:35:13'
 		),
 	);
 

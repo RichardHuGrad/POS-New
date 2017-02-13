@@ -64,13 +64,13 @@
 		<li><?php echo $this->Html->link(__('New Restaurant'), array('controller' => 'restaurants', 'action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Categories'), array('controller' => 'categories', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Category'), array('controller' => 'categories', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Cousine Locals'), array('controller' => 'cousine_locals', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Cousine Local'), array('controller' => 'cousine_locals', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Cousine Locales'), array('controller' => 'cousine_locales', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Cousine Locale'), array('controller' => 'cousine_locales', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
 <div class="related">
-	<h3><?php echo __('Related Cousine Locals'); ?></h3>
-	<?php if (!empty($cousine['CousineLocal'])): ?>
+	<h3><?php echo __('Related Cousine Locales'); ?></h3>
+	<?php if (!empty($cousine['CousineLocale'])): ?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php echo __('Id'); ?></th>
@@ -81,18 +81,18 @@
 		<th><?php echo __('Modified'); ?></th>
 		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php foreach ($cousine['CousineLocal'] as $cousineLocal): ?>
+	<?php foreach ($cousine['CousineLocale'] as $cousineLocale): ?>
 		<tr>
-			<td><?php echo $cousineLocal['id']; ?></td>
-			<td><?php echo $cousineLocal['cousine_id']; ?></td>
-			<td><?php echo $cousineLocal['name']; ?></td>
-			<td><?php echo $cousineLocal['lang_code']; ?></td>
-			<td><?php echo $cousineLocal['created']; ?></td>
-			<td><?php echo $cousineLocal['modified']; ?></td>
+			<td><?php echo $cousineLocale['id']; ?></td>
+			<td><?php echo $cousineLocale['cousine_id']; ?></td>
+			<td><?php echo $cousineLocale['name']; ?></td>
+			<td><?php echo $cousineLocale['lang_code']; ?></td>
+			<td><?php echo $cousineLocale['created']; ?></td>
+			<td><?php echo $cousineLocale['modified']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'cousine_locals', 'action' => 'view', $cousineLocal['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'cousine_locals', 'action' => 'edit', $cousineLocal['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'cousine_locals', 'action' => 'delete', $cousineLocal['id']), null, __('Are you sure you want to delete # %s?', $cousineLocal['id'])); ?>
+				<?php echo $this->Html->link(__('View'), array('controller' => 'cousine_locales', 'action' => 'view', $cousineLocale['id'])); ?>
+				<?php echo $this->Html->link(__('Edit'), array('controller' => 'cousine_locales', 'action' => 'edit', $cousineLocale['id'])); ?>
+				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'cousine_locales', 'action' => 'delete', $cousineLocale['id']), null, __('Are you sure you want to delete # %s?', $cousineLocale['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -101,7 +101,7 @@
 
 	<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('New Cousine Local'), array('controller' => 'cousine_locals', 'action' => 'add')); ?> </li>
+			<li><?php echo $this->Html->link(__('New Cousine Locale'), array('controller' => 'cousine_locales', 'action' => 'add')); ?> </li>
 		</ul>
 	</div>
 </div>

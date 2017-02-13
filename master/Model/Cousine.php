@@ -5,7 +5,7 @@ App::uses('AppModel', 'Model');
  *
  * @property Restaurant $Restaurant
  * @property Category $Category
- * @property CousineLocal $CousineLocal
+ * @property CousineLocale $CousineLocale
  */
 class Cousine extends AppModel {
 
@@ -97,8 +97,8 @@ class Cousine extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'CousineLocal' => array(
-			'className' => 'CousineLocal',
+		'CousineLocale' => array(
+			'className' => 'CousineLocale',
 			'foreignKey' => 'cousine_id',
 			'dependent' => false,
 			'conditions' => '',

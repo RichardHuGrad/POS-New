@@ -16,8 +16,7 @@ class CategoryLocalesControllerTest extends ControllerTestCase {
 		'app.category_locale',
 		'app.category',
 		'app.restaurant',
-		'app.cousine',
-		'app.order'
+		'app.cousine'
 	);
 
 /**

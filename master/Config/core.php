@@ -4,18 +4,9 @@
  *
  * Use it to configure core behavior of Cake.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.Config
  * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -31,7 +22,7 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug',2);
+	Configure::write('debug', 2);
 
 /**
  * Configure the Error handler used to handle errors for your application. By default
@@ -84,8 +75,6 @@
  * Application wide charset encoding
  */
 	Configure::write('App.encoding', 'UTF-8');
-
-
 
 /**
  * To configure CakePHP *not* to use mod_rewrite and to
@@ -151,7 +140,7 @@
  *	`manager_index()` and `/manager/controller/index`
  *
  */
-	Configure::write('Routing.prefixes', array('admin'));
+	//Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
@@ -218,19 +207,16 @@
  *
  */
 	Configure::write('Session', array(
-		'defaults' => 'php',
-           'cookieTimeout' => 0
+		'defaults' => 'php'
 	));
 
 /**
  * A random string used in security hashing methods.
- */
-	//Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mj');
+ */	Configure::write('Security.salt', '1965cde4ba4d1b57c6b148ec30d63b927222cd71');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
- */
-	//Configure::write('Security.cipherSeed', '76859309657453542496749683646');
+ */	Configure::write('Security.cipherSeed', '663039353136336630633833363539');
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
@@ -270,15 +256,7 @@
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-	date_default_timezone_set('Canada/Eastern');
-
-/**
- * `Config.timezone` is available in which you can set users' timezone string.
- * If a method of CakeTime class is called with $timezone parameter as null and `Config.timezone` is set,
- * then the value of `Config.timezone` will be used. This feature allows you to set users' timezone just
- * once instead of passing it each time in function calls.
- */
-	//Configure::write('Config.timezone', 'Europe/Paris')
+	//date_default_timezone_set('UTC');
 
 /**
  *
@@ -361,7 +339,7 @@ if (Configure::read('debug') > 0) {
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'myapp_';
+$prefix = 'test_';
 
 /**
  * Configure the cache used for general framework caching. Path information,
@@ -386,69 +364,3 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
-
-$directory = $_SERVER['DOCUMENT_ROOT'] . '/';
-$url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
-
-$project_directory = '/';
-if('192.168.1.253:81' == $_SERVER['HTTP_HOST']){
-	$project_directory = '/pos/';
-}
-
-$db_host = 'localhost';
-$db_username = 'root';
-$db_password = 'root';
-$db_database = 'pos_master';
-
-if('m.brsoftech.net' == $_SERVER['HTTP_HOST']){
-	Configure::write('debug',0);
-	$project_directory = '/pos/';
-
-	$db_host = 'localhost';
-	$db_username = 'BrdbUserm';
-	$db_password = 'BrDB!34*908m';
-	$db_database = 'pos';
-}
-
-define('DB_HOST', $db_host);
-define('DB_USERNAME', $db_username);
-define('DB_PASSWORD', $db_password);
-define('DB_DATABASE', $db_database);
-
-$directory = $_SERVER['DOCUMENT_ROOT'] . $project_directory;
-$url_directory = 'http://' . $_SERVER['HTTP_HOST'] . $project_directory;
-
-
-define('WEBSITE_URL', $url_directory."pos/");
-define('WEBSITE_FRONT_CSS', WEBSITE_URL."css/");
-define('WEBSITE_FRONT_JS', WEBSITE_URL.'js/');
-define('WEBSITE_FRONT_IMAGE', WEBSITE_URL.'img/');
-
-define('WEBSITE_MAIL', "support@pos.com");
-
-
-
-define('TMP_PATH', $directory.'app/webroot/uploads/temp/');
-define('TIMB_PATH', $url_directory.'master/webroot/img/');
-define('COUSINE_UPLOAD_PATH', $directory.'app/webroot/uploads/cousine_images/');
-define('COUSINE_IMAGE_PATH', $url_directory.'master/webroot/uploads/cousine_images/thumbnail/');
-
-define('CASHIER_UPLOAD_PATH', $directory.'master/webroot/uploads/cashier/');
-define('CASHIER_IMAGE_PATH', $url_directory.'master/webroot/uploads/cashier/thumbnail/');
-
-$paging_options = serialize(array('10' => '10', '15' => '15', '20' => '20', '50', '100' => '100', 'all' => 'All'));
-define('PAGING_OPTIONS', $paging_options);
-define('DEFAULT_PAGE_SIZE', '20');
-define('DATE_FORMAT', 'M j, Y');
-define('DATETIME_FORMAT', 'M j, Y h:i a');
-define('TIME_FORMAT', 'h:i a');
-define('EMAIL_FROM_TEXT', 'POS Team');
-
-$vendor_delivery_type_options = serialize(array('O' => 'Own Delivery', 'S' => 'Stuart Delivery'));
-define('VENDOR_DELIVERY_TYPE_OPTIONS', $vendor_delivery_type_options);
-
-define('LAYOUT_ADMIN', 'admin');
-
-define('DINEIN_TABLE', 10);
-define('WAITING_TABLE', 5);
-define('TAKEOUT_TABLE', 10);

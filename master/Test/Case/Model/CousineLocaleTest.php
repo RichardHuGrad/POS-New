@@ -14,14 +14,7 @@ class CousineLocaleTest extends CakeTestCase {
  */
 	public $fixtures = array(
 		'app.cousine_locale',
-		'app.cousine',
-		'app.restaurant',
-		'app.category',
-		'app.category_locale',
-		'app.order',
-		'app.restaurant_order',
-		'app.merge',
-		'app.cousine_local'
+		'app.cousine'
 	);
 
 /**
