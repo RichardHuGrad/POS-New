@@ -1,0 +1,1922 @@
+2017-01-11 11:23:16 Error: [MissingConnectionException] Database connection "Mysql" is missing, or could not be created.
+Exception Attributes: array (
+  'class' => 'Mysql',
+  'message' => 'SQLSTATE[HY000] [1045] Access denied for user \'root\'@\'localhost\' (using password: NO)',
+  'enabled' => true,
+)
+Request URL: /pos-new/manager/
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(260): Mysql->connect()
+#1 /var/www/html/pos-new/lib/Cake/Model/ConnectionManager.php(105): DboSource->__construct(Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Model.php(3476): ConnectionManager::getDataSource('default')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1126): Model->setDataSource('default')
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(3498): Model->setSource('admins')
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(1355): Model->getDataSource()
+#6 /var/www/html/pos-new/lib/Cake/View/Helper/FormHelper.php(207): Model->schema()
+#7 /var/www/html/pos-new/lib/Cake/View/Helper/FormHelper.php(459): FormHelper->_introspectModel('Admin', 'fields')
+#8 /var/www/html/pos-new/manager/View/Layouts/login.ctp(62): FormHelper->create('Admin', Array)
+#9 /var/www/html/pos-new/lib/Cake/View/View.php(935): include('/var/www/html/p...')
+#10 /var/www/html/pos-new/lib/Cake/View/View.php(897): View->_evaluate('/var/www/html/p...', Array)
+#11 /var/www/html/pos-new/lib/Cake/View/View.php(529): View->_render('/var/www/html/p...')
+#12 /var/www/html/pos-new/lib/Cake/View/View.php(474): View->renderLayout('', 'login')
+#13 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(952): View->render(NULL, NULL)
+#14 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(192): Controller->render()
+#15 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#16 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#17 {main}
+2017-01-11 11:23:16 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:23:16 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:23:16 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:23:16 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:23:17 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:04 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:04 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:04 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:04 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:06 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:06 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:06 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 11:25:06 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 14:30:00 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 14:30:01 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 14:30:01 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 14:30:01 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 18:32:38 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 18:32:38 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-11 18:32:38 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-26 12:21:15 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-26 12:21:15 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-26 12:21:15 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-01-26 12:25:19 Error: [PDOException] SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'pos.Order.created' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Request URL: /pos-new/manager/admin/reportslist/index/0
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT sum(`Ord...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(665): DboSource->execute('SELECT sum(`Ord...', Array, Array)
+#3 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1077): DboSource->fetchAll('SELECT sum(`Ord...', false)
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): DboSource->read(Object(Order), Array)
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#6 /var/www/html/pos-new/manager/Controller/ReportslistController.php(104): Model->find('all', Array)
+#7 [internal function]: ReportslistController->admin_index('0')
+#8 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ReportslistController), Array)
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(ReportslistController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-02-03 15:36:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:36:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:36:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:36:21 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:36:22 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:37:20 Error: [PDOException] SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'pos.Order.created' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Request URL: /pos-new/manager/admin/reportslist/index/0
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT sum(`Ord...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(665): DboSource->execute('SELECT sum(`Ord...', Array, Array)
+#3 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1077): DboSource->fetchAll('SELECT sum(`Ord...', false)
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): DboSource->read(Object(Order), Array)
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#6 /var/www/html/pos-new/manager/Controller/ReportslistController.php(104): Model->find('all', Array)
+#7 [internal function]: ReportslistController->admin_index('0')
+#8 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ReportslistController), Array)
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(ReportslistController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-02-03 15:40:30 Error: [PDOException] SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'pos.Order.created' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Request URL: /pos-new/manager/admin/reportslist/index/0
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT sum(`Ord...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(665): DboSource->execute('SELECT sum(`Ord...', Array, Array)
+#3 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1077): DboSource->fetchAll('SELECT sum(`Ord...', false)
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): DboSource->read(Object(Order), Array)
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#6 /var/www/html/pos-new/manager/Controller/ReportslistController.php(104): Model->find('all', Array)
+#7 [internal function]: ReportslistController->admin_index('0')
+#8 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ReportslistController), Array)
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(ReportslistController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-02-03 15:50:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:50:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:50:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 15:50:30 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-03 16:12:10 Error: [MissingTableException] Table restaurants for model Restaurant was not found in datasource default.
+Exception Attributes: array (
+  'table' => 'restaurants',
+  'class' => 'Restaurant',
+  'ds' => 'default',
+)
+Request URL: /pos-new/manager/admin/restaurants
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Model.php(3498): Model->setSource('restaurants')
+#1 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): Model->getDataSource()
+#2 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#3 /var/www/html/pos-new/lib/Cake/Controller/Component/PaginatorComponent.php(173): Model->find('all', Array)
+#4 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(1079): PaginatorComponent->paginate(NULL, Array, Array)
+#5 /var/www/html/pos-new/manager/Controller/RestaurantsController.php(89): Controller->paginate()
+#6 [internal function]: RestaurantsController->admin_index()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(RestaurantsController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(RestaurantsController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-06 12:03:45 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-06 16:24:18 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-06 16:24:18 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-06 16:24:19 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-06 16:24:19 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 09:42:58 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 11:51:34 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 11:51:34 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 11:51:35 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:03 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:03 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:03 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:03 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:05 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:05 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:05 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:34:05 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 13:37:18 Error: [PDOException] SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'pos.Order.created' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Request URL: /pos-new/manager/admin/reportslist/index/0
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT sum(`Ord...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(665): DboSource->execute('SELECT sum(`Ord...', Array, Array)
+#3 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1077): DboSource->fetchAll('SELECT sum(`Ord...', false)
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): DboSource->read(Object(Order), Array)
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#6 /var/www/html/pos-new/manager/Controller/ReportslistController.php(104): Model->find('all', Array)
+#7 [internal function]: ReportslistController->admin_index('0')
+#8 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ReportslistController), Array)
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(ReportslistController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-02-07 14:36:07 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 14:45:37 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 14:45:43 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 14:48:29 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:06:23 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:07:52 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:09:27 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:09:30 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:09:31 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:09:32 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:09:33 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:09:47 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:10:03 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/adelete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:11:30 Error: [MissingControllerException] Controller class OrderController could not be found.
+Exception Attributes: array (
+  'class' => 'OrderController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/admin/order/delete
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-07 15:29:46 Error: [MissingViewException] View file "/var/www/html/pos-new/manager/View/Orders/admin_delete.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/var/www/html/pos-new/manager/View/Orders/admin_delete.ctp',
+)
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/View/View.php(463): View->_getViewFileName(NULL)
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(952): View->render(NULL, NULL)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(192): Controller->render()
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-07 15:29:58 Error: [MissingViewException] View file "/var/www/html/pos-new/manager/View/Orders/admin_delete.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/var/www/html/pos-new/manager/View/Orders/admin_delete.ctp',
+)
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/View/View.php(463): View->_getViewFileName(NULL)
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(952): View->render(NULL, NULL)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(192): Controller->render()
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-07 15:31:15 Error: [MissingViewException] View file "/var/www/html/pos-new/manager/View/Orders/admin_delete.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/var/www/html/pos-new/manager/View/Orders/admin_delete.ctp',
+)
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/View/View.php(463): View->_getViewFileName(NULL)
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(952): View->render(NULL, NULL)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(192): Controller->render()
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-07 16:04:02 Error: Fatal Error (4): syntax error, unexpected '$log_detail' (T_VARIABLE) in [/var/www/html/pos-new/manager/Model/Order.php, line 29]
+2017-02-07 16:04:02 Error: [FatalErrorException] syntax error, unexpected '$log_detail' (T_VARIABLE)
+Request URL: /pos-new/manager/admin/orders
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 29)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 29, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 29, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:05:18 Error: Fatal Error (4): syntax error, unexpected '$log_detail' (T_VARIABLE) in [/var/www/html/pos-new/manager/Model/Order.php, line 29]
+2017-02-07 16:05:18 Error: [FatalErrorException] syntax error, unexpected '$log_detail' (T_VARIABLE)
+Request URL: /pos-new/manager/admin/orders
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 29)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 29, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 29, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:05:38 Error: Fatal Error (1): Call to a member function save() on null in [/var/www/html/pos-new/manager/Model/Order.php, line 31]
+2017-02-07 16:05:38 Error: [FatalErrorException] Call to a member function save() on null
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to a membe...', '/var/www/html/p...', 31)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', '/var/www/html/p...', 31, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', '/var/www/html/p...', 31, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:05:59 Error: Fatal Error (1): Call to a member function save() on null in [/var/www/html/pos-new/manager/Model/Order.php, line 31]
+2017-02-07 16:05:59 Error: [FatalErrorException] Call to a member function save() on null
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to a membe...', '/var/www/html/p...', 31)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', '/var/www/html/p...', 31, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', '/var/www/html/p...', 31, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:06:34 Error: Fatal Error (1): Call to a member function save() on null in [/var/www/html/pos-new/manager/Model/Order.php, line 32]
+2017-02-07 16:06:34 Error: [FatalErrorException] Call to a member function save() on null
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to a membe...', '/var/www/html/p...', 32)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', '/var/www/html/p...', 32, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', '/var/www/html/p...', 32, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:07:30 Error: Fatal Error (1): Call to a member function save() on null in [/var/www/html/pos-new/manager/Model/Order.php, line 32]
+2017-02-07 16:07:30 Error: [FatalErrorException] Call to a member function save() on null
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to a membe...', '/var/www/html/p...', 32)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', '/var/www/html/p...', 32, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', '/var/www/html/p...', 32, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:08:24 Error: Fatal Error (1): Call to a member function save() on null in [/var/www/html/pos-new/manager/Model/Order.php, line 32]
+2017-02-07 16:08:24 Error: [FatalErrorException] Call to a member function save() on null
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to a membe...', '/var/www/html/p...', 32)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to a membe...', '/var/www/html/p...', 32, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to a membe...', '/var/www/html/p...', 32, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-07 16:16:42 Error: [PDOException] SQLSTATE[HY000]: General error: 1364 Field 'id' doesn't have a default value
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(Log), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/Order.php(34): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(238): Order->deleteByOrderNo('10311517')
+#6 [internal function]: OrdersController->admin_delete()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-07 16:18:26 Error: [PDOException] SQLSTATE[HY000]: General error: 1364 Field 'id' doesn't have a default value
+Request URL: /pos-new/manager/admin/orders/delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(Log), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/Order.php(35): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(238): Order->deleteByOrderNo('10311517')
+#6 [internal function]: OrdersController->admin_delete()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-07 16:38:19 Error: [PDOException] SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'pos.Order.created' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Request URL: /pos-new/manager/admin/reportslist/index/0
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT sum(`Ord...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(665): DboSource->execute('SELECT sum(`Ord...', Array, Array)
+#3 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1077): DboSource->fetchAll('SELECT sum(`Ord...', false)
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): DboSource->read(Object(Order), Array)
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#6 /var/www/html/pos-new/manager/Controller/ReportslistController.php(104): Model->find('all', Array)
+#7 [internal function]: ReportslistController->admin_index('0')
+#8 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ReportslistController), Array)
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(ReportslistController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-02-08 09:44:07 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-08 09:44:07 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-08 09:44:07 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-08 09:44:07 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-08 09:44:08 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-08 09:48:43 Error: [PDOException] SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'pos.Order.created' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+Request URL: /pos-new/manager/admin/reportslist/index/0
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('SELECT sum(`Ord...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(665): DboSource->execute('SELECT sum(`Ord...', Array, Array)
+#3 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1077): DboSource->fetchAll('SELECT sum(`Ord...', false)
+#4 /var/www/html/pos-new/lib/Cake/Model/Model.php(2902): DboSource->read(Object(Order), Array)
+#5 /var/www/html/pos-new/lib/Cake/Model/Model.php(2874): Model->_readDataSource('all', Array)
+#6 /var/www/html/pos-new/manager/Controller/ReportslistController.php(104): Model->find('all', Array)
+#7 [internal function]: ReportslistController->admin_index('0')
+#8 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ReportslistController), Array)
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(ReportslistController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2017-02-08 11:19:17 Error: Fatal Error (4): syntax error, unexpected 'public' (T_PUBLIC) in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 302]
+2017-02-08 11:19:17 Error: [FatalErrorException] syntax error, unexpected 'public' (T_PUBLIC)
+Request URL: /pos-new/manager/admin/orders/delete/502
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 302)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 302, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 302, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:38:23 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:38:23 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batch_delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:38:51 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:38:51 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batch_delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:38:58 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:38:58 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batch_delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:40:00 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:40:00 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:42:13 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:42:13 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:43:23 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:43:23 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:45:53 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:45:53 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:46:28 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 266]
+2017-02-08 11:46:28 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 266)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 266, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:47:45 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 267]
+2017-02-08 11:47:45 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 267)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 267, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 267, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:50:32 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 267]
+2017-02-08 11:50:32 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 267)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 267, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 267, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:56:17 Error: Fatal Error (1): Call to undefined method OrdersController::find() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 267]
+2017-02-08 11:56:17 Error: [FatalErrorException] Call to undefined method OrdersController::find()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 267)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 267, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 267, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 11:56:49 Error: Fatal Error (1): Call to undefined method OrdersController::delete() in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 278]
+2017-02-08 11:56:49 Error: [FatalErrorException] Call to undefined method OrdersController::delete()
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/var/www/html/p...', 278)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/var/www/html/p...', 278, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/var/www/html/p...', 278, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 12:00:13 Error: [MissingActionException] Action OrdersController::admin_batchdelete() could not be found.
+Exception Attributes: array (
+  'controller' => 'OrdersController',
+  'action' => 'admin_batchdelete',
+)
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-08 12:00:19 Error: [MissingActionException] Action OrdersController::admin_batchdelete() could not be found.
+Exception Attributes: array (
+  'controller' => 'OrdersController',
+  'action' => 'admin_batchdelete',
+)
+Request URL: /pos-new/manager/admin/orders/batchdelete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-08 12:05:05 Error: Fatal Error (4): syntax error, unexpected '=>' (T_DOUBLE_ARROW) in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 305]
+2017-02-08 12:05:05 Error: [FatalErrorException] syntax error, unexpected '=>' (T_DOUBLE_ARROW)
+Request URL: /pos-new/manager/admin/orders
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 305)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 305, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 305, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 12:05:54 Error: Fatal Error (4): syntax error, unexpected ';' in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 305]
+2017-02-08 12:05:54 Error: [FatalErrorException] syntax error, unexpected ';'
+Request URL: /pos-new/manager/admin/orders
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 305)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 305, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 305, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 12:09:24 Error: [NotFoundException] Invalid order
+Request URL: /pos-new/manager/admin/orders/delete/441
+Stack Trace:
+#0 [internal function]: OrdersController->admin_delete('441')
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-08 12:10:02 Error: Fatal Error (4): syntax error, unexpected '{' in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 307]
+2017-02-08 12:10:02 Error: [FatalErrorException] syntax error, unexpected '{'
+Request URL: /pos-new/manager/admin/orders/delete/441
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 307)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 307, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 307, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 12:10:08 Error: Fatal Error (4): syntax error, unexpected '{' in [/var/www/html/pos-new/manager/Controller/OrdersController.php, line 307]
+2017-02-08 12:10:08 Error: [FatalErrorException] syntax error, unexpected '{'
+Request URL: /pos-new/manager/admin/orders/delete/441
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/var/www/html/p...', 307)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/var/www/html/p...', 307, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/var/www/html/p...', 307, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-08 12:14:34 Error: [NotFoundException] Invalid order
+Request URL: /pos-new/manager/admin/orders/delete/436
+Stack Trace:
+#0 [internal function]: OrdersController->admin_delete('436')
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-08 12:15:05 Error: [NotFoundException] Invalid order
+Request URL: /pos-new/manager/admin/orders/delete/436
+Stack Trace:
+#0 [internal function]: OrdersController->admin_delete('436')
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-08 12:15:10 Error: [NotFoundException] Invalid order
+Request URL: /pos-new/manager/admin/orders/delete/436
+Stack Trace:
+#0 [internal function]: OrdersController->admin_delete('436')
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-08 12:21:52 Error: [NotFoundException] Invalid order
+Request URL: /pos-new/manager/admin/orders/edit/422
+Stack Trace:
+#0 [internal function]: OrdersController->admin_edit('422')
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-08 12:32:34 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/batch_delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(277): OrderLog->insertLog(Array, 'delete')
+#6 [internal function]: OrdersController->admin_batch_delete()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 12:32:40 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/batch_delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(277): OrderLog->insertLog(Array, 'delete')
+#6 [internal function]: OrdersController->admin_batch_delete()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 13:20:36 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/batch_delete
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(277): OrderLog->insertLog(Array, 'delete')
+#6 [internal function]: OrdersController->admin_batch_delete()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:14:10 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:14:49 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:22:43 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:23:51 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:27:36 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:27:46 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:28:02 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:29:06 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(322): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:30:47 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(323): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:31:09 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(323): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:31:39 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'order_no' cannot be null
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(458): PDOStatement->execute(Array)
+#1 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(424): DboSource->_execute('INSERT INTO `po...', Array)
+#2 /var/www/html/pos-new/lib/Cake/Model/Datasource/DboSource.php(1004): DboSource->execute('INSERT INTO `po...')
+#3 /var/www/html/pos-new/lib/Cake/Model/Model.php(1832): DboSource->create(Object(OrderLog), Array, Array)
+#4 /var/www/html/pos-new/manager/Model/OrderLog.php(12): Model->save(Array, false)
+#5 /var/www/html/pos-new/manager/Controller/OrdersController.php(324): OrderLog->insertLog(Array, 'edit')
+#6 [internal function]: OrdersController->admin_edit_log()
+#7 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(OrdersController), Array)
+#8 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#9 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#10 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#11 {main}
+2017-02-08 14:32:27 Error: [MissingViewException] View file "/var/www/html/pos-new/manager/View/Orders/admin_edit_log.ctp" is missing.
+Exception Attributes: array (
+  'file' => '/var/www/html/pos-new/manager/View/Orders/admin_edit_log.ctp',
+)
+Request URL: /pos-new/manager/admin/orders/edit_log
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/View/View.php(463): View->_getViewFileName(NULL)
+#1 /var/www/html/pos-new/lib/Cake/Controller/Controller.php(952): View->render(NULL, NULL)
+#2 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(192): Controller->render()
+#3 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(OrdersController), Object(CakeRequest), Object(CakeResponse))
+#4 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2017-02-13 12:48:27 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:28 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:28 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:28 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:28 Error: [MissingControllerException] Controller class ImagesController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagesController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/images/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/tytabs.jquery.min.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 12:48:36 Error: [MissingControllerException] Controller class JsController could not be found.
+Exception Attributes: array (
+  'class' => 'JsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/manager/js/html5.js
+Stack Trace:
+#0 /var/www/html/pos-new/manager/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 16:32:47 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 16:32:48 Error: Fatal Error (1): Class 'AppHelper' not found in [/var/www/html/pos-new/lib/Cake/View/Helper/HtmlHelper.php, line 32]
+2017-02-13 16:32:48 Error: [FatalErrorException] Class 'AppHelper' not found
+Request URL: /pos-new/master/
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 32)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 32, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'AppHelpe...', '/var/www/html/p...', 32, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-13 16:57:07 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 16:57:07 Error: Fatal Error (1): Class 'AppHelper' not found in [/var/www/html/pos-new/lib/Cake/View/Helper/SessionHelper.php, line 30]
+2017-02-13 16:57:07 Error: [FatalErrorException] Class 'AppHelper' not found
+Request URL: /pos-new/master/
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-13 16:57:43 Error: [MissingControllerException] Controller class IndexController could not be found.
+Exception Attributes: array (
+  'class' => 'IndexController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/index
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 16:57:43 Error: Fatal Error (1): Class 'AppHelper' not found in [/var/www/html/pos-new/lib/Cake/View/Helper/SessionHelper.php, line 30]
+2017-02-13 16:57:43 Error: [FatalErrorException] Class 'AppHelper' not found
+Request URL: /pos-new/master/index
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-13 17:05:18 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:05:18 Error: Fatal Error (1): Class 'AppHelper' not found in [/var/www/html/pos-new/lib/Cake/View/Helper/SessionHelper.php, line 30]
+2017-02-13 17:05:18 Error: [FatalErrorException] Class 'AppHelper' not found
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-13 17:05:49 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:05:49 Error: Fatal Error (1): Class 'AppHelper' not found in [/var/www/html/pos-new/lib/Cake/View/Helper/SessionHelper.php, line 30]
+2017-02-13 17:05:49 Error: [FatalErrorException] Class 'AppHelper' not found
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-13 17:05:52 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:05:52 Error: Fatal Error (1): Class 'AppHelper' not found in [/var/www/html/pos-new/lib/Cake/View/Helper/SessionHelper.php, line 30]
+2017-02-13 17:05:52 Error: [FatalErrorException] Class 'AppHelper' not found
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Error/ErrorHandler.php(204): ErrorHandler::handleFatalError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#2 /var/www/html/pos-new/lib/Cake/Core/App.php(929): call_user_func('ErrorHandler::h...', 1, 'Class 'AppHelpe...', '/var/www/html/p...', 30, Array)
+#3 /var/www/html/pos-new/lib/Cake/Core/App.php(902): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2017-02-13 17:06:33 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:06:33 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:06:34 Error: [MissingControllerException] Controller class Favicon.icoController could not be found.
+Exception Attributes: array (
+  'class' => 'Favicon.icoController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/favicon.ico
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:07:05 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:07:05 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:07:14 Error: [MissingControllerException] Controller class AdminController could not be found.
+Exception Attributes: array (
+  'class' => 'AdminController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/admin/
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:07:14 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:08:56 Error: [MissingControllerException] Controller class AdminController could not be found.
+Exception Attributes: array (
+  'class' => 'AdminController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/admin/
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:08:56 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:08:58 Error: [MissingControllerException] Controller class AdminController could not be found.
+Exception Attributes: array (
+  'class' => 'AdminController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/admin/
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:08:59 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:09:23 Error: [MissingControllerException] Controller class AdminsController could not be found.
+Exception Attributes: array (
+  'class' => 'AdminsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:09:24 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:09:33 Error: [MissingControllerException] Controller class AdminsController could not be found.
+Exception Attributes: array (
+  'class' => 'AdminsController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:09:33 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:10:09 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:10:09 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:10:56 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:10:56 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:11:46 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:11:46 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:11:48 Error: [MissingActionException] Action AdminsController::admin_login() could not be found.
+Exception Attributes: array (
+  'controller' => 'AdminsController',
+  'action' => 'admin_login',
+)
+Request URL: /pos-new/master/admin/admins/login
+Stack Trace:
+#0 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#1 /var/www/html/pos-new/lib/Cake/Routing/Dispatcher.php(160): Dispatcher->_invoke(Object(AdminsController), Object(CakeRequest), Object(CakeResponse))
+#2 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2017-02-13 17:11:49 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:11:54 Error: [MissingControllerException] Controller class AdminController could not be found.
+Exception Attributes: array (
+  'class' => 'AdminController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/admin
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:11:54 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:12:10 Error: [MissingControllerException] Controller class UsersController could not be found.
+Exception Attributes: array (
+  'class' => 'UsersController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/users/login
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:12:10 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:12:28 Error: [MissingControllerException] Controller class UsersController could not be found.
+Exception Attributes: array (
+  'class' => 'UsersController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/users/login
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:12:28 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:12:34 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:12:46 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:16:32 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:16:51 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:16:57 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:17:00 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:17:02 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:17:09 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:17:13 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:17:16 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-02-13 17:17:34 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos-new/master/css/cake.generic.css
+Stack Trace:
+#0 /var/www/html/pos-new/master/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
