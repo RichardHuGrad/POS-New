@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 App::uses('Component', 'Controller');
 App::uses('PrintLib', 'Lib');
@@ -96,7 +96,7 @@ class PrintComponent extends Component {
 
         $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
         $print = new PrintLib();
-        echo $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false); 
+        echo $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
     }
 
     /**
@@ -219,7 +219,7 @@ class PrintComponent extends Component {
                         array_push($selected_extras_arr, $selected_extra['name']);
                     }
                 }
-                
+
                 $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
                 array_push($cancel_items[$printer], $item_detail[0]['order_items']);
 
@@ -303,7 +303,7 @@ class PrintComponent extends Component {
                         array_push($selected_extras_arr, $selected_extra['name']);
                     }
                 }
-                
+
                 $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
                 array_push($cancel_items[$printer], $item_detail[0]['order_items']);
 
@@ -367,7 +367,7 @@ class PrintComponent extends Component {
         echo $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
 
         // print_r($mergeData);
-       
+
     }
 
 
@@ -411,7 +411,7 @@ class PrintComponent extends Component {
         echo $print->printMergeReceiptDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
 
         // print_r($mergeData);
-       
+
     }
 
 
@@ -426,21 +426,21 @@ class PrintComponent extends Component {
             throw new Exception('Missing argument: restaurant_id');
         }
 
-		date_default_timezone_set("America/Toronto");
-		$date_time = date("l M d Y h:i:s A");
-		$timeline = strtotime(date("Y-m-d 11:00:00")); 
-		$nowtm = time();
-		if ($timeline > $nowtm) {
-			// before 11 am
-			$timeline -= 86400;
-		}
-		$tm11 = $timeline;
-		$timeline += 3600 * 6;
-		$tm17 = $timeline;
-		$timeline += 3600 * 6;
-		$tm23 = $timeline;
-		$timeline += 3600 * 5;
-		$tm04 = $timeline;
+				date_default_timezone_set("America/Toronto");
+				$date_time = date("l M d Y h:i:s A");
+				$timeline = strtotime(date("Y-m-d 11:00:00"));
+				$nowtm = time();
+				if ($timeline > $nowtm) {
+					// before 11 am
+					$timeline -= 86400;
+				}
+				$tm11 = $timeline;
+				$timeline += 3600 * 6;
+				$tm17 = $timeline;
+				$timeline += 3600 * 6;
+				$tm23 = $timeline;
+				$timeline += 3600 * 5;
+				$tm04 = $timeline;
 
         $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
         $dailyAmountTotal = $this->Order->getDailyOrderInfo(array($tm11, $tm04));
@@ -469,7 +469,7 @@ class PrintComponent extends Component {
 
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00")); 
+        $timeline = strtotime(date("Y-m-d 11:00:00"));
         $nowtm = time();
         if ($timeline > $nowtm) {
             // before 11 am

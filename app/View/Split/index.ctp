@@ -16,7 +16,6 @@
         </div>
 
     </div>
-	
 
     <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
 
@@ -55,15 +54,15 @@
 
 			        <?php } ?>
 
-		    	
+
 		    	<br/>
 		    	<span class="split-p-table">Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?>
 
 		    	</span>
 	    	</h2>
-	        
+
 	      </div>
-	      <!-- <div class="col-sm-5 text-right">  
+	      <!-- <div class="col-sm-5 text-right">
 	        <div class="avoid-this text-center reprint pull-right"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
 	      </div>   -->
 
@@ -75,7 +74,7 @@
 			  <div class="col-sm-12" style="margin-bottom: 15px;">
 				<button class="btn btn-lg btn-success pull-right" id="sidebar-button"><b>切换</b></button>
 			<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
-			</div> 
+			</div>
 
 
 			<div id="dangerous-notice">
@@ -83,19 +82,19 @@
 			</div>
         </div>
 
-        
+
     </div>
 
 
 
     <div class="col-md-3 col-sm-4 col-xs-12 order-left" id="left-side">
-        
+
 
         <div class="order-summary col-md-12 col-sm-12 col-xs-12" id="order-wrapper">
             <h3>Order Summary 订单摘要</h3>
 			<div class="clearfix" id="order-component-placeholder"></div>
         </div>
-             
+
 		<div class="order-summary col-md-12 col-sm-12 col-xs-12" id="suborders-wrapper">
             <h3>Split Details 分单明细</h3>
 
@@ -148,7 +147,7 @@ echo $this->fetch('script');
 	var table_id = '<?php echo $table ?>';
 	var order_type = '<?php echo $type ?>';
 	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
-	// var reorder_no = 
+	// var reorder_no =
 
 
 	// ajax path
@@ -166,7 +165,7 @@ echo $this->fetch('script');
 	// add a class for .suborder-list
 	// todo
 	$("#sidebar-button").clickToggle(
-		function() { 
+		function() {
 		  	$('#right-side').hide();
 			$('#left-side').removeClass('col-md-3 col-sm-4 col-xs-12').addClass('col-md-12 col-sm-12 col-xs-12');
 			$('#order-wrapper').removeClass('col-md-12 col-sm-12 col-xs-12').addClass('col-md-3 col-sm-3 col-xs-12');
@@ -174,14 +173,14 @@ echo $this->fetch('script');
 
 			$('#suborders-wrapper').addClass('horizon');
 			// store the state of toggle in suborders
-		}, 
+		},
 		function() {
 			$('#right-side').show();
 		    $('#left-side').addClass('col-md-3 col-sm-4 col-xs-12').removeClass('col-md-12 col-sm-12 col-xs-12');
 			$('#order-wrapper').addClass('col-md-12 col-sm-12 col-xs-12').removeClass('col-md-3 col-sm-3 col-xs-12');
 			$('#suborders-wrapper').addClass('col-md-12 col-sm-12 col-xs-12').removeClass('col-md-9 col-sm-9 col-xs-12');
 			$('#suborders-wrapper').removeClass('horizon');
-		}); 
+		});
 
 
 	$('#customer-select-alert').hide();
@@ -195,7 +194,7 @@ echo $this->fetch('script');
 			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'setCookie')); ?>",
 	  //           method: "post",
 	  //           data: {
-	  //           	key: key, 
+	  //           	key: key,
 	  //           	value: JSON.stringify(value)
 	  //           },
 	  //           async: false,
@@ -225,7 +224,7 @@ echo $this->fetch('script');
 	  //           	} else {
 	  //           		return {};
 	  //           	}
-	            	
+
 	  //           }
 			// })
 
@@ -264,7 +263,7 @@ echo $this->fetch('script');
     var current_person_tab = '1';
 
 	var split_method = parseInt(<?php echo $split_method ?>); // should be removed
-	
+
 	var orderCookie = order_no + '_split_order';
 	var subordersCookie = order_no + '_split_suborder';
 	var discountCookie = order_no + '_split_discount';
@@ -275,7 +274,7 @@ echo $this->fetch('script');
 	var current_suborder = 0;
 	// order = loadOrder(order_no);
 
-	
+
 
 	// if order changed, delete all cookies
 
@@ -283,7 +282,7 @@ echo $this->fetch('script');
 
 	function init() {
 		restoreFromCookie();
-		
+
 		if (isOrderChanged()) {
 			console.log('order has changed');
 			// alert("由于订单修改，请重新分菜");
@@ -319,15 +318,15 @@ echo $this->fetch('script');
 		drawUI();
 	}
 
-	
 
-	
+
+
 
 	// construct suborders by order
 	function restoreFromCookie(orderObj, suborderObj) {
 
 		// check whether cookie exist
-		var tempOrder = KVStorage.get(orderCookie); 
+		var tempOrder = KVStorage.get(orderCookie);
 		console.log('tempOrder');
 		console.log(tempOrder);
 
@@ -364,7 +363,7 @@ echo $this->fetch('script');
 		}
 
 		// restore from the discount cookie
-	}	
+	}
 
 	function deleteAllCookies () {
 		KVStorage.remove(orderCookie, { path: '' });
@@ -393,7 +392,7 @@ echo $this->fetch('script');
 		if (suborder_no != 0) {
 			var item = order.getItem(item_id);
 			var suborder = suborders.getSuborder(suborder_no);
-			
+
 			item.state = "assigned";
 			item.assigned_suborder = suborder_no;
 			suborder.addItem(item);
@@ -414,7 +413,7 @@ echo $this->fetch('script');
 		var availableItems = order.availableItems;
 
 		for (var i = 0; i < availableItems.length; ++i) {
-			
+
 		}
 	}*/
 
@@ -427,7 +426,7 @@ echo $this->fetch('script');
 		drawUI();
 	}
 
-	
+
 
 
 	// todo !!!
@@ -497,7 +496,7 @@ echo $this->fetch('script');
 			// alert("No person to be deleted");
 			$.notify("No person to be deleted. \n无人可删",{ position: "top center", className:"warn"});
 		}
-		
+
 	}
 
 		// enter the number
@@ -529,7 +528,7 @@ echo $this->fetch('script');
 			var currentSuborder = suborders.getSuborder(currentSuborderId);
 
 
-			if (typeof payOrTip == "undefined") { 
+			if (typeof payOrTip == "undefined") {
 				// notification
 				$.notify("Please select payment or tip method \n请选择付款或者小费. ", { position: "top center", className:"warn"});
 			} else if (typeof cardOrCash == "undefined") {
@@ -553,17 +552,17 @@ echo $this->fetch('script');
 					} else if (cardOrCash == "cash") {
 						// give notification when the number is input into suborder
 						currentSuborder._received.cash = inputNum;
-			
+
 					}
 
 				} else if (payOrTip == "tip") {
 					if (cardOrCash == "card") {
 						currentSuborder._tip.card = inputNum;
-				
+
 					} else if (cardOrCash == "cash") {
 						//  give notification when the number is input into suborder
 						currentSuborder._tip.cash = inputNum;
-						
+
 					}
 
 				}
@@ -573,13 +572,13 @@ echo $this->fetch('script');
 
 				persistentOrder();
 				drawExceptKeypad();
-							
+
 			}
 		}
 
 		if (typeof callback === "function") {
 			callback();
-		}	
+		}
 	}
 
 
@@ -623,7 +622,7 @@ echo $this->fetch('script');
 
 		$("#suborders-detail-component-placeholder").empty();
 		$("#suborders-detail-component-placeholder").append(SubordersDetailComponent(suborders));
-		
+
 		// TODO
 
 		if (typeof activeIndex != "undefined") {
@@ -707,15 +706,15 @@ echo $this->fetch('script');
 		        		tempOrder.addItem(temp_item);
 	        		}
 
-	        		
+
 
 		    <?php
 				   	// $i++;
 			 	} // line 563 foreach
 		    ?>
 
-	    <?php 
-			} // line 561 if  
+	    <?php
+			} // line 561 if
 		?>
 		return tempOrder;
 	}
