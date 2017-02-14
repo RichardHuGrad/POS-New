@@ -7,8 +7,16 @@ CREATE TABLE `admins` (
   `password` varchar(255) DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
   `created` datetime NOT NULL,
-  `modified` datetime NOT NULL
+  `modified` datetime NOT NULL,
+  UNIQUE KEY (username)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
+
+CREATE TABLE `admins_restaurants` (
+  `id` int AUTO_INCREMENT PRIMARY KEY,
+  `admin_id` int NOT NULL,
+  `restaurant_id` int NOT NULL
+  -- PRIMARY KEY (admin_id, restaurant_id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `restaurants` (
   `id` int AUTO_INCREMENT PRIMARY KEY,

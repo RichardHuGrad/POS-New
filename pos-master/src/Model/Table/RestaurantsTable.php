@@ -12,6 +12,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Categories
  * @property \Cake\ORM\Association\HasMany $Cousines
  * @property \Cake\ORM\Association\HasMany $Orders
+ * @property \Cake\ORM\Association\BelongsToMany $Admins
  *
  * @method \App\Model\Entity\Restaurant get($primaryKey, $options = [])
  * @method \App\Model\Entity\Restaurant newEntity($data = null, array $options = [])
@@ -50,6 +51,11 @@ class RestaurantsTable extends Table
         ]);
         $this->hasMany('Orders', [
             'foreignKey' => 'restaurant_id'
+        ]);
+        $this->belongsToMany('Admins', [
+            'foreignKey' => 'restaurant_id',
+            'targetForeignKey' => 'admin_id',
+            'joinTable' => 'admins_restaurants'
         ]);
     }
 

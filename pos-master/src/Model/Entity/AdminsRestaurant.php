@@ -4,18 +4,16 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Admin Entity
+ * AdminsRestaurant Entity
  *
  * @property int $id
- * @property string $username
- * @property string $password
- * @property string $token
- * @property \Cake\I18n\Time $created
- * @property \Cake\I18n\Time $modified
+ * @property int $admin_id
+ * @property int $restaurant_id
  *
- * @property \App\Model\Entity\Restaurant[] $restaurants
+ * @property \App\Model\Entity\Admin $admin
+ * @property \App\Model\Entity\Restaurant $restaurant
  */
-class Admin extends Entity
+class AdminsRestaurant extends Entity
 {
 
     /**
@@ -30,15 +28,5 @@ class Admin extends Entity
     protected $_accessible = [
         '*' => true,
         'id' => false
-    ];
-
-    /**
-     * Fields that are excluded from JSON versions of the entity.
-     *
-     * @var array
-     */
-    protected $_hidden = [
-        'password',
-        'token'
     ];
 }

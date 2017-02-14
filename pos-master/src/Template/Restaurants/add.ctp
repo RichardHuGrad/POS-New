@@ -13,6 +13,8 @@
         <li><?= $this->Html->link(__('New Cousine'), ['controller' => 'Cousines', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Orders'), ['controller' => 'Orders', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Order'), ['controller' => 'Orders', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Admins'), ['controller' => 'Admins', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Admin'), ['controller' => 'Admins', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="restaurants form large-9 medium-8 columns content">
@@ -24,6 +26,7 @@
             echo $this->Form->input('name_zh');
             echo $this->Form->input('address');
             echo $this->Form->input('mobile');
+            echo $this->Form->input('admins._ids', ['options' => $admins]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

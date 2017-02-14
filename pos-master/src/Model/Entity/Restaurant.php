@@ -17,6 +17,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Category[] $categories
  * @property \App\Model\Entity\Cousine[] $cousines
  * @property \App\Model\Entity\Order[] $orders
+ * @property \App\Model\Entity\Admin[] $admins
  */
 class Restaurant extends Entity
 {

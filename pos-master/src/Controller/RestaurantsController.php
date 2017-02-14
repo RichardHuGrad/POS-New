@@ -34,7 +34,7 @@ class RestaurantsController extends AppController
     public function view($id = null)
     {
         $restaurant = $this->Restaurants->get($id, [
-            'contain' => ['Categories', 'Cousines', 'Orders']
+            'contain' => ['Admins', 'Categories', 'Cousines', 'Orders']
         ]);
 
         $this->set('restaurant', $restaurant);
@@ -58,7 +58,8 @@ class RestaurantsController extends AppController
             }
             $this->Flash->error(__('The restaurant could not be saved. Please, try again.'));
         }
-        $this->set(compact('restaurant'));
+        $admins = $this->Restaurants->Admins->find('list', ['limit' => 200]);
+        $this->set(compact('restaurant', 'admins'));
         $this->set('_serialize', ['restaurant']);
     }
 
@@ -72,7 +73,7 @@ class RestaurantsController extends AppController
     public function edit($id = null)
     {
         $restaurant = $this->Restaurants->get($id, [
-            'contain' => []
+            'contain' => ['Admins']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $restaurant = $this->Restaurants->patchEntity($restaurant, $this->request->data);
@@ -83,7 +84,8 @@ class RestaurantsController extends AppController
             }
             $this->Flash->error(__('The restaurant could not be saved. Please, try again.'));
         }
-        $this->set(compact('restaurant'));
+        $admins = $this->Restaurants->Admins->find('list', ['limit' => 200]);
+        $this->set(compact('restaurant', 'admins'));
         $this->set('_serialize', ['restaurant']);
     }
 

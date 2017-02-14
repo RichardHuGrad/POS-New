@@ -25,6 +25,7 @@ class AdminsFixture extends TestFixture
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+            'username' => ['type' => 'unique', 'columns' => ['username'], 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -44,8 +45,8 @@ class AdminsFixture extends TestFixture
             'username' => 'Lorem ipsum dolor sit amet',
             'password' => 'Lorem ipsum dolor sit amet',
             'token' => 'Lorem ipsum dolor sit amet',
-            'created' => '2017-02-14 15:32:49',
-            'modified' => '2017-02-14 15:32:49'
+            'created' => '2017-02-14 18:56:25',
+            'modified' => '2017-02-14 18:56:25'
         ],
     ];
 }

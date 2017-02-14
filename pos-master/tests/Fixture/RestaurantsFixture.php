@@ -46,8 +46,8 @@ class RestaurantsFixture extends TestFixture
             'name_zh' => 'Lorem ipsum dolor sit amet',
             'address' => 'Lorem ipsum dolor sit amet',
             'mobile' => 'Lorem ipsum dolor sit a',
-            'created' => '2017-02-14 15:33:08',
-            'modified' => '2017-02-14 15:33:08'
+            'created' => '2017-02-14 18:15:19',
+            'modified' => '2017-02-14 18:15:19'
         ],
     ];
 }

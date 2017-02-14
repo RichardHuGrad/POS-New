@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 /**
  * Admins Model
  *
+ * @property \Cake\ORM\Association\BelongsToMany $Restaurants
+ *
  * @method \App\Model\Entity\Admin get($primaryKey, $options = [])
  * @method \App\Model\Entity\Admin newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Admin[] newEntities(array $data, array $options = [])
@@ -37,6 +39,12 @@ class AdminsTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsToMany('Restaurants', [
+            'foreignKey' => 'admin_id',
+            'targetForeignKey' => 'restaurant_id',
+            'joinTable' => 'admins_restaurants'
+        ]);
     }
 
     /**
@@ -52,7 +60,8 @@ class AdminsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('username');
+            ->allowEmpty('username')
+            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->allowEmpty('password');

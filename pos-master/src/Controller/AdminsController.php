@@ -34,7 +34,7 @@ class AdminsController extends AppController
     public function view($id = null)
     {
         $admin = $this->Admins->get($id, [
-            'contain' => []
+            'contain' => ['Restaurants']
         ]);
 
         $this->set('admin', $admin);
@@ -58,7 +58,8 @@ class AdminsController extends AppController
             }
             $this->Flash->error(__('The admin could not be saved. Please, try again.'));
         }
-        $this->set(compact('admin'));
+        $restaurants = $this->Admins->Restaurants->find('list', ['limit' => 200]);
+        $this->set(compact('admin', 'restaurants'));
         $this->set('_serialize', ['admin']);
     }
 
@@ -72,7 +73,7 @@ class AdminsController extends AppController
     public function edit($id = null)
     {
         $admin = $this->Admins->get($id, [
-            'contain' => []
+            'contain' => ['Restaurants']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $admin = $this->Admins->patchEntity($admin, $this->request->data);
@@ -83,7 +84,8 @@ class AdminsController extends AppController
             }
             $this->Flash->error(__('The admin could not be saved. Please, try again.'));
         }
-        $this->set(compact('admin'));
+        $restaurants = $this->Admins->Restaurants->find('list', ['limit' => 200]);
+        $this->set(compact('admin', 'restaurants'));
         $this->set('_serialize', ['admin']);
     }
 

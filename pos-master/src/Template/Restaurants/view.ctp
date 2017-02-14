@@ -16,6 +16,8 @@
         <li><?= $this->Html->link(__('New Cousine'), ['controller' => 'Cousines', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Orders'), ['controller' => 'Orders', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Order'), ['controller' => 'Orders', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Admins'), ['controller' => 'Admins', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Admin'), ['controller' => 'Admins', 'action' => 'add']) ?> </li>
     </ul>
 </nav>
 <div class="restaurants view large-9 medium-8 columns content">
@@ -129,7 +131,7 @@
             <tr>
                 <th scope="col"><?= __('Id') ?></th>
                 <th scope="col"><?= __('Restaurant Id') ?></th>
-                <th scope="col"><?= __('Origin Order Id') ?></th>
+                <th scope="col"><?= __('Restaurant Order') ?></th>
                 <th scope="col"><?= __('Order No') ?></th>
                 <th scope="col"><?= __('Table No') ?></th>
                 <th scope="col"><?= __('Tax') ?></th>
@@ -152,14 +154,14 @@
                 <th scope="col"><?= __('Percent Discount') ?></th>
                 <th scope="col"><?= __('Discount Value') ?></th>
                 <th scope="col"><?= __('After Discount') ?></th>
-                <th scope="col"><?= __('Merge Id') ?></th>
+                <th scope="col"><?= __('Merge') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($restaurant->orders as $orders): ?>
             <tr>
                 <td><?= h($orders->id) ?></td>
                 <td><?= h($orders->restaurant_id) ?></td>
-                <td><?= h($orders->origin_order_id) ?></td>
+                <td><?= h($orders->restaurant_order) ?></td>
                 <td><?= h($orders->order_no) ?></td>
                 <td><?= h($orders->table_no) ?></td>
                 <td><?= h($orders->tax) ?></td>
@@ -182,11 +184,42 @@
                 <td><?= h($orders->percent_discount) ?></td>
                 <td><?= h($orders->discount_value) ?></td>
                 <td><?= h($orders->after_discount) ?></td>
-                <td><?= h($orders->merge_id) ?></td>
+                <td><?= h($orders->merge) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Orders', 'action' => 'view', $orders->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['controller' => 'Orders', 'action' => 'edit', $orders->id]) ?>
                     <?= $this->Form->postLink(__('Delete'), ['controller' => 'Orders', 'action' => 'delete', $orders->id], ['confirm' => __('Are you sure you want to delete # {0}?', $orders->id)]) ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+        <?php endif; ?>
+    </div>
+    <div class="related">
+        <h4><?= __('Related Admins') ?></h4>
+        <?php if (!empty($restaurant->admins)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th scope="col"><?= __('Id') ?></th>
+                <th scope="col"><?= __('Username') ?></th>
+                <th scope="col"><?= __('Password') ?></th>
+                <th scope="col"><?= __('Token') ?></th>
+                <th scope="col"><?= __('Created') ?></th>
+                <th scope="col"><?= __('Modified') ?></th>
+                <th scope="col" class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($restaurant->admins as $admins): ?>
+            <tr>
+                <td><?= h($admins->id) ?></td>
+                <td><?= h($admins->username) ?></td>
+                <td><?= h($admins->password) ?></td>
+                <td><?= h($admins->token) ?></td>
+                <td><?= h($admins->created) ?></td>
+                <td><?= h($admins->modified) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Admins', 'action' => 'view', $admins->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Admins', 'action' => 'edit', $admins->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Admins', 'action' => 'delete', $admins->id], ['confirm' => __('Are you sure you want to delete # {0}?', $admins->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
