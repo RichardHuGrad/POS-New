@@ -1,28 +1,28 @@
 <header class="product-header">
- 
+
       <div class="home-logo">
                     <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>">
                     <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
                     </a>
-					
+
 					<div class="HomeText text-left">
                         <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'index')) ?>">Home 主页</a>
                         <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
 					</div>
-					
+
             </div>
-	  
-	  
-	  
-	  
-	  
+
+
+
+
+
       <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
-  
+
 </header>
 <div class="container">
-   
-  
-  
+
+
+
     <div class="calculator clearfix">
            <div class="calc-top">
             <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>"><span class="pull-left"><i class="fa fa-angle-left" aria-hidden="true"></i></span></a>
@@ -81,7 +81,7 @@ $(document).ready(function(){
     $("#selected_card").val(type);
   })
 
-  
+
 
   $(".calc-indent li").click(function() {
     if($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt"))
@@ -103,6 +103,10 @@ $(document).ready(function(){
         order_id += $(".order"+i).val();
     }
     if((order_id.length == 8)||(order_id.length == 9)) {
+      // $.ajax({
+      //
+      // });
+
       // send request to server to verify order no
       window.location = "<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'pay')) ?>?order_no="+order_id;
     } else {
@@ -113,7 +117,7 @@ $(document).ready(function(){
   $(".order_input").keyup(function() {
     var val = $(this).val();
     var id = parseInt($(this).attr("alt"));
-    if(val) {      
+    if(val) {
         $(".order"+(id+1)).focus();
     } else {
       return false;
@@ -128,7 +132,7 @@ $(document).ready(function(){
       // Allow: backspace, delete, tab, escape, enter and .
       if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
            // Allow: Ctrl+A, Command+A
-          (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
+          (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) ||
            // Allow: home, end, left, right, down, up
           (e.keyCode >= 35 && e.keyCode <= 40)) {
                // let it happen, don't do anything
