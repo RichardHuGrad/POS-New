@@ -66,7 +66,7 @@ html,body {
     height: 10px;
     border: 1px solid rgb(0,0,0);
     -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
-}​ 
+}​
 
 /* .order-summary-indent {
     height: 350px;
@@ -77,15 +77,15 @@ html,body {
     font-weight: 1000;
 }
 
-#send-to-kitchen-btn {
+/*#send-to-kitchen-btn {
     background-color: #c30e23;
     color: #fff;
 }
 
 #pay-btn {
-    background-color: #292929; 
+    background-color: #292929;
     color: #fff;
-}
+}*/
 
 #order-component, #order-component li {
     padding: 0;
@@ -130,4 +130,9 @@ html,body {
 
 .selected-extra-item .close {
     color: red;
+}
+
+.btn[disabled], .btn[disabled]:hover {
+  background-color: #9da2a3;
+  border-color: #9da2a3;
 }

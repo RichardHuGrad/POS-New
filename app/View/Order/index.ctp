@@ -2,7 +2,7 @@
 <head>
     <?php echo $this->Html->css(array('order', 'components/TastesComponent', 'summarypanel')); ?>
 </head>
-    
+
 
 <body>
 
@@ -36,9 +36,9 @@
             ?>
         </ul>
 
-        
+
     </header>
-    <div class="clearfix cartwrap-wrap col-md-12 col-sm-12 col-xs-12">      
+    <div class="clearfix cartwrap-wrap col-md-12 col-sm-12 col-xs-12">
         <div class="col-md-9 col-sm-8 col-xs-12 home-link">
             <div class="cart-txt" id="order_no_display">
             <!-- Modified by Yishou Liao @ Dec 09 2016 -->
@@ -112,7 +112,7 @@
                                     ?>
                                 </div>
                             </div>
-                        </div>                
+                        </div>
                         <?php
                     }
                 }
@@ -120,27 +120,27 @@
             </div>
         </div>
 
-        
+
     </div>
     <div class="col-md-12 col-sm-12 col-xs-12 " id="button-group">
-        <button id="send-to-kitchen-btn" class="btn btn-lg"><strong>送厨</strong></button>
-        <button id="pay-btn" class="btn btn-lg"><strong>付款</strong></button>
+        <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary"><strong>送厨</strong></button>
+        <button id="pay-btn" class="btn btn-lg btn-success"><strong>付款</strong></button>
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong>批量加口味</strong></button>
-        <button id="add-taste-btn" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#single-extra-component-modal"><strong>改口味</strong></button>
-        <button id="delete-btn" class="btn btn-lg"><strong>删除</strong></button>
-        <button id="quantity-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-quantity-component-modal"><strong>改数量</strong></button>
-        <button id="take-out-btn" class="btn btn-lg"><strong>外卖</strong></button> 
-        <button id="urge-btn" class="btn btn-lg"><strong>加急</strong></button>
-        <button id="change-price-btn" class="btn btn-lg" data-toggle="modal" data-target="#change-price-component-modal"><strong>改价格</strong></button>
+        <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong>改口味</strong></button>
+        <button id="delete-btn" class="btn btn-lg btn-danger"><strong>删除</strong></button>
+        <button id="quantity-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-quantity-component-modal"><strong>改数量</strong></button>
+        <button id="take-out-btn" class="btn btn-lg btn-info"><strong>外卖</strong></button>
+        <button id="urge-btn" class="btn btn-lg btn-info"><strong>加急</strong></button>
+        <button id="change-price-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-price-component-modal"><strong>改价格</strong></button>
         <!-- <button id="free-price-btn" class="btn btn-lg"><strong>免费</strong></button> -->
         <!-- <button id="add-discount-btn" class="btn btn-lg">Add Discount</button>  -->
     </div>
 
-  
+
 </div>
 
 <div id="single-extra-component-modal-placeholder">
-    
+
 </div>
 
 </body>
@@ -158,13 +158,13 @@
                 </div>
                 <div class="modal-body clearfix">
                     <ul id="taste-component-items" class="clearfix">
-                        
+
                     </ul>
                     <div class="clearfix">
                         已选:
                     </div>
                     <ul id="selected-extra" class="clearfix">
-                        
+
                     </ul>
                 </div>
                 <div class="modal-footer clearfix">
@@ -191,25 +191,25 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <ul id="single-extra-component-categories" class="clearfix">
                     </ul>
-                    
+
                 </div>
                 <div class="modal-body clearfix">
                     <ul id="single-extra-component-items" class="clearfix">
-                        
+
                     </ul>
 
-                    
+
                     <div id="single-selected-extra-title" class="clearfix">
                         口味已选:
                     </div>
                     <ul id="single-selected-extra" class="clearfix">
-                        
+
                     </ul>
                     <div id="single-selected-combo-title" class="clearfix">
                         拼盘已选:
                     </div>
                     <ul id="single-selected-combo" data-combo-num="0" class="clearfix">
-                        
+
                     </ul>
 
                 </div>
@@ -288,7 +288,7 @@ echo $this->fetch('script');
     if (!String.prototype.format) {
       String.prototype.format = function() {
         var args = arguments;
-        return this.replace(/{(\d+)}/g, function(match, number) { 
+        return this.replace(/{(\d+)}/g, function(match, number) {
           return typeof args[number] != 'undefined'
             ? args[number]
             : match
@@ -309,7 +309,7 @@ echo $this->fetch('script');
             data: {item_id: item_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>"},
             success: function (json) {
                 // console.log(html);
-                
+
                 // $(".order-summary-indent").scrollTop($(".order-summary-indent ul").height());
                 $("#order_no_display").html("Order 订单号 #" + $("#Order_no").val() + ", Table 桌 #<?php echo $table; ?>");
                 $(".products-panel").removeClass('load1 csspinner');
@@ -321,7 +321,7 @@ echo $this->fetch('script');
                         $("#order-component li[data-order-item-id=" + obj.order_item_id + "]").trigger("click");
                         $("#add-taste-btn").trigger("click");
                     }
-                    
+
                 });
             },
             beforeSend: function () {
@@ -405,9 +405,9 @@ echo $this->fetch('script');
             beforeSend: function () {
                 $(".summary_box").addClass('load1 csspinner');
             }
-        }); 
+        });
     });
-	
+
     $(document).ready(function () {
 
         $(".search-clear").click(function () {
@@ -561,7 +561,7 @@ echo $this->fetch('script');
 
         var createDom = function (tastes) {
             var itemsUl = tastesComponent.find('#taste-component-items');
-            
+
             for (var i = 0; i < tastes.length; ++i) {
 
                 var taste = tastes[i];
@@ -581,7 +581,7 @@ echo $this->fetch('script');
                     continue;
                 }
 
-                
+
             }
         }
 
@@ -603,7 +603,7 @@ echo $this->fetch('script');
                 });
             });
             // clear button
-            
+
         }
 
         var init = function(tastes, SelectedExtraItemComponent) {
@@ -613,7 +613,7 @@ echo $this->fetch('script');
             return tastesComponent;
         }
 
-        
+
 
         return {
             init: init
@@ -622,11 +622,11 @@ echo $this->fetch('script');
 
 
     var SingleExtraComponent = (function() {
-        
+
         var createDom = function (tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special) {
 
             var singleExtraComponent = $($('#single-extra-component').html());
-            
+
             // build title list
             var titleUl = singleExtraComponent.find('#single-extra-component-categories');
             for (var i = 0; i < categories.length; ++i) {
@@ -642,7 +642,7 @@ echo $this->fetch('script');
 
             // build item list
             var itemsUl = singleExtraComponent.find('#single-extra-component-items');
-            
+
             for (var i = 0; i < tastes.length; ++i) {
                 var taste = tastes[i];
                 // category_id 1 means the tastes id
@@ -716,9 +716,9 @@ echo $this->fetch('script');
                         // restriction of combo
                         if (singleExtraComponent.find('#single-selected-combo li').length < combo_num) {
                             singleExtraComponent.find('#single-selected-combo').append(selectedItem);
-                        }                           
+                        }
                     }
-                    
+
                 });
             });
 
@@ -736,7 +736,7 @@ echo $this->fetch('script');
                     })
                 })
             });
-            
+
             singleExtraComponent.find('#single-extra-component-categories li').last().click();
             return singleExtraComponent;
         }
@@ -865,12 +865,12 @@ echo $this->fetch('script');
 
                         extras.push(temp_extra);
                     }
-                    
+
             <?php
                 }
             ?>
 
-        <?php 
+        <?php
             }
         ?>
         return extras;
@@ -879,11 +879,11 @@ echo $this->fetch('script');
     var loadExtraCategories = function() {
         var categories = [];
 
-        <?php 
+        <?php
             if (!empty($extra_categories)) {
                 $i = 0;
                 foreach ($extra_categories as $category) {
-         ?>         
+         ?>
                     var tempCategory = new ExtraCategory(
                             category_id = '<?php echo $category["id"] ?>',
                             name_en = '<?php echo $category["name"] ?>',
@@ -892,11 +892,11 @@ echo $this->fetch('script');
                         );
 
                     categories.push(tempCategory);
-         <?php 
+         <?php
                 }
             }
-          ?>   
-               
+          ?>
+
         return categories;
     }
 
@@ -938,7 +938,7 @@ echo $this->fetch('script');
     });
 
 
-    
+
     $('body').on('click', '#add-taste-btn' ,function() {
         var selected_item_id_list = getSelectedItem();
 
@@ -976,7 +976,7 @@ echo $this->fetch('script');
         var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special);
         $('body').append(singleExtraComponent);
 
-        
+
     });
 
     $('body').on('click', '#single-extra-component-save', function() {
@@ -1019,7 +1019,7 @@ echo $this->fetch('script');
                 $('.modal-header .close').trigger('click');
             }
         })
-    }); 
+    });
 
     // listen to ajax send
     ! function () {
@@ -1039,7 +1039,7 @@ echo $this->fetch('script');
     });
 
     function ChangeBtnDisabled(selectors) {
-        // 
+        //
         // var selectorStr = selectors.join(',');
         if ($('#order-component li.selected.is-print').length > 0) {
             $.notify("If you want to modify items which have been sent to kitchen, please delete it and readd it. \n 已选项中包含已送厨菜品，若要修改已送厨菜品，请删除后重新添加",{ position: "top center", className:"info"});
@@ -1078,7 +1078,7 @@ echo $this->fetch('script');
         $('#change-price-component-modal').modal('hide').remove();
         var changePriceComponent = ChangePriceComponent.init();
         $('body').append(changePriceComponent);
-        
+
     });
 
     $('body').on('click', '#change-price-component-save', function() {
@@ -1091,10 +1091,10 @@ echo $this->fetch('script');
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'changePrice')); ?>",
             method: "post",
             data: {
-                selected_item_id_list: selected_item_id_list, 
+                selected_item_id_list: selected_item_id_list,
                 price: price,
-                table: "<?php echo $table ?>", 
-                type: "<?php echo $type ?>", 
+                table: "<?php echo $table ?>",
+                type: "<?php echo $type ?>",
                 order_no: $("#Order_no").val()
             },
             success: function(html) {
@@ -1112,15 +1112,15 @@ echo $this->fetch('script');
             // alert("No item selected");
              $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
-        } 
+        }
 
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'urgeItem')); ?>",
             method: "post",
             data: {
-                selected_item_id_list: selected_item_id_list, 
-                table: "<?php echo $table ?>", 
-                type: "<?php echo $type ?>", 
+                selected_item_id_list: selected_item_id_list,
+                table: "<?php echo $table ?>",
+                type: "<?php echo $type ?>",
                 order_no: $("#Order_no").val()
             },
             success: function(html) {
@@ -1138,7 +1138,7 @@ echo $this->fetch('script');
             // alert("No item selected");
             $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
             return false;
-        } 
+        }
 
         //popup an input for new price
         $('#change-quantity-component-modal').modal('hide').remove();
@@ -1157,7 +1157,7 @@ echo $this->fetch('script');
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'changeQuantity')); ?>",
             method: "post",
             data: {
-                selected_item_id_list: selected_item_id_list, 
+                selected_item_id_list: selected_item_id_list,
                 quantity: quantity,
                 table: "<?php echo $table ?>",
                 type: "<?php echo $type ?>",
