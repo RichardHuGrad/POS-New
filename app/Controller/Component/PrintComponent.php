@@ -314,7 +314,7 @@ class PrintComponent extends Component {
         // echo empty($cancel_items['K']);
         if (!empty($cancel_items['K'])) {
 
-            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+            $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
             echo $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
         }
