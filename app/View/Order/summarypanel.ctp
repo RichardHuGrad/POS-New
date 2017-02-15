@@ -23,6 +23,7 @@
         <button class="btn btn-info" id="select-unprint"><strong>未送厨</strong></button>
         <button class="btn btn-info" id="select-printed"><strong>已送厨</strong></button>
         <button class="btn btn-info" id="select-revert"><strong>反选</strong></button>
+        <button class="btn btn-info" id="select-clear"><strong>清除</strong></button>
     </div>
 </div>
 
@@ -41,19 +42,19 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
-                        <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">                                                    
+                        <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="discount_percent" style="font-size:11px;">Discount in %</label>
-                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">                                                    
+                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="promocode" style="font-size:11px;">Promo Code</label>
-                        <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">                                                    
+                        <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">
                     </div>
                 </div>
 
@@ -63,7 +64,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                             <a class="btn btn-primary btn-wide pull-right" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                
+
         </div>
     </div>
     <?php } ?>
@@ -71,7 +72,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         <div class="row">
         	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
             <div class="col-xs-8 col-sm-8 col-md-8">Subtotal 小计 </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php 
+            <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php
 
             if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
                 echo number_format($Order_detail['Order']['subtotal'], 2);
@@ -84,7 +85,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             </div>
 		</div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
     </div>
-    
+
     <?php if(!empty($Order_detail) and $Order_detail['Order']['discount_value'])  {
             ?>
             <div class="subtotalwrap">
@@ -96,20 +97,20 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                                 if($Order_detail['Order']['percent_discount']) {
                                     echo "<br/><span class='txt12'> ".$Order_detail['Order']['promocode']." (".$Order_detail['Order']['percent_discount']."%)</span>";
                                 }
-                        ?> 
-                        <a aria-hidden="true" class="fa fa-times pull-right remove_discount" order_id="<?php echo $Order_detail['Order']['id']; ?>" href="javascript:void(0)"></a>                       
+                        ?>
+                        <a aria-hidden="true" class="fa fa-times pull-right remove_discount" order_id="<?php echo $Order_detail['Order']['id']; ?>" href="javascript:void(0)"></a>
                     </strong></div>
-                            
+
                 </div>
             </div>
-            
+
             <div class="subtotalwrap"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
                 <div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
                     <div class="col-xs-8 col-sm-8 col-md-8">After Discount 打折后: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></strong> </div>
-        
+
                 </div>
             </div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-    
+
         <?php
         }
         ?>
@@ -157,12 +158,12 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 <script>
 
-	
+
 
         if (!String.prototype.format) {
           String.prototype.format = function() {
             var args = arguments;
-            return this.replace(/{(\d+)}/g, function(match, number) { 
+            return this.replace(/{(\d+)}/g, function(match, number) {
               return typeof args[number] != 'undefined'
                 ? args[number]
                 : match
@@ -218,7 +219,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                                 extras_amount = '<?php echo $value['extras_amount'] ?>',
                                 quantity = '<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>',
                                 order_item_id = '<?php echo $value['id'] ?>',
-                                state = "keep", 
+                                state = "keep",
                                 shared_suborders = null,
                                 assigned_suborder = null,
                                 is_takeout = '<?php echo $value["is_takeout"] ?>',
@@ -233,12 +234,12 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                     }
                 ?>
 
-            <?php 
+            <?php
                 }
             ?>
             return tempOrder;
         }
-        
+
 
 
 
@@ -263,7 +264,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                 itemComponent.on('click', function () {
                     $(this).toggleClass('selected');
                     // alert('test');
-                    
+
                 });
             }
 
@@ -277,7 +278,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
             return {
                 init: init
-            }; 
+            };
         })();
 
 
@@ -321,7 +322,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
         <?php } ?>
 
-        
+
         $('#select-all').on('click', function() {
             $('#order-component li').each(function() {
                 if(!$(this).hasClass('selected')) {
@@ -341,6 +342,11 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         });
 
         $('#select-printed').on('click', function() {
+            $('#order-component li').each(function () {
+                if ($(this).hasClass('selected')) {
+                  $(this).removeClass('selected');
+                }
+            });
             $('#order-component li.is-print').each(function() {
                 if(!$(this).hasClass('selected')) {
                     $(this).addClass('selected');
@@ -351,13 +357,23 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
         $('#select-unprint').on('click', function() {
             $('#order-component li').each(function() {
+                if ($(this).hasClass('selected')) {
+                  $(this).removeClass('selected');
+                }
                 if(!$(this).hasClass('is-print') && !$(this).hasClass('selected')) {
                     $(this).addClass('selected');
                 }
             });
         });
 
-	
+        $('#select-clear').on('click', function() {
+            $('#order-component li').each(function() {
+                if ($(this).hasClass('selected')) {
+                  $(this).removeClass('selected');
+                }
+            });
+        });
+
+
 
 </script>
-
