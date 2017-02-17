@@ -136,11 +136,11 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-       
+
         //Modified by Yishou Liao @ Dec 12 2016
         $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
         //End @ Dec 12 2016
-        
+
         // get table availability
         $this->loadModel('Order');
         $dinein_tables_status = $this->Order->find("list", array(
@@ -346,7 +346,7 @@ class HomesController extends AppController {
         } else {
             $data['OrderItem']['is_done'] = 'Y';
         }
-        // save order to database        
+        // save order to database
         $data['OrderItem']['id'] = $item_id;
         $this->OrderItem->save($data, false);
 
@@ -382,7 +382,7 @@ class HomesController extends AppController {
         // get all params
         $item_ids = explode(",", $this->data['item_id']);
 
-        // save order to database    
+        // save order to database
         $this->loadModel('OrderItem');
         foreach ($item_ids as $key => $value) {
             # code...
@@ -430,7 +430,7 @@ class HomesController extends AppController {
         // get all params
         $item_ids = explode(",", $this->data['item_id']);
 
-        // save order to database    
+        // save order to database
         $this->loadModel('OrderItem');
         foreach ($item_ids as $key => $value) {
             # code...
@@ -464,7 +464,7 @@ class HomesController extends AppController {
 
         $table_no = $this->params['named']['table_no'];
         $order_id = $this->params['named']['order_id'];
-        
+
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
@@ -494,7 +494,7 @@ class HomesController extends AppController {
     public function tableHisupdate() {
         $this->layout = false;
         $this->autoRender = NULL;
-    	
+
     	// get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
@@ -505,7 +505,7 @@ class HomesController extends AppController {
 
         $table_no = $this->data['table_no'];
         $order_id = $this->data['order_id'];
-        
+
         $this->loadModel('Order');
         $this->loadModel('Log');
 
@@ -535,50 +535,50 @@ class HomesController extends AppController {
         $card_val = $this->data['card_val'];
         $change = $this->data['change'];
         $tip = $this->data['tip'];
-        
+
         $logs = '';
         $data = array();
-        if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) { 
-        	$logs .= 'subtotal[' . $subtotal . ' <= ' . $Order_detail['Order']['subtotal'] . "]"; 
-        	$data['subtotal'] = $subtotal; 
-        	$data['tax_amount'] = $subtotal *  $Order_detail['Order']['tax'] / 100; 
+        if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) {
+        	$logs .= 'subtotal[' . $subtotal . ' <= ' . $Order_detail['Order']['subtotal'] . "]";
+        	$data['subtotal'] = $subtotal;
+        	$data['tax_amount'] = $subtotal *  $Order_detail['Order']['tax'] / 100;
         }
-        if ($discount_value != number_format($Order_detail['Order']['discount_value'],2)) { 
-        	$logs .= 'discount_value[' . $discount_value . ' <= ' . $Order_detail['Order']['discount_value'] . "]"; 
-        	$data['discount_value'] = $discount_value; 
+        if ($discount_value != number_format($Order_detail['Order']['discount_value'],2)) {
+        	$logs .= 'discount_value[' . $discount_value . ' <= ' . $Order_detail['Order']['discount_value'] . "]";
+        	$data['discount_value'] = $discount_value;
         }
-        if ($total != number_format($Order_detail['Order']['total'],2)) { 
-        	$logs .= 'total[' . $total . ' <= ' . $Order_detail['Order']['total'] . "]"; 
-        	$data['total'] = $total; 
+        if ($total != number_format($Order_detail['Order']['total'],2)) {
+        	$logs .= 'total[' . $total . ' <= ' . $Order_detail['Order']['total'] . "]";
+        	$data['total'] = $total;
         }
         if ($paid != number_format($Order_detail['Order']['paid'],2)) {
         	$logs .= 'paid[' . $paid . ' <= ' . $Order_detail['Order']['paid'] . "]";
-        	$data['paid'] = $paid; 
+        	$data['paid'] = $paid;
         }
         if ($cash_val != number_format($Order_detail['Order']['cash_val'],2)) {
         	$logs .= 'cash_val[' . $cash_val . ' <= ' . $Order_detail['Order']['cash_val'] . "]";
-        	$data['cash_val'] = $cash_val; 
+        	$data['cash_val'] = $cash_val;
         }
         if ($card_val != number_format($Order_detail['Order']['card_val'],2)) {
         	$logs .= 'card_val[' . $card_val . ' <= ' . $Order_detail['Order']['card_val'] . "]";
-        	$data['card_val'] = $card_val; 
+        	$data['card_val'] = $card_val;
         }
         if ($change != number_format($Order_detail['Order']['change'],2)) {
         	$logs .= 'change[' . $change . ' <= ' . $Order_detail['Order']['change'] . "]";
-        	$data['change'] = $change; 
+        	$data['change'] = $change;
         }
         if ($tip != number_format($Order_detail['Order']['tip'],2)) {
         	$logs .= 'tip[' . $tip . ' <= ' . $Order_detail['Order']['tip'] . "]";
-        	$data['tip'] = $tip; 
+        	$data['tip'] = $tip;
         }
-        
+
         if ($logs != '') {
         	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'], 'logs' => $logs);
         	$this->Log->save($logArr);
         	$data['id'] = $order_id;
         	$this->Order->save($data);
         }
-        
+
         $r['status'] = 'OK';
         $r['url'] = Router::url(array('controller' => 'homes', 'action' => 'tableHistory',  'table_no' => $table_no, 'order_id' => $order_id));
         echo json_encode($r);
@@ -639,7 +639,7 @@ class HomesController extends AppController {
         $this->loadModel('Order');
         $this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
 
-        // save all 
+        // save all
         $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
         return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     }
@@ -655,7 +655,7 @@ class HomesController extends AppController {
         $order_no = @$this->params['named']['order_no'];
         $ref = @$this->params['named']['ref'];
 
-        // update order to database 
+        // update order to database
         $this->loadModel('Order');
         $this->Order->updateAll(array('table_no' => $table, 'order_type' => "'" . $type . "'"), array('Order.order_no' => $order_no));
         $this->Session->setFlash('Order table successfully changed 成功换桌.', 'success');
@@ -666,12 +666,12 @@ class HomesController extends AppController {
     }
 
     public function inquiry() {
-        
+
     }
 
 
 
- 
+
 
 
     public function updateordermessage() {
@@ -715,7 +715,7 @@ class HomesController extends AppController {
 
         echo true;
     }
-    
+
 
     // check total value #As in Canada, the price is keeping using $9.89, but we don’t have $0.01 now, any amount smaller than 0.02 will be round to 0, more than 0.03 will be round to 0.05.
     function convertoround($amount) {
@@ -733,33 +733,11 @@ class HomesController extends AppController {
         return $amount;
     }
 
-    //Modified by Jack @2017-01-05
-    public function printTodayOrders() {
-        $this->layout = false;
-        $this->autoRender = false;
 
-        $this->loadModel('Cashier');
 
-        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $this->Print->printTodayOrders(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
 
-	}
 
-    public function printTodayItems() {
-        $this->layout = false;
-        $this->autoRender = false;
-
-        $this->loadModel('Cashier');
-
-        $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
-
-        $this->Print->printTodayItems(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
-    }
-
-   
-
-    
 
     //End
 }

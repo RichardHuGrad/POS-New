@@ -22,7 +22,7 @@
                     $("#take-out-component, #waiting-list-component").addClass('col-md-2 col-sm-2 col-xs-2');
                 }
             })
-            
+
         });
     </script>
 
@@ -34,7 +34,7 @@
                 <div class="navbar-header">
                     <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
                     <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS", 'class' => 'logo-img')); ?>
-                    </a>                
+                    </a>
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                     </button>
                 </div>
@@ -43,16 +43,12 @@
                         <li>
                             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
                         </li>
-                        <!-- <li><a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-                        </li> -->
-                        <!-- <li>
-                            <a href="javascript:void(0)"><strong>外卖桌</strong></a>
-                        </li>
-                        
                         <li>
-                            <a href="javascript:void(0)"><strong>等待桌</strong></a>
-                        </li> -->
-                        
+                            <a href="<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'index')) ?>">管理员功能</a>
+                        </li>
+                        <!-- <li><div id='print-today-all' class="pull-left paid-txt">打印总单 </div></li>
+                    	  <li><div id='print-today-items' class="pull-left paid-txt">打印销量</div></li> -->
+
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">More
             <span class="caret"></span></a>
@@ -77,20 +73,19 @@
                                 </li>
                             </ul>
                         </li>
-                        
 
 
-                        
+
+
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><div id='print-today-all' class="pull-left paid-txt">打印总单 </div></li>
-                    	<li><div id='print-today-items' class="pull-left paid-txt">打印销量</div></li>
+
                         <li>
                             <div class="clearfix marginB15">
                                 <div class="pull-left notpaid"></div>
                                 <div class="pull-left paid-txt">On-going 未支付</div>
-                                
+
                             </div>
                             <div class="clearfix marginB15">
                                 <div class="pull-left availableb"></div>
@@ -108,7 +103,7 @@
         </div>
 
     </header>
-    
+
         <div class="clearfix homepage col-md-12 col-sm-12 col-xs-12">
             <?php echo $this->Session->flash(); ?>
             <div class="clearfix col-md-8 col-sm-8 col-xs-8" id="dine-in-component">
@@ -116,7 +111,7 @@
                       Dine in <br/> 堂食
                   </div> -->
                     <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                        
+
 
                         <ul class="dine_ul" style="height:auto; overflow:auto; min-height: 580px; padding:0">
                             <!-- <?php print_r($tables['Admin']);?>  -->
@@ -223,16 +218,16 @@
                                     ?>">Split Bill<br />分单</a>
                                 </li>
                                 <!-- End. -->
-                                
+
                                     <li><a tabindex="-1" href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'tableHistory', 'table_no'=>$i)); ?>">History</a></li>
                             	</ul>
                                 </div>
                                 <div class="<?php if(isset($dinein_tables_status[$i])) echo $colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
                                     <div class="number-txt for-dine">Dine<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
-                                   
+
                                     <!-- <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                     	<?php
-                                	 	if(!@$dinein_tables_status[$i]) 
+                                	 	if(!@$dinein_tables_status[$i])
                                     		echo "&nbsp;";
                                 		else
                                 			echo @$orders_no[$i]['D'];
@@ -240,7 +235,7 @@
                                     </div> -->
                                     <div class="order_total_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                         <?php
-                                        if(!@$dinein_tables_status[$i]) 
+                                        if(!@$dinein_tables_status[$i])
                                             echo "&nbsp;";
                                         else
                                             echo '$' . @round($orders_total[$orders_no[$i]['D']], 2);
@@ -251,8 +246,8 @@
                             </li>
                             <?php }?>
                         </ul>
-                    </div>                    
-                
+                    </div>
+
             </div>
 
             <div class="col-md-2 col-sm-2 col-xs-2" id="take-out-component">
@@ -261,7 +256,7 @@
                 </div>
 
                 <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
-                    
+
 
                     <ul>
                         <?php
@@ -329,22 +324,22 @@
     	                                    </li>
                                             <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>">Pay<br/>结账</a></li>
     	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$takeway_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T']));?>');">Completed<br/>变空桌</a></li>
-                                            
+
     		                        	</ul>
                                         </div>
     	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
     		                                <!-- <div class="takeout-txt">Takeout</div> -->
                                                 <div class="number-txt for-dine">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
-                                                <?php 
+                                                <?php
                                                 if(@$takeway_tables_status[$i]) {
                                                 ?>
     			                                <div class="order_no_box <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
     			                                	<?php
-                                                        echo @$orders_no[$i]['T'];                            	
+                                                        echo @$orders_no[$i]['T'];
     			                                	?>
     			                                </div>
     			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>
-    		                            	
+
                                                 <?php }?>
     		                            </div>
     	                            </li>
@@ -434,10 +429,10 @@
                                         <div class="number-txt for-dine">Wait<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                         <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                             <?php
-                                            if(!@$waiting_tables_status[$i]) 
+                                            if(!@$waiting_tables_status[$i])
                                                 echo "&nbsp;";
                                             else
-                                                echo @$orders_no[$i]['W'];                          
+                                                echo @$orders_no[$i]['W'];
                                             ?>
                                         </div>
                                         <div class="txt12 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
@@ -451,7 +446,7 @@
 
         </div>
 
-            
+
                     <!-- Scroll buttons -->
                     <a href="#" class="scrollUp">Up</a>
                     <a href="#" class="scrollDown">Down</a>
@@ -464,20 +459,20 @@
         <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-lock"></i></span>
         <input id="login-password" type="password"  class="EntPassword form-control" placeholder="password" aria-describedby="sizing-addon1"/>
     </div>
-    
+
     <input type="hidden" id="url" value="" />
     <div class="form-group">
         <div class="col-sm-12 controls">
             <input class="btn btn-primary btn-lg enter" type="button" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['admins']['password']?>')"/>
         <input class="btn btn-secondary btn-lg cancel" type="button" value="Cancel" onclick="checkPasswordC()"/>
         </div>
-        
+
     </div>
 </div>
 
 
 
-   
+
 <?php
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js','jquery.kinetic.min.js', 'notify.min.js'));
 
@@ -485,7 +480,7 @@ echo $this->fetch('script');
 ?>
 <script>
 	$(document).ready(function () {
-            
+
         $(window).scroll(function () {
             if ($(this).scrollTop() > 100) {
                 $('.scrollUp').fadeIn();
@@ -561,7 +556,7 @@ echo $this->fetch('script');
         $('.merge-checkbox').on('click', function(e) {
             e.stopPropagation();
         });
-        
+
         $('#print-today-all').on('click', function(e) {
         	e.preventDefault();
         	var pass = prompt("Input Password","");
@@ -625,11 +620,11 @@ echo $this->fetch('script');
             $(this).attr("checked",false);
         });
         table_merge = table_merge.substring(0,(table_merge.length-1));
-        
+
         document.location = "../merge/index/table:"+tableId+"/tablemerge:"+table_merge+"/type:D";
 
     }
-	
+
 	//Modified by Yishou Liao @ Nov 18 2016.
 	function makeavailable(url){
 		$('#dialog').show();
@@ -659,5 +654,5 @@ echo $this->fetch('script');
 <!-- End. -->
 
 <script>
-    
+
 </script>
