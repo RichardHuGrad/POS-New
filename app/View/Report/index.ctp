@@ -150,7 +150,7 @@ $('button[name="view-amount"]').on('click', function(e) {
 
 $('button[name="print-amount"]').on('click', function(e) {
     $.ajax({
-        url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders')); ?>",
+        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayOrders')); ?>",
         method: "post",
         // async: false,
         data:{
@@ -189,7 +189,7 @@ $('button[name="view-items"]').on('click', function(e) {
 
 $('button[name="print-items"]').on('click', function(e) {
     $.ajax({
-        url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayItems')); ?>",
+        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayItems')); ?>",
         method: "post",
         // async: false,
         data:{
