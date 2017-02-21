@@ -19,24 +19,11 @@ class ReportController extends AppController {
 
         $this->loadModel('Order');
         // expect time arrays
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00"));
-        $nowtm = time();
-        if ($timeline > $nowtm) {
-            // before 11 am
-            $timeline -= 86400;
-        }
-        $tm11 = $timeline;
-        $timeline += 3600 * 6;
-        $tm17 = $timeline;
-        $timeline += 3600 * 6;
-        $tm23 = $timeline;
-        $timeline += 3600 * 5;
-        $tm04 = $timeline;
+        $type = $this->data['type'];
 
-        $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
-        $dailyAmountTotal = $this->Order->getDailyOrderInfo(array($tm11, $tm04));
+        $timeArray = $this->Time->getTimelineArray($type);
+        $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
+        $dailyAmountTotal = $this->Order->getDailyOrderInfo(array(reset($timeArray), end($timeArray)));
 
         return json_encode($dailyAmount);
     }
@@ -46,25 +33,12 @@ class ReportController extends AppController {
         $this->autoRender = false;
 
         $this->loadModel('OrderItem');
+        $type = $this->data['type'];
 
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00"));
-        $nowtm = time();
-        if ($timeline > $nowtm) {
-            // before 11 am
-            $timeline -= 86400;
-        }
-        $tm11 = $timeline;
-        $timeline += 3600 * 6;
-        $tm17 = $timeline;
-        $timeline += 3600 * 6;
-        $tm23 = $timeline;
-        $timeline += 3600 * 5;
-        $tm04 = $timeline;
+        $timeArray = $this->Time->getTimelineArray($type);
 
         // $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
-        $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
+        $dailyItems = $this->OrderItem->getDailyItemCount(array(reset($timeArray), end($timeArray)));
 
         return json_encode($dailyItems);
     }
@@ -76,9 +50,12 @@ class ReportController extends AppController {
 
         $this->loadModel('Cashier');
 
+        $type = $this->data['type'];
+
+
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $this->Print->printTodayOrders(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+        $this->Print->printTotalOrders(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'type'=>$type));
 
 	}
 
@@ -88,9 +65,11 @@ class ReportController extends AppController {
 
         $this->loadModel('Cashier');
 
+        $type = $this->data['type'];
+
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $this->Print->printTodayItems(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+        $this->Print->printTotalItems(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'type'=>$type));
     }
 
 

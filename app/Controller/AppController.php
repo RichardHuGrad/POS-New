@@ -37,6 +37,7 @@ class AppController extends Controller {
         'Session',
         'Cookie',
         'Print',
+        'Time',
         'Auth' => array(
             'loginAction' => array('controller' => 'homes', 'action' => 'index'),
             'loginRedirect' => array('controller' => 'homes', 'action' => 'dashboard'),
@@ -126,7 +127,7 @@ class AppController extends Controller {
         // return the time formatted HH:MM:SS
         if($hours < 1)
             return $this->lz($minutes).":".$this->lz($seconds);
-        else            
+        else
             return $this->lz($hours).":".$this->lz($minutes).":".$this->lz($seconds);
     }
     function lz($num)

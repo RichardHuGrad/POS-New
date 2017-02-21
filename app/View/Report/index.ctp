@@ -27,34 +27,34 @@
     <div class="col-md-3 col-sm-3 col-xs-12">
         <ul class="nav nav-pills nav-stacked">
             <li class="active"><a data-toggle="pill" href="#today-menu">今天</a></li>
-            <!-- <li><a data-toggle="pill" href="#yesterday-menu">昨天</a></li>
-            <li><a data-toggle="pill" href="#month-menu">本月</a></li> -->
+            <li><a data-toggle="pill" href="#yesterday-menu">昨天</a></li>
+            <li><a data-toggle="pill" href="#month-menu">本月</a></li>
         </ul>
     </div>
 
     <div class="tab-content col-md-9 col-sm-9 col-xs-12 ">
         <div id="today-menu" class="tab-pane fade in active">
             <div class="button-group">
-                <button class="btn btn-lg btn-info" type="button" name="view-amount">查看销售额</button>
-                <button class="btn btn-lg btn-info" type="button" name="print-amount">打印销售额</button>
-                <button class="btn btn-lg btn-info" type="button" name="view-items">查看销售量</button>
-                <button class="btn btn-lg btn-info" type="button" name="print-items">打印销售量</button>
+                <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="today">查看销售额</button>
+                <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="today">打印销售额</button>
+                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="today">查看销售量</button>
+                <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="today">打印销售量</button>
             </div>
         </div>
         <div id="yesterday-menu" class="tab-pane fade">
             <div class="button-group">
-                <button class="btn btn-lg btn-info" type="button" name="view-amount">查看销售额</button>
-                <button class="btn btn-lg btn-info" type="button" name="print-amount">打印销售额</button>
-                <button class="btn btn-lg btn-info" type="button" name="view-items">查看销售量</button>
-                <button class="btn btn-lg btn-info" type="button" name="print-items">打印销售量</button>
+                <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="yesterday">查看销售额</button>
+                <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="yesterday">打印销售额</button>
+                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="yesterday">查看销售量</button>
+                <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="yesterday">打印销售量</button>
             </div>
         </div>
         <div id="month-menu" class="tab-pane fade">
             <div class="button-group">
-                <button class="btn btn-lg btn-info" type="button" name="view-amount">查看销售额</button>
-                <button class="btn btn-lg btn-info" type="button" name="print-amount">打印销售额</button>
-                <button class="btn btn-lg btn-info" type="button" name="view-items">查看销售量</button>
-                <button class="btn btn-lg btn-info" type="button" name="print-items">打印销售量</button>
+                <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="month">查看销售额</button>
+                <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="month">打印销售额</button>
+                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="month">查看销售量</button>
+                <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="month">打印销售量</button>
             </div>
         </div>
         <div class="report-content">
@@ -119,10 +119,19 @@ function getTimeStr(timeStamp) {
   return result;
 }
 
-$('#today-menu button[name="view-amount"]').on('click', function(e) {
+
+$('.nav').on('click', function () {
+    $('.report-content').empty();
+});
+
+$('button[name="view-amount"]').on('click', function(e) {
+    console.log($(this).data("type"));
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getAmountInfo')); ?>",
         method: "post",
+        data: {
+          type: $(this).data("type"),
+        },
         success: function (json) {
             // console.log(JSON.parse(json));
             var objs = JSON.parse(json);
@@ -139,11 +148,14 @@ $('#today-menu button[name="view-amount"]').on('click', function(e) {
     })
 });
 
-$('#today-menu button[name="print-amount"]').on('click', function(e) {
+$('button[name="print-amount"]').on('click', function(e) {
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders')); ?>",
         method: "post",
         // async: false,
+        data:{
+          type: $(this).data("type"),
+        },
         success: function (html) {
             alert("Finished");
         },
@@ -153,10 +165,13 @@ $('#today-menu button[name="print-amount"]').on('click', function(e) {
     });
 });
 
-$('#today-menu button[name="view-items"]').on('click', function(e) {
+$('button[name="view-items"]').on('click', function(e) {
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getItemsInfo')); ?>",
         method: "post",
+        data: {
+          type: $(this).data("type"),
+        },
         success: function (json) {
             // console.log(json);
             var objs = JSON.parse(json);
@@ -172,11 +187,14 @@ $('#today-menu button[name="view-items"]').on('click', function(e) {
     });
 });
 
-$('#today-menu button[name="print-items"]').on('click', function(e) {
+$('button[name="print-items"]').on('click', function(e) {
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayItems')); ?>",
         method: "post",
         // async: false,
+        data:{
+          type: $(this).data("type"),
+        },
         success: function (html) {
             alert("Finished");
         },
@@ -185,5 +203,4 @@ $('#today-menu button[name="print-items"]').on('click', function(e) {
         }
     });
 });
-
 </script>

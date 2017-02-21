@@ -2,18 +2,18 @@
 
 App::uses('Component', 'Controller');
 App::uses('PrintLib', 'Lib');
+App::uses('Component', 'Time');
 
 class PrintComponent extends Component {
+    public $components = array('Session');
 
-	public $components = array('Session');
-
-    public $status = 'success';
+	public $status = 'success';
 
 	public function __construct() {
         $this->Admin = ClassRegistry::init('Admin');
-		$this->Order = ClassRegistry::init('Order');
-		$this->OrderItem = ClassRegistry::init('OrderItem');
-		$this->Category = ClassRegistry::init('Category');
+  		$this->Order = ClassRegistry::init('Order');
+        $this->OrderItem = ClassRegistry::init('OrderItem');
+        $this->Category = ClassRegistry::init('Category');
 	}
 
     /**
@@ -421,29 +421,18 @@ class PrintComponent extends Component {
      * Parameters:
      *      $args['restaurant_id']
      */
-    public function printTodayOrders($args) {
+    public function printTotalOrders($args) {
         if (empty($args['restaurant_id'])) {
             throw new Exception('Missing argument: restaurant_id');
         }
+        if (empty($args['type'])) {
+            throw new Exception('Missing argument: type');
+        }
 
-				date_default_timezone_set("America/Toronto");
-				$date_time = date("l M d Y h:i:s A");
-				$timeline = strtotime(date("Y-m-d 11:00:00"));
-				$nowtm = time();
-				if ($timeline > $nowtm) {
-					// before 11 am
-					$timeline -= 86400;
-				}
-				$tm11 = $timeline;
-				$timeline += 3600 * 6;
-				$tm17 = $timeline;
-				$timeline += 3600 * 6;
-				$tm23 = $timeline;
-				$timeline += 3600 * 5;
-				$tm04 = $timeline;
+        $timeArray = $this->Time->getTimelineArray($type);
 
-        $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
-        $dailyAmountTotal = $this->Order->getDailyOrderInfo(array($tm11, $tm04));
+        $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
+        $dailyAmountTotal = $this->Order->getDailyOrderInfo(array(reset($timeArray), end($timeArray)));
         // $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
 
         // print_r($dailyItems);
@@ -461,30 +450,18 @@ class PrintComponent extends Component {
      * Parameters:
      *      $args['restaurant_id']
      */
-    public function printTodayItems($args) {
+    public function printTotalItems($args) {
 
         if (empty($args['restaurant_id'])) {
             throw new Exception('Missing argument: restaurant_id');
         }
-
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00"));
-        $nowtm = time();
-        if ($timeline > $nowtm) {
-            // before 11 am
-            $timeline -= 86400;
+        if (empty($args['type'])) {
+            throw new Exception('Missing argument: type');
         }
-        $tm11 = $timeline;
-        $timeline += 3600 * 6;
-        $tm17 = $timeline;
-        $timeline += 3600 * 6;
-        $tm23 = $timeline;
-        $timeline += 3600 * 5;
-        $tm04 = $timeline;
 
+        $timeArray = $this->Time->getTimelineArray($type);
         // $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
-        $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
+        $dailyItems = $this->OrderItem->getDailyItemCount(array(reset($timeArray), end($timeArray)));
 
         // print_r($dailyItems);
 
