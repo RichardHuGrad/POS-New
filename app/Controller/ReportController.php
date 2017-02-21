@@ -22,10 +22,18 @@ class ReportController extends AppController {
         $type = $this->data['type'];
 
         $timeArray = $this->Time->getTimelineArray($type);
-        $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
-        $dailyAmountTotal = $this->Order->getDailyOrderInfo(array(reset($timeArray), end($timeArray)));
 
-        return json_encode($dailyAmount);
+        if ($type == "month") {
+            $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
+            return json_encode($dailyAmount);
+        } else {
+            $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
+            $dailyAmountTotal = $this->Order->getDailyOrderInfo(array(reset($timeArray), end($timeArray)));
+
+            return json_encode(array_merge($dailyAmount, $dailyAmountTotal));
+        }
+
+       
     }
 
     public function getItemsInfo() {
@@ -55,7 +63,7 @@ class ReportController extends AppController {
 
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $this->Print->printTotalOrders(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'type'=>$type));
+        $this->Print->printTotalOrders(array('restaurant_id'=> $restaurant_id, 'type'=>$type));
 
 	}
 
@@ -69,7 +77,7 @@ class ReportController extends AppController {
 
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $this->Print->printTotalItems(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'type'=>$type));
+        $this->Print->printTotalItems(array('restaurant_id'=> $restaurant_id, 'type'=>$type));
     }
 
 

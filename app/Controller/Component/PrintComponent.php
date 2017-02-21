@@ -2,10 +2,10 @@
 
 App::uses('Component', 'Controller');
 App::uses('PrintLib', 'Lib');
-App::uses('Component', 'Time');
+App::uses('TimeComponent', 'Component');
 
 class PrintComponent extends Component {
-    public $components = array('Session');
+    // public $components = array('Session', 'Time');
 
 	public $status = 'success';
 
@@ -420,6 +420,7 @@ class PrintComponent extends Component {
      *
      * Parameters:
      *      $args['restaurant_id']
+     *      $args['type']
      */
     public function printTotalOrders($args) {
         if (empty($args['restaurant_id'])) {
@@ -429,14 +430,14 @@ class PrintComponent extends Component {
             throw new Exception('Missing argument: type');
         }
 
-        $timeArray = $this->Time->getTimelineArray($type);
+        $timeArray = TimeComponent::getTimelineArray($args['type']);
 
-        $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
+
+        if ($args['type'] != "month") {
+            $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
+        }
         $dailyAmountTotal = $this->Order->getDailyOrderInfo(array(reset($timeArray), end($timeArray)));
         // $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
-
-        // print_r($dailyItems);
-
 
         $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
         $print = new PrintLib();
@@ -449,6 +450,7 @@ class PrintComponent extends Component {
      *
      * Parameters:
      *      $args['restaurant_id']
+     *      $args['type']
      */
     public function printTotalItems($args) {
 
@@ -459,7 +461,8 @@ class PrintComponent extends Component {
             throw new Exception('Missing argument: type');
         }
 
-        $timeArray = $this->Time->getTimelineArray($type);
+        $timeArray = TimeComponent::getTimelineArray($args['type']);
+
         // $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
         $dailyItems = $this->OrderItem->getDailyItemCount(array(reset($timeArray), end($timeArray)));
 
@@ -471,6 +474,8 @@ class PrintComponent extends Component {
         echo $print->printDailyItemsDoc($printerName, $dailyItems);
     }
 
+
+    
 }
 
  ?>

@@ -1,7 +1,9 @@
 <?php
 
+App::uses('Component', 'Controller');
+
 class TimeComponent extends Component {
-    public function getTimeline() {
+    public function getTimelineArray($type) {
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
         $timeline = strtotime(date("Y-m-d 11:00:00"));
@@ -11,12 +13,8 @@ class TimeComponent extends Component {
             $timeline -= 86400;
         }
 
-        return $timeline;
-    }
-
-    public function getTimelineArray($type) {
         if ($type == "today") {
-            $timeline = $this->getTimeline();
+            // $timeline = $this->getTimeline();
             $tm11 = $timeline;
             $tm17 = $timeline + 3600 * 6;
             $tm23 = $timeline + 3600 * 12;
@@ -24,7 +22,7 @@ class TimeComponent extends Component {
 
             return array($tm11, $tm17, $tm23, $tm04);
         } else if ($type == "yesterday") {
-            $timeline = $this->getTimeline() - 86400;
+            $timeline -= 86400;
             $tm11 = $timeline;
             $tm17 = $timeline + 3600 * 6;
             $tm23 = $timeline + 3600 * 12;
