@@ -26,12 +26,12 @@
  */
 	Router::connect('/', array('controller' => 'homes', 'action' => 'index'));
     Router::connect('/admin', array('controller' => 'admins', 'action' => 'login',  "manager"));
-    
+
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	//Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-  
+
 // REST config
 	Router::mapResources('order');
 	Router::parseExtensions();

@@ -57,7 +57,6 @@ Router::scope('/', function (RouteBuilder $routes) {
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
     /**
      * Connect catchall routes for all controllers.
      *
@@ -75,6 +74,18 @@ Router::scope('/', function (RouteBuilder $routes) {
      * routes you want in your application.
      */
     $routes->fallbacks('DashedRoute');
+});
+
+Router::scope('/', function($routes) {
+    $routes->extensions(['json']);
+    $routes->resources('Api', [
+        'map' => [
+            'syncOrders' => [
+                'action' => 'syncOrders',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
 });
 
 /**
