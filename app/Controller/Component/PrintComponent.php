@@ -230,7 +230,7 @@ class PrintComponent extends Component {
         // echo json_encode($cancel_items);
         // echo empty($cancel_items['K']);
         if (!empty($cancel_items['K'])) {
-            $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+            $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
             $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
         }
@@ -475,7 +475,7 @@ class PrintComponent extends Component {
     }
 
 
-    
+
 }
 
  ?>
