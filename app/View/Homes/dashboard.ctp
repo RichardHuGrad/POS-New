@@ -44,7 +44,7 @@
                             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
                         </li>
                         <li>
-                            <a href="<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'index')) ?>">管理员功能</a>
+                            <a id="admin-link" href="#">管理员功能</a>
                         </li>
                         <!-- <li><div id='print-today-all' class="pull-left paid-txt">打印总单 </div></li>
                     	  <li><div id='print-today-items' class="pull-left paid-txt">打印销量</div></li> -->
@@ -556,6 +556,15 @@ echo $this->fetch('script');
         $('.merge-checkbox').on('click', function(e) {
             e.stopPropagation();
         });
+
+        $('#admin-link').on('click', function(e) {
+            e.preventDefault();
+            var pass = prompt("Input Password","");
+            pass = hex_md5(pass);
+            if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
+                window.location.assign('<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'index')) ?>');
+            }
+        })
 
         $('#print-today-all').on('click', function(e) {
         	e.preventDefault();
