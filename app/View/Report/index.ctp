@@ -29,6 +29,7 @@
             <li class="active"><a data-toggle="pill" href="#today-menu">今天</a></li>
             <li><a data-toggle="pill" href="#yesterday-menu">昨天</a></li>
             <li><a data-toggle="pill" href="#month-menu">本月</a></li>
+            <li><a data-toggle="pill" href="#sync-menu">同步</a></li>
         </ul>
     </div>
 
@@ -55,6 +56,11 @@
                 <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="month">打印销售额</button>
                 <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="month">查看销售量</button>
                 <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="month">打印销售量</button>
+            </div>
+        </div>
+        <div id="sync-menu" class="tab-pane fade">
+            <div class="button-group">
+                <button class="btn btn-lg btn-info" type="button" name="sync-orders">同步菜单</button>
             </div>
         </div>
         <div class="report-content">
@@ -203,4 +209,22 @@ $('button[name="print-items"]').on('click', function(e) {
         }
     });
 });
+
+
+$('button[name="sync-orders"]').on('click', function(e) {
+    $.ajax({
+        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'syncOrders')); ?>",
+        method: "post",
+        // async: false,
+        data:{
+          type: $(this).data("type"),
+        },
+        success: function (html) {
+            alert("Finished");
+        },
+        error: function (html) {
+            alert("error");
+        }
+    })
+})
 </script>

@@ -19,18 +19,49 @@ class ApiController extends Controller {
         $this->autoRender = NULL;
         $this->loadModel('Orders');
 
-        $paras = $this->request->data;
-        echo json_encode($paras);
+        $args = $this->request->data;
+
+        // if (empty($args['order_detail'])) {
+        //     throw new Exception('Missing argument: order_detail');
+        // }
+        // if (empty($args['order_id'])) {
+        //     throw new Exception('Missing argument: order_id');
+        // }
+        // if (empty($args['access_token'])) {
+        //     throw new Exception('Missing argument: access_token');
+        // }
+
+        unset($args['order_detail']['sync']);
+        unset($args['order_detail']['is_deleted']);
+        $data['Orders'] = $args['order_detail'];
+        $orders = $this->Orders->newEntity();
+        $orders = $this->Orders->patchEntity($orders, $args['order_detail']);
+        $this->Orders->save($orders);
+        echo json_encode($orders);
     }
 
     public function syncCousine() {
         $this->viewBuilder()->setLayout(false);
         $this->autoRender = NULL;
-        $this->loadModel('Orders');
-    }
+        $this->loadModel('Cousines');
+        $this->loadModel('CousineLocales');
+        $this->loadModel('Categories');
 
+        $args = $this->request->data;
+
+        // find all categories, filter by sync="N", restaurant_id
+        $result = $this->Categories->find('all',
+            array('conditions' => array(
+                'is_synced' => 'N',
+                'restaurant_id' => $args['restaurant_id']
+            ))
+        );
+
+        echo json_encode($result);
+    }
+	//
 	// public function delegate($object, $command) {
-    //     $this->layout = false;
+	// 	$this->viewBuilder()->setLayout(false);
     //     $this->autoRender = NULL;
 	// 	$result = null;
 	// 	try {

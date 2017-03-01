@@ -33,7 +33,7 @@ class ReportController extends AppController {
             return json_encode(array_merge($dailyAmount, $dailyAmountTotal));
         }
 
-       
+
     }
 
     public function getItemsInfo() {
@@ -78,6 +78,24 @@ class ReportController extends AppController {
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
         $this->Print->printTotalItems(array('restaurant_id'=> $restaurant_id, 'type'=>$type));
+    }
+
+
+    public function syncOrders() {
+        $this->layout = false;
+        $this->autoRender = false;
+
+        $this->loadModel('Order');
+
+        $unsyncOrders = $this->Order->find('all', array(
+                            'conditions'=> array(
+                                'sync' => 'N'
+                            )
+                        ));
+
+        // send data to api directly
+
+        return json_encode($unsyncOrders);
     }
 
 

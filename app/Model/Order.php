@@ -24,6 +24,24 @@ class Order extends AppModel {
     //     )
     // );
 
+
+    public function save($data=NULL, $flag=true, $fieldList=[]) {
+        // print_r($data);
+        if (array_key_exists('Order', $data)) {
+            if (!array_key_exists('sync', $data['Order'])) {
+                $data['Order']['sync'] = 'N';
+            }
+        } else {
+            if (!array_key_exists('sync', $data)) {
+                $data['sync'] = 'N';
+            }
+        }
+        //
+        // print_r($data);
+
+        parent::save($data, $flag, $fieldList);
+    }
+
     // insert a new order in orders
     // return Order.id
     public function insertOrder($cashier_id, $counter_id, $table_no, $order_type, $tax) {
@@ -78,12 +96,12 @@ class Order extends AppModel {
         $data['Order']['total'] = 0;
         $data['Order']['discount_value'] = 0;
 
-        
+
 
         foreach ($order_item_list as $order_item) {
             $data['Order']['subtotal'] += ($order_item['OrderItem']['price'] + ($order_item['OrderItem']['extras_amount'] ? $order_item['OrderItem']['extras_amount'] : 0)) * $order_item['OrderItem']['qty'];
         }
-        
+
         if ($Order_detail['Order']['fix_discount'] && $Order_detail['Order']['fix_discount'] > 0) {
             $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
         } else if ($Order_detail['Order']['percent_discount'] && $Order_detail['Order']['percent_discount'] > 0) {
@@ -109,10 +127,10 @@ class Order extends AppModel {
                 "order_nos" => "",
                 "table_nos" => "",
                 "print_items" => array(),
-                "subtotal" => 0, 
-                "discount_value" => 0, 
+                "subtotal" => 0,
+                "discount_value" => 0,
                 "after_discount" => 0,
-                "tax" => 0, 
+                "tax" => 0,
                 "tax_amount" => 0,
                 "total" => 0,
                 "paid" => 0,
@@ -146,14 +164,14 @@ class Order extends AppModel {
         $data['table_nos'] = implode(",", $table_nos);
 
         return $data;
-    } 
+    }
 
 
     public function getDailyOrderInfo($timeline_arr) {
 
         $data = array();
         for ($i = 0; $i < count($timeline_arr) - 1; ++$i) {
-            $conditions = 
+            $conditions =
             $Orders = $this->find("all", array(
                 'recursive' => -1,
                 'fields' =>  array('Order.order_no', 'Order.cashier_id', 'Order.table_no', 'Order.total', 'Order.paid', 'Order.cash_val', 'Order.card_val', 'Order.tax_amount', 'Order.discount_value', 'Order.percent_discount','Order.paid_by', 'Order.tip','Order.tip_paid_by'),
