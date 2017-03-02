@@ -72,7 +72,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .loginpage .btn { background: #c30e23; color: #fff; padding: 8px 50px; font-size: 30px; margin-top: 30px; }
 .loginpage .forget-txt a { padding-top: 15px; font-size: 24px; color: #666; font-weight: 300; display: inline-block; }
 /* Calculator page Css */
-header { background: #c30e23; height: 75px; }
+/*header { background: #c30e23; height: 75px; }*/
 .calculator { width: 50%; margin: 2% auto 0; -webkit-border-radius: 12px 13px 13px 12px/13px; -moz-border-radius: 12px 13px 13px 12px/13px; border-radius: 12px 13px 13px 12px/13px; background-color: #fff; -webkit-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); -moz-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9); }
 .calculator .calc-top { width: 100%; text-align: center; color: #696969; font-size: 26px; padding: 15px 30px; line-height: 30px; font-weight: 600; }
 .calculator .calc-top .fa { font-size: 30px; cursor: pointer; }
@@ -156,21 +156,21 @@ header { background: #c30e23; height: 75px; }
 .homepage { padding: 20px 0; }
 .dine-box { margin-bottom: 0px; }
 .dine-box .dinebtn {
-	margin-bottom: -25px; 
-	/*-webkit-border-radius: 6px; 
-	-moz-border-radius: 6px; 
+	margin-bottom: -25px;
+	/*-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
 	border-radius: 6px; */
 	background-color: #c30e23;
-	/*-webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.26); 
-	-moz-box-shadow: -2px 5px 5px rgba(0,0,0,.26); 
-	box-shadow: -2px 5px 5px rgba(0,0,0,.26); 
-	background-image: -webkit-linear-gradient(bottom, #c30e23, #df7f8a); 
-	background-image: -moz-linear-gradient(bottom, #c30e23, #df7f8a); 
-	background-image: -o-linear-gradient(bottom, #c30e23, #df7f8a); 
-	background-image: -ms-linear-gradient(bottom, #c30e23, #df7f8a); 
+	/*-webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.26);
+	-moz-box-shadow: -2px 5px 5px rgba(0,0,0,.26);
+	box-shadow: -2px 5px 5px rgba(0,0,0,.26);
+	background-image: -webkit-linear-gradient(bottom, #c30e23, #df7f8a);
+	background-image: -moz-linear-gradient(bottom, #c30e23, #df7f8a);
+	background-image: -o-linear-gradient(bottom, #c30e23, #df7f8a);
+	background-image: -ms-linear-gradient(bottom, #c30e23, #df7f8a);
 	background-image: linear-gradient(to top, #c30e23, #df7f8a); */
-	border: 0px; color: #fff; font-size: 18px; font-weight: 600; 
-	padding: 10px 20px 13px; 
+	border: 0px; color: #fff; font-size: 18px; font-weight: 600;
+	padding: 10px 20px 13px;
 }
 .dine-box .dinebtn img { display:none;vertical-align: -7px; margin-right: 10px; }
 .dine-wrap{margin-top: 20px;}
@@ -179,7 +179,7 @@ header { background: #c30e23; height: 75px; }
 .dine-wrap li .notpaidwrap { height: 65px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .availablebwrap { height: 65px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .greenwrap { height: 75px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; border-radius: 10px;}
-.dine-wrap li .number-txt {  
+.dine-wrap li .number-txt {
 	color: #fff;
     font-size: 17px;
     font-weight: bold;
@@ -202,25 +202,25 @@ header { background: #c30e23; height: 75px; }
 .dine-wrap li .dropdown-menu .arrow { position: absolute; bottom: -10px; left: 10%; background: url(../img/bot-arrow.png) left top no-repeat; width: 24px; height: 11px; }
 .dine-wrap li .dropdown-menu .dropdown-title { width: 100%; border-right: none; color: white; padding: 5px 0; text-align: center; font-size: 20px; font-weight: 600; line-height: 100%; }
 .dine-wrap li .dropdown-submenu { position: relative; }
-.dine-wrap li .dropdown-submenu .dropdown-menu { 
-	position: absolute; 
-	top: -250%; 
-	left: 106%; 
-	margin-top: -1px; 
+.dine-wrap li .dropdown-submenu .dropdown-menu {
+	position: absolute;
+	top: -250%;
+	left: 106%;
+	margin-top: -1px;
 	border: 2px solid #761722;
-	background: #d2a1a1; width: 250px; padding-top: 10px; 
+	background: #d2a1a1; width: 250px; padding-top: 10px;
 }
 .dine-wrap li .dropdown-submenu.bottom-submenu .sub-open { top: -35%; }
 .dine-wrap li .dropdown-submenu .dropdown-menu.dropdown-menu-right { left: auto; }
 .dine-wrap li .dropdown-submenu .dropdown-menu .close-btn { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; z-index: 99; text-align: center; line-height: 1.35; }
-.timetable { 
-	font-size: 16px; 
-	font-weight: 600; 
+.timetable {
+	font-size: 16px;
+	font-weight: 600;
 	color: #fff;
 	background: #9a1d1d;
-	line-height: 20px; 
-	padding-bottom: 6px; 
-	padding-top: 6px; 
+	line-height: 20px;
+	padding-bottom: 6px;
+	padding-top: 6px;
 	border-radius: 10px;
 	border: 1px solid grey;
 	margin-top: 10px;
@@ -255,20 +255,20 @@ header { background: #c30e23; height: 75px; }
 .cashierbox { min-height: 70px; background-color: #fff; -webkit-box-shadow: -2px 5px 5px rgba(0,0,0,.12); -moz-box-shadow: -2px 5px 5px rgba(0,0,0,.12); box-shadow: -2px 5px 5px rgba(0,0,0,.12); padding: 10px 15px; }
 .cashierbox .dropdown-toggle { cursor: pointer; }
 .cashierbox .dropdown-menu { left: 105%; top: 0; border: 2px solid #c30e23; background: #fff; width: 800px; padding: 10px; border-radius: 15px; }
-.cashierbox .dropdown-menu > li > a { 
+.cashierbox .dropdown-menu > li > a {
 	/*padding: 3px 10px 4px; */
 	padding: 5px;
 	height: 50px;
 	width:70px;
 }
-.cashierbox .dropdown-menu li { 
+.cashierbox .dropdown-menu li {
 	background-color: #ECE7E7;
-	margin:5px; 
+	margin:5px;
 	/*padding: 2px 10px; */
-	border: 0px; 
-	float:left; 
+	border: 0px;
+	float:left;
 	/*width:20%; */
-	border-bottom:1px solid #eee; 
+	border-bottom:1px solid #eee;
 	border-right:1px solid #eee;
 	border-radius: 10px;
 }
@@ -326,11 +326,11 @@ header { background: #c30e23; height: 75px; }
 .name-title { /*overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;*/ padding:0 0 0 5px; }
 .productbox li { cursor: pointer; float:left; display:inline-block; vertical-align:top; }
 .productbox li:hover { background: #f9f9f9; }
-.productbox li .item-wrapper { 
-	padding-left: 5px; 
-	margin: 5px 2px; 
-	background: white; 
-	box-shadow: -2px 5px 5px rgba(0,0,0,.12); 
+.productbox li .item-wrapper {
+	padding-left: 5px;
+	margin: 5px 2px;
+	background: white;
+	box-shadow: -2px 5px 5px rgba(0,0,0,.12);
 	height:100px;
 }
 .cartwrap-wrap { padding: 5px 0; }
@@ -508,8 +508,8 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .padding { padding:0px;}
 .paddinT10{ padding-top:10px !important;}
 .paddinB10{ padding-bottom:10px !important;}
-.padding15{ padding:15px !important;} 
-.padding10{ padding:10px !important;} 
+.padding15{ padding:15px !important;}
+.padding10{ padding:10px !important;}
 
 /* Fonts */
 .txt12 { font-size: 12px !important; }
@@ -520,7 +520,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .lightcolor{ color:#727272;}
 /* Calculator page Css */
 header{ background:#c30e23; height:100px;}
-.calculator{ width:50%; margin:2% auto 0; -webkit-border-radius: 12px 13px 13px 12px/13px; -moz-border-radius: 12px 13px 13px 12px/13px; border-radius: 12px 13px 13px 12px/13px; background-color: #fff; -webkit-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); -moz-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9);} 
+.calculator{ width:50%; margin:2% auto 0; -webkit-border-radius: 12px 13px 13px 12px/13px; -moz-border-radius: 12px 13px 13px 12px/13px; border-radius: 12px 13px 13px 12px/13px; background-color: #fff; -webkit-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); -moz-box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); box-shadow: 0 0 43px rgba(0,0,0,.16), inset -2px 5px 54px rgba(0,0,0,.03); border: solid 1px rgba(142,142,142,.9);}
 .calculator .calc-top{ width:100%; text-align:center; color:#696969; font-size:26px; padding:15px 30px; line-height:30px; font-weight:600;}
 .calculator .calc-top .fa{ font-size:30px; cursor:pointer;}
 .calculator .calc-total{ background:#e7e7e7; padding:10px 15px;}
@@ -634,7 +634,7 @@ header{ background:#c30e23; height:100px;}
 .dine-wrap li .dropdown-submenu .dropdown-menu {top:-250%;left: 106%; margin-top: -1px; border:2px solid #c30e23; background:#fff; width:150px; padding-top:10px;}
 .timetable{ font-size:16px; font-weight:600; color:#999; line-height:20px; padding-bottom:6px; padding-top:6px;}
 .dine-wrap li .dropdown-submenu .dropdown-menu .left-arrow{ position:absolute; top:141px; left:-10px; background:url(../img/left-arrow.png) left top no-repeat; width:10px; height:21px;}
-.takeout-txt{ font-size:24px; font-weight:500; color:#fff; margin-bottom:55px; line-height:45px;} 
+.takeout-txt{ font-size:24px; font-weight:500; color:#fff; margin-bottom:55px; line-height:45px;}
 .paidb{ width:20px; height:20px; margin-right:10px; background:#57ad12;}
 .notpaid{ width:20px; height:20px; margin-right:10px; background:#ff8400;}
 .availableb{ width:20px; height:20px; margin-right:10px; background:#e3e3e4; border: 1px solid #eee;}
@@ -715,9 +715,9 @@ header{ background:#c30e23; height:100px;}
 .othertopwrap{ padding:15px 0; position:relative;}
 
 .otherpage .checkbox-btn{ margin-bottom:10px;}
-.otherpage .checkbox-btn label{ color:#000; padding:2px 0 0 20px;} 
+.otherpage .checkbox-btn label{ color:#000; padding:2px 0 0 20px;}
 .otherpage .product-indent { min-height:350px;}
-.otherpage .product-indent li{ 
+.otherpage .product-indent li{
 	padding-top:10px; padding-bottom:10px; font-size:15px;
 	list-style-position: outside;
     	list-style-type:none !important;
@@ -751,7 +751,7 @@ header{ background:#c30e23; height:100px;}
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.donebtn{     
+.donebtn{
 	background: rgb(41, 41, 41) none repeat scroll 0 0;
     border: 0 none;
     border-radius: 8px;
@@ -786,7 +786,7 @@ li.already_done {
     /*print css end  */
 
     .order-summary-indent li, .product-indent li, .redbdr{border:none !important;}
-    .order-summary-indent .less-title{ 
+    .order-summary-indent .less-title{
     	font-size:13px !important; padding-bottom: 0; line-height: 15px;
     }
 
@@ -872,7 +872,7 @@ li.already_done {
 	position:fixed;
 	top:45%;
 	left:50%;
-	z-index:9999;	
+	z-index:9999;
 	background:linear-gradient(#C30E23, #D75E6C);
 	;
 	border:2px solid #D75E6C;
@@ -903,7 +903,7 @@ li.already_done {
 }
 
 .EntPassword{
-	width:210px;	
+	width:210px;
 }
 
 .tabSyle{

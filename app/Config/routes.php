@@ -47,6 +47,11 @@
 	  )
 	));
 
+    // Router::connect('/:language/:controller/:action/*', array(), array(
+    //     'language' => '[a-zA-Z]{3}',
+    //     'persist' => array('language')
+    // ));
+
 
 
 
