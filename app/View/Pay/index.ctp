@@ -1,22 +1,5 @@
-<header class="product-header">
-    <div style="display:none;">
-        <canvas id="canvas" width="512" height="480"></canvas>
-        <?php echo $this->Html->image("logo.png", array('alt' => "POS", 'id' => "logo")); ?>
-    </div>
-
-    <div class="home-logo">
-        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
-            <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
-        </a>
-
-        <div class="HomeText text-left">
-            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
-            <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-        </div>
-
-    </div>	  
-    <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
-
+<header >
+    <?php echo $this->element('navbar'); ?>
     <style>
         .payment-group {
             margin-bottom: 15px;
@@ -24,7 +7,7 @@
         .tip-group {
 
         }
-        
+
         .tip-paid-by input[type="radio"] {
             display: inline-block;
             /*margin: 10px;*/
@@ -70,41 +53,39 @@
 
 </header>
 <div class="pay container-fluid">
-    <div class="clearfix cartwrap-wrap">
-    </div>
     <div class="order-wrap">
         <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?><br>Table 桌 <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
+            <h2><?php echo __('Order No.'); ?><?php echo $Order_detail['Order']['order_no'] ?><br><?php echo __('Table'); ?> <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
 
             <div class="paid-box">
                 <div class="checkbox-btn">
                     <input type="checkbox" value="value-1" id="rc1" name="rc1" <?php if ($Order_detail['Order']['table_status'] == 'P') echo "checked='checked'"; ?>/>
-                    <label for="rc1" disabled>Paid 已付费</label>
+                    <label for="rc1" disabled><?php echo __('Paid'); ?></label>
                 </div>
             </div>
             <?php
             if ($Order_detail['Order']['table_status'] <> 'P') {
                 ?>
-                <div class="table-box dropdown"><a href="" class="dropdown-toggle"  data-toggle="dropdown">Change Table 换桌</a>
+                <div class="table-box dropdown"><a href="" class="dropdown-toggle"  data-toggle="dropdown"><?php echo __('Change Table'); ?></a>
                     <ul class="dropdown-menu">
                         <div class="customchangemenu clearfix">
                             <div class="left-arrow"></div>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">DINE IN</div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('DINE IN'); ?></div>
                             <?php for ($t = 1; $t <= DINEIN_TABLE; $t++) {
                                 if (!@$orders_no[$t]['D']) {
                                     ?>
                                     <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">D<?php echo $t; ?></a></div>
                                 <?php }
                             } ?>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">TAKE OUT</div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('TAKE OUT'); ?></div>
                             <?php for ($t = 1; $t <= TAKEOUT_TABLE; $t++) {
                                 if (!@$orders_no[$t]['T']) {
                                     ?>
                                     <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">T<?php echo $t; ?></a></div>
                                 <?php }
                             } ?>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING</div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('WAITING'); ?></div>
     <?php for ($t = 1; $t <= WAITING_TABLE; $t++) {
         if (!@$orders_no[$t]['W']) {
             ?>
@@ -116,9 +97,9 @@
                 </div>
 <?php } ?>
 
-            <div class="avoid-this text-center reprint"><button type="button" class="submitbtn">Print Receipt 打印收据</button></div>
+            <div class="avoid-this text-center reprint"><button type="button" class="submitbtn"><?php echo __('Print Receipt'); ?></button></div>
             <div class="order-summary">
-                <h3>Order Summary 订单摘要</h3>
+                <h3><?php echo __('Order Summary'); ?></h3>
                 <div class="order-summary-indent clearfix">
                     <ul>
                         <?php
@@ -169,53 +150,44 @@
                 <ul>
                     <li class="clearfix">
                         <div class="row">
-	                        <!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Subtotal<?php 
-							if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) { ?>小计(原价)<?php } else { ?> 小计 <?php } ?> </div>
-											<div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php 
-							if(!empty($Order_detail) and $Order_detail['Order']['discount_value']) {
-								if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00';  
-							}else{
-								if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['subtotal'], 2); else echo '0.00';  
-							};
-							?>
-							<!-- End -->
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Subtotal'); ?></div>
+							<div class="col-md-3 col-sm-4 col-xs-4 sub-price">
+                                $<?php echo number_format($Order_detail['Order']['subtotal'], 2);?>
 							</div>
 
                     <?php
-                    if ($Order_detail['Order']['table_status'] <> 'P' and ! $Order_detail['Order']['discount_value']) {
+                    if ($Order_detail['Order']['table_status'] != 'P' and ! $Order_detail['Order']['discount_value']) {
                         ?>
-                                <div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Discount 加入折扣</button></div>
+                                <div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> <?php echo __('Add Discount'); ?></button></div>
 <?php } ?>
                         </div>
                     </li>
-
 <?php if (!$Order_detail['Order']['discount_value']) { ?>
                         <li class="clearfix discount_view" style="display:none;">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
-                                        <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">                                                    
+                                        <label for="fix_discount" style="font-size:11px;"><?php echo __('Fix Discount'); ?></label>
+                                        <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="discount_percent" style="font-size:11px;">Discount in %</label>
-                                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">                                                    
+                                        <label for="discount_percent" style="font-size:11px;"><?php echo __('Discount in %'); ?></label>
+                                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="promocode" style="font-size:11px;">Promo Code</label>
-                                        <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">                                                    
+                                        <label for="promocode" style="font-size:11px;"><?php echo __('Promo Code'); ?></label>
+                                        <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="AdminTableSize" style="width:100%">&nbsp;</label>
-                                        <a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
+                                        <a class="btn btn-primary btn-wide" id="apply-discount" href="javascript:void(0)"><?php echo __('Apply'); ?> <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
 
@@ -230,35 +202,34 @@
                                     <?php
                                     // show discount code here
                                     ?>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Discount 折扣</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Discount'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price">
                                     $<?php
                                 echo number_format($Order_detail['Order']['discount_value'], 2);
                                 if ($Order_detail['Order']['percent_discount']) {
                                     echo "<span class='txt12'> " . $Order_detail['Order']['promocode'] . " (" . $Order_detail['Order']['percent_discount'] . "%)</span>";
                                 }
-                                    ?> 
-                                    <a aria-hidden="true" class="fa fa-times remove_discount" order_id="<?php echo $Order_detail['Order']['id']; ?>" href="javascript:void(0)"></a>                       
+                                    ?>
+                                    <a aria-hidden="true" class="fa fa-times remove_discount" order_id="<?php echo $Order_detail['Order']['id']; ?>" href="javascript:void(0)"></a>
                                 </div>
 
                             </div>
                         </li>
-                    
-                    <!-- Modified by Yishou Liao @ Nov 25 2016 -->
+
                     <li class="clearfix">
-                        <div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">After Discount 打折后: </div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></div>
-                
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('After Discount'); ?>: </div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></div>
+
                         </div>
                     </li>
-                    <!-- End -->
+
     <?php
 }
 ?>
-					<!-- Modified by Yishou Liao @ Nov 25 2016 -->
+
                     <li class="clearfix">
                         <div class="row">
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tax 税 (<?php echo $Order_detail['Order']['tax'] ?>%)</div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tax'); ?>(<?php echo $Order_detail['Order']['tax'] ?>%)</div>
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></div>
                         </div>
                     </li>
@@ -266,7 +237,7 @@
 
                     <li class="clearfix">
                         <div class="row">
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Total 总</div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Total'); ?></div>
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="<?php echo round($Order_detail['Order']['total'],2); ?>">$<?php echo number_format($Order_detail['Order']['total'], 2) ?></div>
                         </div>
                     </li>
@@ -275,19 +246,19 @@ if ($Order_detail['Order']['table_status'] == 'P') {
     ?>
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Receive 收到</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Received'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$<?php echo $Order_detail['Order']['paid']; ?></div>
 
 
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price">Cash 现金: $<?php echo $Order_detail['Order']['cash_val']; ?></div>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price">Card 卡: $<?php echo $Order_detail['Order']['card_val']; ?></div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price"><?php echo __('Cash'); ?>: $<?php echo $Order_detail['Order']['cash_val']; ?></div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price"><?php echo __('Card'); ?>: $<?php echo $Order_detail['Order']['card_val']; ?></div>
                             </div>
                         </li>
 
     <?php if ($Order_detail['Order']['change']) { ?>
                             <li class="clearfix">
                                 <div class="row">
-                                    <div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt">Change 找零</div>
+                                    <div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt"><?php echo __('Change'); ?></div>
                                     <div class="col-md-3 col-sm-4 col-xs-4 sub-price change_price">$<?php echo $Order_detail['Order']['change']; ?></div>
                                 </div>
                             </li>
@@ -295,7 +266,7 @@ if ($Order_detail['Order']['table_status'] == 'P') {
 
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tip 小费</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tip'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price">$<?php echo $Order_detail['Order']['tip']; ?></div>
                             </div>
                         </li>
@@ -304,44 +275,44 @@ if ($Order_detail['Order']['table_status'] == 'P') {
     ?>
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Receive 收到</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Received'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$00.00</div>
 
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price">Cash 现金: $00.00</div>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price">Card 卡: $00.00</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price"><?php echo __('Cash'); ?>: $00.00</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price"><?php echo __('Card'); ?>: $00.00</div>
                             </div>
                         </li>
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt">Remaining 其余</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt"><?php echo __('Remaining'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price change_price">$00.00</div>
                             </div>
-                        </li>  
+                        </li>
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt">Tip 小费</div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tip'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price">$00.00</div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <!-- <div class="control-label col-md-4 sub-txt">Paid by:</div> -->
                                         <!-- <div class="col-md-8 tip-paid-by text-center"> -->
-                                            
-                                                
+
+
                                                     <!-- <input id="tip-card" name="tip_paid_by"  class="tip_paid_by" value="CARD" type="radio">
                                                     <label for="tip-card" class="control-label vcenter"><?php echo $this->Html->image("card.png", array('alt' => "card")); ?><div>Card 卡</div></label> -->
-                                               
-                                                
+
+
                                                     <!-- <input id="tip-cash" name="tip_paid_by"  class="tip_paid_by" value="CASH" type="radio">
                                                     <label for="tip-cash" class="control-label"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?><div>Cash 现金</div></label> -->
-                                            
+
                                         <!-- </div> -->
                                     </div>
                                 </div>
                             </div>
-                        </li>                              
+                        </li>
                 <?php
             }
-            ?>                            
+            ?>
                 </ul>
             </div>
 
@@ -363,20 +334,20 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
                         <li>8</li>
                         <li>9</li>
 
-                        <li class="clear-txt" id="Clear">Clear 清除</li>
+                        <li class="clear-txt" id="Clear"><?php echo __('Clear'); ?></li>
                         <li>0</li>
-                        <li class="enter-txt" id="Enter">Enter 输入</li>
+                        <li class="enter-txt" id="Enter"><?php echo __('Enter'); ?></li>
                     </ul>
                 </div>
 
                 <div class="card-bot clearfix text-center">
-                    <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> Card 卡</button>
-                    <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> Cash 现金</button>
+                    <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> <?php echo __('Card'); ?></button>
+                    <button type="button" class="btn btn-danger select_card" id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> <?php echo __('Cash'); ?></button>
 
                     <!-- <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button> -->
 
-                    <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> Confirm 确认</button>
-                    
+                    <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?><?php echo __('Confirm'); ?> </button>
+
                     <input type="hidden" id="selected_card" value="" />
                     <input type="hidden" id="card_val" name="card_val" value="" />
                     <input type="hidden" id="cash_val" name="cash_val" value="" />
@@ -395,6 +366,11 @@ echo $this->fetch('script');
 ?>
 <script>
     // $('#tip-cash').trigger('click');
+
+    var text_remaining = "<?php echo __('Remaining'); ?>";
+    var text_change = "<?php echo __('Change'); ?>";
+    var text_cash = "<?php echo __('Cash'); ?>";
+    var text_card = "<?php echo __('Card'); ?>";
 
     $(document).on('click', '.reprint', function () {
 
@@ -453,7 +429,7 @@ echo $this->fetch('script');
                     if (parseFloat($("#tip_val").val())) {
                         if (!$("#tip_paid_by").val()) {
                             $("#submit").notify("Please select tip payment method card or cash \n 请选择提示付款方式卡或现金. ", {
-                                position: "top center", 
+                                position: "top center",
                                 className:"warn"
                             });
                             // alert("Please select tip payment method card or cash 请选择提示付款方式卡或现金. ");
@@ -498,7 +474,7 @@ echo $this->fetch('script');
                     })
                 } else {
                     $.notify("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.", {
-                        position: "top center", 
+                        position: "top center",
                         className:"warn"
                     });
                     // alert("Invalid amount, please check and verfy again 金额无效，请检查并再次验证.");
@@ -506,7 +482,7 @@ echo $this->fetch('script');
                 }
             } else {
                 $.notify("Please select card or cash payment method 请选择卡或现金付款方式. ", {
-                        position: "top center", 
+                        position: "top center",
                         className:"warn"
                     });
                 // alert("Please select card or cash payment method 请选择卡或现金付款方式. ");
@@ -517,8 +493,8 @@ echo $this->fetch('script');
         $(".card-indent li").click(function () {
             if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
                 // alert("Please select payment type cash/card or select tip.");
-                $.notify("Please select payment type card/cash.",  { 
-                    position: "top center", 
+                $.notify("Please select payment type card/cash.",  {
+                    position: "top center",
                     className:"warn",
                 });
                 return false;
@@ -556,10 +532,10 @@ echo $this->fetch('script');
 
 
             if (card_val >= total_price) {
-                
+
                 card_extra_tip = card_val - total_price;
                 tip += card_extra_tip;
-                
+
                 $(".change_price_txt").html("Change 找零");
                 $(".change_price").html("$" + cash_val.toFixed(2));
                 $(".change_price").attr('amount', (cash_val).toFixed(2));
@@ -576,9 +552,9 @@ echo $this->fetch('script');
                 $(".change_price").attr('amount', (amount - total_price).toFixed(2));
 
                 if (amount < total_price) {
-                    $(".change_price_txt").html("Remaining 其余");
+                    $(".change_price_txt").html(text_remaining);
                 } else { // amount >= total_price
-                    $(".change_price_txt").html("Change 找零");
+                    $(".change_price_txt").html(text_change);
                 }
 
                 $(".tip_price").html("$" + (0).toFixed(2));
@@ -588,15 +564,15 @@ echo $this->fetch('script');
                 }
             }
 
-            
-            
+
+
         }
 
 
         $("#Enter").click(function () {
             if (!$("#selected_card").val()) {
-                $.notify("Please select payment type card/cash.",  { 
-                    position: "top center", 
+                $.notify("Please select payment type card/cash.",  {
+                    position: "top center",
                     className:"warn",
                 });
                 return false;
@@ -608,11 +584,11 @@ echo $this->fetch('script');
 
             if ($("#selected_card").val() == 'cash') {
                 $("#cash_val").val(amount.toFixed(2));
-                $(".cash_price").html("Cash 现金: $" + amount.toFixed(2));
+                $(".cash_price").html(text_cash + amount.toFixed(2));
             }
             if ($("#selected_card").val() == 'card') {
                 $("#card_val").val(amount.toFixed(2));
-                $(".card_price").html("Card 卡: $" + amount.toFixed(2));
+                $(".card_price").html(text_card + amount.toFixed(2));
             }
             if ($("#selected_card").val() == 'tip') {
                 $("#tip_val").val(amount.toFixed(2));
@@ -625,7 +601,7 @@ echo $this->fetch('script');
 
 
             recalculateAmount(cash_val, card_val, tip_val, total_price);
-            
+
         })
 
         $("#rc1").click(function (E) {
@@ -638,13 +614,13 @@ echo $this->fetch('script');
             var total_price = parseFloat($(".total_price").attr("alt"));
             if (selected_card == 'cash') {
                 $("#cash_val").val(0);
-                $(".cash_price").html("Cash 现金: $" + (0).toFixed(2));
+                $(".cash_price").html(text_cash + ": $" + (0).toFixed(2));
             }
 
             if (selected_card == 'card') {
                 $("#card_val").val(0);
-                $(".card_price").html("Card 卡: $" + (0).toFixed(2));
- 
+                $(".card_price").html(text_card + ": $" + (0).toFixed(2));
+
             }
             if (selected_card == 'tip') {
                 $("#tip_val").val(0);
@@ -702,8 +678,8 @@ echo $this->fetch('script');
                 data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: "<?php echo $Order_detail['Order']['order_no'] ?>"},
                 success: function (html) {
                     if (html.error) {
-                        $.notify(html.message,  { 
-                            position: "top center", 
+                        $.notify(html.message,  {
+                            position: "top center",
                             className:"warn",
                         });
                         // alert(html.message);
@@ -721,8 +697,8 @@ echo $this->fetch('script');
 
 
         } else {
-            $.notify("Please add discount first.",  { 
-                position: "top center", 
+            $.notify("Please add discount first.",  {
+                position: "top center",
                 className:"warn",
             });
             // alert("Please add discount first.");

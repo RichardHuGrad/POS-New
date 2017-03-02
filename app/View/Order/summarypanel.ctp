@@ -19,18 +19,18 @@
     </div>
 
     <div class="clearfix">
-        <button class="btn btn-info" id="select-all"><strong>全选</strong></button>
-        <button class="btn btn-info" id="select-unprint"><strong>未送厨</strong></button>
-        <button class="btn btn-info" id="select-printed"><strong>已送厨</strong></button>
-        <button class="btn btn-info" id="select-revert"><strong>反选</strong></button>
-        <button class="btn btn-info" id="select-clear"><strong>清除</strong></button>
+        <button class="btn btn-info" id="select-all"><strong><?php echo __('Check All'); ?></strong></button>
+        <button class="btn btn-info" id="select-unprint"><strong><?php echo __('Uncooked'); ?></strong></button>
+        <button class="btn btn-info" id="select-printed"><strong><?php echo __('Cooked'); ?></strong></button>
+        <button class="btn btn-info" id="select-revert"><strong><?php echo __('Inverse'); ?></strong></button>
+        <button class="btn btn-info" id="select-clear"><strong><?php echo __('Clear'); ?></strong></button>
     </div>
 </div>
 
 <div class="bgwhite clearfix">
     <?php if(empty($Order_detail) OR !$Order_detail['Order']['discount_value']) { ?>
         <div class="padding10 adddoscount">
-            Add Discount 加入折扣  <i class="fa fa-plus-circle pull-right add-discount <?php
+            <?php echo __('Add Discount'); ?>  <i class="fa fa-plus-circle pull-right add-discount <?php
 if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     ?>" aria-hidden="true"></i>
         </div>
@@ -41,19 +41,19 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="fix_discount" style="font-size:11px;">Fix Discount</label>
+                        <label for="fix_discount" style="font-size:11px;"><?php echo __('Fix Discount'); ?></label>
                         <input type="text" id="fix_discount" required="required" class="form-control discount_section" maxlength="5"  name="fix_discount">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="discount_percent" style="font-size:11px;">Discount in %</label>
+                        <label for="discount_percent" style="font-size:11px;"><?php echo __('Discount in %'); ?></label>
                         <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="promocode" style="font-size:11px;">Promo Code</label>
+                        <label for="promocode" style="font-size:11px;"><?php echo __('Promo Code'); ?></label>
                         <input type="text" id="promocode" required="required" class="form-control discount_section" maxlength="200" name="promocode">
                     </div>
                 </div>
@@ -61,7 +61,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="AdminTableSize">&nbsp;</label>
-                            <a class="btn btn-primary btn-wide pull-right" id="apply-discount" href="javascript:void(0)">Apply <i class="fa fa-arrow-circle-right"></i></a>
+                            <a class="btn btn-primary btn-wide pull-right" id="apply-discount" href="javascript:void(0)"><?php echo __('Apply'); ?> <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
@@ -71,7 +71,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     <div class="subtotalwrap">
         <div class="row">
         	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
-            <div class="col-xs-8 col-sm-8 col-md-8">Subtotal 小计 </div>
+            <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Subtotal'); ?></div>
             <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php
 
             if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) {
@@ -90,7 +90,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             ?>
             <div class="subtotalwrap">
                 <div class="row">
-                    <div class="col-xs-8 col-sm-8 col-md-8">Discount 折扣</div>
+                    <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Discount'); ?></div>
                     <div class="col-xs-4 col-sm-4 col-md-4 text-right">
                     <strong>
                         $<?php echo number_format($Order_detail['Order']['discount_value'], 2) ;
@@ -106,7 +106,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
             <div class="subtotalwrap"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
                 <div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-                    <div class="col-xs-8 col-sm-8 col-md-8">After Discount 打折后: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></strong> </div>
+                    <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('After Discount'); ?>: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></strong> </div>
 
                 </div>
             </div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
@@ -117,13 +117,13 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
     <div class="subtotalwrap"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
     	<div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-            <div class="col-xs-8 col-sm-8 col-md-8">Taxes 税 (<?php if(!empty($Order_detail) and !empty(@$Order_detail['Order'] )) echo $Order_detail['Order']['tax'] ?>%): </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['tax_amount'], 2); else echo '0.00'; ?></strong> </div>
+            <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Taxes'); ?>(<?php if(!empty($Order_detail) and !empty(@$Order_detail['Order'] )) echo $Order_detail['Order']['tax'] ?>%): </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['tax_amount'], 2); else echo '0.00'; ?></strong> </div>
 
         </div>
     </div>
     <div class="subtotalwrap">
         <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8">Total 总额: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>
+            <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Total'); ?> : </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>
 
           <!--   <div class="col-xs-6 col-sm-6 col-md-6">
                 <textarea name="" cols="" rows="" class="form-control" placeholder="Message" id="Message"><?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['message'] ?></textarea>

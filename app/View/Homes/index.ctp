@@ -8,18 +8,18 @@
 	<div class="form-group">
 	    <div class="form-round"><i class="fa fa-user" aria-hidden="true"></i></div>
 
-	    <?php echo $this->Form->input('username', array('type' => 'text', 'placeholder' => 'User Name', 'required' => 'required', 'class' => 'form-control', 'div' => false, 'label' => false)) ?>
+	    <?php echo $this->Form->input('username', array('type' => 'text', 'placeholder' => __('User Name'), 'required' => 'required', 'class' => 'form-control', 'div' => false, 'label' => false)) ?>
 
 	</div>
 	<div class="form-group">
 	    <div class="form-round"><i class="fa fa-lock" aria-hidden="true"></i></div>
-	    <?php echo $this->Form->input('password', array('type' => 'password', 'placeholder' => 'Password', 'required' => 'required', 'class' => 'form-control', 'div' => false, 'label' => false)) ?>
+	    <?php echo $this->Form->input('password', array('type' => 'password', 'placeholder' => __('Password'), 'required' => 'required', 'class' => 'form-control', 'div' => false, 'label' => false)) ?>
 
 	</div>
-	<div class="text-center"><button type="submit" class="btn">Sign in</button></div>
+	<div class="text-center"><button type="submit" class="btn"><?php echo __('Sign in') ?></button></div>
 	<?php echo $this->Form->end(); ?>
 	<div class="text-center forget-txt">
-		<a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'homes','action' => 'forgot_password')); ?>">Forgot your password?</a></div>
+		<a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'homes','action' => 'forgot_password')); ?>"><?php echo __('Forgot your password?') ?></a></div>
 	</form>
     </div>
 </div>
@@ -27,4 +27,3 @@
 echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js'));
 echo $this->fetch('script');
 ?>
-

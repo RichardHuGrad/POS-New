@@ -1,21 +1,10 @@
-<header class="product-header">
-	  <div class="home-logo">
-                    <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>">
-                    <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
-                    </a>
-
-					<div class="HomeText text-left">
-                        <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'index')) ?>">Home 主页</a>
-                        <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-					</div>
-
-            </div>
-      <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
+<header >
+    <?php echo $this->element('navbar'); ?>
 </header>
 
 <div class="container">
 	<div class="clearfix cartwrap-wrap"></div>
-	
+
     <div class="order-wrap">
     <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
@@ -125,7 +114,7 @@
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price" style='overflow: hidden; white-space: nowrap;'>$<input name='tip' id='tip' value='<?php echo number_format($Order_detail['Order']['tip'], 2) ?>'></div>
                         </div>
                     </li>
-                    
+
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-3 col-xs-3 sub-txt">&nbsp;</div>

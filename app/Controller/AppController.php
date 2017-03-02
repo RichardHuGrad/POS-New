@@ -71,6 +71,11 @@ class AppController extends Controller {
         $this->Auth->allow('signin');
         //pr($this->Session->read('Auth')); die;
         //pr($this->params); die;
+
+        if (!empty($this->request->params['language'])) {
+            Configure::write('Config.language', $this->request->params['language']);
+        }
+        $this->Session->write('Config.language', 'eng');
     }
 
     function resize($image_name, $size, $folder_name) {

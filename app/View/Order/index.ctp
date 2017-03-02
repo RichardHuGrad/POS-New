@@ -14,15 +14,15 @@
             </a>
 
             <div class="HomeText text-left">
-                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
-                <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
+                <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>"><?php echo __('Home')?></a>
+                <a href="javascript:void(0)" onclick="window.history.back()"><?php echo __('Back')?></a>
             </div>
 
         </div>
 
 
 
-        <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
+        <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>"><?php echo __('Logout')?></a></div>
 
         <ul class="nav nav-tabs text-center">
             <?php
@@ -42,7 +42,7 @@
         <div class="col-md-9 col-sm-8 col-xs-12 home-link">
             <div class="cart-txt" id="order_no_display">
             <!-- Modified by Yishou Liao @ Dec 09 2016 -->
-                Order 订单号 #<?php echo @$Order_detail['Order']['order_no']; ?>, Table 桌 #<?php echo $table; ?>
+                <?php echo __('Order No.')?><?php echo @$Order_detail['Order']['order_no']; ?>, <?php echo __('Table No.')?><?php echo $table; ?>
             <!-- End -->
             </div>
         </div>
@@ -51,7 +51,7 @@
             <div class="searchwrap">
                 <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i></label>
                 <a class="fa fa-times-circle-o search-clear" aria-hidden="true"></a>
-                <input id="search-input" class="form-control input-lg" placeholder="Search 搜索">
+                <input id="search-input" class="form-control input-lg" placeholder=<?php echo __('Search')?>>
             </div>
         </div>
 
@@ -123,15 +123,15 @@
 
     </div>
     <div class="col-md-12 col-sm-12 col-xs-12 " id="button-group">
-        <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary"><strong>送厨</strong></button>
-        <button id="pay-btn" class="btn btn-lg btn-success"><strong>付款</strong></button>
-        <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong>批量加口味</strong></button>
-        <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong>改口味</strong></button>
-        <button id="delete-btn" class="btn btn-lg btn-danger"><strong>删除</strong></button>
-        <button id="quantity-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-quantity-component-modal"><strong>改数量</strong></button>
-        <button id="take-out-btn" class="btn btn-lg btn-info"><strong>外卖</strong></button>
-        <button id="urge-btn" class="btn btn-lg btn-info"><strong>加急</strong></button>
-        <button id="change-price-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-price-component-modal"><strong>改价格</strong></button>
+        <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary"><strong><?php echo __('Send to Kitchen')?></strong></button>
+        <button id="pay-btn" class="btn btn-lg btn-success"><strong><?php echo __('Pay')?></strong></button>
+        <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong><?php echo __('Batch Add Taste');?></strong></button>
+        <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong><?php echo __('Change Taste');?></strong></button>
+        <button id="delete-btn" class="btn btn-lg btn-danger"><strong><?php echo __('Delete');?></strong></button>
+        <button id="quantity-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-quantity-component-modal"><strong><?php echo __('Change Quantity');?></strong></button>
+        <button id="take-out-btn" class="btn btn-lg btn-info"><strong><?php echo __('Takeout');?></strong></button>
+        <button id="urge-btn" class="btn btn-lg btn-info"><strong><?php echo __('Urge');?></strong></button>
+        <button id="change-price-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-price-component-modal"><strong><?php echo __('Change Price');?></strong></button>
         <!-- <button id="free-price-btn" class="btn btn-lg"><strong>免费</strong></button> -->
         <!-- <button id="add-discount-btn" class="btn btn-lg">Add Discount</button>  -->
     </div>
@@ -154,14 +154,14 @@
             <div class="modal-content clearfix">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Taste(味道)</h4>
+                    <h4 class="modal-title"><?php echo __('Taste');?></h4>
                 </div>
                 <div class="modal-body clearfix">
                     <ul id="taste-component-items" class="clearfix">
 
                     </ul>
                     <div class="clearfix">
-                        已选:
+                        <?php echo __('Selected');?>
                     </div>
                     <ul id="selected-extra" class="clearfix">
 
@@ -173,8 +173,8 @@
                         <input class="pull-left" id="taste-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
                     </div>
                     <div class="clearfix">
-                         <button style="display:none;" type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>
-                        <button type="button" id="taste-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                         <button style="display:none;" type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger"><?php echo __('Clear');?></button>
+                        <button type="button" id="taste-component-save" class="pull-right btn btn-lg btn-success"><?php echo __('Save');?></button>
                     </div>
                 </div>
             </div>
@@ -200,13 +200,13 @@
 
 
                     <div id="single-selected-extra-title" class="clearfix">
-                        口味已选:
+                        <?php echo __('Selected Taste');?>:
                     </div>
                     <ul id="single-selected-extra" class="clearfix">
 
                     </ul>
                     <div id="single-selected-combo-title" class="clearfix">
-                        拼盘已选:
+                        <?php echo __('Selected Combo');?>:
                     </div>
                     <ul id="single-selected-combo" data-combo-num="0" class="clearfix">
 

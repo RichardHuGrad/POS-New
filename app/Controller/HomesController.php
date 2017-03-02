@@ -20,6 +20,7 @@ class HomesController extends AppController {
         parent::beforeFilter();
         $this->Auth->allow('index', 'forgot_password');
         $this->layout = "default";
+
     }
 
     /**

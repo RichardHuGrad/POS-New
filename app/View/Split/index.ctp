@@ -1,33 +1,6 @@
 <header class="product-header">
-    <div style="display:none;">
-        <canvas id="canvas" width="512" height="480"></canvas>
-        <?php echo $this->Html->image("logo.png", array('alt' => "POS", 'id' => "logo")); ?>
-    </div>
-
-
-    <div class="home-logo">
-        <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
-            <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
-        </a>
-
-        <div class="HomeText text-left">
-            <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>">Home 主页</a>
-            <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-        </div>
-
-    </div>
-
-    <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>">Logout 登出</a></div>
-
+    <?php echo $this->element('navbar'); ?>
 </header>
-
-<style>
-	/* #whole-wrapper {
-		margin-top: 20px;
-	} */
-
-</style>
-
 
 <div class="col-md-12 col-sm-12 col-xs-12" id="whole-wrapper">
     <div id="customer-select-alert" class="alert alert-info alert-dismissible fade in" role="alert">
