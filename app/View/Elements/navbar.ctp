@@ -48,6 +48,23 @@
                     </ul>
                 </li>
 
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo __('Languages'); ?>
+    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" data-lang="eng" class="switch-lang">
+                                English
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-lang="zho" class="switch-lang">
+                                中文
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
 
 
@@ -75,3 +92,25 @@
         </div>
     </div>
 </div>
+
+<?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js')); ?>
+<script type="text/javascript">
+
+    $('.switch-lang').on('click', function() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'switchLang')); ?>",
+            method: "post",
+            data: {
+                lang: $(this).data('lang')
+            },
+            success: function(html) {
+                // reload the page
+                location.reload();
+            }
+        })
+        // console.log("click");
+    });
+
+
+
+</script>

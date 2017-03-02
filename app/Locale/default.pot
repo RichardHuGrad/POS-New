@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-03-01 16:41-0500\n"
+"POT-Creation-Date: 2017-03-02 17:03-0500\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -18,8 +18,405 @@ msgstr ""
 msgid "%s you have successfully logged out"
 msgstr ""
 
-#: View/Homes/index.ctp:23
+#: View/Elements/navbar.ctp:19
+#: View/Order/index.ctp:17
+msgid "Home"
+msgstr ""
+
+#: View/Elements/navbar.ctp:22
+msgid "Admin Functions"
+msgstr ""
+
+#: View/Elements/navbar.ctp:28
+msgid "More"
+msgstr ""
+
+#: View/Elements/navbar.ctp:36
+msgid "Order Search"
+msgstr ""
+
+#: View/Elements/navbar.ctp:44
+#: View/Homes/dashboard.ctp:56;203;301
+msgid "Order"
+msgstr ""
+
+#: View/Elements/navbar.ctp:52
+msgid "Languages"
+msgstr ""
+
+#: View/Elements/navbar.ctp:78
+msgid "On-going"
+msgstr ""
+
+#: View/Elements/navbar.ctp:83
+msgid "Available"
+msgstr ""
+
+#: View/Elements/navbar.ctp:87
+#: View/Order/index.ctp:25
+msgid "Logout"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:55
+msgid "Dine In"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:59;210;309
+#: View/Pay/index.ctp:70
+msgid "Change Table"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:65;218;317
+#: View/Pay/index.ctp:74
+msgid "DINE IN"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:76;228;327
+#: View/Pay/index.ctp:81
+msgid "TAKE OUT"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:86;238;337
+#: View/Pay/index.ctp:88
+msgid "WAITING"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:95;252;351
+#: View/Order/index.ctp:127
+msgid "Pay"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:97;253
+msgid "Clear Table"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:106;115
+msgid "Merge Bill"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:145
+msgid "Split Bill"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:149
+msgid "History"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:153
+msgid "Dine"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:182
+msgid "Takeout Tables"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:197
+#: View/Order/index.ctp:132
+msgid "Takeout"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:282;295
+msgid "Waiting List"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:352
+#: View/Merge/index.ctp:342
+#: View/Order/index.ctp:177
+#: View/Order/summarypanel.ctp:26
+#: View/Pay/index.ctp:337
+msgid "Clear"
+msgstr ""
+
+#: View/Homes/forgot_password.ctp:11
+msgid "Email"
+msgstr ""
+
+#: View/Homes/forgot_password.ctp:15
+msgid "Submit"
+msgstr ""
+
+#: View/Homes/forgot_password.ctp:17
+msgid "Already have an account?"
+msgstr ""
+
+#: View/Homes/index.ctp:11
+msgid "User Name"
+msgstr ""
+
+#: View/Homes/index.ctp:16
+msgid "Password"
+msgstr ""
+
+#: View/Homes/index.ctp:19
+msgid "Sign in"
+msgstr ""
+
+#: View/Homes/index.ctp:22
 msgid "Forgot your password?"
+msgstr ""
+
+#: View/Merge/index.ctp:10;714
+#: View/Order/index.ctp:45
+#: View/Pay/index.ctp:59
+msgid "Order No."
+msgstr ""
+
+#: View/Merge/index.ctp:16
+#: View/Pay/index.ctp:59
+msgid "Table"
+msgstr ""
+
+#: View/Merge/index.ctp:19
+msgid "and"
+msgstr ""
+
+#: View/Merge/index.ctp:25
+msgid "merge"
+msgstr ""
+
+#: View/Merge/index.ctp:44
+#: View/Pay/index.ctp:64
+msgid "Paid"
+msgstr ""
+
+#: View/Merge/index.ctp:48
+#: View/Pay/index.ctp:100
+msgid "Print Receipt"
+msgstr ""
+
+#: View/Merge/index.ctp:50
+#: View/Pay/index.ctp:102
+msgid "Order Summary"
+msgstr ""
+
+#: View/Merge/index.ctp:110;716
+#: View/Order/summarypanel.ctp:74
+#: View/Pay/index.ctp:153
+msgid "Subtotal"
+msgstr ""
+
+#: View/Merge/index.ctp:150;720
+#: View/Order/summarypanel.ctp:93
+#: View/Pay/index.ctp:205
+msgid "Discount"
+msgstr ""
+
+#: View/Merge/index.ctp:184;724
+#: View/Order/summarypanel.ctp:109
+#: View/Pay/index.ctp:221
+msgid "After Discount"
+msgstr ""
+
+#: View/Merge/index.ctp:207;728
+#: View/Pay/index.ctp:232
+#: View/Report/index.ctp:55
+msgid "Tax"
+msgstr ""
+
+#: View/Merge/index.ctp:234;732
+#: View/Order/summarypanel.ctp:126
+#: View/Pay/index.ctp:240
+#: View/Report/index.ctp:56
+msgid "Total"
+msgstr ""
+
+#: View/Merge/index.ctp:263;292
+#: View/Pay/index.ctp:249;278
+msgid "Received"
+msgstr ""
+
+#: View/Merge/index.ctp:267;295;350
+#: View/Pay/index.ctp:253;281;345;372
+msgid "Cash"
+msgstr ""
+
+#: View/Merge/index.ctp:268;296;349
+#: View/Pay/index.ctp:254;282;344;373
+msgid "Card"
+msgstr ""
+
+#: View/Merge/index.ctp:275
+#: View/Pay/index.ctp:261;371
+msgid "Change"
+msgstr ""
+
+#: View/Merge/index.ctp:283;307
+#: View/Pay/index.ctp:269;293
+msgid "Tip"
+msgstr ""
+
+#: View/Merge/index.ctp:301
+#: View/Pay/index.ctp:287;370
+msgid "Remaining"
+msgstr ""
+
+#: View/Merge/index.ctp:344
+#: View/Pay/index.ctp:339
+msgid "Enter"
+msgstr ""
+
+#: View/Merge/index.ctp:355
+#: View/Pay/index.ctp:349
+msgid "Confirm"
+msgstr ""
+
+#: View/Merge/index.ctp:714
+#: View/Order/index.ctp:45
+msgid "Table No."
+msgstr ""
+
+#: View/Merge/index.ctp:714
+msgid "Type"
+msgstr ""
+
+#: View/Merge/index.ctp:741
+#: View/Order/summarypanel.ctp:44
+#: View/Pay/index.ctp:170
+msgid "Fix Discount"
+msgstr ""
+
+#: View/Merge/index.ctp:745
+#: View/Order/summarypanel.ctp:50
+#: View/Pay/index.ctp:176
+msgid "Discount in %"
+msgstr ""
+
+#: View/Merge/index.ctp:749
+#: View/Order/summarypanel.ctp:56
+#: View/Pay/index.ctp:182
+msgid "Promo Code"
+msgstr ""
+
+#: View/Merge/index.ctp:752
+#: View/Order/summarypanel.ctp:64
+#: View/Pay/index.ctp:190
+msgid "Apply"
+msgstr ""
+
+#: View/Merge/index.ctp:757
+#: View/Order/summarypanel.ctp:33
+#: View/Pay/index.ctp:161
+msgid "Add Discount"
+msgstr ""
+
+#: View/Merge/index.ctp:761
+msgid "Delete Discount"
+msgstr ""
+
+#: View/Order/index.ctp:18
+msgid "Back"
+msgstr ""
+
+#: View/Order/index.ctp:54
+msgid "Search"
+msgstr ""
+
+#: View/Order/index.ctp:126
+msgid "Send to Kitchen"
+msgstr ""
+
+#: View/Order/index.ctp:128
+msgid "Batch Add Taste"
+msgstr ""
+
+#: View/Order/index.ctp:129
+msgid "CHange Taste"
+msgstr ""
+
+#: View/Order/index.ctp:130
+msgid "Delete"
+msgstr ""
+
+#: View/Order/index.ctp:131
+msgid "Change Quantity"
+msgstr ""
+
+#: View/Order/index.ctp:133
+msgid "Urge"
+msgstr ""
+
+#: View/Order/index.ctp:134
+msgid "Change Price"
+msgstr ""
+
+#: View/Order/index.ctp:157
+msgid "Taste"
+msgstr ""
+
+#: View/Order/index.ctp:178
+msgid "Save"
+msgstr ""
+
+#: View/Order/index.ctp:204
+msgid "Selected Taste"
+msgstr ""
+
+#: View/Order/index.ctp:210
+msgid "Selected Combo"
+msgstr ""
+
+#: View/Order/summarypanel.ctp:22
+msgid "Check All"
+msgstr ""
+
+#: View/Order/summarypanel.ctp:23
+msgid "Uncooked"
+msgstr ""
+
+#: View/Order/summarypanel.ctp:24
+msgid "Cooked"
+msgstr ""
+
+#: View/Order/summarypanel.ctp:25
+msgid "Inverse"
+msgstr ""
+
+#: View/Order/summarypanel.ctp:120
+msgid "Taxes"
+msgstr ""
+
+#: View/Report/index.ctp:9
+msgid "Admin Report Functions"
+msgstr ""
+
+#: View/Report/index.ctp:13
+msgid "Today"
+msgstr ""
+
+#: View/Report/index.ctp:14
+msgid "Yesterday"
+msgstr ""
+
+#: View/Report/index.ctp:15
+msgid "Current Month"
+msgstr ""
+
+#: View/Report/index.ctp:22;30;38
+msgid "Check Sales Total"
+msgstr ""
+
+#: View/Report/index.ctp:23;24;31;39;40
+msgid "Print Sales Total"
+msgstr ""
+
+#: View/Report/index.ctp:25;33;41
+msgid "Print Sales Items"
+msgstr ""
+
+#: View/Report/index.ctp:32
+msgid "Check Sales Items"
+msgstr ""
+
+#: View/Report/index.ctp:57
+msgid "Received Total"
+msgstr ""
+
+#: View/Report/index.ctp:58
+msgid "Received Cash"
+msgstr ""
+
+#: View/Report/index.ctp:59
+msgid "Received Card"
 msgstr ""
 
 #: Model/Admin.php:validation for field firstname
@@ -169,4 +566,3 @@ msgstr ""
 #: Model/User.php:validation for field user_image
 msgid "Error in uploading file"
 msgstr ""
-

@@ -126,7 +126,7 @@
         <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary"><strong><?php echo __('Send to Kitchen')?></strong></button>
         <button id="pay-btn" class="btn btn-lg btn-success"><strong><?php echo __('Pay')?></strong></button>
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong><?php echo __('Batch Add Taste');?></strong></button>
-        <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong><?php echo __('Change Taste');?></strong></button>
+        <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong><?php echo __('CHange Taste');?></strong></button>
         <button id="delete-btn" class="btn btn-lg btn-danger"><strong><?php echo __('Delete');?></strong></button>
         <button id="quantity-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-quantity-component-modal"><strong><?php echo __('Change Quantity');?></strong></button>
         <button id="take-out-btn" class="btn btn-lg btn-info"><strong><?php echo __('Takeout');?></strong></button>
@@ -161,7 +161,8 @@
 
                     </ul>
                     <div class="clearfix">
-                        <?php echo __('Selected');?>
+
+                        已选:
                     </div>
                     <ul id="selected-extra" class="clearfix">
 

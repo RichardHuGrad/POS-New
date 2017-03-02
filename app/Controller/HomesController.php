@@ -670,6 +670,17 @@ class HomesController extends AppController {
 
     }
 
+    public function switchLang() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $lang = $this->data['lang'];
+
+        $this->Session->write('Config.language', $lang);
+
+        echo $lang;
+    }
+
 
 
 
