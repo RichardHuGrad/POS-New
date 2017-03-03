@@ -65,24 +65,9 @@
                     </ul>
                 </li>
 
-
-
-
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-
-                <li>
-                    <div class="clearfix marginB15">
-                        <div class="pull-left notpaid"></div>
-                        <div class="pull-left paid-txt"><?php echo __('On-going'); ?></div>
-
-                    </div>
-                    <div class="clearfix marginB15">
-                        <div class="pull-left availableb"></div>
-                        <div class="pull-left paid-txt"><?php echo __('Available'); ?></div>
-                    </div>
-                </li>
                 <li>
                     <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>"><?php echo __('Logout'); ?></a>
                 </li>
@@ -93,7 +78,7 @@
     </div>
 </div>
 
-<?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js')); ?>
+<?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js' )); ?>
 <script type="text/javascript">
 
     $('.switch-lang').on('click', function() {

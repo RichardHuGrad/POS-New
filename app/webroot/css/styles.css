@@ -195,7 +195,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .dine-wrap li .dropdown-menu .dine-tables li:nth-child(2n + 4) { border-bottom: 1px solid #cb4555; border-right: 1px solid #cb4555; }
 .dine-wrap li .dropdown-menu li:last-child { border-bottom: 0px !important; border-right: 0px !important; }
 .dine-wrap li .dropdown-menu > li > a, .dine-wrap li .dropdown-menu ul > li > a { color: #fff; padding: 5px 15px; }
-.dine-wrap li .dropdown-menu > ul > li > a { display: block; clear: both; font-weight: normal; line-height: 1.42857143; white-space: nowrap; }
+.dine-wrap li .dropdown-menu > ul > li > a { display: block; clear: both; font-size:15px; font-weight: bold; line-height: 3; white-space: nowrap; }
 .dine-wrap li .dropdown-menu > li > a:hover, .dine-wrap li .dropdown-menu > li > a:focus,
 .dine-wrap li .dropdown-menu > ul > li > a:hover, .dine-wrap li .dropdown-menu > ul > li > a:focus { background: none; }
 .dine-wrap li .dropdown-menu li.disabled > a { color: gray; cursor: no-drop; }
