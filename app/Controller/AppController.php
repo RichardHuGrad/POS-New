@@ -73,7 +73,7 @@ class AppController extends Controller {
         //pr($this->params); die;
 
         if (!$this->Session->read('Config.language')) {
-            $this->Session->write('Config.language', 'eng');
+            $this->Session->write('Config.language', 'zho');
         }
 
 
