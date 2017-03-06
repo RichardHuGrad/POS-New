@@ -5,7 +5,9 @@ require '../lib/Slim/Slim.php';
 $app = new \Slim\Slim();
 $user_id = NULL;
 $zone_id = NULL;
-error_reporting(0);
+
+error_reporting(E_ALL);
+//error_reporting(0);
 ini_set('display_errors', '1');
 
 /**
@@ -60,9 +62,29 @@ $app->post('/login', function() use ($app) {
         $response['data']['no_of_takeout_tables'] = $res['no_of_takeout_tables'];
         $response['data']['no_of_waiting_tables'] = $res['no_of_waiting_tables'];
         $response['data']['table_size'] = $res['table_size'];
-        $response['data']['table_order'] = $res['table_order'];
+
+        $table_order=str_replace('"', '',str_replace(']', '', str_replace('[', '', $res['table_order'])));
+        $table_orderArrOutput=array();
+
+		$table_orderArr=explode(',', $table_order);
+		for($i=0; $i<count($table_orderArr); $i++) {
+			if (preg_match('/left: (.*?)%/', $table_orderArr[$i], $left) === 1) {
+			    $left[1];
+			}
+			if (preg_match('/top: (.*?)%/', $table_orderArr[$i], $top) === 1) {
+			    $top[1];
+			}
+			$table_orderArrOutput[$i]['left']=$left[1];
+			$table_orderArrOutput[$i]['top']=$top[1];
+		}
+
+        $response['data']['table_order'] = $table_orderArrOutput;
         $response['data']['takeout_table_size'] = $res['takeout_table_size'];
         $response['data']['waiting_table_size'] = $res['waiting_table_size'];
+
+        $response['data']['printer_ip'] = $res['printer_ip'];
+        $response['data']['kitchen_printer_device'] = $res['kitchen_printer_device'];
+        $response['data']['service_printer_device'] = $res['service_printer_device'];
         echoRespnse(201, $response);
     }
 });
@@ -260,13 +282,13 @@ $app->get('/extras/:type', 'authenticate', function($type) use ($app) {
 * Make a reservation
 * url - /reservation 
 * method - POST
-* params - name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
+* params - name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(optional)
 * header Params - email (mandatory), password (mandatory)
 **/
 $app->post('/reservation', 'authenticate', function() use ($app) {
     global $user_id;
     // check for required params
-    verifyRequiredParams(array('name', 'noofperson', 'phoneno', 'date', 'time', 'required'));
+    verifyRequiredParams(array('name', 'noofperson', 'phoneno', 'date', 'time'));
     $response = array();
     // reading post params
     $name = $app->request->post('name');
@@ -358,13 +380,13 @@ $app->get('/reservations/:type', 'authenticate', function($type) use ($app) {
 * Update reservation
 * url - /updatereservation 
 * method - POST
-* params - reservationid(mandatory), name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(mandatory)
+* params - reservationid(mandatory), name(mandatory), noofperson(mandatory), phoneno(mandatory), date(mandatory), time(mandatory), required(optional)
 * header Params - email (mandatory), password (mandatory)
 **/
 $app->post('/updatereservation', 'authenticate', function() use ($app) {
     global $user_id;
     // check for required params
-    verifyRequiredParams(array('reservationid', 'name', 'noofperson', 'phoneno', 'date', 'time', 'required'));
+    verifyRequiredParams(array('reservationid', 'name', 'noofperson', 'phoneno', 'date', 'time'));
     $response = array();
     // reading post params
     $reservationid = $app->request->post('reservationid');
@@ -447,11 +469,10 @@ $app->post('/reservetable', 'authenticate', function() use ($app) {
 * method - POST
 * params - type(mandatory), itemdata(mandatory), tableno(optional)
 * type :- D-> Dinin
-* itemdata = [{ "itemid": "68",  "qty": "20", "allextras": 
+* itemdata = [{ "itemid": "10",  "qty": "1", "allextras": 
 [{ "id": "56", "name": "extra egg", "name_zh": "extra egg", "price": "2" }, {
         "id": "57", "name": "extra cha-shu", "name_zh": "extra cha-shu", "price": "3.5" }],
-    "selectedextras": [{"id": "56", "price": "2", "name": "extra egg", "name_zh": "extra egg" }, {
-        "id": "57", "price": "3.5", "name": "extra cha-shu", "name_zh": "extra cha-shu"}]
+    "selectedextras": []
 }]
 * header Params - email (mandatory), password (mandatory)
 **/
@@ -486,7 +507,8 @@ $app->post('/makeorderdinein', 'authenticate', function() use ($app) {
         $response["code"] = 0;
         $response["error"] = false;
         $response["message"] = "Order successfully Saved";
-        $response["data"] = $res;
+        $response['order_no'] = $res['order_no'];
+        $response['order_id'] = $res['order_id'];
         echoRespnse(201, $response);
     }
 });
@@ -528,7 +550,8 @@ $app->post('/makeorderother', 'authenticate', function() use ($app) {
         $response["code"] = 0;
         $response["error"] = false;
         $response["message"] = "Order successfully Created";
-        $response["data"] = $res;
+        $response['order_no'] = $res['order_no'];
+        $response['order_id'] = $res['order_id'];
         echoRespnse(201, $response);
     }
 });
@@ -936,7 +959,7 @@ $app->post('/changeorderitemprice', 'authenticate', function() use ($app) {
     $newprice = $app->request->post('newprice');
     
     $db = new DbHandler();
-    $res = $db->changeOrderItemPrice($orderid, $orderitemid, $tableno, $oldprice, $newprice);
+    $res = $db->changeOrderItemPrice($user_id, $orderid, $orderitemid, $tableno, $oldprice, $newprice);
     if ($res == 'UNABLE_TO_PROCEED') {
         $response["code"] = 1;
         $response["error"] = true;
@@ -953,9 +976,14 @@ $app->post('/changeorderitemprice', 'authenticate', function() use ($app) {
         $response["message"] = "Order already marked as completed";
         echoRespnse(200, $response);
     } else {
+		
         $response["code"] = 0;
         $response["error"] = false;
-        $response["message"] = "Item price successfully updated";
+        if ($newprice==0) {
+			$response["message"] = "Item marked as free"; 
+		} else {
+			$response["message"] = "Item price successfully updated"; 
+		}
         echoRespnse(201, $response);
     }
 });
@@ -977,8 +1005,8 @@ $app->post('/updateorderitem', 'authenticate', function() use ($app) {
     // check for required params
     verifyRequiredParams(array('orderid', 'itemid', 'rowid', 'allextras', 'quantity', 'selectedextras'));
     $response = array();
-    // reading post params
     
+    // reading post params
     $orderid = $app->request->post('orderid');
     $itemid = $app->request->post('itemid');
     $rowid = $app->request->post('rowid');
@@ -1025,6 +1053,7 @@ $app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function
     $response = array();
     $db = new DbHandler();
     $res = $db->mergingTableData($user_id, $orderid, $mergedorderids);   
+
     if ($res=='NO_RECORD_FOUND') { 
         $response['code'] = 1;
         $response['error'] = true; 
@@ -1036,22 +1065,132 @@ $app->get('/mergingtabledata/:orderid/:mergedorderids', 'authenticate', function
         $response['message'] = "Unable to proceed";
         echoRespnse(200, $response);
     } else {
-        $response['code'] = 0;
-        $response['error'] = false;
-        $response['message'] = "Merging Table Data"; 
-        $response['data'] = $res;
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Merging Table Data"; 
+        $response["data"] = $res;
         echoRespnse(201, $response);
     }
 });
 
 /**
 * Make Payment
-* url - /makepayment 
+* url - /makepayment
+* method - POST
+* params - orderid(mandatory), mergedorderids(mandatory), tip(mandatory), paymenttype(mandatory), totamountpaid(mandatory), tippaidby(mandatory), change(mandatory), discount(mandatory)
+* tip : default 0
+* mergedorderids : default 0
+* tippaidby : default 0 else CARD / CASH
+* paymenttype :- CARD / CASH
+* change : default 0 -- returning amount
+* discount : default 0
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/makepayment', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'mergedorderids', 'tip', 'paymenttype', 'totamountpaid', 'tippaidby'));
+    $response = array();
+    // reading post params
+    $orderid = $app->request->post('orderid');
+    $mergedorderids = $app->request->post('mergedorderids');
+    $tip = $app->request->post('tip');
+    $paymenttype = $app->request->post('paymenttype');
+    $totamountpaid = $app->request->post('totamountpaid');
+    $tippaidby = $app->request->post('tippaidby');
+
+    $change = $app->request->post('change');
+    $discount = $app->request->post('discount');
+
+    $db = new DbHandler();
+    $res = $db->makePayment($user_id, $orderid, $mergedorderids, $tip, $paymenttype, $totamountpaid, $tippaidby, $change, $discount);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully made payment";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Make Payment for Split bill -- Split by people only
+* url - /makepaymentsplitdish
+* method - POST
+* params - orderid(mandatory), tip(mandatory), tippaidby(mandatory), paymenttype(mandatory), totamountpaid(mandatory), tax(mandatory), discount(mandatory), change(mandatory), orderitemids(mandatory), ordertotal(mandatory)
+* tip : default 0
+* tippaidby : default 0 else CARD / CASH
+* paymenttype :- CARD / CASH
+* discount : default 0
+* change : default 0 -- returning amount
+* orderitemids : comma separeted
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/makepaymentsplitdish', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('orderid', 'tip', 'tippaidby', 'paymenttype', 'totamountpaid', 'tax', 'discount', 'change', 'orderitemids', 'ordertotal'));
+    $response = array();
+    // reading post params 
+    $orderid = $app->request->post('orderid');
+    $tip = $app->request->post('tip');
+    $tippaidby = $app->request->post('tippaidby');
+    $paymenttype = $app->request->post('paymenttype');
+    $totamountpaid = $app->request->post('totamountpaid');
+    $tax = $app->request->post('tax');
+    $discount = $app->request->post('discount');
+    $change = $app->request->post('change');
+    $orderitemids = $app->request->post('orderitemids');
+    $ordertotal = $app->request->post('ordertotal');
+
+    $db = new DbHandler();
+    $res = $db->makePaymentSplitDish($user_id, $orderid, $tip, $tippaidby, $paymenttype, $totamountpaid, $tax, $discount, $change, $orderitemids, $ordertotal);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'SUCCESSFULLY_DONE') {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully made payment";
+        echoRespnse(201, $response);
+    } else if ($res == 'ITEMS_NOT_FOUND') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order Items Not Found";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Please include these items only";
+        $response["data"] = $res;
+        echoRespnse(200, $response);
+    }
+});
+
+/**
+* Make Payment merge
+* url - /makepaymentmerge 
 * method - POST
 * params - orderid(mandatory), mergedorderids(mandatory), tip(mandatory), paymenttype(mandatory)
 * tip : default 0
 * paymenttype :- CARD / CASH
-
 * header Params - email(mandatory), password(mandatory)
 **/
 $app->post('/makepaymentmerge', 'authenticate', function() use ($app) {
@@ -1087,6 +1226,393 @@ $app->post('/makepaymentmerge', 'authenticate', function() use ($app) {
         $response["code"] = 0;
         $response["error"] = false;
         $response["message"] = "Successfully made payment";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Send A Print to Kitchen
+* url - /printTokitchen 
+* method - POST
+* params - printer(mandatory), order_no(mandatory), order_type(mandatory), table_no(mandatory), table(mandatory), Print_Item(mandatory), splititem(mandatory), print_zh(mandatory)
+*examples
+* table_no :  [[Dinein]] #19
+* table : 19
+* printer :- Printer[K]:PRINTER1
+			Printer[C]:PRINTER2
+* print_zh: bool true or false Send true for printing in Chinese		
+* header Params - email(mandatory), password(mandatory)
+**/
+/* $app->post('/printTokitchen', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('printer', 'order_no', 'order_type', 'table_no', 'table', 'Print_Item', 'splititem', 'print_zh'));
+    $response = array();
+    // reading post params
+    
+    $Printer = $app->request->post('printer');
+    $order_no = $app->request->post('order_no');
+    $order_type = $app->request->post('order_type');
+    $table_no = $app->request->post('table_no');
+	$table = $app->request->post('table');
+    $Print_Item = $app->request->post('Print_Item');
+    $splititem = $app->request->post('splititem');
+    $print_zh = $app->request->post('print_zh');
+
+    $db = new DbHandler();
+    $res = $db->sendPrintToKitchen($Printer, $order_no, $order_type, $table_no, $table, $Print_Item, $splititem, $print_zh);
+    if ($res) {
+		$response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully sent";
+        echoRespnse(201, $response);
+    } else {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    }
+}); */
+
+/**
+* Send A Print to Kitchen
+* url - /printTokitchen 
+* method - POST
+* params - order_no(mandatory)
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/printTokitchen', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('order_no','printer_name'));
+    $response = array();
+    // reading post params
+    
+    $Printer = $app->request->post('printer');
+   
+    $db = new DbHandler();
+    $res = $db->sendPrintToKitchen($order_no, $user_id);
+    if($res==NO_ITEM_UNPRINTED){
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "No item remaining to send to kitchen";
+        echoRespnse(200, $response);
+    } else if($res==ORDER_NOT_EXIST){
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order doesn't exist.";
+        echoRespnse(200, $response);
+    } else if($res==INVALID_ORDERID){
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Invalid Order";
+        echoRespnse(200, $response);
+    } else if($res==INVALID_CASHIER){
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Invalid Cashier";
+        echoRespnse(200, $response);
+    }
+	else {
+		$response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully sent";
+        echoRespnse(201, $response);
+    } 
+});
+
+/**
+* Print Receipt
+* url - /printreceipt
+* method - POST
+* params - order_no(mandatory)
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/printreceipt', 'authenticate', function() use ($app) {
+	//echo "Hello";die;
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('order_no','printer_name'));
+    $response = array();
+    // reading post params
+	//echo $user_id;die;
+    
+    $order_no = $app->request->post('order_no');
+    $cashier_id = $user_id;
+	
+    $db = new DbHandler();
+    $res = $db->printReceipt($order_no, $cashier_id);
+	echo $res;
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if($res==ORDER_NOT_EXIST){
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order doesn't exist.";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_CASHIER') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Invalid User";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully printed";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Print Split Bill
+* url - /printsplit
+* method - POST
+* params - order_no(mandatory)
+* header Params - email(mandatory), password(mandatory)
+**/
+/* $app->post('/printsplit', 'authenticate', function() use ($app) {
+	//echo "Hello";die;
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('order_no','printer_name'));
+    $response = array();
+    // reading post params
+	//echo $user_id;die;
+    
+    $order_no = $app->request->post('order_no');
+    $cashier_id = $user_id;
+	
+    $db = new DbHandler();
+    $res = $db->printReceipt($order_no, $cashier_id);
+	echo $res;
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if($res==ORDER_NOT_EXIST){
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Order doesn't exist.";
+        echoRespnse(200, $response);
+    } else if ($res == 'INVALID_CASHIER') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Invalid User";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully printed";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+}); */
+
+
+/**
+* Split Bill
+* url - /splitorder 
+* method - POST
+* params - table_no(mandatory), order_no(mandatory), suborder(mandatory)
+	table_no => 2
+    order_no => 98528
+		suborder[0][suborder_no] => 1
+		suborder[0][subtotal] => 5.5
+		suborder[0][discount_value] => 0
+		suborder[0][discount_type] => 'UNKNOWN' or 'FIXED' or 'PERCENT'
+		suborder[0][discount_amount] => 0
+		suborder[0][tax] => 13
+		suborder[0][tax_amount] => 0.72
+		suborder[0][total] => 6.22
+		suborder[0][paid_card] => 0
+		suborder[0][paid_cash] => 6.22
+		suborder[0][tip_card] => 0
+		suborder[0][tip_cash] => 0
+		suborder[0][change] => 0
+		suborder[0][items] => [{"item_id":0,"image":"1467777127_cousine.png","name_en":"Noodles w/Beef Sirloin","name_zh":"å®‹å«‚ç‰›è‚‰é¢","selected_extras_name":"","price":10.99,"extras_amount":0,"quantity":1,"order_item_id":"1771","state":"share","shared_suborders":[1,2],"assigned_suborder":0}]
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/splitorder', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('table_no', 'order_no'));
+    $response = array();
+    // reading post params
+    
+    $data['table_no'] = $app->request->post('table_no');
+    $data['order_no'] = $app->request->post('order_no');
+    $data['suborder'] = $app->request->post('suborder');
+	if(empty($data['suborder']))
+	{
+		$response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Suborder is missing";
+        echoRespnse(200, $response);
+	}
+	
+    $db = new DbHandler();
+    $res = $db->splitBill($data);
+	//var_dump($res);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully done.";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Complete Order
+* url - /completeorder
+* method - POST
+* params - order_no(mandatory), card_val(mandatory), cash_val(mandatory), tip(mandatory), tip_paid_by(mandatory), change(mandatory), paid_by(mandatory)
+	order_no:120460213
+	card_val:0
+	cash_val:12.44
+	tip:0
+	tip_paid_by:NO TIP or 'CARD' or 'CASH' or 'MIXED'
+	change:0
+	paid_by:CASH/CARD
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/completeorder', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('order_no'));
+    $response = array();
+    // reading post params
+    
+    $data['order_no'] = $app->request->post('order_no');
+	$data['card_val'] = $app->request->post('card_val');
+	$data['cash_val'] = $app->request->post('cash_val');
+	$data['tip'] = $app->request->post('tip');
+	$data['tip_paid_by'] = $app->request->post('tip_paid_by');
+	$data['change'] = $app->request->post('change');
+	$data['paid_by'] = $app->request->post('paid_by');
+	
+    $db = new DbHandler();
+    $res = $db->completeOrder($data);
+	//var_dump($res);
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully done.";
+        $response["data"] = $res;
+        echoRespnse(201, $response);
+    }
+});
+
+/**
+* Print Split Bill
+* url - /printSplit
+* method - POST
+* params - 	1. order_no(mandatory), 
+			2. suborders(mandatory) - It will be an array containing following keys
+				2a. suborders[0][after_discount] = 8.75
+				2b. suborders[0][change] = 0
+				2c. suborders[0][discount_amount] = 0
+				2d. suborders[0][discount_type]	= 'UNKNOWN' or 'FIXED' or 'PERCENT'
+				2e. suborders[0][discount_value] = 0
+				2f. suborders[0][items][0][name_en] = Noodles w/Beef Sirloin s2
+				2g. suborders[0][items][0][name_zh] = å®‹å«‚ç‰›è‚‰é¢ s2
+				2h. suborders[0][items][0][price] = 5.5
+				2i. suborders[0][items][0][quantity] = 1
+				2j. suborders[0][items][0][selected_extras_name]
+				2k. suborders[0][received_card]	= 0
+				2l. suborders[0][received_cash]	= 0
+				2m. suborders[0][received_total] = 0
+				2n. suborders[0][suborder_no] = 2
+				2o. suborders[0][subtotal] = 8.75
+				2p. suborders[0][tax_amount] = 1.14
+				2q. suborders[0][tax_rate] = 13
+				2r. suborders[0][tip_amount] = 0
+				2s. suborders[0][tip_card] = 0
+				2t. suborders[0][tip_cash] = 0
+				2u. suborders[0][total]	= 9.89
+			3. table_type 'D', 'T', 'W'
+			4. print_zh 1 or 0
+			5. table_no 
+* header Params - email(mandatory), password(mandatory)
+**/
+$app->post('/printSplit', 'authenticate', function() use ($app) {
+    global $user_id;
+    // check for required params
+    verifyRequiredParams(array('order_no', 'table_type'));
+    $response = array();
+    // reading post params
+    
+    $order_no = $app->request->post('order_no');
+	$suborders = $app->request->post('suborders');
+	$table_type = $app->request->post('table_type');
+	$print_zh = $app->request->post('print_zh');
+	$table_no = $app->request->post('table_no');
+	
+	if(empty($suborders))
+	{
+		$response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "suborders missing";
+        echoRespnse(200, $response);
+	}
+    $db = new DbHandler();
+    $res = $db->printSplit($order_no, $table_no, $suborders, $table_type, $print_zh, $user_id);
+	//var_dump($res);die;
+    if ($res == 'INVALID_ORDERID') {
+        $response["code"] = 1;
+        $response["error"] = true;
+        $response["message"] = "Inavlid Order id";
+        echoRespnse(200, $response);
+    } else if ($res == 'UNABLE_TO_PROCEED') {
+        $response["code"] = 2;
+        $response["error"] = true;
+        $response["message"] = "Unable to proceed";
+        echoRespnse(200, $response);
+    } else if ($res == 'ALREADY_COMPLETED') {
+        $response["code"] = 3;
+        $response["error"] = true;
+        $response["message"] = "Order already completed";
+        echoRespnse(200, $response);
+    } else {
+        $response["code"] = 0;
+        $response["error"] = false;
+        $response["message"] = "Successfully done.";
         $response["data"] = $res;
         echoRespnse(201, $response);
     }
@@ -1180,7 +1706,7 @@ function echoRespnse($status_code, $response) {
     $app->status($status_code);
     // setting response content type to json
     $app->contentType('application/json');
-    echo json_encode($response);
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
 
 function validateLevel($level) {
@@ -1206,8 +1732,9 @@ function authenticate(\Slim\Route $route) {
     $username = $req->headers('PHP_AUTH_USER');
     $password = $req->headers('PHP_AUTH_PW');
     if (isset($username) && $username != '' && isset($password) && $password != '') {
-        $db = new DbHandler();
+		$db = new DbHandler();
         if ($userdata = $db->validateUser($username, $password)) {
+			
             global $user_id;
             $user_id = $userdata["id"];
             return true;
