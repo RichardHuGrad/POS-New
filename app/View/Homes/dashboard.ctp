@@ -1,35 +1,6 @@
 <body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // setTimeout(function(){
-            //    window.location.reload(1);
-            // }, 30000);
-            if ($(window).width() <= 780) {
-                $(".dine_ul, .dine_li").removeAttr("style");
-                $('#dine-in-component').removeClass('col-md-8 col-sm-8 col-xs-8')
-                $("#take-out-component, #waiting-list-component").removeClass('col-md-2 col-sm-2 col-xs-2');
-                // $("").removeAttr("style");
-            }
-            $(window).resize(function () {
-                if ($(window).width() <= 780) {
-                    $(".dine_ul, .dine_li").removeAttr("style");
-                    // $("").removeAttr("style");
-                    $('#dine-in-component').removeClass('col-md-8 col-sm-8 col-xs-8')
-                    $("#take-out-component, #waiting-list-component").removeClass('col-md-2 col-sm-2 col-xs-2');
-                } else {
-                    $('#dine-in-component').addClass('col-md-8 col-sm-8 col-xs-8')
-                    $("#take-out-component, #waiting-list-component").addClass('col-md-2 col-sm-2 col-xs-2');
-                }
-            })
 
-        });
-    </script>
-
-    <header>
-        <?php echo $this->element('navbar'); ?>
         <?php echo $this->Html->css(array('dashboard'));  ?>
-    </header>
 
         <div class="clearfix homepage col-md-12 col-sm-12 col-xs-12">
             <?php echo $this->Session->flash(); ?>
@@ -398,13 +369,6 @@
 </div>
 <?php echo $this->element('footer'); ?>
 
-
-
-<?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js','jquery.kinetic.min.js', 'notify.min.js'));
-
-echo $this->fetch('script');
-?>
 <script>
 	$(document).ready(function () {
 
@@ -588,7 +552,28 @@ echo $this->fetch('script');
 	//End.
 </script>
 <!-- End. -->
-
 <script>
+    $(document).ready(function () {
+        // setTimeout(function(){
+        //    window.location.reload(1);
+        // }, 30000);
+        if ($(window).width() <= 780) {
+            $(".dine_ul, .dine_li").removeAttr("style");
+            $('#dine-in-component').removeClass('col-md-8 col-sm-8 col-xs-8')
+            $("#take-out-component, #waiting-list-component").removeClass('col-md-2 col-sm-2 col-xs-2');
+            // $("").removeAttr("style");
+        }
+        $(window).resize(function () {
+            if ($(window).width() <= 780) {
+                $(".dine_ul, .dine_li").removeAttr("style");
+                // $("").removeAttr("style");
+                $('#dine-in-component').removeClass('col-md-8 col-sm-8 col-xs-8')
+                $("#take-out-component, #waiting-list-component").removeClass('col-md-2 col-sm-2 col-xs-2');
+            } else {
+                $('#dine-in-component').addClass('col-md-8 col-sm-8 col-xs-8')
+                $("#take-out-component, #waiting-list-component").addClass('col-md-2 col-sm-2 col-xs-2');
+            }
+        })
 
+    });
 </script>

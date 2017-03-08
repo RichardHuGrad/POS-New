@@ -1,57 +1,3 @@
-<header >
-    <?php echo $this->element('navbar'); ?>
-    <style>
-        .payment-group {
-            margin-bottom: 15px;
-        }
-        .tip-group {
-
-        }
-
-        .tip-paid-by input[type="radio"] {
-            display: inline-block;
-            /*margin: 10px;*/
-            vertical-align: middle;
-            margin-right: 3%;
-            visibility:hidden;
-        }
-
-        .tip-paid-by img {
-            background-color: #F8DCDC;
-            width: 20px;
-        }
-        .tip-paid-by label {
-            display: inline-block;
-            width: 80px;
-            height: 50px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-
-            background-color: #F8DCDC;
-            color: #FFFFFF;
-            vertical-align: middle;
-            margin-right: 3%;
-        }
-
-        .tip-paid-by input[type="radio"]:checked+label{
-            background: #C9302C;
-        }
-        .tip-paid-by input[type="radio"]:checked+label img{
-            background: #C9302C;
-        }
-
-        /*for notify.js*/
-        .notifyjs-bootstrap-warn {
-            /*height: 100px;*/
-            font-size: 20px;
-            /*text-align: center;*/
-            /*width: 100px;*/
-        }
-
-    </style>
-
-</header>
 <div class="pay container-fluid">
     <div class="order-wrap">
         <?php echo $this->Session->flash(); ?>
@@ -360,10 +306,6 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
     </div>
 </div>
 
-<?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js', 'flowtype.js'));
-echo $this->fetch('script');
-?>
 <script>
     // $('#tip-cash').trigger('click');
 

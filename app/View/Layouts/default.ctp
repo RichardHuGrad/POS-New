@@ -8,14 +8,24 @@
 	<meta http-equiv="Expires" content="-1" />
 	<meta http-equiv="Vary" content="*" />
 	<title>POS - InStore Experience - <?php echo $title_for_layout; ?></title>
-	<?php 
-		echo $this->Html->css(array('bootstrap.css', 'font-awesome.min.css', 'styles.css', 'responsive.css', 'font-awesome.min.css'));
+	<?php
+		echo $this->Html->css(array('bootstrap.css', 'font-awesome.min.css', 'styles.css', 'responsive.css', 'navbar.css','font-awesome.min.css'));
         echo $this->fetch('css');
 	?>
+
     </head>
 
     <body>
+        <?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'notify.min.js', 'vue.js')); ?>
+        <header>
+            <?php echo $this->element('navbar'); ?>
+        </header>
 		<?php echo $this->fetch('content');
 		?>
     </body>
 </html>
+
+
+<?php
+    echo $this->fetch('script');
+?>

@@ -1,10 +1,4 @@
-<header >
-    <?php echo $this->element('navbar'); ?>
-</header>
 <div class="container">
-
-
-
     <div class="calculator clearfix">
            <div class="calc-top">
             <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>"><span class="pull-left"><i class="fa fa-angle-left" aria-hidden="true"></i></span></a>

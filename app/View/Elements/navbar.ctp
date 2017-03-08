@@ -1,7 +1,4 @@
-<?php
-    echo $this->Html->css(array('navbar'));
-    // echo $this->Html->script(array('jquery', 'bootstrap.min.js'));
-?>
+
 
 <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container-fluid ">
@@ -16,7 +13,7 @@
         <div class="collapse navbar-collapse navbar-menubuilder">
             <ul class="nav navbar-nav navbar-left">
                 <li>
-                    <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'index')) ?>"><?php echo __('Home'); ?></a>
+                    <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>"><?php echo __('Home'); ?></a>
                 </li>
                 <li>
                     <a id="admin-link" href="#"><?php echo __('Admin Functions'); ?></a>
@@ -69,7 +66,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>"><?php echo __('Logout'); ?></a>
+                    <a href="<?php echo $this->Html->url(array('controller' => 'user', 'action' => 'logout')) ?>"><?php echo __('Logout'); ?></a>
                 </li>
 
             </ul>
@@ -78,9 +75,9 @@
     </div>
 </div>
 
-<?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js' )); ?>
-<script type="text/javascript">
 
+<script type="text/javascript">
+$(document).ready(function() {
     $('.switch-lang').on('click', function() {
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'switchLang')); ?>",
@@ -95,7 +92,5 @@
         })
         // console.log("click");
     });
-
-
-
+});
 </script>

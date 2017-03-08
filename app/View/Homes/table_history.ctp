@@ -1,6 +1,3 @@
-<header >
-    <?php echo $this->element('navbar'); ?>
-</header>
 <div class="container">
 	<?php /*print_r($cashier_detail); echo'<br><br>'; var_dump($Order_detail); echo'<br><br>';var_dump($Order_detail); echo'<br><br>'; echo $this->Paginator->counter();
 		echo "<br><br>";*/

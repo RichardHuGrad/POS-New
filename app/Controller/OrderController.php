@@ -1,4 +1,4 @@
-<?php 
+<?php
 App::uses('PrintLib', 'Lib');
 class OrderController extends AppController {
 
@@ -8,15 +8,16 @@ class OrderController extends AppController {
 
         parent::beforeFilter();
         $this->Auth->allow('index', 'forgot_password');
-        $this->layout = "default";
+        // $this->layout = "default";
     }
 
     public function index() {
         // get all recepie items according to category
+        $this->layout = "order";
         $this->loadModel('Category');
         $this->loadModel('Cousine');
 
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Cashier.restaurant_id', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
@@ -86,7 +87,7 @@ class OrderController extends AppController {
         //$order_id = $this->Order->find('all',array('fields' => 'Max(id) as max_id'));
         //$order_no = str_pad(($order_id[0][0]['max_id']+1), 5, rand(98753, 87563), STR_PAD_LEFT);
         //End @ Dec 09 2016
-        
+
         $query_str = "SELECT extras.* FROM `extras`";
 
         $all_extras = $this->Extra->query($query_str);
@@ -146,7 +147,7 @@ class OrderController extends AppController {
         $CousineDetail = $this->Cousine->getCousineInfo($item_id);
         // print_r($CousineDetail);
 
-        
+
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => array('Order.cashier_id' => $restaurant_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
@@ -232,10 +233,10 @@ class OrderController extends AppController {
 
 
     public function removeitem() {
-        
+
         $this->layout = false;
         $this->autoRender = NULL;
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
@@ -253,21 +254,21 @@ class OrderController extends AppController {
 
 
         foreach ($item_id_list as $item_id) {
-            // delete all item in order_item table 
+            // delete all item in order_item table
             $data['id'] = $item_id;
             $this->OrderItem->delete($data);
         }
 
- 
+
         // update order amount
         $this->Order->updateBillInfo($order_id);
     }
 
     public function urgeItem() {
-        
+
         $this->layout = false;
         $this->autoRender = NULL;
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
@@ -287,7 +288,7 @@ class OrderController extends AppController {
     public function changePrice() {
         $this->layout = false;
         $this->autoRender = NULL;
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
@@ -304,12 +305,12 @@ class OrderController extends AppController {
             return false;
         }
 
-        
+
         foreach ($item_id_list as $item_id) {
             $itemDetail = $this->OrderItem->find('first',
                     array(
                         'conditions' => array(
-                            'OrderItem.id' => $item_id 
+                            'OrderItem.id' => $item_id
                             )
                         )
                 );
@@ -351,7 +352,7 @@ class OrderController extends AppController {
             $itemDetail = $this->OrderItem->find('first',
                     array(
                         'conditions' => array(
-                            'OrderItem.id' => $item_id 
+                            'OrderItem.id' => $item_id
                             )
                         )
                 );
@@ -361,7 +362,7 @@ class OrderController extends AppController {
 
             $this->OrderItem->save($itemDetail, false);
         }
-        
+
         // recalculate price
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $this->Order->updateBillInfo($order_id);
@@ -374,7 +375,7 @@ class OrderController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-         // get cashier details        
+         // get cashier details
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
@@ -409,17 +410,17 @@ class OrderController extends AppController {
             } // else do nothing
 
 
-            // set all item in order_item table as is_takeout 'Y' 
+            // set all item in order_item table as is_takeout 'Y'
             // revert all is_takeout flag
             if ($item_detail[0]['order_items']['is_takeout'] == 'Y') {
                 $update_para['is_takeout'] = 'N';
             } else if ($item_detail[0]['order_items']['is_takeout'] == 'N') {
                 $update_para['is_takeout'] = 'Y';
             }
-            
+
             $update_para['id'] = $item_id;
             $this->OrderItem->save($update_para, false);
-            
+
             // $this->OrderItem->delete($data);
 
         }
@@ -439,7 +440,7 @@ class OrderController extends AppController {
         $special = $this->data['special'];
 
 
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
@@ -453,7 +454,7 @@ class OrderController extends AppController {
 
 
         $extras_amount = 0;
-        
+
         $selected_extras_list = [];
         foreach ($selected_extras_id_list as $extra_id) {
             $extra_details = $this->Extra->find("first", array(
@@ -489,7 +490,7 @@ class OrderController extends AppController {
             if (!empty($special)) {
                 $item_detail['OrderItem']['special_instruction'] = $special;
             }
-            
+
 
             $this->OrderItem->save($item_detail, false);
 
@@ -512,7 +513,7 @@ class OrderController extends AppController {
         $special = $this->data['special'];
 
 
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
@@ -525,7 +526,7 @@ class OrderController extends AppController {
 
 
         $extras_amount = 0;
-        
+
         $selected_extras_list = [];
         foreach ($selected_extras_id_list as $extra_id) {
             $extra_details = $this->Extra->find("first", array(
@@ -568,14 +569,14 @@ class OrderController extends AppController {
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
-        
+
 
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-        
+
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
             // 'fields' => array('Order.id','Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
@@ -587,7 +588,7 @@ class OrderController extends AppController {
                 )
         );
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        
+
 
         if (!empty($Order_detail['Order']['id'])) {
             $this->Order->updateBillInfo($Order_detail['Order']['id']);

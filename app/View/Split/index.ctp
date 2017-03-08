@@ -1,7 +1,3 @@
-<header class="product-header">
-    <?php echo $this->element('navbar'); ?>
-</header>
-
 <div class="col-md-12 col-sm-12 col-xs-12" id="whole-wrapper">
     <div id="customer-select-alert" class="alert alert-info alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

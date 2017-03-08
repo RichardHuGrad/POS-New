@@ -1,6 +1,3 @@
-<header class="product-header">
-    <?php echo $this->element('navbar'); ?>
-</header>
 <div class="merge container-fluid">
     <div class="clearfix cartwrap-wrap">
     </div>

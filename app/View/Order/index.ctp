@@ -280,7 +280,7 @@
 </script>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'flowtype.js', 'avgsplit.js', 'notify.min.js'));
+echo $this->Html->script(array('avgsplit.js'));
 echo $this->fetch('script');
 ?>
 

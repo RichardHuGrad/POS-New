@@ -39,9 +39,9 @@ class AppController extends Controller {
         'Print',
         'Time',
         'Auth' => array(
-            'loginAction' => array('controller' => 'homes', 'action' => 'index'),
+            'loginAction' => array('controller' => 'user', 'action' => 'login'),
             'loginRedirect' => array('controller' => 'homes', 'action' => 'dashboard'),
-            'logoutRedirect' => array('controller' => 'homes', 'action' => 'index'),
+            'logoutRedirect' => array('controller' => 'user', 'action' => 'login'),
             'authenticate' => array(
                 'Form' => array(
                     'userModel' => 'Cashier',

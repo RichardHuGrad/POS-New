@@ -1,7 +1,3 @@
-<header >
-    <?php echo $this->element('navbar'); ?>
-</header>
-
 <div class="container">
 	<div class="clearfix cartwrap-wrap"></div>
 
