@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'notify.min.js', 'vue.js')); ?>
+        <?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'notify.min.js', 'md5.js','vue.js')); ?>
         <header>
             <?php echo $this->element('navbar'); ?>
         </header>

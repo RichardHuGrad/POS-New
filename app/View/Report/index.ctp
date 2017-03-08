@@ -1,8 +1,7 @@
-<header >
-   <?php echo $this->element('navbar'); ?>
-</header>
+<?php
+  echo $this->Html->css(array('report'));
+ ?>
 
-<body>
 
 <div class="container clearfix" >
   <div class="text-center">
@@ -46,6 +45,11 @@
     </div>
 </div>
 
+<div id="app">
+    <test></test>
+</div>
+
+
 
 
 
@@ -66,15 +70,37 @@
 </script>
 
 
+<template id="amount">
+    <div class="">
+        <li class="col-md-6 col-sm-6 col-xs-6">{{start_time}}</li> <li class="col-md-6 col-sm-6 col-xs-6 tax">{{end_time}}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Tax'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{tax}}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{total}}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{received_total}}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Cash'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{received_cash}}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{received_card}}</li>
+    </div>
+</template>
 
-</body>
+<script type="text/javascript">
+    Vue.component('test', {
+        template: '#amount',
+        data: function() {
+            return {
+                start_time: '1',
+                end_time: '1',
+                tax: '2',
+                total: '1',
+                received_total: '1',
+                received_cash: '1',
+                received_card: '1',
+            }
+        }
+    })
 
-<?php
-  echo $this->Html->css(array('report'));
-  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js'));
- ?>
-
-
+    var app = new Vue({
+        el: '#app'
+    })
+</script>
 
 <script type="text/javascript">
 
