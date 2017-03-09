@@ -96,6 +96,16 @@
     </div>
 </div>
 
+
+<div class="button-group">
+    <button class="btn btn-info btn-lg" type="button" name="button">增加人</button>
+    <button class="btn btn-info btn-lg" type="button" name="button">删除人</button>
+    <button class="btn btn-info btn-lg" type="button" name="button">分单</button>
+    <button class="btn btn-info btn-lg" type="button" name="button">打印原账单</button>
+    <button class="btn btn-info btn-lg" type="button" name="button">打印分单账单</button>
+    <button class="btn btn-info btn-lg" type="button" name="button">切换视图</button>
+</div>
+
 <?php
 
 echo $this->Html->css(array('components/KeypadComponent', 'components/OrderComponent', 'components/SubordersListComponent', 'components/SubordersDetailComponent', 'split'));

@@ -16,10 +16,13 @@
 
     <div class="tab-content col-md-9 col-sm-9 col-xs-12">
         <template id="" v-for="type in types">
-            <report-button-group :type="type"></report-button-group>
+            <report-button-group :type="type" :amount_info="amount_info"></report-button-group>
         </template>
     </div>
 </div>
+
+
+
 <!-- <div class="container clearfix" >
   <div class="text-center">
     <h2><?php echo __('Admin Report Functions'); ?></h2>
@@ -103,8 +106,15 @@
             <button class="btn btn-lg btn-info" type="button" v-on:click="view_items"><?php echo __('Check Sales Items'); ?></button>
             <button class="btn btn-lg btn-info" type="button" v-on:click="print_items"><?php echo __('Print Sales Items'); ?></button>
         </div>
-        <div class="report-content">
-            {{type}}
+        <div class="amount-content">
+            <div v-if="amount_info.is_returned" class="">
+                <li class="col-md-6 col-sm-6 col-xs-6">{{amount_info.info.start_time}}</li> <li class="col-md-6 col-sm-6 col-xs-6 tax">{{amount_info.info.end_time}}</li>
+                <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Tax'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{amount_info.info.tax}}</li>
+                <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{amount_info.info.total}}</li>
+                <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{amount_info.info.received_total}}</li>
+                <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Cash'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{amount_info.info.received_cash}}</li>
+                <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{{amount_info.info.received_card}}</li>
+            </div>
         </div>
     </div>
 </template>
@@ -141,14 +151,22 @@
 
     Vue.component('report-button-group', {
         template: '#report-button-group',
-        props: ['type'],
+        props: ['type', 'amount_info'],
         methods: {
             view_amount: function() {
                 this.$http.post('<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getAmountInfo')); ?>',
                                 {type: this.type},
                                 {emulateJSON: true})
                             .then(response => {
-                                    console.log(response.body)
+                                    console.log(JSON.parse(response.body)[0])
+                                    var obj = JSON.parse(response.body)[0]
+                                    this.amount_info = {
+                                        is_returned: true,
+                                        info: {
+                                            tax: obj.tax,
+                                            total: obj.total
+                                        }
+                                    }
                                 });
             },
             print_amount: function() {
@@ -181,11 +199,19 @@
     var app = new Vue({
         el: '#app',
         data: {
-            types: ['today', 'yesterday', 'month']
+            types: ['today', 'yesterday', 'month'],
+            amount_info: {
+                is_returned: false,
+                info: {
+                    tax: 0,
+                    total: 0
+                }
+            }
         },
         methods: {
         }
     })
+
 </script>
 
 <script type="text/javascript">
