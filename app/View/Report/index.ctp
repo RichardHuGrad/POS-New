@@ -2,8 +2,25 @@
   echo $this->Html->css(array('report'));
  ?>
 
+<div id="app" class="container clearfix">
+    <div class="text-center">
+      <h2><?php echo __('Admin Report Functions'); ?></h2>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-12">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a data-toggle="pill" href="#today-menu"><?php echo __('Today'); ?></a></li>
+            <li><a data-toggle="pill" href="#yesterday-menu"><?php echo __('Yesterday'); ?></a></li>
+            <li><a data-toggle="pill" href="#month-menu"><?php echo __('Current Month'); ?></a></li>
+        </ul>
+    </div>
 
-<div class="container clearfix" >
+    <div class="tab-content col-md-9 col-sm-9 col-xs-12">
+        <template id="" v-for="type in types">
+            <report-button-group :type="type"></report-button-group>
+        </template>
+    </div>
+</div>
+<!-- <div class="container clearfix" >
   <div class="text-center">
     <h2><?php echo __('Admin Report Functions'); ?></h2>
   </div>
@@ -43,11 +60,8 @@
         <div class="report-content">
         </div>
     </div>
-</div>
+</div> -->
 
-<div id="app">
-    <test></test>
-</div>
 
 
 
@@ -81,8 +95,22 @@
     </div>
 </template>
 
+<template id="report-button-group">
+    <div :id="type + '-menu'" class="tab-pane fade">
+        <div class="button-group">
+            <button class="btn btn-lg btn-info" type="button" v-on:click="view_amount"><?php echo __('Check Sales Total'); ?></button>
+            <button class="btn btn-lg btn-info" type="button" v-on:click="print_amount"><?php echo __('Print Sales Total'); ?></button>
+            <button class="btn btn-lg btn-info" type="button" v-on:click="view_items"><?php echo __('Check Sales Items'); ?></button>
+            <button class="btn btn-lg btn-info" type="button" v-on:click="print_items"><?php echo __('Print Sales Items'); ?></button>
+        </div>
+        <div class="report-content">
+            {{type}}
+        </div>
+    </div>
+</template>
+
 <script type="text/javascript">
-    Vue.component('test', {
+    Vue.component('amount-info', {
         template: '#amount',
         data: function() {
             return {
@@ -97,8 +125,66 @@
         }
     })
 
+    Vue.component('cousine-info', {
+        template: `  <div class="">
+            <li class="col-md-6 col-sm-6 col-xs-6">{{name}}</li> <li class="col-md-6 col-sm-6 col-xs-6 tax">{{number}}</li>
+          </div>`,
+
+        data: function() {
+            return {
+                name: 'test',
+                number: '12'
+            }
+        }
+
+    })
+
+    Vue.component('report-button-group', {
+        template: '#report-button-group',
+        props: ['type'],
+        methods: {
+            view_amount: function() {
+                this.$http.post('<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getAmountInfo')); ?>',
+                                {type: this.type},
+                                {emulateJSON: true})
+                            .then(response => {
+                                    console.log(response.body)
+                                });
+            },
+            print_amount: function() {
+                this.$http.post("<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayOrders')); ?>",
+                                {type: this.type},
+                                {emulateJSON: true})
+                            .then(response => {
+                                    console.log(response.body)
+                                });
+            },
+            view_items: function() {
+                this.$http.post("<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getItemsInfo')); ?>",
+                                {type: this.type},
+                                {emulateJSON: true})
+                            .then(response => {
+                                    console.log(response.body)
+                                });
+            },
+            print_items: function() {
+                this.$http.post( "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayItems')); ?>",
+                                {type: this.type},
+                                {emulateJSON: true}
+                            ).then(response => {
+                                    console.log(response.body)
+                                });
+            }
+        }
+    })
+
     var app = new Vue({
-        el: '#app'
+        el: '#app',
+        data: {
+            types: ['today', 'yesterday', 'month']
+        },
+        methods: {
+        }
     })
 </script>
 
@@ -130,87 +216,87 @@ function getTimeStr(timeStamp) {
 }
 
 
-$('.nav').on('click', function () {
-    $('.report-content').empty();
-});
+// $('.nav').on('click', function () {
+//     $('.report-content').empty();
+// });
 
-$('button[name="view-amount"]').on('click', function(e) {
-    console.log($(this).data("type"));
-    $.ajax({
-        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getAmountInfo')); ?>",
-        method: "post",
-        data: {
-          type: $(this).data("type"),
-        },
-        success: function (json) {
-            // console.log(JSON.parse(json));
-            var objs = JSON.parse(json);
-            $('.report-content').empty();
-            // $('.report-content').append()
-
-            $('.report-content').append(
-              objs.map( (obj) => {
-                  var startTimeStr = new Date(obj.start_time)
-                  return $('#amount-info').html().format(obj.tax.toFixed(2), obj.total.toFixed(2), obj.real_total.toFixed(2), obj.paid_cash_total.toFixed(2), obj.paid_card_total.toFixed(2), getTimeStr(obj.start_time * 1000),getTimeStr(obj.end_time * 1000));
-              })
-            );
-        }
-    })
-});
-
-$('button[name="print-amount"]').on('click', function(e) {
-    $.ajax({
-        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayOrders')); ?>",
-        method: "post",
-        // async: false,
-        data:{
-          type: $(this).data("type"),
-        },
-        success: function (html) {
-            alert("Finished");
-        },
-        error: function (html) {
-            alert("error");
-        }
-    });
-});
-
-$('button[name="view-items"]').on('click', function(e) {
-    $.ajax({
-        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getItemsInfo')); ?>",
-        method: "post",
-        data: {
-          type: $(this).data("type"),
-        },
-        success: function (json) {
-            // console.log(json);
-            var objs = JSON.parse(json);
-            var obj = objs[0];
-
-            $('.report-content').empty();
-            $('.report-content').append(
-              obj.items.map((item)=> {
-                return '<li class="col-md-6 col-sm-6 col-xs-6">{0}</li> <li class="col-md-6 col-sm-6 col-xs-6 tax">{1}</li>'.format(item.name_xh, item.qty_sum);
-              })
-            );
-        }
-    });
-});
-
-$('button[name="print-items"]').on('click', function(e) {
-    $.ajax({
-        url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayItems')); ?>",
-        method: "post",
-        // async: false,
-        data:{
-          type: $(this).data("type"),
-        },
-        success: function (html) {
-            alert("Finished");
-        },
-        error: function (html) {
-            alert("error");
-        }
-    });
-});
+// $('button[name="view-amount"]').on('click', function(e) {
+//     console.log($(this).data("type"));
+//     $.ajax({
+//         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getAmountInfo')); ?>",
+//         method: "post",
+//         data: {
+//           type: $(this).data("type"),
+//         },
+//         success: function (json) {
+//             // console.log(JSON.parse(json));
+//             var objs = JSON.parse(json);
+//             $('.report-content').empty();
+//             // $('.report-content').append()
+//
+//             $('.report-content').append(
+//               objs.map( (obj) => {
+//                   var startTimeStr = new Date(obj.start_time)
+//                   return $('#amount-info').html().format(obj.tax.toFixed(2), obj.total.toFixed(2), obj.real_total.toFixed(2), obj.paid_cash_total.toFixed(2), obj.paid_card_total.toFixed(2), getTimeStr(obj.start_time * 1000),getTimeStr(obj.end_time * 1000));
+//               })
+//             );
+//         }
+//     })
+// });
+//
+// $('button[name="print-amount"]').on('click', function(e) {
+//     $.ajax({
+//         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayOrders')); ?>",
+//         method: "post",
+//         // async: false,
+//         data:{
+//           type: $(this).data("type"),
+//         },
+//         success: function (html) {
+//             alert("Finished");
+//         },
+//         error: function (html) {
+//             alert("error");
+//         }
+//     });
+// });
+//
+// $('button[name="view-items"]').on('click', function(e) {
+//     $.ajax({
+//         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getItemsInfo')); ?>",
+//         method: "post",
+//         data: {
+//           type: $(this).data("type"),
+//         },
+//         success: function (json) {
+//             // console.log(json);
+//             var objs = JSON.parse(json);
+//             var obj = objs[0];
+//
+//             $('.report-content').empty();
+//             $('.report-content').append(
+//               obj.items.map((item)=> {
+//                 return '<li class="col-md-6 col-sm-6 col-xs-6">{0}</li> <li class="col-md-6 col-sm-6 col-xs-6 tax">{1}</li>'.format(item.name_xh, item.qty_sum);
+//               })
+//             );
+//         }
+//     });
+// });
+//
+// $('button[name="print-items"]').on('click', function(e) {
+//     $.ajax({
+//         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayItems')); ?>",
+//         method: "post",
+//         // async: false,
+//         data:{
+//           type: $(this).data("type"),
+//         },
+//         success: function (html) {
+//             alert("Finished");
+//         },
+//         error: function (html) {
+//             alert("error");
+//         }
+//     });
+// });
 </script>
