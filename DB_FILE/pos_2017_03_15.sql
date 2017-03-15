@@ -1,0 +1,9 @@
+CREATE TABLE print_pages (
+  id INT NOT NULL AUTO_INCREMENT,
+  type VARCHAR(50) NOT NULL,
+  line_index INT NOT NULL,
+  offset_x INT NOT NULL DEFAULT 0,
+  content VARCHAR(255) NOT NULL,
+  lang_code VARCHAR(10) NOT NULL,
+  PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
