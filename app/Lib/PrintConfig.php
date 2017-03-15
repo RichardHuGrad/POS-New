@@ -6,7 +6,7 @@
         // yonge finch
         public static $addressLine1 = array("content" => "5306 Yonge St.", "offset_x" => "160");
         public static $addressLine2 = array("content" => "North York ON", "offset_x" => "160");
-        public static $phone = array("content" => "416-347-6789", "offset_x" => "156");
+        public static $phone = array("content" => "416-347-6789", "offset_x" => "160");
 
         // midland
         // public static $addressLine1 = array("content" => "3700 Midland Ave. #108", "offset_x" => "116");
