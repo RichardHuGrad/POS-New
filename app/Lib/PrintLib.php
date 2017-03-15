@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 function mbStrSplit($string, $len=1) {
@@ -13,11 +13,11 @@ function mbStrSplit($string, $len=1) {
 }
 
 class PrintLib {
-    public $fontStr1 = "simsun"; 
+    public $fontStr1 = "simsun";
 
     // print all items with cancelled tag
     public function printCancelledItems($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
-        // do not check $item_id_list 
+        // do not check $item_id_list
 
         $debug_str = json_encode($item_detail);
 
@@ -81,7 +81,7 @@ class PrintLib {
         $headerPage = new KitchenHeaderPage($order_no, $table_no, $table_type);
         $itemsPage = new KitchenItemsPage($item_detail, $table_type);
         $footerPage = new TimeFooterPage();
-        
+
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $footerPage));
         $doc->printDoc();
 
@@ -237,9 +237,9 @@ class KitchenHeaderPage extends HeaderPage {
             printer_select_font($handle, $font);
             printer_draw_text($handle, "Kitchen", 138, $y);
         }
-            
+
         printer_end_page($handle);
-        
+
 
         printer_start_page($handle);
 
@@ -298,7 +298,8 @@ class LogoHeaderPage extends HeaderPage {
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
             $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 210, $print_y);
+            // printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
             $print_y+=40;
         };
 
@@ -354,12 +355,12 @@ class KitchenItemsPage extends ItemsPage {
 
             $font1H = 32;
             $font2H = 38;
-            $font3H = 32; 
+            $font3H = 32;
             $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
             $font2 = printer_create_font('simsun', $font2H, 16, PRINTER_FW_BOLD, false, false, false, 0);
-            
+
             $font3 = printer_create_font('simsun', $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
-            
+
 
             $name_zh = $item['name_xh'];
             $name_en = $item['name_en'];
@@ -379,11 +380,11 @@ class KitchenItemsPage extends ItemsPage {
             printer_draw_text($handle, $qty, 10, $y);
             printer_draw_text($handle, $name_en, 80, $y);
             $y += $font1H + 3;
-        
+
             printer_select_font($handle, $font2);
             printer_draw_text($handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);
             $y += $font2H + 3;
-            
+
             printer_select_font($handle, $font3);
 
             if (strlen($selected_extras) > 0) {
@@ -407,7 +408,7 @@ class KitchenItemsPage extends ItemsPage {
             printer_delete_font($font3);
 
             printer_end_page($handle);
-        }    
+        }
     }
 }
 
@@ -422,7 +423,7 @@ class PayItemsPage extends ItemsPage {
         foreach ($this->item_detail as $item) {
             printer_start_page($handle);
 
-            
+
             $font = printer_create_font('simsun', 28, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
 
             $name_zh = $item['name_xh'];
@@ -443,14 +444,14 @@ class PayItemsPage extends ItemsPage {
             printer_select_font($handle, $font);
             printer_draw_text($handle, mbStrSplit($name_en, 20)[0], 80, $y);
             $y += 30;
-        
+
             printer_select_font($handle, $font);
             printer_draw_text($handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);
             $y += 30;
 
             printer_draw_text($handle, $qty, 10, $origin_y);
             printer_draw_text($handle, number_format($price, 2), 400, $origin_y);
-            
+
 
            /* if (strlen($selected_extras) > 0) {
                 $selected_extras_arr = mbStrSplit($selected_extras, 14);
@@ -464,7 +465,7 @@ class PayItemsPage extends ItemsPage {
             printer_delete_font($font);
 
             printer_end_page($handle);
-        }   
+        }
     }
 }
 
@@ -490,7 +491,7 @@ class MergeItemsPage extends ItemsPage {
             foreach ($item_detail as $item) {
                 printer_start_page($handle);
 
-                
+
                 $font = printer_create_font('simsun', 28, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
 
                 $name_zh = $item['name_xh'];
@@ -511,13 +512,13 @@ class MergeItemsPage extends ItemsPage {
                 printer_select_font($handle, $font);
                 printer_draw_text($handle, mbStrSplit($name_en, 20)[0], 80, $y);
                 $y += 30;
-            
+
                 printer_select_font($handle, $font);
                 printer_draw_text($handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);
 
                 printer_draw_text($handle, $qty, 10, $origin_y);
                 printer_draw_text($handle, number_format($price, 2), 400, $origin_y);
-                
+
 
                /* if (strlen($selected_extras) > 0) {
                     $selected_extras_arr = mbStrSplit($selected_extras, 14);
@@ -534,11 +535,11 @@ class MergeItemsPage extends ItemsPage {
             }
         }
     }
-        
+
 }
 
 /**
-* 
+*
 */
 class ReportItemsPage extends ItemsPage {
     private $item_detail, $print_zh, $pritn_en;
@@ -575,7 +576,7 @@ class ReportItemsPage extends ItemsPage {
         }
 
         printer_delete_font($font);
-    } 
+    }
 }
 
 
@@ -586,12 +587,12 @@ abstract class CountPage {
         printer_start_page($handle);
         $font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        
+
         printer_draw_text($handle, iconv("UTF-8", "gb2312", $str1), 58, 0);
         printer_draw_text($handle, iconv("UTF-8", "gb2312", $str2), 148, 0);
 
         printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($num, 2)), 400, 0);
-        
+
         printer_delete_font($font);
         printer_end_page($handle);
     }
@@ -636,7 +637,7 @@ class BillPage extends CountPage {
 
     }
 
-    
+
 
 }
 
@@ -683,7 +684,7 @@ class ReceiptPage extends CountPage {
 }
 
 class ReportCountDetailPage extends CountPage {
-    private $dailyAmount, $print_zh, $print_en; 
+    private $dailyAmount, $print_zh, $print_en;
     public function __construct($dailyAmount, $print_zh=true, $print_en=false) {
         $this->dailyAmount = $dailyAmount;
         $this->print_zh = $print_zh;
@@ -693,11 +694,11 @@ class ReportCountDetailPage extends CountPage {
     public function printPage($handle) {
         $font = printer_create_font('simsun', 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        
+
         foreach ($this->dailyAmount as $spanAmount) {
-            
-            printer_start_page($handle);   
-            
+
+            printer_start_page($handle);
+
             $print_y = 30;
             // print time title
             printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
@@ -705,7 +706,7 @@ class ReportCountDetailPage extends CountPage {
 
             printer_draw_line($handle, 21, $print_y, 600, $print_y);
             $print_y+=32;
-            
+
             if ($spanAmount['real_total'] > 0) {
                 $paid_cash_percent = " " . number_format($spanAmount['paid_cash_total'] * 100 / $spanAmount['real_total'], 2) . '%';
                 $paid_card_percent = " " . number_format($spanAmount['paid_card_total'] * 100 / $spanAmount['real_total'], 2) . '%';
@@ -720,15 +721,15 @@ class ReportCountDetailPage extends CountPage {
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-        
+
             } else {
                 printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
-                
+
                 printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-                
+
             }
             $print_y+=30;
 
@@ -747,7 +748,7 @@ class ReportCountDetailPage extends CountPage {
 */
 class ReportCountPage extends CountPage
 {
-    private $dailyAmount, $print_zh, $print_en; 
+    private $dailyAmount, $print_zh, $print_en;
     public function __construct($dailyAmount, $print_zh=true, $print_en=false) {
         $this->dailyAmount = $dailyAmount;
         $this->print_zh = $print_zh;
@@ -758,11 +759,11 @@ class ReportCountPage extends CountPage
 
         $font = printer_create_font('simsun', 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        
+
         foreach ($this->dailyAmount as $spanAmount) {
-            
-            printer_start_page($handle);   
-            
+
+            printer_start_page($handle);
+
             $print_y = 30;
             // print time title
             printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
@@ -770,7 +771,7 @@ class ReportCountPage extends CountPage
 
             printer_draw_line($handle, 21, $print_y, 600, $print_y);
             $print_y+=32;
-            
+
             if ($spanAmount['real_total'] > 0) {
                 $paid_cash_percent = " " . number_format($spanAmount['paid_cash_total'] * 100 / $spanAmount['real_total'], 2) . '%';
                 $paid_card_percent = " " . number_format($spanAmount['paid_card_total'] * 100 / $spanAmount['real_total'], 2) . '%';
@@ -781,11 +782,11 @@ class ReportCountPage extends CountPage
             if ($this->print_zh == true) {
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
 
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;        
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
             } else {
                 printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
-                
-                printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;                
+
+                printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;
             }
             $print_y+=30;
 
@@ -798,7 +799,7 @@ class ReportCountPage extends CountPage
         printer_delete_font($font);
     }
 
-   
+
 }
 
 abstract class FooterPage {
@@ -816,7 +817,7 @@ class TimeFooterPage extends FooterPage {
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
         printer_draw_line($handle, 21, $print_y, 600, $print_y);
-        
+
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
@@ -829,7 +830,7 @@ class TimeFooterPage extends FooterPage {
 
 
 /**
-* 
+*
 */
 class BasicDoc
 {
@@ -844,7 +845,7 @@ class BasicDoc
 
         $this->handle = printer_open($this->printerName);
         printer_start_doc($this->handle, "Doc");
-        
+
         foreach($this->pages as $page) {
             $page->printPage($this->handle);
         }
