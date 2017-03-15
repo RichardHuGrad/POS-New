@@ -288,7 +288,6 @@ class LogoHeaderPage extends HeaderPage {
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         // print address line
-        PrintConfig::addressLine1
         printer_draw_text($handle, PrintConfig::addressLine1["content"], PrintConfig::addressLine1["offset_x"], 130);
         printer_draw_text($handle, PrintConfig::addressLine2["content"], PrintConfig::addressLine2["offset_x"], 168);
         printer_draw_text($handle, PrintConfig::phone["content"], printConfig::phone["offset_x"], 206);
