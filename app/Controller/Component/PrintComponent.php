@@ -1,5 +1,4 @@
 <?php
-
 App::uses('Component', 'Controller');
 App::uses('PrintLib', 'Lib');
 App::uses('TimeComponent', 'Component');
