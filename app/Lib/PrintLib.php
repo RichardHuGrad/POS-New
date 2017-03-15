@@ -298,7 +298,7 @@ class LogoHeaderPage extends HeaderPage {
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
             $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 210, $print_y);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 100, $print_y);
             // printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
             $print_y+=40;
         };
