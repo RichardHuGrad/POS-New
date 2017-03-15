@@ -1,5 +1,5 @@
 <?php
-
+App::uses('PrintConfig', 'Lib');
 
 function mbStrSplit($string, $len=1) {
     $start = 0;
@@ -288,9 +288,10 @@ class LogoHeaderPage extends HeaderPage {
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         // print address line
-        printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
-        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
-        printer_draw_text($handle, "647-352-5333", 156, 206);
+        PrintConfig::addressLine1
+        printer_draw_text($handle, PrintConfig::addressLine1["content"], PrintConfig::addressLine1["offset_x"], 130);
+        printer_draw_text($handle, PrintConfig::addressLine2["content"], PrintConfig::addressLine2["offset_x"], 168);
+        printer_draw_text($handle, PrintConfig::phone["content"], printConfig::phone["offset_x"], 206);
 
         $print_y = 244;
         if ($this->print_zh == true) {
@@ -298,7 +299,7 @@ class LogoHeaderPage extends HeaderPage {
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
             $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 100, $print_y);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 110, $print_y);
             // printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
             $print_y+=40;
         };
