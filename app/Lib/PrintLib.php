@@ -101,7 +101,7 @@ class PrintLib {
         $headerPage = new LogoHeaderPage($order_no, $table_no, $table_type, $logo_name);
         $itemsPage = new PayItemsPage($item_detail);
         $countPage = new BillPage($bill_info);
-        $footerPage = new TimeFooterPage();
+        $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         $doc->printDoc();
@@ -124,7 +124,7 @@ class PrintLib {
         $headerPage = new LogoHeaderPage($order_no, $table_no, $table_type, $logo_name);
         $itemsPage = new PayItemsPage($item_detail);
         $countPage = new ReceiptPage($bill_info);
-        $footerPage = new TimeFooterPage();
+        $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         $doc->printDoc();
@@ -144,7 +144,7 @@ class PrintLib {
         $headerPage = new LogoHeaderPage($order_nos, $table_nos, $table_type, $logo_name);
         $itemsPage = new MergeItemsPage($item_details);
         $countPage = new BillPage($bill_info);
-        $footerPage = new TimeFooterPage();
+        $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         $doc->printDoc();
@@ -161,7 +161,7 @@ class PrintLib {
         $headerPage = new LogoHeaderPage($order_nos, $table_nos, $table_type, $logo_name);
         $itemsPage = new MergeItemsPage($item_details);
         $countPage = new ReceiptPage($bill_info);
-        $footerPage = new TimeFooterPage();
+        $footerPage = new TimeHSTFooterPage();
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         $doc->printDoc();
     }
@@ -821,6 +821,29 @@ class TimeFooterPage extends FooterPage {
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
+        printer_draw_text($handle, $date_time, 80, $print_y);
+
+        printer_delete_font($font);
+        printer_end_page($handle);
+    }
+}
+class TimeHSTFooterPage extends FooterPage {
+    public function printPage($handle) {
+        printer_start_page($handle);
+
+        date_default_timezone_set("America/Toronto");
+        $date_time = date("l M d Y h:i:s A");
+
+        $print_y = 10;
+        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+        printer_select_pen($handle, $pen);
+        printer_draw_line($handle, 21, $print_y, 600, $print_y);
+
+        $print_y += 10;
+        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
+        $print_y += 30;
         printer_draw_text($handle, $date_time, 80, $print_y);
 
         printer_delete_font($font);

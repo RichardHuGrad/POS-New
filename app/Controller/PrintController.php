@@ -1,5 +1,5 @@
-<?php 
-
+<?php
+App::uses('PrintConfig', 'Lib');
 class PrintController extends AppController {
     public $fontStr1 = "simsun";
     public $handle;
@@ -74,9 +74,9 @@ class PrintController extends AppController {
             if (mb_strlen($str, 'UTF-8') > 0 ) {
                 $y += $this->fontH + 2; // change the line
             }
-            
+
             $start += 10;
-           
+
         }
 
         // printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
@@ -123,11 +123,11 @@ class PrintController extends AppController {
     // order number
     public function printOriginalBill($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=true) {
         $this->layout = false;
-        $this->autoRender = NULL;   
+        $this->autoRender = NULL;
 
         $order = $this->data['order'];
         $items = $order['items'];
-        
+
         $subtotal = $order['subtotal'];
         $discount_type = $order['discount_type'];
         $discount_value = $order['discount_value'];
@@ -145,7 +145,7 @@ class PrintController extends AppController {
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
 
-        
+
 
 
         $this->handle = printer_open($printer_name);
@@ -156,9 +156,9 @@ class PrintController extends AppController {
         $this->printBigEn("416-792-4476", 156, 206);*/
         printer_draw_bmp($this->handle, $logo_name, 100, 20, 263, 100);
 
-        $this->printBigEn("3700 Midland Ave. #108", 156, 130);
-        $this->printBigEn("Scarborogh ON M1V 0B3", 110, 168);
-        $this->printBigEn("647-352-5333", 156, 206);
+        $this->printBigEn(PrintConfig::$addressLine1['content'], PrintConfig::$addressLine1['offset_x'], 130);
+        $this->printBigEn(PrintConfig::$addressLine2['content'], PrintConfig::$addressLine2['offset_x'], 168);
+        $this->printBigEn(PrintConfig::$phone['content'], PrintConfig::$phone['offset_x'], 206);
 
         $print_y = 244;
 
@@ -185,7 +185,7 @@ class PrintController extends AppController {
             $this->printEn("1", 10, $print_y);
             $this->printEn(number_format($items[$i]['price'], 2), 360, $print_y);
             $this->printItemEn($items[$i]['name_en'], 50, $print_y);
-            
+
             // $print_y += 30;
             if ($print_zh == true) {
                 $this->printItemZh($items[$i]['name_zh'], 50, $print_y);
@@ -235,7 +235,7 @@ class PrintController extends AppController {
                 $this->printZh("折后价：", 148, $print_y);
             } else {
                 $this->printEn("After Discount :", 58, $print_y);
-            } 
+            }
 
             $this->printEn(number_format($after_discount, 2), 360, $print_y);
 
@@ -252,7 +252,7 @@ class PrintController extends AppController {
         }
         $this->printEn(number_format($tax_amount, 2), 360, $print_y);
         $print_y += 30;
-        
+
         if ($print_zh == true) {
             $this->printZh("Total", 58, $print_y);
             $this->printZh("总计：", 148, $print_y);
@@ -276,7 +276,7 @@ class PrintController extends AppController {
 
         $this->printEn($date_time, 80, $print_y);
 
-        
+
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
@@ -285,13 +285,13 @@ class PrintController extends AppController {
         echo true;
         exit;
 
-        
+
     }
 
 
     public function printSplitReceipt($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=false) {
         $this->layout = false;
-        $this->autoRender = NULL;   
+        $this->autoRender = NULL;
 
         $suborder = $this->data['suborder'];
         $items = $suborder['items'];
@@ -328,9 +328,9 @@ class PrintController extends AppController {
         $this->printBigEn("Toronto ON M4S 1Z9", 110, 168);
         $this->printBigEn("416-792-4476", 156, 206);*/
         printer_draw_bmp($this->handle, $logo_name, 100, 20, 263, 100);
-        $this->printBigEn("3700 Midland Ave. #108", 156, 130);
-        $this->printBigEn("Scarborogh ON M1V 0B3", 110, 168);
-        $this->printBigEn("647-352-5333", 156, 206);
+        $this->printBigEn(PrintConfig::$addressLine1['content'], PrintConfig::$addressLine1['offset_x'], 130);
+        $this->printBigEn(PrintConfig::$addressLine2['content'], PrintConfig::$addressLine2['offset_x'], 168);
+        $this->printBigEn(PrintConfig::$phone['content'], PrintConfig::$phone['offset_x'], 206);
 
         $print_y = 244;
 
@@ -357,7 +357,7 @@ class PrintController extends AppController {
             $this->printEn("1", 10, $print_y);
             $this->printEn(number_format($items[$i]['price'], 2), 360, $print_y);
             $this->printItemEn($items[$i]['name_en'], 50, $print_y);
-            
+
             // $print_y += 30;
             if ($print_zh == true) {
                 // $this->printZh($items[$i]['name_zh'], 10, $print_y);
@@ -408,7 +408,7 @@ class PrintController extends AppController {
                 $this->printZh("折后价：", 148, $print_y);
             } else {
                 $this->printEn("After Discount :", 58, $print_y);
-            } 
+            }
 
             $this->printEn(number_format($after_discount, 2), 360, $print_y);
 
@@ -425,7 +425,7 @@ class PrintController extends AppController {
         }
         $this->printEn(number_format($tax_amount, 2), 360, $print_y);
         $print_y += 30;
-        
+
         if ($print_zh == true) {
             $this->printZh("Total", 58, $print_y);
             $this->printZh("总计：", 148, $print_y);

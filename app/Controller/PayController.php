@@ -1,7 +1,6 @@
 <?php
 
 App::uses('PrintLib', 'Lib');
-App::uses('PrintConfig', 'Lib');
 class PayController extends AppController {
 
     public function beforeFilter() {
