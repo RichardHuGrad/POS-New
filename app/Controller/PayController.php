@@ -1,6 +1,7 @@
-<?php 
+<?php
 
 App::uses('PrintLib', 'Lib');
+App::uses('PrintConfig', 'Lib');
 class PayController extends AppController {
 
     public function beforeFilter() {
@@ -12,7 +13,7 @@ class PayController extends AppController {
 
     public function index() {
 
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
@@ -38,7 +39,7 @@ class PayController extends AppController {
             );
         }
 
-        // get order details 
+        // get order details
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
@@ -72,7 +73,7 @@ class PayController extends AppController {
 
         $this->loadModel('Cashier');
         $this->loadModel('Order');
-        
+
         $order_no = $this->data['order_no'];
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
@@ -86,7 +87,7 @@ class PayController extends AppController {
 
         $this->loadModel('Cashier');
         $this->loadModel('Order');
-        
+
         $order_no = $this->data['order_no'];
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
@@ -110,7 +111,7 @@ class PayController extends AppController {
         $pay = $this->data['pay'];
         $change = $this->data['change'];
 
-        // save order to database        
+        // save order to database
         $data['Order']['id'] = $order_id;
         if ($this->data['card_val'] and $this->data['cash_val'])
             $data['Order']['paid_by'] = "MIXED";
@@ -141,7 +142,7 @@ class PayController extends AppController {
         $this->loadModel('Cousine');
         $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id')");
 
-        // save all 
+        // save all
         $this->Session->setFlash('Order successfully completed.', 'success');
 
         echo true;
