@@ -334,7 +334,35 @@ echo $this->fetch('script');
         				}
         			}
         		}
-                drawUI();
+
+                var tempSuborders
+
+        		$.ajax({
+        			url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
+                    method: "post",
+                    data: {
+                    	key: subordersCookie
+                    },
+                    success: function (value) {
+                        // drawUI();
+                    	if (value.trim()) {
+                    		tempSuborders =  JSON.parse(value.trim());
+                    	} else {
+                    		tempSuborders = undefined;
+                    	}
+
+                        if (tempSuborders != undefined) {
+                			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
+                				var temp_no = tempSuborders.suborders[i].suborder_no;
+                				// console.log(temp_no);
+                				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
+                			}
+                		}
+                        drawUI();
+                    }
+        		})
+
+
                 console.log('tempOrder');
         		console.log(tempOrder);
 
@@ -365,32 +393,32 @@ echo $this->fetch('script');
 		// 		}
 		// 	}
 		// }
-        var tempSuborders
-
-		$.ajax({
-			url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
-            method: "post",
-            data: {
-            	key: subordersCookie
-            },
-            success: function (value) {
-                // drawUI();
-            	if (value.trim()) {
-            		tempSuborders =  JSON.parse(value.trim());
-            	} else {
-            		tempSuborders = undefined;
-            	}
-
-                if (tempSuborders != undefined) {
-        			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
-        				var temp_no = tempSuborders.suborders[i].suborder_no;
-        				// console.log(temp_no);
-        				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
-        			}
-        		}
-                drawUI();
-            }
-		})
+        // var tempSuborders
+        //
+		// $.ajax({
+		// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
+        //     method: "post",
+        //     data: {
+        //     	key: subordersCookie
+        //     },
+        //     success: function (value) {
+        //         // drawUI();
+        //     	if (value.trim()) {
+        //     		tempSuborders =  JSON.parse(value.trim());
+        //     	} else {
+        //     		tempSuborders = undefined;
+        //     	}
+        //
+        //         if (tempSuborders != undefined) {
+        // 			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
+        // 				var temp_no = tempSuborders.suborders[i].suborder_no;
+        // 				// console.log(temp_no);
+        // 				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
+        // 			}
+        // 		}
+        //         drawUI();
+        //     }
+		// })
 
 			// return false;
 			// return Cookies.getJSON(key);
