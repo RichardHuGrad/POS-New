@@ -1,0 +1,17 @@
+[{
+    "content": "line 1",
+    "offset_x": 100,
+    "line_index" : 0
+}, {
+    "content": "line 2",
+    "offset_x": 150,
+    "line_index" : 1
+}, {
+    "content": "line 3",
+    "offset_x": 200,
+    "line_index" : 2
+}, {
+    "content": "line 4",
+    "offset_x": 100,
+    "line_index" : 3
+}]

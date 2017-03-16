@@ -14,6 +14,11 @@
         <option value="receipt-footer">receipt footer</option>
     </select>
 
+    <!-- <select class="" name="" ng-model="" ng-options="type for type in types">
+
+    </select> -->
+
+
     <button class="btn btn-info" type="button" name="button" ng-click="insertLine('receipt-header')">Insert Line</button>
 
 
@@ -33,7 +38,7 @@
         </div>
         <div class="col-sm-2">
             <button class="btn btn-info" type="button" name="button" ng-click="updateLine('receipt-header', value.content, value.offset_x, value.line_index)">Update</button>
-            <button class="btn btn-danger" type="button" name="button">Delete</button>
+            <button class="btn btn-danger" type="button" name="button" ng-click="deleteLine('receipt-header', value.line_index)">Delete</button>
         </div>
 
     </div>
@@ -43,4 +48,4 @@
 
 
 
-<?php echo $this->Html->script(array('lib/angular.min.js', 'angular/app.js', 'angular/controllers/printPage.js')); ?>
+<?php echo $this->Html->script(array('lib/angular.min.js', 'angular/app.js', 'angular/controllers/printPage.js', 'lib/lodash.min.js')); ?>
