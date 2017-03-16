@@ -6,4 +6,4 @@ CREATE TABLE `cookies` (
 	`created` datetime NOT NULL,
 	`validate_days` int(10) DEFAULT 0,
 	primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
