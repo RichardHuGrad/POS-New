@@ -842,8 +842,10 @@ class TimeHSTFooterPage extends FooterPage {
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
-        $print_y += 30;
+        if (PrintConfig::$hasHstNumber) {
+            printer_draw_text($handle, "Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
+            $print_y += 30;
+        }
         printer_draw_text($handle, $date_time, 80, $print_y);
 
         printer_delete_font($font);

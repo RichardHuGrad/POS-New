@@ -273,9 +273,10 @@ class PrintController extends AppController {
         }*/
 
 
-
-        $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
-        $print_y += 30;
+        if (PrintConfig::$hasHstNumber) {
+            $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
+            $print_y += 30;
+        }
         $this->printEn($date_time, 80, $print_y);
 
 
@@ -460,8 +461,10 @@ class PrintController extends AppController {
 
         $print_y += 30;
 
-        $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
-        $print_y += 30;
+        if (PrintConfig::$hasHstNumber) {
+            $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
+            $print_y += 30;
+        }
         $this->printEn($date_time, 80, $print_y);
 
 
