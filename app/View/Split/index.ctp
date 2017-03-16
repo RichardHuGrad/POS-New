@@ -162,65 +162,61 @@ echo $this->fetch('script');
 	var KVStorage = (function() {
 
 		function set(key, value, cfg={}) {
-			Cookies.set(key, value, cfg);
-			// $.ajax({
-			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'setCookie')); ?>",
-	  //           method: "post",
-	  //           data: {
-	  //           	key: key,
-	  //           	value: JSON.stringify(value)
-	  //           },
-	  //           async: false,
-	  //           success: function (data) {
+			// Cookies.set(key, value, cfg);
+			$.ajax({
+				url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'setCookie')); ?>",
+	            method: "post",
+	            data: {
+	            	key: key,
+	            	value: JSON.stringify(value)
+	            },
+	            success: function (data) {
+                    drawUI();
+	            }
+			})
 
-	  //           }
-			// })
-
-			// return false;+
+			// return false;
 		}
 
 		function get(key) {
 
-			// $.ajax({
-			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
-	  //           method: "post",
-	  //           data: {
-	  //           	key: key
-	  //           },
-	  //           async: false,
-	  //           success: function (value) {
-	  //           	// console.log(JSON.parse(value));
-	  //           	// console.log(JSON.parse(value));
+			$.ajax({
+				url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
+	            method: "post",
+	            data: {
+	            	key: key
+	            },
+                async: false,
+	            success: function (value) {
+                    drawUI();
+	            	if (value.trim()) {
+	            		return JSON.parse(value.trim());
+	            	} else {
+	            		return {};
+	            	}
 
-	  //           	if (value) {
-	  //           		return JSON.parse(value);
-	  //           	} else {
-	  //           		return {};
-	  //           	}
-
-	  //           }
-			// })
+	            }
+			})
 
 			// return false;
-			return Cookies.getJSON(key);
+			// return Cookies.getJSON(key);
 		}
 
 		function remove(key, cfg={}) {
-			// $.ajax({
-			// 	url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'removeCookie')); ?>",
-	  //           method: "post",
-	  //           data: {
-	  //           	key: key
-	  //           },
-	  //           async: false,
-	  //           success: function (value) {
-
-	  //           }
-			// })
+			$.ajax({
+				url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'removeCookie')); ?>",
+	            method: "post",
+	            data: {
+	            	key: key
+	            },
+	            success: function (value) {
+                    drawUI();
+	            }
+			})
 
 			// return false;
 
-			Cookies.remove(key, cfg);
+			// Cookies.remove(key, cfg);
 		}
 
 		return {
@@ -284,8 +280,8 @@ echo $this->fetch('script');
 			order = loadOrder(order_no);
 			suborders = new Suborders();
 
-			KVStorage.remove(orderCookie, { path: '' });
-			KVStorage.remove(subordersCookie, { path: '' });
+			// KVStorage.remove(orderCookie, { path: '' });
+			// KVStorage.remove(subordersCookie, { path: '' });
 		}
 
 		drawUI();
@@ -299,41 +295,114 @@ echo $this->fetch('script');
 	function restoreFromCookie(orderObj, suborderObj) {
 
 		// check whether cookie exist
-		var tempOrder = KVStorage.get(orderCookie);
-		console.log('tempOrder');
-		console.log(tempOrder);
+		// var tempOrder = KVStorage.get(orderCookie);
+        var tempOrder;
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
+            method: "post",
+            data: {
+                key: orderCookie
+            },
+            success: function (value) {
+                if (value.trim()) {
+                    tempOrder = JSON.parse(value.trim());
+                } else {
+                    tempOrder = undefined;
+                }
 
-		if (tempOrder != undefined) {
-			order = Order.fromJSON(tempOrder);
-			suborders = new Suborders();
-			// construct suborder
+                if (tempOrder != undefined) {
+                    console.log(tempOrder)
+        			order = Order.fromJSON(tempOrder);
+                    console.log(order)
+        			suborders = new Suborders();
+        			// construct suborder
 
-			for (var i = 0; i < order.suborderNum; ++i) {
-				suborders.pushEmptySuborder();
-			}
+        			for (var i = 0; i < order.suborderNum; ++i) {
+        				suborders.pushEmptySuborder();
+        			}
 
-			// restore suborder from order
-			for (var i = 0; i < order.items.length; ++i) {
-				if (order.items[i].state == 'keep') {
-					continue;
-				} else if (order.items[i].state == 'assigned') { // restore based on assigned_suborder
-					suborders.getSuborder(order.items[i].assigned_suborder).addItem(order.items[i])
-				} else if (order.items[i].state == 'share') { //restore based on shared_suborders
-					for (var j = 0; j < order.items[i].shared_suborders.length; ++j) {
-						suborders.getSuborder(order.items[i].shared_suborders[j]).addItem(order.items[i]);
-					}
-				}
-			}
-		}
+        			// restore suborder from order
+        			for (var i = 0; i < order.items.length; ++i) {
+        				if (order.items[i].state == 'keep') {
+        					continue;
+        				} else if (order.items[i].state == 'assigned') { // restore based on assigned_suborder
+        					suborders.getSuborder(order.items[i].assigned_suborder).addItem(order.items[i])
+        				} else if (order.items[i].state == 'share') { //restore based on shared_suborders
+        					for (var j = 0; j < order.items[i].shared_suborders.length; ++j) {
+        						suborders.getSuborder(order.items[i].shared_suborders[j]).addItem(order.items[i]);
+        					}
+        				}
+        			}
+        		}
+                drawUI();
+                console.log('tempOrder');
+        		console.log(tempOrder);
 
-		var tempSuborders = KVStorage.get(subordersCookie);
-		if (tempSuborders != undefined) {
-			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
-				var temp_no = tempSuborders.suborders[i].suborder_no;
-				// console.log(temp_no);
-				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
-			}
-		}
+
+            }
+        })
+
+
+		// if (tempOrder != undefined) {
+		// 	order = Order.fromJSON(tempOrder);
+		// 	suborders = new Suborders();
+		// 	// construct suborder
+        //
+		// 	for (var i = 0; i < order.suborderNum; ++i) {
+		// 		suborders.pushEmptySuborder();
+		// 	}
+        //
+		// 	// restore suborder from order
+		// 	for (var i = 0; i < order.items.length; ++i) {
+		// 		if (order.items[i].state == 'keep') {
+		// 			continue;
+		// 		} else if (order.items[i].state == 'assigned') { // restore based on assigned_suborder
+		// 			suborders.getSuborder(order.items[i].assigned_suborder).addItem(order.items[i])
+		// 		} else if (order.items[i].state == 'share') { //restore based on shared_suborders
+		// 			for (var j = 0; j < order.items[i].shared_suborders.length; ++j) {
+		// 				suborders.getSuborder(order.items[i].shared_suborders[j]).addItem(order.items[i]);
+		// 			}
+		// 		}
+		// 	}
+		// }
+        var tempSuborders
+
+		$.ajax({
+			url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
+            method: "post",
+            data: {
+            	key: subordersCookie
+            },
+            success: function (value) {
+                // drawUI();
+            	if (value.trim()) {
+            		tempSuborders =  JSON.parse(value.trim());
+            	} else {
+            		tempSuborders = undefined;
+            	}
+
+                if (tempSuborders != undefined) {
+        			for (var i = 0; i < tempSuborders.suborders.length; ++i) {
+        				var temp_no = tempSuborders.suborders[i].suborder_no;
+        				// console.log(temp_no);
+        				suborders.getSuborder(temp_no).fromJSON(tempSuborders);
+        			}
+        		}
+                drawUI();
+            }
+		})
+
+			// return false;
+			// return Cookies.getJSON(key);
+
+		// var tempSuborders = KVStorage.get(subordersCookie);
+		// if (tempSuborders != undefined) {
+		// 	for (var i = 0; i < tempSuborders.suborders.length; ++i) {
+		// 		var temp_no = tempSuborders.suborders[i].suborder_no;
+		// 		// console.log(temp_no);
+		// 		suborders.getSuborder(temp_no).fromJSON(tempSuborders);
+		// 	}
+		// }
 
 		// restore from the discount cookie
 	}
@@ -654,8 +723,8 @@ echo $this->fetch('script');
 			        // }
 	        ?>
 	        		var qty = parseInt('<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>');
-	        		console.log("quantity");
-	        		console.log(qty);
+	        		// console.log("quantity");
+	        		// console.log(qty);
 
 	        		for (var i = 0; i < qty; ++i) {
 	        			var temp_item = new Item(
