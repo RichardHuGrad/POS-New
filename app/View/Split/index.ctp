@@ -440,12 +440,45 @@ echo $this->fetch('script');
 		KVStorage.remove(subordersCookie, { path: '' });
 	}
 
+    //reduce the ajax set request
+    var timeout = 300;
+    var scheduler = new Scheduler(setCookiesAjax, timeout);
+
+    function Scheduler(callback, timeout){
+
+        this.callback = callback;
+        this.timeout = timeout;
+        this.updateDataTimeout = null;
+
+        this.updateDataInAWhile = function(){
+
+            if(this.updateDataTimeout){
+                clearTimeout(this.updateDataTimeout);
+            }
+
+            var self = this;
+            this.updateDataTimeout = setTimeout(function(){
+                self.callCallback();
+            }, this.timeout);
+        };
+
+        this.callCallback = function(){
+            if($.isFunction(this.callback)){
+                this.callback();
+            }
+        }
+    }
+    function setCookiesAjax() {
+        KVStorage.set(orderCookie, order, { expires: 3, path: '' });
+		KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
+    }
 
 	function persistentOrder(callback) {
-		KVStorage.remove(orderCookie, { path: '' });
-		KVStorage.remove(subordersCookie, { path: '' });
-		KVStorage.set(orderCookie, order, { expires: 3, path: '' });
-		KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
+        scheduler.updateDataInAWhile();
+		// KVStorage.remove(orderCookie, { path: '' });
+		// KVStorage.remove(subordersCookie, { path: '' });
+        // KVStorage.set(orderCookie, order, { expires: 3, path: '' });
+		// KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
 		// Cookies.set(discountCookie, discount);
 
 		if (typeof callback === "function") {

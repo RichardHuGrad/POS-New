@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Cookie extends AppModel {
 
@@ -8,13 +8,27 @@ class Cookie extends AppModel {
     public function setCookie($key, $value) {
 
 		// $this->removeCookie($key);
+        $data = $this->find('first', array(
+    			'conditions' => array(
+    				'key' => $key
+    				)
+    		));
 
-    	$insert_data = array(
-            'key' => $key,
-            'value' => $value,
-            'created' => date('Y-m-d H:i:s'),
-        );
-        $this->save($insert_data, false);
+        if (!empty(data)) {
+            $data['Cookie']['value'] = $value;
+            $data['Cookie']['created'] = date('Y-m-d H:i:s');
+            $this->save($data, false);
+        } else {
+            $insert_data = array(
+                'key' => $key,
+                'value' => $value,
+                'created' => date('Y-m-d H:i:s'),
+            );
+            $this->save($insert_data, false);
+        }
+
+
+
     }
 
     public function getCookie($key) {
@@ -30,7 +44,7 @@ class Cookie extends AppModel {
     		return ;
     	}
 
-    	
+
     }
 
     public function removeCookie($key) {
@@ -38,7 +52,7 @@ class Cookie extends AppModel {
     	// $data['key'] = $key;
     	$this->deleteAll(array('Cookie.key' => $key), false);
     }
-   
+
 
 }
 
