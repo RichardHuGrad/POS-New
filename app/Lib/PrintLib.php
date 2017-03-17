@@ -245,15 +245,15 @@ class KitchenHeaderPage extends HeaderPage {
 
         $y = 0;
         //Print order information
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $y);
 
-        $y += 35;
+        $y += 42;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $this->table_no), 32, $y);
         //End
 
-        $y += 35;
+        $y += 42;
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
         printer_draw_line($handle, 21, $y, 600, $y);

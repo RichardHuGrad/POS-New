@@ -1,4 +1,4 @@
-<?php 
+<?php
 App::uses('PrintLib', 'Lib');
 class SplitController extends AppController {
 
@@ -12,7 +12,7 @@ class SplitController extends AppController {
     }
 
     public function index() {
-        // get cashier details        
+        // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
@@ -39,7 +39,7 @@ class SplitController extends AppController {
             );
         }
 
-        // get order details 
+        // get order details
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
@@ -65,8 +65,6 @@ class SplitController extends AppController {
                 )
         );
 
-        // print_r ($Order_detail);
-
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
     }
 
@@ -78,12 +76,12 @@ class SplitController extends AppController {
 
     	$this->loadModel('Cousine');
         $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id')");
-        
+
 
         $this->Session->setFlash('Order successfully completed.', 'success');
     }
 
-    // 
+    //
     public function updateOriginalOrder() {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -123,7 +121,7 @@ class SplitController extends AppController {
 
     public function printOriginalBill($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=true) {
         $this->layout = false;
-        $this->autoRender = NULL;   
+        $this->autoRender = NULL;
 
         $print = new PrintLib();
         // echo $print->printCancelledItems($order_no, $table, $cancel_items['K'], 'K',true, true);
@@ -133,14 +131,14 @@ class SplitController extends AppController {
     public function printSplitReceipt($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=false) {
 
         $this->layout = false;
-        $this->autoRender = NULL; 
+        $this->autoRender = NULL;
 
     }
 
 
     public function setCookie() {
         $this->layout = false;
-        $this->autoRender = NULL;   
+        $this->autoRender = NULL;
         $this->loadModel('Cookie');
 
 
@@ -153,7 +151,7 @@ class SplitController extends AppController {
 
     public function getCookie() {
         $this->layout = false;
-        $this->autoRender = NULL;   
+        $this->autoRender = NULL;
         $this->loadModel('Cookie');
 
         $key = $this->data['key'];
@@ -163,7 +161,7 @@ class SplitController extends AppController {
 
     public function removeCookie() {
         $this->layout = false;
-        $this->autoRender = NULL;   
+        $this->autoRender = NULL;
         $this->loadModel('Cookie');
 
         $key = $this->data['key'];

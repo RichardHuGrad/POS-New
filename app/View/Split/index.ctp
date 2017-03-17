@@ -252,6 +252,8 @@ echo $this->fetch('script');
 	function init() {
 		restoreFromCookie();
 
+
+
 		if (isOrderChanged()) {
 			console.log('order has changed');
 			// alert("由于订单修改，请重新分菜");
@@ -280,8 +282,9 @@ echo $this->fetch('script');
 			order = loadOrder(order_no);
 			suborders = new Suborders();
 
-			// KVStorage.remove(orderCookie, { path: '' });
-			// KVStorage.remove(subordersCookie, { path: '' });
+
+			KVStorage.remove(orderCookie, { path: '' });
+			KVStorage.remove(subordersCookie, { path: '' });
 		}
 
 		drawUI();
@@ -300,6 +303,7 @@ echo $this->fetch('script');
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
             method: "post",
+            async: false,
             data: {
                 key: orderCookie
             },
@@ -343,6 +347,7 @@ echo $this->fetch('script');
                     data: {
                     	key: subordersCookie
                     },
+                    async: false,
                     success: function (value) {
                         // drawUI();
                     	if (value.trim()) {
@@ -831,6 +836,8 @@ echo $this->fetch('script');
 	function isOrderChanged () {
 		var changed = false;
 		var temp_order = loadOrder();
+        console.log(temp_order);
+        console.log(order)
 
 		if (temp_order.discount.type != order.discount.type || temp_order.discount.value != order.discount.value) {
 			order.discount.type = temp_order.discount.type;
@@ -838,7 +845,7 @@ echo $this->fetch('script');
 		}
 
 		if ((temp_order['items'].length != order['items'].length)) {
-			return true;
+			changed = true;
 		} else {
 			for (var i = 0; i < temp_order['items'].length; ++i) {
 				if (temp_order['items'][i]['order_item_id'] != order['items'][i]['order_item_id']) {
@@ -846,6 +853,8 @@ echo $this->fetch('script');
 				}
 			}
 		}
+        console.log("test")
+        console.log(changed)
 
 		return changed;
 	}
