@@ -5,5 +5,6 @@ CREATE TABLE print_pages (
   offset_x INT NOT NULL DEFAULT 0,
   content VARCHAR(255) NOT NULL,
   lang_code VARCHAR(10) NOT NULL,
+  bold BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
