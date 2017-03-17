@@ -13,35 +13,31 @@
     </select>
     <button class="btn btn-info" type="button" name="button" ng-click="insertLine(selectedType)">Insert Line</button>
     <!-- line details -->
-    <div class="" ng-repeat="(key, value) in data | filter: typeFilter(selectedType)">
-        <div class="col-sm-5">
-            <label for="">Content</label>
-            <input class="form-control" type="text" name="" ng-model="value.content">
-        </div>
-        <div class="col-sm-1">
-            <label for="">Offset X</label>
-            <input class="form-control" type="text" name="" ng-model="value.offset_x">
-        </div>
-        <div class="col-sm-1">
-            <label for="">Index</label>
-            <input class="form-control" type="text" name="" ng-model="value.line_index">
-        </div>
-        <div class="col-sm-1">
-            <label for="">Lang</label>
-            <select class="form-control" name="" ng-model="value.lang_code" ng-options="x for x in ['en', 'zh']">
-            </select>
-        </div>
-        <div class="col-sm-2">
-            <label for="">Bold</label>
-            <select class="form-control" name="" ng-model="value.bold" ng-options="x for x in [true, false]">
-            </select>
-        </div>
-        <div class="col-sm-2">
-            <button class="btn btn-info" type="button" name="button" ng-click="updateLine('receipt-header', value.content, value.offset_x, value.line_index)">Update</button>
-            <button class="btn btn-danger" type="button" name="button" ng-click="deleteLine('receipt-header', value.line_index)">Delete</button>
-        </div>
-
-    </div>
+    <table>
+        <tr class="">
+            <th>Content</th>
+            <th>Offset X</th>
+            <th>Index</th>
+            <th>Lang</th>
+            <th>Bold</th>
+        </tr>
+        <tr ng-repeat="(key, value) in data | filter: typeFilter(selectedType)">
+            <td><input class="form-control" type="text" name="" ng-model="value.content"></td>
+            <td><input class="form-control" type="text" name="" ng-model="value.offset_x"></td>
+            <td><input class="form-control" type="text" name="" ng-model="value.line_index"></td>
+            <td>
+                <select class="form-control" name="" ng-model="value.lang_code" ng-options="x for x in ['en', 'zh']">
+                </select>
+            </td>
+            <td>
+                <select class="form-control" name="" ng-model="value.bold" ng-options="x for x in [true, false]">
+            </td>
+            <td>
+                <button class="btn btn-info" type="button" name="button" ng-click="updateLine('receipt-header', value.content, value.offset_x, value.line_index)">Update</button>
+                <button class="btn btn-danger" type="button" name="button" ng-click="deleteLine('receipt-header', value.line_index)">Delete</button>
+            </td>
+        </tr>
+    </table>
 
 </div>
 

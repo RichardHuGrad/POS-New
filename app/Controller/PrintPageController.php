@@ -13,13 +13,19 @@ class PrintPageController extends AppController {
         $pageDetail = $this->PrintPage->find('all');
         print_r($pageDetail);
 
-        
+
 
         $this->set(compact('pageDetail'));
     }
 
     public function insertType() {
         $this->layout = false;
+
+        // $this->data;
+
+        $this->loadModel('PrintPage');
+        $this->PrintPage->save($this->data, false);
+
     }
 
     /**

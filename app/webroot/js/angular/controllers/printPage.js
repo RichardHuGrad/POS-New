@@ -12,11 +12,13 @@ app.controller('printPageCtrl', ['$scope', '$http',
         }
 
         $scope.insertLine = function(type) {
+            var index = _.filter($scope.data, {'type': type}).length
+
             var empty_data = {
                                 "type": type,
                                 "content": "",
                                 "offset_x": 0,
-                                "line_index" : $scope.data.length,
+                                "line_index" : index,
                                 "lang_code": "en",
                                 "bold": false
                             }
