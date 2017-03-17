@@ -245,7 +245,7 @@ class KitchenHeaderPage extends HeaderPage {
 
         $y = 0;
         //Print order information
-        $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("Arial", 40, 14, PRINTER_FW_BOLD, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $y);
 
