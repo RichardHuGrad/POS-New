@@ -14,20 +14,13 @@ class Cookie extends AppModel {
     				)
     		));
 
-        if (!empty(data)) {
+        if (!empty($data)) {
             $data['Cookie']['value'] = $value;
             $data['Cookie']['created'] = date('Y-m-d H:i:s');
             $this->save($data, false);
         } else {
-            $insert_data = array(
-                'key' => $key,
-                'value' => $value,
-                'created' => date('Y-m-d H:i:s'),
-            );
-            $this->save($insert_data, false);
+            $this->createCookie($key, $value);
         }
-
-
 
     }
 
@@ -51,6 +44,16 @@ class Cookie extends AppModel {
 
     	// $data['key'] = $key;
     	$this->deleteAll(array('Cookie.key' => $key), false);
+    }
+
+    public function createCookie($key, $value) {
+        $insert_data = array(
+            'key' => $key,
+            'value' => $value,
+            'created' => date('Y-m-d H:i:s'),
+        );
+
+        $this->save($insert_data, false);
     }
 
 

@@ -441,7 +441,7 @@ echo $this->fetch('script');
 	}
 
     //reduce the ajax set request
-    var timeout = 300;
+    var timeout = 500;
     var scheduler = new Scheduler(setCookiesAjax, timeout);
 
     function Scheduler(callback, timeout){
@@ -469,6 +469,8 @@ echo $this->fetch('script');
         }
     }
     function setCookiesAjax() {
+        console.log(orderCookie)
+        console.log(subordersCookie)
         KVStorage.set(orderCookie, order, { expires: 3, path: '' });
 		KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
     }
