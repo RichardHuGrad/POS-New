@@ -3,27 +3,16 @@
 </header>
 
 <div class="container" ng-app="app" ng-controller="printPageCtrl">
-    <form class="" action="index.html" method="post">
 
-    </form>
-
-    <!-- type selector -->
-    <select class="form-control" name="type" value="Type">
-        <option value="receipt-header">receipt Header</option>
-        <option value="kitchen-header">kitchen Header</option>
-        <option value="receipt-footer">receipt footer</option>
+    <button class="btn btn-info" type="button" name="button">Insert Category</button>
+    <select class="" name="" ng-model="selectedType" ng-options="type for type in types">
     </select>
 
-    <!-- <select class="" name="" ng-model="" ng-options="type for type in types">
-
-    </select> -->
-
-
-    <button class="btn btn-info" type="button" name="button" ng-click="insertLine('receipt-header')">Insert Line</button>
+    <button class="btn btn-info" type="button" name="button" ng-click="insertLine(selectedType)">Insert Line</button>
 
 
     <!-- line details -->
-    <div class="" ng-repeat="(key, value) in data">
+    <div class="" ng-repeat="(key, value) in data | filter: typeFilter(selectedType)">
         <div class="col-sm-8">
             <label for="">Content</label>
             <input class="form-control" type="text" name="" ng-model="value.content">
@@ -48,4 +37,4 @@
 
 
 
-<?php echo $this->Html->script(array('lib/angular.min.js', 'angular/app.js', 'angular/controllers/printPage.js', 'lib/lodash.min.js')); ?>
+<?php echo $this->Html->script(array('lib/angular.min.js', 'lib/lodash.min.js', 'lib/angular-filter.min.js','angular/app.js', 'angular/controllers/printPage.js' )); ?>
