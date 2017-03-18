@@ -20,11 +20,15 @@ class PrintPageController extends AppController {
 
     public function insertType() {
         $this->layout = false;
+        $this->autoRender = NULL;
 
         // $this->data;
+        // print_r($this->data);
+        // print_r($this->data['type']);
+        print_r($this->data['bold']);
 
         $this->loadModel('PrintPage');
-        $this->PrintPage->save($this->data, false);
+        $this->PrintPage->save($this->data);
 
     }
 
@@ -37,6 +41,7 @@ class PrintPageController extends AppController {
      */
     public function insertLine() {
         $this->layout = false;
+        $this->autoRender = NULL;
     }
 
     /**

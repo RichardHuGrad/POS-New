@@ -1,5 +1,6 @@
-app.controller('printPageCtrl', ['$scope', '$http',
-    function($scope, $http) {
+app.controller('printPageCtrl', ['$scope', '$http', '$location',
+    function($scope, $http, $location) {
+        var baseUrl = $location.$$absUrl;
         init()
 
         function init() {
@@ -15,15 +16,34 @@ app.controller('printPageCtrl', ['$scope', '$http',
             var index = _.filter($scope.data, {'type': type}).length
 
             var empty_data = {
-                                "type": type,
-                                "content": "",
-                                "offset_x": 0,
-                                "line_index" : index,
-                                "lang_code": "en",
-                                "bold": false
+                                type: type,
+                                content: "",
+                                offset_x: 0,
+                                line_index : index,
+                                lang_code: "en",
+                                bold: false
                             }
             $scope.data.push(empty_data)
-            console.log($scope.data)
+
+            // $http.post()
+            // console.log($location.path())
+            // var url = baseUrl + '/insertType'
+            console.log(empty_data)
+            console.log($.param(empty_data))
+            var req = {
+                method: 'POST',
+                url: baseUrl + '/insertType',
+                data: $.param(empty_data),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }
+
+
+            $http(req).then(function(res) {
+                console.log(res.data)
+                console.log(empty_data)
+            })
+
+            // console.log($scope.data)
         }
 
         $scope.updateLine = function(type, content, line_index, offset_x) {
