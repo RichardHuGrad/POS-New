@@ -6,7 +6,7 @@
 
     <div class="">
         <input type="text" name="" value="" ng-model="newType">
-        <button class="btn btn-info" type="button" name="button" ng-click="insertType()">Insert New Type</button>
+        <button class="btn btn-info" type="button" name="button" ng-click="insertType(newType)">Insert New Type</button>
 
     </div>
     <select class="" name="" ng-model="selectedType" ng-options="type for type in types">
@@ -30,11 +30,11 @@
                 </select>
             </td>
             <td>
-                <select class="form-control" name="" ng-model="value.bold" ng-options="x for x in [true, false]">
+                <select class="form-control" name="" ng-model="value.bold" ng-options="x for x in ['0', '1']">
             </td>
             <td>
-                <button class="btn btn-info" type="button" name="button" ng-click="updateLine('receipt-header', value.content, value.offset_x, value.line_index)">Update</button>
-                <button class="btn btn-danger" type="button" name="button" ng-click="deleteLine('receipt-header', value.line_index)">Delete</button>
+                <button class="btn btn-info" type="button" name="button" ng-click="updateLine(value.id, value.type, value.content, value.offset_x, value.line_index, value.lang_code, value.bold)">Update</button>
+                <button class="btn btn-danger" type="button" name="button" ng-click="deleteLine(value.id)">Delete</button>
             </td>
         </tr>
     </table>

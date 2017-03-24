@@ -1,0 +1,64 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Uber API
+  description: Move your app forward with the Uber API
+  version: "1.0.0"
+# the domain of the service
+host: api.uber.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /access/generateToken:
+    post:
+      summary: generate access token for api
+      description: |
+        generate access token for api
+      parameters:
+        - name: email
+          in: query
+          description: Cashier's email address
+          required: true
+          type: string
+        - name: password
+          in: query
+          description: Latitude component of location.
+          required: true
+          type: string
+      tags:
+        - Access
+      responses:
+        200:
+          description: access token
+  /print/printPayReceipt:
+    post:
+      summary: print payment receipt
+      description: |
+        print payment receipt
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: the id of restaurant
+          required: true
+          type: string
+        - name: order_id
+          in: query
+          description: the id of order
+          required: true
+          type: string
+        - name: access_token
+          in: query
+          description: the access token of cashier
+          required: true
+          type: string
+      tags:
+        - Print
+      responses:
+        200:
+          description: access token
