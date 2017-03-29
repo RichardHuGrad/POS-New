@@ -96,6 +96,15 @@
         // console.log("click");
     });
 
+    $('#admin-link').on('click', function(e) {
+        e.preventDefault();
+        var pass = prompt("Input Password","");
+        pass = hex_md5(pass);
+        if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
+            window.location.assign('<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'index')) ?>');
+        }
+    })
+
 
 
 </script>

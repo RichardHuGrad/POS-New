@@ -14,7 +14,9 @@ class OrderHandlerComponent extends Component {
         $this->Cashier = ClassRegistry::init('Cashier');
         $this->Cousine = ClassRegistry::init('Cousine');
     }
-
+    /**
+     * paras:
+     */
     public function addItem($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'table', 'type', 'cashier_id']);
 

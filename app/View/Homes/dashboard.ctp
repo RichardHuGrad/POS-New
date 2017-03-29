@@ -484,56 +484,6 @@ echo $this->fetch('script');
             e.stopPropagation();
         });
 
-        $('#admin-link').on('click', function(e) {
-            e.preventDefault();
-            var pass = prompt("Input Password","");
-            pass = hex_md5(pass);
-            if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
-                window.location.assign('<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'index')) ?>');
-            }
-        })
-
-        $('#print-today-all').on('click', function(e) {
-        	e.preventDefault();
-        	var pass = prompt("Input Password","");
-        	pass = hex_md5(pass);
-        	if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
-				$.ajax({
-					url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayOrders')); ?>",
-					method: "post",
-					// async: false,
-					success: function (html) {
-						alert("Finished");
-					},
-					error: function (html) {
-						alert("error");
-					}
-				});
-        	} else {
-            	alert("Wrong password");
-        	}
-		});
-
-        $('#print-today-items').on('click', function(e) {
-            e.preventDefault();
-            var pass = prompt("Input Password","");
-            pass = hex_md5(pass);
-            if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {
-                $.ajax({
-                    url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'printTodayItems')); ?>",
-                    method: "post",
-                    // async: false,
-                    success: function (html) {
-                        alert("Finished");
-                    },
-                    error: function (html) {
-                        alert("error");
-                    }
-                });
-            } else {
-                alert("Wrong password");
-            }
-        })
 	});
 
     $(window).load(function () {
