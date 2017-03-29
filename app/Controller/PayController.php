@@ -2,6 +2,7 @@
 
 App::uses('PrintLib', 'Lib');
 class PayController extends AppController {
+    public $components = array('PayHandler');
 
     public function beforeFilter() {
 
@@ -100,48 +101,21 @@ class PayController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-        // pr($this->data); die;
-        // get all params
-        $order_id = $this->data['order_id'];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
-        $paid_by = strtoupper($this->data['paid_by']);
 
-        $pay = $this->data['pay'];
-        $change = $this->data['change'];
+        $this->PayHandler->completeOrder(array(
+            'order_id' => $this->data['order_id'],
+            'table' => $this->data['table'],
+            'type' => $this->data['type'],
+            'paid_by' => strtoupper($this->data['paid_by']),
+            'pay' => $this->data['pay'],
+            'change' => $this->data['change'],
+            'card_val' => $this->data['card_val'],
+            'cash_val' => $this->data['cash_val'],
+            'tip_paid_by' => $this->data['tip_paid_by'],
+            'tip' => $this->data['tip'] ? $this->data['tip'] : 0
+        ));
 
-        // save order to database
-        $data['Order']['id'] = $order_id;
-        if ($this->data['card_val'] and $this->data['cash_val'])
-            $data['Order']['paid_by'] = "MIXED";
 
-        elseif ($this->data['card_val'])
-            $data['Order']['paid_by'] = "CARD";
-
-        elseif ($this->data['cash_val'])
-            $data['Order']['paid_by'] = "CASH";
-
-        $data['Order']['table_status'] = 'P';
-
-        $data['Order']['paid'] = $pay;
-        $data['Order']['change'] = $change;
-        $data['Order']['is_kitchen'] = 'Y';
-
-        $data['Order']['is_completed'] = 'Y';
-
-        $data['Order']['card_val'] = $this->data['card_val'];
-        $data['Order']['cash_val'] = $this->data['cash_val'];
-        $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
-        $data['Order']['tip'] = $this->data['tip_val'];
-
-        $this->loadModel('Order');
-        $this->Order->save($data, false);
-
-        // update popularity status
-        $this->loadModel('Cousine');
-        $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id')");
-
-        // save all
         $this->Session->setFlash('Order successfully completed.', 'success');
 
         echo true;

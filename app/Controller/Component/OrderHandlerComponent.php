@@ -13,6 +13,7 @@ class OrderHandlerComponent extends Component {
         $this->Category = ClassRegistry::init('Category');
         $this->Cashier = ClassRegistry::init('Cashier');
         $this->Cousine = ClassRegistry::init('Cousine');
+        $this->Extra = ClassRegistry::init('Extra');
     }
     /**
      * paras:
@@ -194,7 +195,7 @@ class OrderHandlerComponent extends Component {
         $item_id_list = $args['item_id_list'];
         $table = $args['table'];
         $type = $args['type'];
-        // $order_no = $this->data['order_no'];
+        // $order_no = $args['order_no'];
 
         foreach ($item_id_list as $item_id) {
             // if the item is printed
@@ -231,10 +232,122 @@ class OrderHandlerComponent extends Component {
     }
 
 
-    public function batchAddExtras() {
+    public function batchAddExtras($args) {
+        ApiHelperComponent::verifyRequiredParams($args, ['item_id_list', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
 
+        $selected_item_id_list = $args['item_id_list'];
+        $selected_extras_id_list = $args['extra_id_list'];
+        $table = $args['table'];
+        $type = $args['type'];
+        $special = $args['special'];
+        $cashier_id = $args['cashier_id'];
+
+        // get cashier details
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $cashier_id)
+                )
+        );
+
+        $extras_amount = 0;
+
+        $selected_extras_list = [];
+        foreach ($selected_extras_id_list as $extra_id) {
+            $extra_details = $this->Extra->find("first", array(
+                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
+                    'conditions' => array('Extra.id' => $extra_id)
+                ));
+            $temp_data = array(
+                    'id' => $extra_details['Extra']['id'],
+                    'price' => $extra_details['Extra']['price'],
+                    'name' => $extra_details['Extra']['name_zh'],
+                    'category_id' => $extra_details['Extra']['category_id']
+                );
+            array_push($selected_extras_list, $temp_data);
+        }
+        // echo json_encode($selected_extras_list);
+
+        foreach ($selected_item_id_list as $item_id) {
+            $item_detail = $this->OrderItem->find("first", array(
+                'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
+                'conditions' => array('OrderItem.id' => $item_id)
+                    )
+            );
+
+            if (empty($item_detail['OrderItem']['selected_extras'])) {
+                $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
+            } else {
+                $item_detail['OrderItem']['selected_extras'] = json_decode($item_detail['OrderItem']['selected_extras'], true);
+                $item_detail['OrderItem']['selected_extras'] = json_encode(array_merge($item_detail['OrderItem']['selected_extras'], $selected_extras_list));
+            }
+
+            if (!empty($special)) {
+                $item_detail['OrderItem']['special_instruction'] = $special;
+            }
+
+
+            $this->OrderItem->save($item_detail, false);
+
+            // update extra amount will also incur the updateBillInfo() function
+            $this->OrderItem->updateExtraAmount($item_id);
+
+        }
     }
 
+
+    public function addExtras($args) {
+        ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
+
+        $item_id = $args['item_id'];
+        // selected_extras_id_list maybe empty
+        $selected_extras_id_list = $args['extra_id_list'];
+        $table = $args['table'];
+        $type = $args['type'];
+        $special = $args['special'];
+        $cashier_id = $args['cashier_id'];
+
+        // get cashier details
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $cashier_id)
+                )
+        );
+
+        $extras_amount = 0;
+
+        $selected_extras_list = [];
+        foreach ($selected_extras_id_list as $extra_id) {
+            $extra_details = $this->Extra->find("first", array(
+                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
+                    'conditions' => array('Extra.id' => $extra_id)
+                ));
+            $temp_data = array(
+                    'id' => $extra_details['Extra']['id'],
+                    'price' => $extra_details['Extra']['price'],
+                    'name' => $extra_details['Extra']['name_zh'],
+                    'category_id' => $extra_details['Extra']['category_id']
+                );
+            array_push($selected_extras_list, $temp_data);
+        }
+        // echo json_encode($selected_extras_list);
+
+
+
+        $item_detail = $this->OrderItem->find("first", array(
+            'recursive' => -1,
+            'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
+            'conditions' => array('OrderItem.id' => $item_id)
+                )
+        );
+
+        $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
+        $item_detail['OrderItem']['special_instruction'] = $special;
+
+        $this->OrderItem->save($item_detail, false);
+
+        // update extra amount will also incur the updateBillInfo() function
+        $this->OrderItem->updateExtraAmount($item_id);
+    }
 
 
 }

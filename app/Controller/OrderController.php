@@ -131,38 +131,15 @@ class OrderController extends AppController {
     }
 
 
-    // get all taste
-    public function getAllTaste() {
-        $this->loadModel('Cousine');
-        $query_str = "SELECT comb_num FROM cousines WHERE id = " . $item_id;
-        $comb_num = $this->Cousine->query($query_str);
-        $query_str = "SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A'";
-        $extras_categories = $this->Order->query($query_str);
-        if ($comb_num[0]['cousines']['comb_num'] == 0) {
-            $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND extrascategories.extras_num = 0 ";
-        }else{
-            $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND (extrascategories.extras_num = 0 " . " OR extrascategories.id = " . $comb_num[0]['cousines']['comb_num'] . ")";
-        };
-
-
-        $all_extras = $this->Order->query($query_str);
-        $extras = array();
-        foreach ($all_extras as $exts){
-            array_push($extras,$exts['extras']);
-        }
-    }
-
-
     public function removeitem() {
-
         $this->layout = false;
         $this->autoRender = NULL;
 
-        // get all params
-        $item_id_list = $this->data['selected_item_id_list'];
-        $order_no = $this->data['order_no'];
-
-        $res = $this->OrderHandler->removeItem(array('item_id_list' => $item_id_list, 'order_no' => $order_no, 'cashier_id' => $this->Session->read('Front.id')));
+        $res = $this->OrderHandler->removeItem(array(
+            'item_id_list' => $this->data['selected_item_id_list'],
+            'order_no' => $this->data['order_no'],
+            'cashier_id' => $this->Session->read('Front.id')
+        ));
 
         return $res;
     }
@@ -178,9 +155,6 @@ class OrderController extends AppController {
 
         // get all params
         $item_id_list = $this->data['selected_item_id_list'];
-        if (empty($item_id_list)) {
-            return false;
-        }
         $order_no = $this->data['order_no'];
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
@@ -191,19 +165,14 @@ class OrderController extends AppController {
     public function changePrice() {
         $this->layout = false;
         $this->autoRender = NULL;
-        // get cashier details
-        $this->loadModel('Cashier');
-        $this->loadModel('OrderItem');
-        $this->loadModel('Order');
 
-        // get all params
-        $item_id_list = $this->data['selected_item_id_list'];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
-        $order_no = $this->data['order_no'];
-        $price = $this->data['price'];
-
-        $this->OrderHandler->changePrice(array('item_id_list' => $item_id_list, 'table' => $table, 'type' => $type, 'order_no' => $order_no, 'price' => $price));
+        $this->OrderHandler->changePrice(array(
+            'item_id_list' => $this->data['selected_item_id_list'],
+            'table' => $this->data['table'],
+            'type' => $this->data['type'],
+            'order_no' => $this->data['order_no'],
+            'price' => $this->data['price']
+        ));
     }
 
 
@@ -236,75 +205,17 @@ class OrderController extends AppController {
 
 
     public function batchAddExtras() {
-
         $this->layout = false;
         $this->autoRender = NULL;
 
-        $selected_item_id_list = $this->data['selected_item_id_list'];
-        $selected_extras_id_list = $this->data['selected_extras_id'];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
-        $special = $this->data['special'];
-
-
-        // get cashier details
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-
-        $this->loadModel('OrderItem');
-        $this->loadModel('Extra');
-
-
-        $extras_amount = 0;
-
-        $selected_extras_list = [];
-        foreach ($selected_extras_id_list as $extra_id) {
-            $extra_details = $this->Extra->find("first", array(
-                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
-                    'conditions' => array('Extra.id' => $extra_id)
-                ));
-            $temp_data = array(
-                    'id' => $extra_details['Extra']['id'],
-                    'price' => $extra_details['Extra']['price'],
-                    'name' => $extra_details['Extra']['name_zh'],
-                    'category_id' => $extra_details['Extra']['category_id']
-                );
-            array_push($selected_extras_list, $temp_data);
-        }
-        // echo json_encode($selected_extras_list);
-
-        foreach ($selected_item_id_list as $item_id) {
-
-
-            $item_detail = $this->OrderItem->find("first", array(
-                'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
-                'conditions' => array('OrderItem.id' => $item_id)
-                    )
-            );
-
-            if (empty($item_detail['OrderItem']['selected_extras'])) {
-                $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
-            } else {
-                $item_detail['OrderItem']['selected_extras'] = json_decode($item_detail['OrderItem']['selected_extras'], true);
-                $item_detail['OrderItem']['selected_extras'] = json_encode(array_merge($item_detail['OrderItem']['selected_extras'], $selected_extras_list));
-            }
-
-            if (!empty($special)) {
-                $item_detail['OrderItem']['special_instruction'] = $special;
-            }
-
-
-            $this->OrderItem->save($item_detail, false);
-
-            // update extra amount will also incur the updateBillInfo() function
-            $this->OrderItem->updateExtraAmount($item_id);
-
-        }
+        $this->OrderHandler->batchAddExtras(array(
+            'item_id_list' => $this->data['selected_item_id_list'],
+            'extra_id_list' => $this->data['selected_extras_id'],
+            'table' => $this->data['table'],
+            'type' => $this->data['type'],
+            'special' => $this->data['special'],
+            'cashier_id' => $this->Session->read('Front.id')
+        ));
     }
 
         // overwrite all extras of items and special instruction
@@ -312,60 +223,14 @@ class OrderController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-        $item_id = $this->data['selected_item_id'];
-        // selected_extras_id_list maybe empty
-        $selected_extras_id_list = isset($this->data['selected_extras_id']) ?  $this->data['selected_extras_id'] : [];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
-        $special = $this->data['special'];
-
-
-        // get cashier details
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        $this->loadModel('OrderItem');
-        $this->loadModel('Extra');
-
-
-        $extras_amount = 0;
-
-        $selected_extras_list = [];
-        foreach ($selected_extras_id_list as $extra_id) {
-            $extra_details = $this->Extra->find("first", array(
-                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
-                    'conditions' => array('Extra.id' => $extra_id)
-                ));
-            $temp_data = array(
-                    'id' => $extra_details['Extra']['id'],
-                    'price' => $extra_details['Extra']['price'],
-                    'name' => $extra_details['Extra']['name_zh'],
-                    'category_id' => $extra_details['Extra']['category_id']
-                );
-            array_push($selected_extras_list, $temp_data);
-        }
-        // echo json_encode($selected_extras_list);
-
-
-
-        $item_detail = $this->OrderItem->find("first", array(
-            'recursive' => -1,
-            'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
-            'conditions' => array('OrderItem.id' => $item_id)
-                )
-        );
-
-        $item_detail['OrderItem']['selected_extras'] = json_encode($selected_extras_list);
-        $item_detail['OrderItem']['special_instruction'] = $special;
-
-        $this->OrderItem->save($item_detail, false);
-
-        // update extra amount will also incur the updateBillInfo() function
-        $this->OrderItem->updateExtraAmount($item_id);
+        $this->OrderHandler->addExtras(array(
+            'item_id' => $this->data['selected_item_id'],
+            'extra_id_list' => $this->data['selected_extras_id'],
+            'table' => $this->data['table'],
+            'type' => $this->data['type'],
+            'special' => $this->data['special'],
+            'cashier_id' => $this->Session->read('Front.id')
+        ));
     }
 
 
