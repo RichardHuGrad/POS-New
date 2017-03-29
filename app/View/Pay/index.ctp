@@ -360,8 +360,14 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
     </div>
 </div>
 
+<div class="" ng-app="keyboardApp" ng-controller="keyboardCtrl">
+    <keyboard></keyboard>
+</div>
+
+
+
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js', 'flowtype.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js', 'flowtype.js', 'angular/keyboardApp.js', 'angular/controllers/keyboard.js'));
 echo $this->fetch('script');
 ?>
 <script>

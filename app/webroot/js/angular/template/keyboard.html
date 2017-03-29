@@ -1,0 +1,39 @@
+<div class="container">
+    <input class="col-md-12" type="text" name="" value="" ng-model="screen">
+    <div class="col-md-4 keyboard-left">
+        <div class="col-md-6">Card</div>
+        <div class="col-md-6">Cash</div>
+    </div>
+    <div class="col-md-8 keyboard-right">
+        <div class="col-md-12">
+            <button type="button" name="button" class="col-md-3 keyboard" ng-click="add(10)">$10</button>
+            <button type="button" name="button" class="col-md-3 keyboard" ng-click="add(20)">$20</button>
+            <button type="button" name="button" class="col-md-3 keyboard" ng-click="add(59)">$50</button>
+            <button type="button" name="button" class="col-md-3 keyboard" ng-click="add(100)">$100</button>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-3 keyboard" ng-click="attach('1')">1</div>
+            <div class="col-md-3 keyboard" ng-click="attach('2')">2</div>
+            <div class="col-md-3 keyboard" ng-click="attach('3')">3</div>
+            <div class="col-md-3 keyboard" ng-click="back()">Back</div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-3 keyboard" ng-click="attach('4')">4</div>
+            <div class="col-md-3 keyboard" ng-click="attach('5')">5</div>
+            <div class="col-md-3 keyboard" ng-click="attach('6')">6</div>
+            <div class="col-md-3 keyboard" ng-click="clear()">Clear</div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-3 keyboard" ng-click="attach('7')">7</div>
+            <div class="col-md-3 keyboard" ng-click="attach('8')">8</div>
+            <div class="col-md-3 keyboard" ng-click="attach('9')">9</div>
+            <div class="col-md-3 keyboard" ng-click="enter()">Enter</div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-3 keyboard" ng-click="attach('0')">0</div>
+            <div class="col-md-3 keyboard" ng-click="attach('.')">.</div>
+            <div class="col-md-3 keyboard" ng-click="attach('00')">00</div>
+            <div class="col-md-3 keyboard"></div>
+        </div>
+    </div>
+</div>

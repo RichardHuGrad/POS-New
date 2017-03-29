@@ -78,7 +78,7 @@
     </div>
 </div>
 
-<?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js' )); ?>
+<?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'lib/angular.min.js', 'lib/lodash.min.js')); ?>
 <script type="text/javascript">
 
     $('.switch-lang').on('click', function() {
