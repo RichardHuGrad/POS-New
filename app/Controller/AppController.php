@@ -38,6 +38,7 @@ class AppController extends Controller {
         'Cookie',
         'Print',
         'Time',
+        'ApiHelper',
         'Auth' => array(
             'loginAction' => array('controller' => 'homes', 'action' => 'index'),
             'loginRedirect' => array('controller' => 'homes', 'action' => 'dashboard'),

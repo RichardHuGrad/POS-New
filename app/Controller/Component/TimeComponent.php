@@ -39,6 +39,21 @@ class TimeComponent extends Component {
         }
     }
 
+    public static function verifyRequiredParams($args, $required_fields) {
+        $error = false;
+        $error_fields = "";
+
+        foreach ($required_fields as $field) {
+            if (!isset($args[$field]) || strlen(trim($args[$field])) <= 0) {
+                $error = true;
+                $error_fields .= $field . ', ';
+                throw new Exception('Missing argument: ' . $field);
+            }
+        }
+
+        return !$error;
+    }
+
 }
 
  ?>
