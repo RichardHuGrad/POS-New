@@ -1,14 +1,11 @@
 var paymentApp = angular.module('paymentApp', [])
+    .config(['$locationProvider', function($locationProvider) {
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        });
+    }])
 
 paymentApp.factory('keyboardData', function($rootScope) {
 
 })
-
-paymentApp.directive('orderDetail', [function() {
-    return {
-        restict: 'E',
-        template: `
-
-        `
-    }
-}])

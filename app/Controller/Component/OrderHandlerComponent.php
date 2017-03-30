@@ -15,6 +15,7 @@ class OrderHandlerComponent extends Component {
         $this->Cousine = ClassRegistry::init('Cousine');
         $this->Extra = ClassRegistry::init('Extra');
     }
+
     /**
      * paras:
      */

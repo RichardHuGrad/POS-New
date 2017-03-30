@@ -92,7 +92,7 @@
                                             </ul>
                                         <?php }?>
                                     </li>
-                                    <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'D')); else echo "javascript:void(0)";?>"><?php echo __('Pay'); ?></a></li>
+                                    <li <?php if(@$dinein_tables_status[$i] <> 'N' and @$dinein_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$dinein_tables_status[$i] == 'N' OR @$dinein_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', '?' => array('table'=>$i, 'type'=>'D'))); else echo "javascript:void(0)";?>"><?php echo __('Pay'); ?></a></li>
 
                                     <li <?php if(@$dinein_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$dinein_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'D', 'order'=>@$orders_no[$i]['D']));?>');"><?php echo __('Clear Table'); ?></a></li>
 
@@ -249,7 +249,7 @@
                                                 </ul>
     	                                        <?php }?>
     	                                    </li>
-                                            <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>"> <?php echo __('Pay')?></a></li>
+                                            <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', '?' => array('table'=>$i, 'type'=>'T'))); else echo "javascript:void(0)";?>"> <?php echo __('Pay')?></a></li>
     	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$takeway_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T']));?>');"><?php echo __('Clear Table')?></a></li>
 
     		                        	</ul>
@@ -348,7 +348,7 @@
                                                 </ul>
                                             <?php }?>
                                         </li>
-                                        <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'W')); else echo "javascript:void(0)";?>"><?php echo __('Pay'); ?></a></li>
+                                        <li <?php if(@$waiting_tables_status[$i] <> 'N' and @$waiting_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$waiting_tables_status[$i] == 'N' OR @$waiting_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', "?" => array('table'=>$i, 'type'=>'W'))); else echo "javascript:void(0)";?>"><?php echo __('Pay'); ?></a></li>
                                         <li <?php if(@$waiting_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$waiting_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'W', 'order'=>@$orders_no[$i]['W']));?>');"><?php echo __('Clear'); ?></a></li>
                                     </ul>
                                     </div>
