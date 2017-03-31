@@ -5,6 +5,8 @@ App::uses('PrintComponent', 'Component');
 
 
 class OrderHandlerComponent extends Component {
+    public $status = 'success';
+
     public function __construct() {
         // register model
         $this->Admin = ClassRegistry::init('Admin');

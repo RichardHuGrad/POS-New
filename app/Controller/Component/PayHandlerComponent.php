@@ -4,6 +4,8 @@ App::uses('ApiHelperComponent', 'Component');
 
 
 class PayHandlerComponent extends Component {
+    public $status = 'success';
+
     public function __construct() {
         // register model
         $this->Order = ClassRegistry::init('Order');

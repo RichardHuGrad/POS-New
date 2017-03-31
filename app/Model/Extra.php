@@ -6,13 +6,13 @@ class Extra extends AppModel {
 
 
     public $belongsTo = array(
-        'Cousine' => array(
-            'className' => 'Cousine',
-            'foreignKey' => 'cousine_id'
-        )
+        // 'Cousine' => array(
+        //     'className' => 'Cousine',
+        //     'foreignKey' => 'cousine_id'
+        // )
     );
 
-	
+
     public $validate = array(
         'name' => array(
             'notEmpty' => array(
@@ -20,7 +20,7 @@ class Extra extends AppModel {
                 'message' => 'Last name can\'t be empty',
                 'allowEmpty' => false
             )
-        ),        
+        ),
     );
 
     public function validate_passwords() {
