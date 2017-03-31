@@ -4,13 +4,13 @@ info:
   description: POS system API
   version: "1.0.0"
 # the domain of the service
-host: localhost
+host: pos.auroraeducationonline.info
 # array of all schemes that your API supports
 schemes:
   - http
   - https
 # will be prefixed to all paths
-basePath: /pos-new/api
+basePath: /api
 produces:
   - application/json
 paths:
@@ -618,5 +618,3 @@ responses:
     description: missing argument
     schema:
       $ref: "#/definitions/Error"
-
-  
