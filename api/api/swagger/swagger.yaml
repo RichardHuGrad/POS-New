@@ -487,7 +487,7 @@ paths:
         200:
           description: success
           
-  /tables/view:
+  /tables/getOrderInfoByTable:
      post:
       consumes:
         - application/x-www-form-urlencoded
@@ -571,6 +571,30 @@ paths:
         - order_item information
       parameters:
         - $ref: "#/parameters/itemId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+  
+  /tables/getAllOrderItemsByOrderId:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order_item by order_item_id
+      description: |
+        get infomation of order_item by id
+        - order_item information
+      parameters:
+        - $ref: "#/parameters/orderId"
         - $ref: "#/parameters/accessToken"
       tags:
         - Table
@@ -699,6 +723,96 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllTableStatus:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of extra
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: D for dine in, T for takeout, W for waiting
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+          
+  /tables/getAllDineinTableStatus:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of extra
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllTakeoutTableStatus:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of extra
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"  
+
+  /tables/getAllWaitingTableStatus:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of extra
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+          
+
 
 
 parameters:
