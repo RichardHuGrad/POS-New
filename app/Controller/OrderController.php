@@ -70,8 +70,9 @@ class OrderController extends AppController {
             'Order.is_completed' => 'N',
             'Order.order_type' => $type
         );
+        
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.order_type', 'Order.id'),
+            'fields' => array('Order.order_no', 'Order.order_type', 'Order.id','Order.phone'),
             'conditions' => $conditions,
             'recursive' => false
                 )
@@ -287,6 +288,23 @@ class OrderController extends AppController {
         $this->Print->printTokitchen(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
     }
 
+    public function editPhone() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $this->loadModel('Cashier');
+        $this->loadModel('Order');
+
+        // get all params
+        $phone = $this->data['phone'];
+        $order_no = $this->data['order_no'];
+        
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        
+        $this->Order->query("UPDATE orders set `phone` = '$phone' where id = $order_id");
+
+        $this->Session->setFlash('Order successfully completed.', 'success');
+}
 
 
 

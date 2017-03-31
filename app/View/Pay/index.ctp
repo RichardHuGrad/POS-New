@@ -85,7 +85,7 @@
                                     <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">T<?php echo $t; ?></a></div>
                                 <?php }
                             } ?>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('WAITING'); ?></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('Delivery'); ?></div>
     <?php for ($t = 1; $t <= WAITING_TABLE; $t++) {
         if (!@$orders_no[$t]['W']) {
             ?>

@@ -83,7 +83,7 @@
                                                     }
                                                 }
                                                 ?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('WAITING'); ?></div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('Delivery'); ?></div>
                                                 <?php for($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                 if(!@$orders_no[$t]['W']){  ?>
                                                    <a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['D']));?>"><div class="col-md-4 col-sm-4 col-xs-4 text-center timetable"><?php echo $t; ?></div></a>
@@ -235,7 +235,7 @@
                                                         }
                                                     }
                                                     ?>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('WAITING'); ?></div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('Delivery'); ?></div>
                                                     <?php
                                                     for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                         if (!@$orders_no[$t]['W']) {
@@ -279,7 +279,7 @@
             <div class="col-md-2 col-sm-2 col-xs-2" id="waiting-list-component">
 
                 <div class="col-md-12 col-sm-12 col-xs-12" id="waiting-list-title">
-                        <?php echo __('Waiting List'); ?>
+                        <?php echo __('Delivery List'); ?>
                 </div>
 
                 <div class="col-md-12 col-sm-12 col-xs-12 dine-wrap">
@@ -292,7 +292,7 @@
                                 <div class="dropdown-menu dropdown-overlay">
                                 <ul class="waiting-tables">
                                     <!--<div class="arrow"></div>-->
-                                    <li class="dropdown-title"><?php echo __('Waiting List'); ?><?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
+                                    <li class="dropdown-title"><?php echo __('Delivery List'); ?><?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></li>
                                     <li <?php if (@$waiting_tables_status[$i] == 'P') echo 'class="disabled"'; ?>><a tabindex="-1" href="<?php
                                         if (@$waiting_tables_status[$i] <> 'P')
                                             echo $this->Html->url(array('controller' => 'order', 'action' => 'index', 'table' => $i, 'type' => 'W'));
@@ -334,7 +334,7 @@
                                                         }
                                                     }
                                                     ?>
-                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('WAITING'); ?></div>
+                                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('Delivery'); ?></div>
                                                     <?php
                                                     for ($t = 1; $t <= $tables['Admin']['no_of_waiting_tables']; $t++) {
                                                         if (!@$orders_no[$t]['W'] and $t <> $i) {
@@ -353,7 +353,7 @@
                                     </ul>
                                     </div>
                                     <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-                                        <div class="number-txt for-dine">Wait<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                                        <div class="number-txt for-dine">Deliv<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                         <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                             <?php
                                             if(!@$waiting_tables_status[$i])

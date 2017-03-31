@@ -45,7 +45,7 @@ class PrintLib {
     }
 
 
-    public function printKitchenItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
+    public function printKitchenItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false,$phone='') {
 
         $debug_str = json_encode($item_detail);
 
@@ -54,7 +54,7 @@ class PrintLib {
         }
 
 
-        $headerPage = new KitchenHeaderPage($order_no, $table_no, $table_type);
+        $headerPage = new KitchenHeaderPage($order_no, $table_no, $table_type,true,false,$phone);
         $itemsPage = new KitchenItemsPage($item_detail, $table_type);
         $footerPage = new TimeFooterPage();
 
@@ -211,18 +211,19 @@ abstract class HeaderPage {
 // with logo, address information
 class KitchenHeaderPage extends HeaderPage {
     private $order_no, $table_no, $table_type, $print_zh, $print_en;
-    public function __construct($order_no, $table_no, $table_type, $print_zh=true, $print_en = false) {
+    public function __construct($order_no, $table_no, $table_type, $print_zh=true, $print_en = false,$phone='') {
         $this->order_no = $order_no;
         $this->table_no = $table_no;
         $this->table_type = $table_type;
         $this->print_zh = $print_zh;
         $this->print_en = $print_en;
+        $this->phone = $phone;
     }
 
     public function printPage($handle) {
         printer_start_page($handle);
 
-        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[等候]]');
+        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
         $table_type_str = $type_map[$this->table_type];
 
         $y = 10;
@@ -250,7 +251,12 @@ class KitchenHeaderPage extends HeaderPage {
         printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $y);
 
         $y += 42;
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $this->table_no), 32, $y);
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
+        
+        if($this->phone!=''){
+          $y += 42;
+          printer_draw_text($handle, "Phone:" . $this->phone, 32, $y);
+        }
         //End
 
         $y += 42;
@@ -279,7 +285,7 @@ class LogoHeaderPage extends HeaderPage {
     public function printPage($handle) {
         printer_start_page($handle);
 
-        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[等候]]');
+        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
         $table_type_str = $type_map[$this->table_type];
 
         // print Logo image
@@ -308,7 +314,7 @@ class LogoHeaderPage extends HeaderPage {
 
         printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $print_y);
         $print_y+=40;
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '#' . $this->table_no), 32, $print_y);
+        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $print_y);
         $print_y+=38;
 
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
@@ -583,9 +589,15 @@ class ReportItemsPage extends ItemsPage {
 abstract class CountPage {
     abstract function printPage($handle);
 
-    public function format3Columns($handle, $str1, $str2, $num) {
+    public function format3Columns($handle, $str1, $str2, $num,$font_bold=false) {
         printer_start_page($handle);
-        $font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        
+        if($font_bold == true){
+        	$font = printer_create_font('simsun', 28, 10, 1500, false, false, false, 0);
+        }else{
+        	$font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        }
+        
         printer_select_font($handle, $font);
 
         printer_draw_text($handle, iconv("UTF-8", "gb2312", $str1), 58, 0);
@@ -676,7 +688,7 @@ class ReceiptPage extends CountPage {
         }
         $this->format3Columns($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
 
-        $this->format3Columns($handle, "Total", "总计:", $total);
+        $this->format3Columns($handle, "Total", "总计:", $total,1200);
 
         $this->format3Columns($handle, "Paid", "付款:", $paid);
         $this->format3Columns($handle, "Change", "找零:", $change);

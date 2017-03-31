@@ -95,7 +95,7 @@
                                                 if(!@$orders_no[$t]['T']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$orders_no[$i]['D']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Delivery 送餐</div>
                                                 <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
                                                 if(!@$orders_no[$t]['W']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['D']));?>"><?php echo $t; ?></a></div>
@@ -171,7 +171,7 @@
                                                 if(!@$orders_no[$t]['T'] and $t <> $i){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$orders_no[$i]['T']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Delivery 送餐</div>
                                                 <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
                                                 if(!@$orders_no[$t]['W']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['T']));?>"><?php echo $t; ?></a></div>
@@ -206,7 +206,7 @@
 
 
             <div class="clearfix dine-box">
-                <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Waiting Table 等待表</button>
+                <button class="dinebtn"><?php echo $this->Html->image('dine-icon.png', array('alt' => 'POS', 'title' => 'Dine')); ?> Delivery Table 送餐表</button>
             </div>
 
             <div class="clearfix marginB30">
@@ -238,7 +238,7 @@
                                                 if(!@$orders_no[$t]['T']){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$orders_no[$i]['W']));?>"><?php echo $t; ?></a></div>
                                                 <?php } }?>
-                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Delivery 送餐</div>
                                                 <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
                                                 if(!@$orders_no[$t]['W'] and $t <> $i){  ?>
                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$orders_no[$i]['W']));?>"><?php echo $t; ?></a></div>

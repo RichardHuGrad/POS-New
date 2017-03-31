@@ -124,7 +124,8 @@ class PrintComponent extends Component {
                 'fields' => array(
                         'Order.order_type',
                         'Order.table_no',
-                        'Order.order_no'
+                        'Order.order_no',
+                        'Order.phone'
                     ),
                 'conditions' => array(
                         'Order.id' => $order_id
@@ -134,6 +135,7 @@ class PrintComponent extends Component {
         $type = $orderDetail['Order']['order_type'];
         $table = $orderDetail['Order']['table_no'];
         $order_no = $orderDetail['Order']['order_no'];
+        $phone = $orderDetail['Order']['phone'];
 
 
         // get all un printed items
@@ -145,7 +147,7 @@ class PrintComponent extends Component {
 
             $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false);
+            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false,$phone);
         }
 
         if (!empty($printItems['C'])) {

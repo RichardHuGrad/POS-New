@@ -44,7 +44,7 @@
                             if(!@$orders_no[$t]['T']){  ?>
                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'T', 'order_no'=>@$Order_detail['Order']['order_no'], 'ref'=>'pay' ));?>"><?php echo $t; ?></a></div>
                             <?php } }?>
-                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">WAITING 等候</div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable">Delivery 送餐</div>
                             <?php for($t = 1; $t <= WAITING_TABLE; $t++) {
                             if(!@$orders_no[$t]['W']){  ?>
                                <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'move_order', 'table'=>$t, 'type'=>'W', 'order_no'=>@$Order_detail['Order']['order_no'], 'ref'=>'pay' ));?>"><?php echo $t; ?></a></div>

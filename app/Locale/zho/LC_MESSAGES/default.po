@@ -4,515 +4,403 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-03-02 17:16-0500\n"
-"PO-Revision-Date: 2017-03-02 18:01-0500\n"
+"POT-Creation-Date: 2017-03-31 14:49-0400\n"
+"PO-Revision-Date: 2017-03-31 14:50-0400\n"
+"Last-Translator: \n"
 "Language-Team: EMAIL@ADDRESS\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: \n"
-"Language: zh_CN\n"
+"X-Generator: Poedit 1.8.11\n"
 
-#: Controller/HomesController.php:83
+#: /Controller/HomesController.php:83
 msgid "%s you have successfully logged out"
 msgstr "%s 你已经成功登出"
 
-#: View/Elements/navbar.ctp:19 View/Order/index.ctp:17
-msgid "Home"
-msgstr "主页"
-
-#: View/Elements/navbar.ctp:22
-msgid "Admin Functions"
-msgstr "管理员功能"
-
-#: View/Elements/navbar.ctp:28
-msgid "More"
-msgstr "更多"
-
-#: View/Elements/navbar.ctp:36
-msgid "Order Search"
-msgstr "订单搜索"
-
-#: View/Elements/navbar.ctp:44 View/Homes/dashboard.ctp:56;203;301
-msgid "Order"
-msgstr "订单"
-
-#: View/Elements/navbar.ctp:52
-msgid "Languages"
-msgstr "语言"
-
-#: View/Elements/navbar.ctp:78
+#: /View/Elements/footer.ctp:6
 msgid "On-going"
 msgstr "未支付"
 
-#: View/Elements/navbar.ctp:83
+#: /View/Elements/footer.ctp:11
 msgid "Available"
 msgstr "可用的"
 
-#: View/Elements/navbar.ctp:87 View/Order/index.ctp:25
+#: /View/Elements/navbar.ctp:19 /View/Order/index.ctp:17
+msgid "Home"
+msgstr "主页"
+
+#: /View/Elements/navbar.ctp:22
+msgid "Admin Functions"
+msgstr "管理员功能"
+
+#: /View/Elements/navbar.ctp:28
+msgid "More"
+msgstr "更多"
+
+#: /View/Elements/navbar.ctp:36
+msgid "Order Search"
+msgstr "订单搜索"
+
+#: /View/Elements/navbar.ctp:44 /View/Homes/dashboard.ctp:56;203;301
+msgid "Order"
+msgstr "订单"
+
+#: /View/Elements/navbar.ctp:52
+msgid "Languages"
+msgstr "语言"
+
+#: /View/Elements/navbar.ctp:72 /View/Order/index.ctp:25
 msgid "Logout"
 msgstr "登出"
 
-#: View/Homes/dashboard.ctp:55
+#: /View/Homes/dashboard.ctp:55
 msgid "Dine In"
 msgstr "堂食"
 
-#: View/Homes/dashboard.ctp:59;210;309 View/Pay/index.ctp:70
+#: /View/Homes/dashboard.ctp:59;210;309 /View/Pay/index.ctp:70
 msgid "Change Table"
 msgstr "换桌"
 
-#: View/Homes/dashboard.ctp:65;218;317 View/Pay/index.ctp:74
+#: /View/Homes/dashboard.ctp:65;218;317 /View/Pay/index.ctp:74
 msgid "DINE IN"
 msgstr "堂食"
 
-#: View/Homes/dashboard.ctp:76;228;327 View/Pay/index.ctp:81
+#: /View/Homes/dashboard.ctp:76;228;327 /View/Pay/index.ctp:81
 msgid "TAKE OUT"
 msgstr "外卖"
 
-#: View/Homes/dashboard.ctp:86;238;337 View/Pay/index.ctp:88
-msgid "WAITING"
-msgstr "等待"
+#: /View/Homes/dashboard.ctp:86;238;337 /View/Pay/index.ctp:88
+msgid "Delivery"
+msgstr "送餐"
 
-#: View/Homes/dashboard.ctp:95;252;351 View/Order/index.ctp:127
+#: /View/Homes/dashboard.ctp:95;252;351 /View/Order/index.ctp:127
 msgid "Pay"
 msgstr "付款"
 
-#: View/Homes/dashboard.ctp:97;253
+#: /View/Homes/dashboard.ctp:97;253
 msgid "Clear Table"
 msgstr "变空桌"
 
-#: View/Homes/dashboard.ctp:106;115
+#: /View/Homes/dashboard.ctp:106;115
 msgid "Merge Bill"
 msgstr "合单"
 
-#: View/Homes/dashboard.ctp:145
+#: /View/Homes/dashboard.ctp:145
 msgid "Split Bill"
 msgstr "分单"
 
-#: View/Homes/dashboard.ctp:149
+#: /View/Homes/dashboard.ctp:149
 msgid "History"
 msgstr "历史订单"
 
-#: View/Homes/dashboard.ctp:153
+#: /View/Homes/dashboard.ctp:153
 msgid "Dine"
 msgstr "堂食"
 
-#: View/Homes/dashboard.ctp:182
+#: /View/Homes/dashboard.ctp:182
 msgid "Takeout Tables"
 msgstr "外卖桌"
 
-#: View/Homes/dashboard.ctp:197 View/Order/index.ctp:132
+#: /View/Homes/dashboard.ctp:197 /View/Order/index.ctp:132
 msgid "Takeout"
 msgstr "外卖"
 
-#: View/Homes/dashboard.ctp:282;295
-msgid "Waiting List"
-msgstr "等待桌"
+#: /View/Homes/dashboard.ctp:282;295
+msgid "Delivery List"
+msgstr "送餐桌"
 
-#: View/Homes/dashboard.ctp:352 View/Merge/index.ctp:342
-#: View/Order/index.ctp:177 View/Order/summarypanel.ctp:26
-#: View/Pay/index.ctp:337
+#: /View/Homes/dashboard.ctp:352 /View/Merge/index.ctp:342
+#: /View/Order/index.ctp:178 /View/Order/summarypanel.ctp:26
+#: /View/Pay/index.ctp:337
 msgid "Clear"
 msgstr "清空"
 
-#: View/Homes/forgot_password.ctp:11
+#: /View/Homes/forgot_password.ctp:11
 msgid "Email"
 msgstr "邮箱"
 
-#: View/Homes/forgot_password.ctp:15
+#: /View/Homes/forgot_password.ctp:15
 msgid "Submit"
 msgstr "上传"
 
-#: View/Homes/forgot_password.ctp:17
+#: /View/Homes/forgot_password.ctp:17
 msgid "Already have an account?"
 msgstr "已经注册？"
 
-#: View/Homes/index.ctp:11
+#: /View/Homes/index.ctp:11
 msgid "User Name"
 msgstr "用户名"
 
-#: View/Homes/index.ctp:16
+#: /View/Homes/index.ctp:16
 msgid "Password"
 msgstr "密码"
 
-#: View/Homes/index.ctp:19
+#: /View/Homes/index.ctp:19
 msgid "Sign in"
 msgstr "登录"
 
-#: View/Homes/index.ctp:22
+#: /View/Homes/index.ctp:22
 msgid "Forgot your password?"
 msgstr "忘记密码？"
 
-#: View/Merge/index.ctp:10;714 View/Order/index.ctp:45 View/Pay/index.ctp:59
+#: /View/Merge/index.ctp:10;714 /View/Order/index.ctp:45 /View/Pay/index.ctp:59
 msgid "Order No."
 msgstr "订单号"
 
-#: View/Merge/index.ctp:16 View/Pay/index.ctp:59
+#: /View/Merge/index.ctp:16 /View/Pay/index.ctp:59
 msgid "Table"
 msgstr "桌"
 
-#: View/Merge/index.ctp:19
+#: /View/Merge/index.ctp:19
 msgid "and"
 msgstr "和"
 
-#: View/Merge/index.ctp:25
+#: /View/Merge/index.ctp:25
 msgid "merge"
 msgstr "合并"
 
-#: View/Merge/index.ctp:44 View/Pay/index.ctp:64
+#: /View/Merge/index.ctp:44 /View/Pay/index.ctp:64
 msgid "Paid"
 msgstr "已付款"
 
-#: View/Merge/index.ctp:48 View/Pay/index.ctp:100
+#: /View/Merge/index.ctp:48 /View/Pay/index.ctp:100
 msgid "Print Receipt"
 msgstr "打印收据"
 
-#: View/Merge/index.ctp:50 View/Pay/index.ctp:102
+#: /View/Merge/index.ctp:50 /View/Pay/index.ctp:102
 msgid "Order Summary"
 msgstr "订单摘要"
 
-#: View/Merge/index.ctp:110;716 View/Order/summarypanel.ctp:74
-#: View/Pay/index.ctp:153
+#: /View/Merge/index.ctp:110;716 /View/Order/summarypanel.ctp:74
+#: /View/Pay/index.ctp:153
 msgid "Subtotal"
 msgstr "小计"
 
-#: View/Merge/index.ctp:150;720 View/Order/summarypanel.ctp:93
-#: View/Pay/index.ctp:205
+#: /View/Merge/index.ctp:150;720 /View/Order/summarypanel.ctp:93
+#: /View/Pay/index.ctp:205
 msgid "Discount"
 msgstr "折扣"
 
-#: View/Merge/index.ctp:184;724 View/Order/summarypanel.ctp:109
-#: View/Pay/index.ctp:221
+#: /View/Merge/index.ctp:184;724 /View/Order/summarypanel.ctp:109
+#: /View/Pay/index.ctp:221
 msgid "After Discount"
 msgstr "折后价"
 
-#: View/Merge/index.ctp:207;728 View/Pay/index.ctp:232 View/Report/index.ctp:55
+#: /View/Merge/index.ctp:207;728 /View/Pay/index.ctp:232
+#: /View/Report/index.ctp:55
 msgid "Tax"
 msgstr "税"
 
-#: View/Merge/index.ctp:234;732 View/Order/summarypanel.ctp:126
-#: View/Pay/index.ctp:240 View/Report/index.ctp:56
+#: /View/Merge/index.ctp:234;732 /View/Order/summarypanel.ctp:126
+#: /View/Pay/index.ctp:240 /View/Report/index.ctp:56
 msgid "Total"
 msgstr "总计"
 
-#: View/Merge/index.ctp:263;292 View/Pay/index.ctp:249;278
+#: /View/Merge/index.ctp:263;292 /View/Pay/index.ctp:249;278
 msgid "Received"
 msgstr "已收到"
 
-#: View/Merge/index.ctp:267;295;350 View/Pay/index.ctp:253;281;345;372
+#: /View/Merge/index.ctp:267;295;350 /View/Pay/index.ctp:253;281;345;372
 msgid "Cash"
 msgstr "现金"
 
-#: View/Merge/index.ctp:268;296;349 View/Pay/index.ctp:254;282;344;373
+#: /View/Merge/index.ctp:268;296;349 /View/Pay/index.ctp:254;282;344;373
 msgid "Card"
 msgstr "卡"
 
-#: View/Merge/index.ctp:275 View/Pay/index.ctp:261;371
+#: /View/Merge/index.ctp:275 /View/Pay/index.ctp:261;371
 msgid "Change"
 msgstr "找零"
 
-#: View/Merge/index.ctp:283;307 View/Pay/index.ctp:269;293
+#: /View/Merge/index.ctp:283;307 /View/Pay/index.ctp:269;293
 msgid "Tip"
 msgstr "小费"
 
-#: View/Merge/index.ctp:301 View/Pay/index.ctp:287;370
+#: /View/Merge/index.ctp:301 /View/Pay/index.ctp:287;370
 msgid "Remaining"
 msgstr "剩余"
 
-#: View/Merge/index.ctp:344 View/Pay/index.ctp:339
+#: /View/Merge/index.ctp:344 /View/Pay/index.ctp:339
 msgid "Enter"
 msgstr "输入"
 
-#: View/Merge/index.ctp:355 View/Pay/index.ctp:349
+#: /View/Merge/index.ctp:355 /View/Pay/index.ctp:349
 msgid "Confirm"
 msgstr "确认"
 
-#: View/Merge/index.ctp:714 View/Order/index.ctp:45
+#: /View/Merge/index.ctp:714 /View/Order/index.ctp:45
 msgid "Table No."
 msgstr "桌号"
 
-#: View/Merge/index.ctp:714
+#: /View/Merge/index.ctp:714
 msgid "Type"
 msgstr "类型"
 
-#: View/Merge/index.ctp:741 View/Order/summarypanel.ctp:44
-#: View/Pay/index.ctp:170
+#: /View/Merge/index.ctp:741 /View/Order/summarypanel.ctp:44
+#: /View/Pay/index.ctp:170
 msgid "Fix Discount"
 msgstr "固定折扣"
 
-#: View/Merge/index.ctp:745 View/Order/summarypanel.ctp:50
-#: View/Pay/index.ctp:176
+#: /View/Merge/index.ctp:745 /View/Order/summarypanel.ctp:50
+#: /View/Pay/index.ctp:176
 msgid "Discount in %"
 msgstr "%折扣"
 
-#: View/Merge/index.ctp:749 View/Order/summarypanel.ctp:56
-#: View/Pay/index.ctp:182
+#: /View/Merge/index.ctp:749 /View/Order/summarypanel.ctp:56
+#: /View/Pay/index.ctp:182
 msgid "Promo Code"
 msgstr "优惠码"
 
-#: View/Merge/index.ctp:752 View/Order/summarypanel.ctp:64
-#: View/Pay/index.ctp:190
+#: /View/Merge/index.ctp:752 /View/Order/summarypanel.ctp:64
+#: /View/Pay/index.ctp:190
 msgid "Apply"
 msgstr "应用"
 
-#: View/Merge/index.ctp:757 View/Order/summarypanel.ctp:33
-#: View/Pay/index.ctp:161
+#: /View/Merge/index.ctp:757 /View/Order/summarypanel.ctp:33
+#: /View/Pay/index.ctp:161
 msgid "Add Discount"
 msgstr "加入折扣"
 
-#: View/Merge/index.ctp:761
+#: /View/Merge/index.ctp:761
 msgid "Delete Discount"
 msgstr "删除折扣"
 
-#: View/Order/index.ctp:18
+#: /View/Order/index.ctp:18
 msgid "Back"
 msgstr "返回"
 
-#: View/Order/index.ctp:54
+#: /View/Order/index.ctp:54
 msgid "Search"
 msgstr "搜索"
 
-#: View/Order/index.ctp:126
+#: /View/Order/index.ctp:126
 msgid "Send to Kitchen"
 msgstr "送厨"
 
-#: View/Order/index.ctp:128
-msgid "Batch Add Taste"
-msgstr "批量加口味"
-
-#: View/Order/index.ctp:129
+#: /View/Order/index.ctp:128
 msgid "CHange Taste"
 msgstr "换口味"
 
-#: View/Order/index.ctp:130
+#: /View/Order/index.ctp:129
+msgid "Batch Add Taste"
+msgstr "批量加口味"
+
+#: /View/Order/index.ctp:130
 msgid "Delete"
 msgstr "删除"
 
-#: View/Order/index.ctp:131
+#: /View/Order/index.ctp:131
 msgid "Change Quantity"
 msgstr "改数量"
 
-#: View/Order/index.ctp:133
+#: /View/Order/index.ctp:133
 msgid "Urge"
 msgstr "催菜"
 
-#: View/Order/index.ctp:134
+#: /View/Order/index.ctp:134
 msgid "Change Price"
 msgstr "改价格"
 
-#: View/Order/index.ctp:157
+#: /View/Order/index.ctp:137
+msgid "Edit Phone"
+msgstr "加号码"
+
+#: /View/Order/index.ctp:158
 msgid "Taste"
 msgstr "口味"
 
-#: View/Order/index.ctp:178
+#: /View/Order/index.ctp:179
 msgid "Save"
 msgstr "保存"
 
-#: View/Order/index.ctp:204
+#: /View/Order/index.ctp:205
 msgid "Selected Taste"
 msgstr "已选口味"
 
-#: View/Order/index.ctp:210
+#: /View/Order/index.ctp:211
 msgid "Selected Combo"
 msgstr "已选拼盘"
 
-#: View/Order/summarypanel.ctp:22
+#: /View/Order/summarypanel.ctp:22
 msgid "Check All"
 msgstr "全选"
 
-#: View/Order/summarypanel.ctp:23
+#: /View/Order/summarypanel.ctp:23
 msgid "Uncooked"
 msgstr "未送厨"
 
-#: View/Order/summarypanel.ctp:24
+#: /View/Order/summarypanel.ctp:24
 msgid "Cooked"
 msgstr "已送厨"
 
-#: View/Order/summarypanel.ctp:25
+#: /View/Order/summarypanel.ctp:25
 msgid "Inverse"
 msgstr "反选"
 
-#: View/Order/summarypanel.ctp:120
+#: /View/Order/summarypanel.ctp:120
 msgid "Taxes"
 msgstr "税"
 
-#: View/Report/index.ctp:9
+#: /View/Report/index.ctp:9
 msgid "Admin Report Functions"
 msgstr "管理员报表功能"
 
-#: View/Report/index.ctp:13
+#: /View/Report/index.ctp:13
 msgid "Today"
 msgstr "今天"
 
-#: View/Report/index.ctp:14
+#: /View/Report/index.ctp:14
 msgid "Yesterday"
 msgstr "昨天"
 
-#: View/Report/index.ctp:15
+#: /View/Report/index.ctp:15
 msgid "Current Month"
 msgstr "本月"
 
-#: View/Report/index.ctp:22;30;38
+#: /View/Report/index.ctp:22;30;38
 msgid "Check Sales Total"
 msgstr "查看销售额"
 
-#: View/Report/index.ctp:23;24;31;39;40
+#: /View/Report/index.ctp:23;24;31;39;40
 msgid "Print Sales Total"
 msgstr "打印销售额"
 
-#: View/Report/index.ctp:25;33;41
+#: /View/Report/index.ctp:25;33;41
 msgid "Print Sales Items"
 msgstr "打印销售量"
 
-#: View/Report/index.ctp:32
+#: /View/Report/index.ctp:32
 msgid "Check Sales Items"
 msgstr "查看销售量"
 
-#: View/Report/index.ctp:57
+#: /View/Report/index.ctp:57
 msgid "Received Total"
 msgstr "实收总计"
 
-#: View/Report/index.ctp:58
+#: /View/Report/index.ctp:58
 msgid "Received Cash"
 msgstr "实收现金"
 
-#: View/Report/index.ctp:59
+#: /View/Report/index.ctp:59
 msgid "Received Card"
 msgstr "实收卡类"
 
-#: Model/Admin.php:validation for field firstname Model/Cashier.php:validation
-#: Model/Restaurant.php:validation
-msgid "First name can't be empty"
-msgstr "名字不能为空"
+#~ msgid "First name can't be empty"
+#~ msgstr "名字不能为空"
 
-#: Model/Admin.php:validation for field lastname Model/Cashier.php:validation
-#: Model/Extra.php:validation name Model/Restaurant.php:validation
-msgid "Last name can't be empty"
-msgstr "姓不能为空"
+#~ msgid "Last name can't be empty"
+#~ msgstr "姓不能为空"
 
-#: Model/Admin.php:validation for field email Model/Cashier.php:validation
-#: Model/Restaurant.php:validation Model/User.php:validation
-msgid "Email can't be empty"
-msgstr "邮箱不能为空"
+#~ msgid "Email can't be empty"
+#~ msgstr "邮箱不能为空"
 
-#: Model/Admin.php:validation for field email Model/Cashier.php:validation
-#: Model/Restaurant.php:validation Model/User.php:validation
-msgid "Email already exists, please use different one"
-msgstr "邮箱已被注册，请用其他邮箱"
+#~ msgid "Email already exists, please use different one"
+#~ msgstr "邮箱已被注册，请用其他邮箱"
 
-#: Model/Admin.php:validation for field old_password;validation password
-#: Model/Cashier.php:validation Model/Restaurant.php:validation
-#: Model/User.php:validation password;validation cleaner_password;validation
-#: admin_password
-msgid "Password can't be empty"
-msgstr "密码不能为空"
+#~ msgid "Password can't be empty"
+#~ msgstr "密码不能为空"
 
-#: Model/Admin.php:validation for field old_password
-#: Model/Cashier.php:validation Model/Restaurant.php:validation
-msgid "Incorrect old password"
-msgstr "旧密码不正确"
-
-#: Model/Admin.php:validation for field password Model/Cashier.php:validation
-#: Model/Restaurant.php:validation Model/User.php:validation
-#: cleaner_password;validation admin_password
-msgid "Password must be between %d and %d characters"
-msgstr ""
-
-#: Model/Admin.php:validation for field password Model/Cashier.php:validation
-#: Model/Restaurant.php:validation
-msgid "Old password and new password can't be same"
-msgstr ""
-
-#: Model/Admin.php:validation for field confirm_password
-#: Model/Cashier.php:validation Model/Restaurant.php:validation
-#: Model/User.php:validation confirm_password;validation
-#: cleaner_confirm_password;validation admin_confirm_password
-msgid "Confirm password can't be empty"
-msgstr ""
-
-#: Model/Admin.php:validation for field confirm_password
-#: Model/Cashier.php:validation Model/Restaurant.php:validation
-msgid "Password and confirm password not matched"
-msgstr ""
-
-#: Model/Admin.php:validation for field restaurant_name
-#: Model/Restaurant.php:validation
-msgid "Restaurant name can't be empty"
-msgstr ""
-
-#: Model/Admin.php:validation for field mobile_no Model/Cashier.php:validation
-#: Model/Restaurant.php:validation
-msgid "Mobile number should be numeric only"
-msgstr ""
-
-#: Model/Admin.php:validation for field mobile_no Model/Cashier.php:validation
-#: Model/Restaurant.php:validation Model/User.php:validation contact_number
-msgid "Contact number must be between %d and %d characters only"
-msgstr ""
-
-#: Model/Admin.php:validation for field tax Model/Restaurant.php:validation
-msgid "Please enter a valid tax amount"
-msgstr ""
-
-#: Model/Admin.php:validation for field no_of_table
-#: Model/Restaurant.php:validation
-msgid "Please enter a valid no of table"
-msgstr ""
-
-#: Model/Cashier.php:validation for field email Model/Restaurant.php:validation
-#: Model/User.php:validation
-msgid "Please enter valid email address"
-msgstr ""
-
-#: Model/Cashier.php:validation for field restaurant_id
-msgid "Cashier can't be empty"
-msgstr ""
-
-#: Model/Page.php:validation for field slug
-msgid "Page name can't be empty"
-msgstr ""
-
-#: Model/Page.php:validation for field slug
-msgid "Page name already exists, please use different one"
-msgstr ""
-
-#: Model/Page.php:validation for field slug
-msgid "Page name must be no larger than 100 characters"
-msgstr ""
-
-#: Model/Page.php:validation for field body
-msgid "Page body can't be empty"
-msgstr ""
-
-#: Model/User.php:validation for field name
-msgid "Name can't be empty"
-msgstr ""
-
-#: Model/User.php:validation for field name
-msgid "Name must be between %d and %d characters"
-msgstr ""
-
-#: Model/User.php:validation for field confirm_password;validation
-#: cleaner_confirm_password;validation admin_confirm_password
-msgid "The passwords you entered do not match."
-msgstr ""
-
-#: Model/User.php:validation for field admin_old_password
-msgid "Old Password can't be empty"
-msgstr ""
-
-#: Model/User.php:validation for field contact_number
-msgid "Contact number should be numeric only"
-msgstr ""
-
-#: Model/User.php:validation for field user_image
-msgid ""
-"User image extension should be of jpg, jpeg, JPG, JPEG, png, gif, PNG, GIF "
-"only"
-msgstr ""
-
-#: Model/User.php:validation for field user_image
-msgid "Error in uploading file"
-msgstr ""
+#~ msgid "Incorrect old password"
+#~ msgstr "旧密码不正确"

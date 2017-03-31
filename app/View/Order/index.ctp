@@ -42,7 +42,7 @@
         <div class="col-md-9 col-sm-8 col-xs-12 home-link">
             <div class="cart-txt" id="order_no_display">
             <!-- Modified by Yishou Liao @ Dec 09 2016 -->
-                <?php echo __('Order No.')?><?php echo @$Order_detail['Order']['order_no']; ?>, <?php echo __('Table No.')?><?php echo $table; ?>
+                <?php echo __('Order No.')?><?php echo @$Order_detail['Order']['order_no']; ?>, <?php echo __('Table No.')?><?php echo $table; ?><?php echo @$Order_detail['Order']['phone']!=''?(', Tel: '.$Order_detail['Order']['phone']):''; ?>
             <!-- End -->
             </div>
         </div>
@@ -134,6 +134,7 @@
         <button id="change-price-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-price-component-modal"><strong><?php echo __('Change Price');?></strong></button>
         <!-- <button id="free-price-btn" class="btn btn-lg"><strong>免费</strong></button> -->
         <!-- <button id="add-discount-btn" class="btn btn-lg">Add Discount</button>  -->
+        <button id="edit-phone-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#edit-phone-component-modal"><strong><?php echo __('Edit Phone');?></strong></button>        
     </div>
 
 
@@ -269,6 +270,25 @@
         </div>
     </div>
 </script>
+
+<div class="modal fade clearfix" id="edit-phone-component-modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content clearfix">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Input Phone</h4>
+                </div>
+                <div class="modal-body clearfix">
+                    Phone: <input name="phone" type="text" style="height:30px">
+                </div>
+                <div class="modal-footer clearfix">
+                    
+                    <button type="button" id="edit-phone-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
+                </div>
+            </div>
+        </div>
+</div>
+
 
 <!-- <script id="taste-component" type="text/template"></script> -->
 <script id="selected-extra-item-component" type="text/template">
@@ -1168,6 +1188,25 @@ echo $this->fetch('script');
                 // $(".summary_box").html(html);
                 $('#change-quantity-component-modal .close').trigger('click');
                 renderOrder();
+            }
+        });
+    });
+
+    $('body').on('click', '#edit-phone-component-save', function() {
+
+        var phone = $('input[name="phone"]').val();
+
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'editPhone')); ?>",
+            method: "post",
+            data: {
+                phone: phone,
+                order_no: $("#Order_no").val()
+            },
+            success: function(html) {
+                $('#edit-phone-component-modal .close').trigger('click');
+                //renderOrder();
+                window.location.reload();
             }
         });
     });

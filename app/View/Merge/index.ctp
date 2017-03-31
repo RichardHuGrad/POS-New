@@ -13,7 +13,7 @@
                     echo " " . $Order_detail[$i]['Order']['order_no'];
                 };
                 //End.
-                ?>, <?php echo __('Table'); ?> <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Waiting]]' : ''))); ?>#<?php echo $table; ?>
+                ?>, <?php echo __('Table'); ?> <?php echo (($type == 'D') ? '[[Dinein]]' : (($type == 'T') ? '[[Takeout]]' : (($type == 'W') ? '[[Delivery]]' : ''))); ?>#<?php echo $table; ?>
 
                 <?php
                 echo __('and');

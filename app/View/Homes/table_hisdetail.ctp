@@ -117,9 +117,14 @@
 
                     <li class="clearfix">
                         <div class="row">
-                            <div class="col-md-3 col-sm-3 col-xs-3 sub-txt">&nbsp;</div>
-                            <div class="col-md-6 col-sm-6 col-xs-6 sub-txt updatefee" style='margin: 0; text-align: center; color:#fff; font-size:24px; font-weight: bold; border-radius: 15px; background-color: #c30e23;'>Update 修改</div>
-                            <div class="col-md-3 col-sm-3 col-xs-3 sub-txt">&nbsp;</div>
+                            <div class="col-md-2 col-sm-2 col-xs-2 sub-txt">&nbsp;</div>
+                            <?php if($dinein_table_status[0]['orders']['table_status']!='N'){ ?>
+                              <div class="col-md-3 col-sm-3 col-xs-3 sub-txt restore" style='margin: 0; text-align: center; color:#fff; font-size:20px; font-weight: bold; border-radius: 15px; background-color: green;cursor:pointer;'>Restore 弹回</div>
+                              <div class="col-md-2 col-sm-2 col-xs-2 sub-txt">&nbsp;</div>
+                            <?php } ?>
+                            <div class="col-md-3 col-sm-3 col-xs-3 sub-txt updatefee" style='margin: 0; text-align: center; color:#fff; font-size:20px; font-weight: bold; border-radius: 15px; background-color: #c30e23;cursor:pointer;'>Update 修改</div>
+                            
+                            <div class="col-md-2 col-sm-2 col-xs-2 sub-txt">&nbsp;</div>
                         </div>
                     </li>
                 </ul>
@@ -157,5 +162,30 @@ $(document).on('click', ".updatefee", function () {
             	}
             }
         })
-    })
+    });
+
+$(document).on('click', ".updatefee", function () {
+        var subtotal = $('#subtotal').val();
+        var discount_value = $('#discount_value').val();
+        var total = $('#total').val();
+        var paid = $('#paid').val();
+        var cash_val = $('#cash_val').val();
+        var card_val = $('#card_val').val();
+        var change = $('#change').val();
+        var tip = $('#tip').val();
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'tableRestore')); ?>",
+            method: "post",
+            data: {table_no: "<?php echo $table_no ?>", order_id: "<?php echo $order_id ?>", subtotal: subtotal, discount_value: discount_value, total: total, paid: paid, cash_val: cash_val, card_val: card_val, change: change, tip: tip},
+            dataType: "json",
+            success: function (json) {
+            	if (json.status == 'OK') {
+            		window.location.href = json.url;
+            	} else {
+            		alert(json.message);
+            	}
+            }
+        })
+    });
+
 </script>

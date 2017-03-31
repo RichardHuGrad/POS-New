@@ -469,6 +469,8 @@ class HomesController extends AppController {
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
+        $dinein_table_status = $this->Order->query("SELECT table_status FROM orders WHERE cashier_id='{$cashier_detail['Admin']['id']}' and is_completed='N' and order_type='D' and table_no='$table_no' ");
+
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.id' => $order_id,
         	'Order.table_no' => $table_no,
@@ -489,7 +491,7 @@ class HomesController extends AppController {
 
         $today = date('Y-m-d H:i', strtotime($Order_detail['Order']['created']));
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'order_id', 'today'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'order_id', 'today','dinein_table_status'));
     }
 
     public function tableHisupdate() {
@@ -638,7 +640,10 @@ class HomesController extends AppController {
         $order_no = $this->params['named']['order'];
 
         $this->loadModel('Order');
-        $this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
+        //delete order and order_item
+        $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
+
+        //$this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
 
         // save all
         $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
