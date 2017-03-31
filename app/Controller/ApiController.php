@@ -1,6 +1,8 @@
-<?php 
+<?php
 
 class ApiController extends Controller {
+	public $components = array('ApiHelper');
+
 	public function delegate($object, $command) {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -67,6 +69,6 @@ class ApiController extends Controller {
 			throw new ForbiddenException();
 		}
 	}
-} 
+}
 
  ?>

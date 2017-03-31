@@ -20,10 +20,26 @@ class Category extends AppModel {
         $item = $this->find('first', array(
                 'fields' => array('Category.printer'),
                 'conditions' => array('Category.id' => $id)
-            )   
+            )
         );
 
         return $item['Category']['printer'];
+    }
+
+    public function getAllCategories() {
+        $categoryDetails = $this->find('all', array(
+                                'recursive' => -1
+                            ));
+        foreach($categoryDetails as &$categoryDetail) {
+            $id = $categoryDetail['Category']['id'];
+            $enName = $this->CategoryLocale->getEnName($id);
+            $zhName = $this->CategoryLocale->getZhName($id);
+
+            $categoryDetail['Category']['en'] = $enName;
+            $categoryDetail['Category']['zh'] = $zhName;
+        }
+
+        return $categoryDetails;
     }
 
 }
