@@ -21,7 +21,7 @@ class TablesComponent extends Component {
 
     }
 
-    public function view($args) {
+    public function getOrderInfoByTable($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['type', 'table']);
         $tableType = $args['type'];
         $tableNo = $args['table'];
@@ -59,6 +59,15 @@ class TablesComponent extends Component {
         ));
 
         return $orderItemDetail;
+    }
+
+    public function getAllOrderItemsByOrderId($args) {
+        ApiHelperComponent::verifyRequiredParams($args, ['order_id']);
+        return $this->OrderItem->find('all', array(
+                        'recursive' => -1,
+                        // 'fields' => array('OrderItem')
+                        'conditions' => array('OrderItem.order_id' => $args['order_id'])
+                    ));
     }
 
     public function getAllCousines($args) {
@@ -102,5 +111,43 @@ class TablesComponent extends Component {
         ));
         // return null;
     }
+
+    public function getAllTableStatus() {
+        return $this->Order->find('list', array(
+                        'fields' => array('Order.table_no', 'Order.table_status', 'Order.order_type'),
+                        'conditions' => array('Order.is_completed' => 'N')
+                    ));
+    }
+
+    public function getAllDineinTableStatus() {
+        return $this->Order->find("list", array(
+                        'fields' => array('Order.table_no', 'Order.table_status'),
+                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'D')
+                            )
+                    );
+    }
+
+    public function getAllTakeoutTableStatus() {
+        return $this->Order->find("list", array(
+                        'fields' => array('Order.table_no', 'Order.table_status'),
+                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'T')
+                            )
+                    );
+    }
+
+    public function getAllWaitingTableStatus() {
+        return $this->Order->find("list", array(
+                        'fields' => array('Order.table_no', 'Order.table_status'),
+                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'W')
+                            )
+                    );
+    }
+
+
+
+
+
+
+
 
 }
