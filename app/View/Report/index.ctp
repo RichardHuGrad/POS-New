@@ -46,8 +46,36 @@
     </div>
 </div>
 
+<div ng-app="reportApp" ng-controller="reportCtrl" class="container">
+	<div id="calendar">
+	</div>
 
 
+	<div id="calendar-popup" class="modal fade">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Modal title</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+			<button class="btn btn-lg btn-info" type="button" ng-click="getSaleAmount()"><?php echo __('Check Sales Total'); ?></button>
+			<button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="today"><?php echo __('Print Sales Total'); ?></button>
+			<button class="btn btn-lg btn-info" type="button" name="view-items" data-type="today"><?php echo __('Check Sales Items'); ?></button>
+			<button class="btn btn-lg btn-info" type="button" name="print-items" data-type="today"><?php echo __('Print Sales Items'); ?></button>
+			<div class="report-content">
+
+			</div>
+		  </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>
 
 <script id="amount-info" type="text/template">
     <div class="">
@@ -70,8 +98,8 @@
 </body>
 
 <?php
-  echo $this->Html->css(array('report'));
-  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js'));
+  echo $this->Html->css(array('report', 'lib/fullcalendar.min'));
+  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js', 'lib/moment.min.js','lib/fullcalendar.min.js', 'lib/angular.min.js','angular/reportApp.js', 'angular/controllers/report.js'));
  ?>
 
 
