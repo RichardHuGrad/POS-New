@@ -21,6 +21,26 @@ class TablesComponent extends Component {
 
     }
 
+	public function getTableNos($args) {
+		ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id']);
+
+		$tableDetail = $this->Admin->find('first', array(
+									'fields' => array(
+										'Admin.no_of_tables',
+										'Admin.no_of_takeout_tables',
+										'Admin.no_of_waiting_tables'
+									),
+									'conditions' => array(
+										'Admin.id' => $args['restaurant_id']
+									)
+							));
+		$res = array(
+					'dineIn' => $tableDetail['Admin']['no_of_tables'],
+					'takeout' => $tableDetail['Admin']['no_of_takeout_tables'],
+					'waiting' => $tableDetail['Admin']['no_of_waiting_tables']);
+		return $res;
+	}
+
     public function getOrderInfoByTable($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['type', 'table']);
         $tableType = $args['type'];

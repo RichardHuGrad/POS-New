@@ -4,7 +4,7 @@ info:
   description: POS system API
   version: "1.0.0"
 # the domain of the service
-host: localhost
+host: 192.168.33.10
 # array of all schemes that your API supports
 schemes:
   - http
@@ -486,7 +486,43 @@ paths:
       responses:
         200:
           description: success
-          
+
+  /tables/getTableNos:
+     post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation about table
+      description: |
+        get infomation about table
+        - order information
+        - related order_item information
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: array
+            items:
+              properties:
+                dineIn:
+                  description: the number of dine in tables
+                  type: integer
+                  format: int32
+                takeout:
+                  description: the number of takeout tables
+                  type: integer
+                  format: int32
+                waiting:
+                  description: the number of waiting tables
+                  type: integer
+                  format: int32
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
   /tables/getOrderInfoByTable:
      post:
       consumes:
@@ -505,14 +541,16 @@ paths:
       responses:
         200:
           description: success
-          # schema:
-          #   properties:
-          #     access_token:
-          #       type: string
-          #       description: the access token of cashier
+          schema:
+            type: object
+            properties:
+              Order:
+                $ref: "#/definitions/Order"
+              OrderItem:
+                $ref: "#/definitions/OrderItem"
         default:
           $ref: "#/responses/MissingArgumentError"
-    
+
   /tables/getOrderInfoById:
      post:
       consumes:
@@ -524,6 +562,7 @@ paths:
         - related order_item information
       parameters:
         - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
       tags:
         - Table
       responses:
@@ -536,7 +575,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-          
+
   /tables/getOrderInfoByOrderNo:
      post:
       consumes:
@@ -560,7 +599,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-  
+
   /tables/getOrderItemInfoById:
     post:
       consumes:
@@ -584,7 +623,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-  
+
   /tables/getAllOrderItemsByOrderId:
     post:
       consumes:
@@ -608,7 +647,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-  
+
   /tables/getAllCousines:
     post:
       consumes:
@@ -631,7 +670,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-          
+
   /tables/getAllCousineCategories:
     post:
       consumes:
@@ -654,7 +693,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-          
+
   /tables/getCousinesByCategoryId:
     post:
       consumes:
@@ -677,7 +716,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-          
+
   /tables/getAllExtras:
     post:
       consumes:
@@ -700,7 +739,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-  
+
   /tables/getAllExtraCategories:
     post:
       consumes:
@@ -745,7 +784,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-          
+
   /tables/getAllDineinTableStatus:
     post:
       consumes:
@@ -788,7 +827,7 @@ paths:
           #       type: string
           #       description: the access token of cashier
         default:
-          $ref: "#/responses/MissingArgumentError"  
+          $ref: "#/responses/MissingArgumentError"
 
   /tables/getAllWaitingTableStatus:
     post:
@@ -811,7 +850,7 @@ paths:
           #       description: the access token of cashier
         default:
           $ref: "#/responses/MissingArgumentError"
-          
+
 
 
 
@@ -936,7 +975,7 @@ parameters:
     description: the special message for item
     required: true
     type: string
-    
+
   categoryId:
     name: category_id
     in: formData
@@ -944,28 +983,28 @@ parameters:
     required: true
     type: integer
     format: int
-    
+
   cousineCategoryStatus:
     name: status
     in: formData
-    description: | 
+    description: |
       the status column in category table
       - A for active
-      - I for inactive  
+      - I for inactive
       means whether category should show
     required: true
     type: string
     enum:
       - A
       - I
-      
+
   cousineStatus:
     name: status
     in: formData
-    description: | 
+    description: |
       the status column in cousine table
       - A for active
-      - I for inactive  
+      - I for inactive
       means whether category should show
     required: true
     type: string
@@ -976,10 +1015,10 @@ parameters:
   extraStatus:
     name: status
     in: formData
-    description: | 
+    description: |
       the status column in extra table
       - A for active
-      - I for inactive  
+      - I for inactive
       means whether category should show
     required: true
     type: string
@@ -996,10 +1035,104 @@ definitions:
       message:
         type: string
 
+  Order:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+        example: 653
+        description: order_id
+      order_no:
+        type: string
+        example: 60461641
+        description: order_no
+      subtotal:
+        type: number
+        format: float
+      tax:
+        type: integer
+        format: int10
+        example: 13
+        description: tax rate
+      tax_amount:
+        type: number
+        format: float
+      discount_value:
+        type: number
+        format: float
+        description: discount value 折扣价
+      after_discount:
+        type: number
+        format: float
+        description: after discount 折后价
+      is_completed:
+        type: string
+        enum:
+          - N
+          - Y
+        description: N for not complete, Y for complete
+      total:
+        type: number
+        format: float
+      tip:
+        type: number
+        format: float
+        description: 小费
+      change:
+        type: number
+        format: float
+        description: the change 找零
+      card_val:
+        type: number
+        format: float
+        description: received card money from customer
+      cash_val:
+        type: number
+        format: float
+        description: received cash money from customer
+      merge_id:
+        type: integer
+        format: int10
+        description: 对应order中的id，为'0'表示没有合单，否则为合单的主单id
+        
+  OrderItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+        example: 653
+        description: order_id
+      order_no:
+        type: string
+        example: 60461641
+        description: order_no
+      subtotal:
+        type: number
+        format: float
+      tax:
+        type: integer
+        format: int10
+        example: 13
+        description: tax rate
+      tax_amount:
+        type: number
+        format: float
+      total:
+        type: number
+        format: float
+      card_val:
+        type: number
+        format: float
+        description: received card money from customer
+      cash_val:
+        type: number
+        format: float
+        description: received cash money from customer
+
 responses:
   MissingArgumentError:
     description: missing argument
     schema:
       $ref: "#/definitions/Error"
-
-  
