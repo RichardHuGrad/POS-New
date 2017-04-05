@@ -75,7 +75,8 @@ class TablesComponent extends Component {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id']);
         $orderItemId = $args['item_id'];
         $orderItemDetail = $this->OrderItem->find('first', array(
-            'conditions' => array('OrderItem.id' => $orderItemId)
+			'recursive' => -1,
+			'conditions' => array('OrderItem.id' => $orderItemId)
         ));
 
         return $orderItemDetail;
@@ -92,28 +93,28 @@ class TablesComponent extends Component {
 
     public function getAllCousines($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        // return $this->Cousine->getAllCousines();
-        return $this->Cousine->find('all', array(
-            'conditions' => array('Cousine.status' => $args['status'])
-        ));
+        return $this->Cousine->getAllCousines();
+        // return $this->Cousine->find('all', array(
+        //     'conditions' => array('Cousine.status' => $args['status'])
+        // ));
     }
 
     public function getAllCousineCategories($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        // return $this->Category->getAllCategories();
-        return $this->Category->find('all', array(
-            'conditions' => array('Category.status' => $args['status'])
-        ));
+        return $this->Category->getAllCategories();
+        // return $this->Category->find('all', array(
+        //     'conditions' => array('Category.status' => $args['status'])
+        // ));
     }
 
     public function getCousinesByCategoryId($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['category_id']);
-        // return $this->Cousine->getAllCousinesByCategoryId($args['category_id']);
-        return $this->Cousine->find('all', array(
-            'conditions' => array(
-                'category_id' =>  $args['category_id']
-            )
-        ));
+        return $this->Cousine->getAllCousinesByCategoryId($args['category_id']);
+        // return $this->Cousine->find('all', array(
+        //     'conditions' => array(
+        //         'category_id' =>  $args['category_id']
+        //     )
+        // ));
     }
 
 
