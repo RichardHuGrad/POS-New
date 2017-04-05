@@ -541,7 +541,3 @@ echo $this->fetch('script');
 	//End.
 </script>
 <!-- End. -->
-
-<script>
-
-</script>

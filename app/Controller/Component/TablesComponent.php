@@ -21,7 +21,27 @@ class TablesComponent extends Component {
 
     }
 
-    public function view($args) {
+	public function getTableNos($args) {
+		ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id']);
+
+		$tableDetail = $this->Admin->find('first', array(
+									'fields' => array(
+										'Admin.no_of_tables',
+										'Admin.no_of_takeout_tables',
+										'Admin.no_of_waiting_tables'
+									),
+									'conditions' => array(
+										'Admin.id' => $args['restaurant_id']
+									)
+							));
+		$res = array(
+					'dineIn' => $tableDetail['Admin']['no_of_tables'],
+					'takeout' => $tableDetail['Admin']['no_of_takeout_tables'],
+					'waiting' => $tableDetail['Admin']['no_of_waiting_tables']);
+		return $res;
+	}
+
+    public function getOrderInfoByTable($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['type', 'table']);
         $tableType = $args['type'];
         $tableNo = $args['table'];
@@ -55,36 +75,46 @@ class TablesComponent extends Component {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id']);
         $orderItemId = $args['item_id'];
         $orderItemDetail = $this->OrderItem->find('first', array(
-            'conditions' => array('OrderItem.id' => $orderItemId)
+			'recursive' => -1,
+			'conditions' => array('OrderItem.id' => $orderItemId)
         ));
 
         return $orderItemDetail;
     }
 
+    public function getAllOrderItemsByOrderId($args) {
+        ApiHelperComponent::verifyRequiredParams($args, ['order_id']);
+        return $this->OrderItem->find('all', array(
+                        'recursive' => -1,
+                        // 'fields' => array('OrderItem')
+                        'conditions' => array('OrderItem.order_id' => $args['order_id'])
+                    ));
+    }
+
     public function getAllCousines($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        // return $this->Cousine->getAllCousines();
-        return $this->Cousine->find('all', array(
-            'conditions' => array('Cousine.status' => $args['status'])
-        ));
+        return $this->Cousine->getAllCousines();
+        // return $this->Cousine->find('all', array(
+        //     'conditions' => array('Cousine.status' => $args['status'])
+        // ));
     }
 
     public function getAllCousineCategories($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        // return $this->Category->getAllCategories();
-        return $this->Category->find('all', array(
-            'conditions' => array('Category.status' => $args['status'])
-        ));
+        return $this->Category->getAllCategories();
+        // return $this->Category->find('all', array(
+        //     'conditions' => array('Category.status' => $args['status'])
+        // ));
     }
 
     public function getCousinesByCategoryId($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['category_id']);
-        // return $this->Cousine->getAllCousinesByCategoryId($args['category_id']);
-        return $this->Cousine->find('all', array(
-            'conditions' => array(
-                'category_id' =>  $args['category_id']
-            )
-        ));
+        return $this->Cousine->getAllCousinesByCategoryId($args['category_id']);
+        // return $this->Cousine->find('all', array(
+        //     'conditions' => array(
+        //         'category_id' =>  $args['category_id']
+        //     )
+        // ));
     }
 
 
@@ -102,5 +132,43 @@ class TablesComponent extends Component {
         ));
         // return null;
     }
+
+    public function getAllTableStatus() {
+        return $this->Order->find('list', array(
+                        'fields' => array('Order.table_no', 'Order.table_status', 'Order.order_type'),
+                        'conditions' => array('Order.is_completed' => 'N')
+                    ));
+    }
+
+    public function getAllDineinTableStatus() {
+        return $this->Order->find("list", array(
+                        'fields' => array('Order.table_no', 'Order.table_status'),
+                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'D')
+                            )
+                    );
+    }
+
+    public function getAllTakeoutTableStatus() {
+        return $this->Order->find("list", array(
+                        'fields' => array('Order.table_no', 'Order.table_status'),
+                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'T')
+                            )
+                    );
+    }
+
+    public function getAllWaitingTableStatus() {
+        return $this->Order->find("list", array(
+                        'fields' => array('Order.table_no', 'Order.table_status'),
+                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'W')
+                            )
+                    );
+    }
+
+
+
+
+
+
+
 
 }
