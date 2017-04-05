@@ -5,7 +5,9 @@ class PrintController extends AppController {
     public $handle;
     public $fontH = 28; // font height
     public $fontW = 10; // font width
-
+    public $open_drawer = false;
+    public $drawer_code = '';
+    
     public $itemLineLen = 180;
     // public $charNo = $this->itemLineLen / $this->fontW;
     public $charNo = 20;
@@ -153,8 +155,6 @@ class PrintController extends AppController {
 
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
-
-
 
 
         $this->handle = printer_open($printer_name);
@@ -471,15 +471,20 @@ class PrintController extends AppController {
         $print_y += 30;
 
         if (PrintConfig::$hasHstNumber) {
-            $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
+            $this->printEn("Hst Number11: " . PrintConfig::$hstNumber, 80, $print_y);
             $print_y += 30;
         }
         $this->printEn($date_time, 80, $print_y);
 
-
-
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
+
+        if($received_cash > 0){
+            $this->drawer_code = chr(27).chr(112).chr(48).chr(55).chr(121);
+            printer_set_option($this->handle, PRINTER_MODE, "RAW");
+            printer_write($this->handle, $this->drawer_code);
+        }
+
         printer_close($this->handle);
 
         echo true;

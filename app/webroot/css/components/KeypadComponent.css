@@ -51,8 +51,10 @@
 }
 #input-key-list #input-enter{
 	border-bottom-right-radius: 15px;
-	color: #337ab7!important;
-	font-size: 20px !important;
+	/* color: #337ab7!important; */
+	color: blue!important;
+	font-size: 24px !important;
+	font-weight: bold !important;
 }
 
 #input-placeholder .p-method>.p-pay{margin-right: 15px;}

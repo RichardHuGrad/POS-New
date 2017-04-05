@@ -319,9 +319,17 @@ if ($Order_detail['Order']['table_status'] == 'P') {
 <?php
 if ($Order_detail['Order']['table_status'] <> 'P') {
     ?>
-                <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13" readonly></div>
+                <div class="card-wrap"><input type="text" id="screen" buffer="" lastinput="" maxlength="13" readonly></div>
                 <div class="card-indent clearfix">
                     <ul>
+                        <li>100</li>
+                        <li>50</li>
+                        <li class="back-txt" id="Back">Back</li>
+
+                        <li>20</li>
+                        <li>10</li>
+                        <li>0</li>
+
                         <li>1</li>
                         <li>2</li>
                         <li>3</li>
@@ -335,7 +343,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
                         <li>9</li>
 
                         <li class="clear-txt" id="Clear"><?php echo __('Clear'); ?></li>
-                        <li>0</li>
+                        <li id="Dot">.</li>
                         <li class="enter-txt" id="Enter"><?php echo __('Enter'); ?></li>
                     </ul>
                 </div>
@@ -500,20 +508,27 @@ echo $this->fetch('script');
                 return false;
             }
 
-            if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt"))
+            if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt") || $(this).hasClass("back-txt"))
                 return false;
 
-            var digit = parseInt($(this).html());
-            var nums = $("#screen").attr('buffer') + digit;
+				    var buffer = $('#screen').attr("buffer");
+				    if(Number(buffer) == 0) buffer = '';
+				    
+				    var new_value;
+				    
+				    if($.inArray( $(this).html(), ['100','50','20','10'])!= -1){
+				    	new_value = Number(buffer) + Number( $(this).html() );	
+				    	new_value = new_value.toString() ;									
+				    }else{
+				    	new_value = buffer + $(this).html();										
+				    }
+            				    
+				    $('#screen').attr("buffer", new_value);				
+            
+            $('#screen').attr("lastinput", $('#screen').val() );
+				    
+				    $('#screen').val(new_value);
 
-            // store buffer value
-            $("#screen").attr('buffer', nums);
-            nums = nums / 100;
-            nums = nums.toFixed(2);
-            if (nums.length < 12)
-                $("#screen").val(nums).focus();
-            else
-                $("#screen").focus();
         })
 
 
@@ -632,10 +647,23 @@ echo $this->fetch('script');
 
             recalculateAmount(cash_val, card_val, tip_val, total_price);
 
-            $("#screen").attr('buffer', 0);
+            $("#screen").attr('buffer', '');
             $("#screen").val("");
             $("#screen").focus();
         })
+
+        $("#Back").click(function () {
+
+				$('#screen').attr("buffer", $('#screen').attr("lastinput"));
+				if($('#screen').attr("buffer")=='00.00'){
+					$('#screen').attr("buffer",'');
+				}
+												
+				$('#screen').val($('#screen').attr("lastinput"));
+
+            $("#screen").focus();
+        })
+
 
         $("#screen").keydown(function (e) {
             // Allow: backspace, delete, tab, escape, enter and .

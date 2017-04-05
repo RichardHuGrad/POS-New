@@ -117,6 +117,7 @@ class Order extends AppModel {
                 "total" => 0,
                 "paid" => 0,
                 "change" => 0,
+                "paid_by"=>"",
             );
 
 
@@ -138,6 +139,8 @@ class Order extends AppModel {
             $data['total'] += $Order_detail['Order']['total'];
             $data['paid'] += $Order_detail['Order']['paid'];
             $data['change'] += $Order_detail['Order']['change'];
+            $data['paid_by'] = $Order_detail['Order']['paid_by'];
+
             array_push($order_nos, $Order_detail['Order']['order_no']);
             array_push($table_nos, $Order_detail['Order']['table_no']);
         }

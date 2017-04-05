@@ -13,8 +13,25 @@ function mbStrSplit($string, $len=1) {
 }
 
 class PrintLib {
-    public $fontStr1 = "simsun";
+    public  $fontStr1 = "simsun";
+    private $open_drawer = false;
+    private $drawer_code = '' ;
 
+    function __construct(){
+      $this->drawer_code = chr(27).chr(112).chr(48).chr(55).chr(121);
+    }
+
+    public function setOpenDrawer($open=false) {
+      $this->open_drawer = $open;
+    }
+ 
+    public function setDrawerCode($code='') {
+      if($code == '')
+        $this->drawer_code = chr(27).chr(112).chr(48).chr(55).chr(121);
+      else
+        $this->drawer_code = $code;
+    }
+   
     // print all items with cancelled tag
     public function printCancelledItems($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false) {
         // do not check $item_id_list
@@ -106,14 +123,12 @@ class PrintLib {
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         $doc->printDoc();
 
-
-
-
         return $debug_str;
     }
 
 
     public function printPayReceiptDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $bill_info,$logo_name,$print_zh=true, $print_en=false) {
+    	
         $debug_str = json_encode($item_detail);
         $debug_str .= json_encode($bill_info);
 
@@ -127,8 +142,10 @@ class PrintLib {
         $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
+        if($bill_info['paid_by'] != 'CARD'){
+          $doc->setOpenDrawer(true);
+        }
         $doc->printDoc();
-
 
         return $debug_str;
     }
@@ -163,6 +180,11 @@ class PrintLib {
         $countPage = new ReceiptPage($bill_info);
         $footerPage = new TimeHSTFooterPage();
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
+
+        if($bill_info['paid_by'] != 'CARD'){
+           $doc->setOpenDrawer(true);
+        }
+
         $doc->printDoc();
     }
 
@@ -645,12 +667,8 @@ class BillPage extends CountPage {
         }
         $this->format3Columns($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
 
-        $this->format3Columns($handle, "Total", "总计:", $total);
-
+        $this->format3Columns($handle, "Total", "总计:", $total,true);
     }
-
-
-
 }
 
 class ReceiptPage extends CountPage {
@@ -671,7 +689,6 @@ class ReceiptPage extends CountPage {
         $total = $bill_info['total'];
         $paid = $bill_info['paid'];
         $change = $bill_info['change'];
-
 
         printer_start_page($handle);
         $print_y = 10;
@@ -839,6 +856,7 @@ class TimeFooterPage extends FooterPage {
         printer_end_page($handle);
     }
 }
+
 class TimeHSTFooterPage extends FooterPage {
     public function printPage($handle) {
         printer_start_page($handle);
@@ -873,12 +891,27 @@ class BasicDoc
 {
     private $pages;
     private $printerName;
+    private $handle;
+    private $open_drawer = false;
+    private $drawer_code = '';
+    
     function __construct($printerName, $pages){
         $this->printerName = $printerName;
         $this->pages = $pages;
     }
 
-    function printDoc() {
+    function setOpenDrawer($open_drawer = false) {
+        $this->open_drawer = $open_drawer;
+    }
+
+    public function setDrawerCode($code='') {
+      if($code == '')
+        $this->drawer_code = chr(27).chr(112).chr(48).chr(55).chr(121);
+      else
+        $this->drawer_code = $code;
+    }
+
+    function printDoc($open_drawer = false) {
 
         $this->handle = printer_open($this->printerName);
         printer_start_doc($this->handle, "Doc");
@@ -888,6 +921,16 @@ class BasicDoc
         }
 
         printer_end_doc($this->handle);
+        
+        if($this->open_drawer == true){
+        	if($this->drawer_code == ''){
+        		$this->drawer_code = chr(27).chr(112).chr(48).chr(55).chr(121);
+        	}
+        	
+          printer_set_option($this->handle, PRINTER_MODE, "RAW");
+          printer_write($this->handle, $this->drawer_code); 	
+        }
+       
         printer_close($this->handle);
 
     }
@@ -899,9 +942,6 @@ class BasicDoc
 // bill formater
 
 // kitchen item formater
-
-
-
 
 
  ?>

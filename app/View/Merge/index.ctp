@@ -324,9 +324,17 @@ for ($i = 0; $i < count($Order_detail); $i++) {
 if ($table_status != 'P') {
 //End.
     ?>
-                <div class="card-wrap"><input type="text" id="screen" buffer="0" maxlength="13" readonly></div>
+                <div class="card-wrap"><input type="text" id="screen" buffer="" lastinput="" maxlength="13" readonly></div>
                 <div class="card-indent clearfix">
                     <ul>
+                        <li>100</li>
+                        <li>50</li>
+                        <li class="back-txt" id="Back">Back</li>
+
+                        <li>20</li>
+                        <li>10</li>
+                        <li>0</li>
+
                         <li>1</li>
                         <li>2</li>
                         <li>3</li>
@@ -340,7 +348,7 @@ if ($table_status != 'P') {
                         <li>9</li>
 
                         <li class="clear-txt" id="Clear"><?php echo __('Clear'); ?></li>
-                        <li>0</li>
+                        <li id="Dot">.</li>
                         <li class="enter-txt" id="Enter"><?php echo __('Enter'); ?></li>
                     </ul>
                 </div>
@@ -460,116 +468,130 @@ echo $this->fetch('script');
                                 $("#screen").attr('buffer', tip_val);
                                 $("#screen").val($("#tip_val").val());
                         }
-            $("#selected_card").val(type);
-            })
-                    $(".select_tip").click(function () {
-                        $(".select_card").removeClass("active");
-                            $(this).toggleClass("active");
-                            var val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
-                            $("#screen").attr('buffer', val);
-                            $("#screen").val($("#tip_val").val());
-                        });
-                    //Modified by Yishou Liao @ Oct 16 2016
-                    $("#submit").click(function () {
-                        if ($("#selected_card").val()) {
-                            if (parseFloat($(".change_price").attr("amount")) >= 0) {
-                                // submit form for complete payment process
-                                $.ajax({
-                                    url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'complete', $table, $type)); ?>",
-                                    method: "post",
-                                    data: {
-                                        pay: $(".received_price").attr("amount"),
-                                        paid_by: $("#selected_card").val(),
-                                        change: $(".change_price").attr("amount"),
-                                        table: "<?php echo $table ?>",
-                                        table_merge: "<?php echo implode(",", $tablemerge); ?>",
-                                        type: "<?php echo $type ?>",
-                                        main_order_id:"<?php
-                                                        $main_order_id = "";
-                                                        for ($i = 0; $i < count($Order_detail); $i++) {
-                                                            if ($Order_detail[$i]['Order']['table_no'] == $table) {
-                                                                $main_order_id = $Order_detail[$i]['Order']['id'];
-                                                            };
-                                                        };
-                                                        echo $main_order_id;
-                                                        ?>",
-                                        order_id: "<?php
-                                                    $order_id = "";
+                 
+                 $("#selected_card").val(type);
+              })
+            
+                $(".select_tip").click(function () {
+                    $(".select_card").removeClass("active");
+                        $(this).toggleClass("active");
+                        var val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+                        $("#screen").attr('buffer', val);
+                        $("#screen").val($("#tip_val").val());
+                    });
+                //Modified by Yishou Liao @ Oct 16 2016
+                $("#submit").click(function () {
+                    if ($("#selected_card").val()) {
+                        if (parseFloat($(".change_price").attr("amount")) >= 0) {
+                            // submit form for complete payment process
+                            $.ajax({
+                                url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'complete', $table, $type)); ?>",
+                                method: "post",
+                                data: {
+                                    pay: $(".received_price").attr("amount"),
+                                    paid_by: $("#selected_card").val(),
+                                    change: $(".change_price").attr("amount"),
+                                    table: "<?php echo $table ?>",
+                                    table_merge: "<?php echo implode(",", $tablemerge); ?>",
+                                    type: "<?php echo $type ?>",
+                                    main_order_id:"<?php
+                                                    $main_order_id = "";
                                                     for ($i = 0; $i < count($Order_detail); $i++) {
-                                                        $order_id .= $Order_detail[$i]['Order']['id'] . ",";
+                                                        if ($Order_detail[$i]['Order']['table_no'] == $table) {
+                                                            $main_order_id = $Order_detail[$i]['Order']['id'];
+                                                        };
                                                     };
-                                                    $order_id = substr($order_id, 0, (strlen($order_id) - 1));
-                                                    echo $order_id;
+                                                    echo $main_order_id;
                                                     ?>",
-                                        card_val: $("#card_val").val(),
-                                        cash_val: $("#cash_val").val(),
-                                        tip_val: $("#tip_val").val(),
-                                        tip_paid_by: $("#tip_paid_by").val()
-                                    },
-                                    success: function (html) {
-                                        $(".alert-warning").hide();
-                                        // $(".reprint").trigger("click");
+                                    order_id: "<?php
+                                                $order_id = "";
+                                                for ($i = 0; $i < count($Order_detail); $i++) {
+                                                    $order_id .= $Order_detail[$i]['Order']['id'] . ",";
+                                                };
+                                                $order_id = substr($order_id, 0, (strlen($order_id) - 1));
+                                                echo $order_id;
+                                                ?>",
+                                    card_val: $("#card_val").val(),
+                                    cash_val: $("#cash_val").val(),
+                                    tip_val: $("#tip_val").val(),
+                                    tip_paid_by: $("#tip_paid_by").val()
+                                },
+                                success: function (html) {
+                                    $(".alert-warning").hide();
+                                    // $(".reprint").trigger("click");
 
-                                        var order_ids = [];
-                                        <?php
-                                            foreach ($order_id_merge as $o) {
-                                        ?>
-                                                order_ids.push(parseInt('<?php echo $o?>'));
-                                        <?php
-                                            }
-                                         ?>
-                                        $.ajax({
-                                            url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'printReceipt')); ?>",
-                                            method:"post",
-                                            data:{
-                                                type: "<?php echo $type; ?>",
-                                                logo_name:"../webroot/img/logo.bmp",
-                                                order_ids: order_ids,
-                                            },
-                                            success:function(html) {
-                                                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
-                                            }
-                                        });
-                                    },
-                                    beforeSend: function () {
-                                        $(".RIGHT-SECTION").addClass('load1 csspinner');
-                                        $(".alert-warning").show();
-                                    }
-                                });
-                            } else {
-                                $.notify("Invalid amount, please check and verfy again \n 金额无效，请检查并再次验证.", { position: "top center", className:"warn"});
-                                    return false;
-                            }
-                        } else {
-                            $.notify("Please select card or cash payment method \n 请选择卡或现金付款方式. ", { position: "top center", className:"warn"});
-                            return false;
-                        }
-                    })
-                    //End.
-
-                    $(".card-indent li").click(function () {
-            if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
-                $.notify("Please select payment type cash/card or select tip.", {
-                                position: "top center",
-                                className:"warn"
+                                    var order_ids = [];
+                                    <?php
+                                        foreach ($order_id_merge as $o) {
+                                    ?>
+                                            order_ids.push(parseInt('<?php echo $o?>'));
+                                    <?php
+                                        }
+                                     ?>
+                                    $.ajax({
+                                        url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'printReceipt')); ?>",
+                                        method:"post",
+                                        data:{
+                                            type: "<?php echo $type; ?>",
+                                            logo_name:"../webroot/img/logo.bmp",
+                                            order_ids: order_ids,
+                                        },
+                                        success:function(html) {
+                                            window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                                        }
+                                    });
+                                },
+                                beforeSend: function () {
+                                    $(".RIGHT-SECTION").addClass('load1 csspinner');
+                                    $(".alert-warning").show();
+                                }
                             });
-            // alert("Please select payment type cash/card or select tip.");
-                    return false;
-            }
+                        } else {
+                            $.notify("Invalid amount, please check and verfy again \n 金额无效，请检查并再次验证.", { position: "top center", className:"warn"});
+                                return false;
+                        }
+                    } else {
+                        $.notify("Please select card or cash payment method \n 请选择卡或现金付款方式. ", { position: "top center", className:"warn"});
+                        return false;
+                    }
+                })
+                //End.
 
-            if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt"))
-                    return false;
-                    var digit = parseInt($(this).html());
-                    var nums = $("#screen").attr('buffer') + digit;
-                    // store buffer value
-                    $("#screen").attr('buffer', nums);
-                    nums = nums / 100;
-                    nums = nums.toFixed(2);
-                    if (nums.length < 12)
-                    $("#screen").val(nums).focus();
-                    else
-                    $("#screen").focus();
-            })
+                 $(".card-indent li").click(function () {
+                    
+                      if (!$("#selected_card").val() && !$(".select_tip").hasClass("active")) {
+                          $.notify("Please select payment type cash/card or select tip.", {
+                                          position: "top center",
+                                          className:"warn"
+                                      });
+                      // alert("Please select payment type cash/card or select tip.");
+                              return false;
+                      }
+                      
+                      if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt") || $(this).hasClass("back-txt"))
+                         return false;                         
+
+
+				              var buffer = $('#screen').attr("buffer");
+				              if(Number(buffer) == 0) buffer = '';
+				              
+				              var new_value;
+				              
+				              if($.inArray( $(this).html(), ['100','50','20','10'])!= -1){
+				              	new_value = Number(buffer) + Number( $(this).html() );	
+				              	new_value = new_value.toString() ;									
+				              }else{
+				              	new_value = buffer + $(this).html();										
+				              }
+                      
+				              
+				              $('#screen').attr("buffer", new_value);		
+                      
+                      $('#screen').attr("lastinput", $('#screen').val() );
+				              
+				              $('#screen').val(new_value);
+
+                })
 
 
             function recalculateAmount(cash_val, card_val, tip, total_price) {
@@ -680,10 +702,24 @@ echo $this->fetch('script');
 
                 recalculateAmount(cash_val, card_val, tip_val, total_price);
 
-                $("#screen").attr('buffer', 0);
+                $("#screen").attr('buffer', '');
                 $("#screen").val("");
                 $("#screen").focus();
             })
+
+
+            $("#Back").click(function () {
+
+								$('#screen').attr("buffer", $('#screen').attr("lastinput"));
+								if($('#screen').attr("buffer")=='00.00'){
+									$('#screen').attr("buffer",'');
+								}
+																
+								$('#screen').val($('#screen').attr("lastinput"));
+
+                $("#screen").focus();
+            })
+
 
 
                     //Modified by Yishou Liao @ Oct 16 2016

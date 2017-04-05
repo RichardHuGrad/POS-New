@@ -4,14 +4,13 @@ info:
   description: POS system API
   version: "1.0.0"
 # the domain of the service
-host: 127.0.0.1:8080
+host: pos.auroraeducationonline.info
 # array of all schemes that your API supports
 schemes:
   - http
   - https
 # will be prefixed to all paths
-basePath: /pos/api
-
+basePath: /api
 produces:
   - application/json
 paths:

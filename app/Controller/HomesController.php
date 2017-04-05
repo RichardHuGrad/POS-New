@@ -168,6 +168,15 @@ class HomesController extends AppController {
                 )
         );
 
+        // get all order phone.
+        $orders_phone = $this->Order->find("list", array(
+            'fields' => array('Order.order_type', 'Order.phone', 'Order.table_no'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => false
+                )
+        );
+
+
         $orders_total = $this->Order->find("list", array(
             'fields' => array('Order.order_no', 'Order.total'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
@@ -191,7 +200,7 @@ class HomesController extends AppController {
 
         // print_r($orders_total);
 
-        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no', 'orders_time', 'orders_total','admin_passwd'));
+        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no','orders_phone','orders_time', 'orders_total','admin_passwd'));
     }
 
     public function allorders() {
@@ -470,7 +479,12 @@ class HomesController extends AppController {
         $this->loadModel('OrderItem');
 
         $dinein_table_status = $this->Order->query("SELECT table_status FROM orders WHERE cashier_id='{$cashier_detail['Admin']['id']}' and is_completed='N' and order_type='D' and table_no='$table_no' ");
-
+        if($dinein_table_status){
+            $dinein_table_status = $dinein_table_status[0]['orders']['table_status'];
+        }else{
+            $dinein_table_status = "";
+        }
+        
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.id' => $order_id,
         	'Order.table_no' => $table_no,
@@ -587,6 +601,56 @@ class HomesController extends AppController {
         echo json_encode($r);
     }
 
+    public function tableRestore() {
+        $table_no = $this->data['table_no'];
+        $order_id = $this->data['order_id'];
+
+    	  //get cashier details
+        $this->loadModel('Cashier');
+        $cashier_detail = $this->Cashier->find("first", array(
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+                )
+        );
+
+        $this->loadModel('Order');
+        $this->loadModel('Log');
+
+        $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
+            'Order.id' => $order_id,
+        	'Order.table_no' => $table_no,
+            'Order.is_completed' => 'Y',
+            'Order.order_type' => 'D',
+            'Order.created >=' => date("Ymd")
+        );
+
+        $logs = '';
+        $data = array();
+
+       	$data['paid']     = '';
+       	$data['paid_by']  = '';
+       	$data['cash_val'] = '';
+       	$data['card_val'] = '';
+       	$data['change']   = '';
+       	$data['tip'] = '';
+       	$data['tip'] = '';
+       	$data['tip_paid_by'] = '';
+       	$data['table_status']= 'N';
+       	$data['is_completed']= 'N';
+
+        $logs = "Table#$table_no, orderid:$order_id restored at ".date('Y-m-d H:i:s');
+       	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'], 'logs' => $logs);
+        $this->Log->save($logArr);
+        
+        $data['id'] = $order_id;
+        $this->Order->save($data);
+                
+        $r['status'] = 'OK';
+        $r['url'] = Router::url(array('controller' => 'homes', 'action' => 'dashboard'));
+        echo json_encode($r);
+    }
+    
+
     public function tableHistory() {
         // get cashier details
         $this->loadModel('Cashier');
@@ -687,10 +751,6 @@ class HomesController extends AppController {
     }
 
 
-
-
-
-
     public function updateordermessage() {
 
         // get all params
@@ -749,11 +809,6 @@ class HomesController extends AppController {
         }
         return $amount;
     }
-
-
-
-
-
 
 
     //End
