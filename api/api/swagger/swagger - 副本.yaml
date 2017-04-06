@@ -548,7 +548,7 @@ paths:
                   format: int32
         default:
           $ref: "#/responses/MissingArgumentError"
-
+          
   /tables/getAllTablesSummary:
     post:
       consumes:
@@ -568,7 +568,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/definitions/Order"
-
+      
   /tables/getTablesSummaryByType:
     post:
       consumes:

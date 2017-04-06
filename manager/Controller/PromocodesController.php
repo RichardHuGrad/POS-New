@@ -142,11 +142,12 @@ class PromocodesController extends AppController {
             }
 
             if (empty($this->request->data)) {
-
+            	
 	            $customer_data['Promocode']['start_time'] = date('h:i A', strtotime($customer_data['Promocode']['start_time']));
 	            $customer_data['Promocode']['end_time'] = date('h:i A', strtotime($customer_data['Promocode']['end_time']));
 	            $customer_data['Promocode']['week_days'] = $customer_data['Promocode']['week_days']?explode(",", $customer_data['Promocode']['week_days']):"";
-                $this->request->data = $customer_data;
+	            
+              $this->request->data = $customer_data;
             }
         }
         $this->loadModel('Admin');

@@ -863,6 +863,7 @@ echo $this->fetch('script');
 	$('#print-split-receipt').on('click', function() {
 		printSplitReceipt(order, suborders);
 	});
+	
 	// print accounding order and suborders
 	function printSplitReceipt(order, suborders) {
 		var order = order;
@@ -897,6 +898,7 @@ echo $this->fetch('script');
 	$('#print-split-bill').on('click', function() {
 		printSplitBill(order, suborders);
 	});
+	
 	function printSplitBill(order, suborders) {
 
 		var order = order;

@@ -254,7 +254,7 @@
 
     		                        	</ul>
                                         </div>
-    	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+    	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
     		                                <!-- <div class="takeout-txt">Takeout</div> -->
                                                 <div class="number-txt for-dine">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                                 <?php
@@ -265,7 +265,10 @@
                                                         echo @$orders_no[$i]['T'];
     			                                	?>
     			                                </div>
-    			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>
+    			                                
+    			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_time[$i]['T']?date("H:i", strtotime(@$orders_time[$i]['T'])):"" ?></div>  
+
+    			                                <div class="txt12 text-center <?php if(isset($takeway_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_phone[$i]['T']; ?></div>
 
                                                 <?php }?>
     		                            </div>
@@ -538,7 +541,3 @@ echo $this->fetch('script');
 	//End.
 </script>
 <!-- End. -->
-
-<script>
-
-</script>

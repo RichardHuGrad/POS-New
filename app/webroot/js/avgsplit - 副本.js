@@ -1143,7 +1143,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	
 	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">');
 
-	var screenComponent = $('<input type="text" id="input-screen" data-buffer="" data-lastinput="" data-maxlength="13" value="00.00" readonly>');
+	var screenComponent = $('<input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00" readonly>');
 	// restrict the input type of screen by keyboard
 	screenComponent.keydown(function(e) {
 		// Allow: backspace, delete, tab, escape, enter and .
@@ -1190,6 +1190,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	var submitButton = $('<button class="btn btn-success btn-lg" id="input-submit">').text('Submit 提交');
 
 
+
+
+	
 	if (order.availableItems.length == 0) {
 		submitButton.on('click', function(){
 			// submit to the backend
@@ -1266,6 +1269,8 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 				
 
+
+
 			} else {
 				if (suborders.suborders.length == 0) {
 					$.notify("there is no suborder to submit \n请分单后再提交",{ position: "top center", className:"warn"});
@@ -1312,37 +1317,6 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	// construct keypad
 	var keyComponent = $('<ul id="input-key-list">');
-	keyComponent.append('<li data-num=' + 100 + '>' + 100 + '</li>' );
-	keyComponent.append('<li data-num=' + 50 + '>' + 50 + '</li>' );
-	
-	var screenBack = $('<li id="input-back">').text("Back")
-												.on('click', function() {
-													/*
-													var buffer = $('#input-screen').attr("data-buffer") + ".";
-													if($.inArray(buffer, ['100','50','20','10'])){
-														
-													}else{
-														
-													}*/
-													
-													
-													$('#input-screen').attr("data-buffer", $('#input-screen').attr("data-lastinput"));
-													if($('#input-screen').attr("data-buffer")=='00.00'){
-														$('#input-screen').attr("data-buffer",'');
-													}
-													
-												
-													$('#input-screen').val($('#input-screen').attr("data-lastinput"));
-													
-												});
-												
-  keyComponent.append(screenBack);
-  
-	keyComponent.append('<li data-num=' + 20 + '>' + 20 + '</li>' );
-	keyComponent.append('<li data-num=' + 10 + '>' + 10 + '</li>' );
-	keyComponent.append('<li data-num=' + 0 + '>' + 0 + '</li>' );
-
-	
 	for (var i = 1; i <= 9; ++i){
 		keyComponent.append('<li data-num=' + i + '>' + i + '</li>' );
 	}
@@ -1350,24 +1324,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	var screenClear = $('<li id="input-clear">').text("Clear 清除")
 												.on('click', function() {
 													// var value = $('#input-screen').val().slice(0, -1);
-													$('#input-screen').attr("data-buffer", "")
+													$('#input-screen').attr("data-buffer", "0")
 													$('#input-screen').val("00.00");
 												});
-
-	keyComponent.append(screenClear);
-	
-	var screenDot = $('<li id="input-dot">').text(".")
-												.on('click', function() {  
-                          
-													var buffer = $('#input-screen').attr("data-buffer") + ".";
-													
-													$('#input-screen').attr("data-buffer", buffer);
-													
-													$('#input-screen').val(buffer);
-													
-												});
-												
-	keyComponent.append(screenDot);
 
     // should be changed
     // should not change the suborder state directly
@@ -1377,8 +1336,8 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 													screenClear.trigger('click');
 												});
 
-	keyComponent.append(screenEnter);
-	
+
+	keyComponent.append(screenClear).append('<li data-num=0 >0</li>').append(screenEnter);
 
 	//  to be fixed
 	//  add restriction of num length
@@ -1387,28 +1346,12 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		if (typeof attr !== typeof undefined && attr !== false) {
 			$(this).on('click', function () {
 				// var value = $('#input-screen').val() ? parseFloat($('#input-screen').val() : 0;
+				var buffer = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');
+				$('#input-screen').attr("data-buffer", buffer);
+				var value = buffer / 100;
+				value = value.toFixed(2);
 
-				var buffer = $('#input-screen').attr("data-buffer");
-				var new_value;
-				
-				if($.inArray($(this).attr('data-num'), ['100','50','20','10'])!= -1){
-					new_value = Number(buffer) + Number( $(this).attr('data-num') );	
-					new_value = new_value.toString() ;									
-				}else{
-					new_value = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');										
-				}
-
-				
-				//var buffer = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');	
-				var buffer = new_value;								
-				
-				$('#input-screen').attr("data-buffer", buffer);				
-
-        $('#input-screen').attr("data-lastinput", $('#input-screen').val() );
-				
-				//var value = buffer / 100;
-				//value = value.toFixed(2);
-				$('#input-screen').val(new_value);
+				$('#input-screen').val(value);
 			});
 		}
 	});

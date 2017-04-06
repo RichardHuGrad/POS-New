@@ -21,7 +21,7 @@
             <div class="button-group">
                 <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="today"><?php echo __('Check Sales Total'); ?></button>
                 <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="today"><?php echo __('Print Sales Total'); ?></button>
-                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="today"><?php echo __('Print Sales Total'); ?></button>
+                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="today"><?php echo __('Check Sales Items'); ?></button>
                 <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="today"><?php echo __('Print Sales Items'); ?></button>
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="button-group">
                 <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="month"><?php echo __('Check Sales Total'); ?></button>
                 <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="month"><?php echo __('Print Sales Total'); ?></button>
-                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="month"><?php echo __('Print Sales Total'); ?></button>
+                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="month"><?php echo __('Check Sales Items'); ?></button>
                 <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="month"><?php echo __('Print Sales Items'); ?></button>
             </div>
         </div>
@@ -47,16 +47,16 @@
 </div>
 
 
-
-
 <script id="amount-info" type="text/template">
     <div class="">
-        <li class="col-md-6 col-sm-6 col-xs-6">{5}</li> <li class="col-md-6 col-sm-6 col-xs-6 tax">{6}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6" style="background-color:#E0E0E0;">{5}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6 tax" style="background-color:#E0E0E0;">{6}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Tax'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{0}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{1}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{2}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Cash'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{3}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{4}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Tips by Card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{7}</li>
     </div>
 </script>
 <script id="item-info" type="text/template">
@@ -65,15 +65,12 @@
   </div>
 </script>
 
-
-
 </body>
 
 <?php
   echo $this->Html->css(array('report'));
   echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js'));
  ?>
-
 
 
 <script type="text/javascript">
@@ -125,7 +122,7 @@ $('button[name="view-amount"]').on('click', function(e) {
             $('.report-content').append(
               objs.map( (obj) => {
                   var startTimeStr = new Date(obj.start_time)
-                  return $('#amount-info').html().format(obj.tax.toFixed(2), obj.total.toFixed(2), obj.real_total.toFixed(2), obj.paid_cash_total.toFixed(2), obj.paid_card_total.toFixed(2), getTimeStr(obj.start_time * 1000),getTimeStr(obj.end_time * 1000));
+                  return $('#amount-info').html().format(obj.tax.toFixed(2), obj.total.toFixed(2), obj.real_total.toFixed(2), obj.paid_cash_total.toFixed(2), obj.paid_card_total.toFixed(2), getTimeStr(obj.start_time * 1000),getTimeStr(obj.end_time * 1000), obj.card_tip_total.toFixed(2));
               })
             );
         }
@@ -153,6 +150,7 @@ $('button[name="view-items"]').on('click', function(e) {
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getItemsInfo')); ?>",
         method: "post",
+        cache:false,
         data: {
           type: $(this).data("type"),
         },
