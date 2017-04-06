@@ -9,7 +9,10 @@ class ReportController extends AppController {
     }
 
     public function index() {
-
+    	$this->loadModel('Cashier');
+      $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
+      
+      $this->set(compact('admin_passwd'));
     }
 
 

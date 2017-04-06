@@ -223,7 +223,7 @@ class OrderController extends AppController {
     public function addExtras() {
         $this->layout = false;
         $this->autoRender = NULL;
-
+                
         $this->OrderHandler->addExtras(array(
             'item_id' => $this->data['selected_item_id'],
             'extra_id_list' => $this->data['selected_extras_id'],

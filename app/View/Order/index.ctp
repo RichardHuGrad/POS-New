@@ -240,10 +240,9 @@
                     <h4>{0}</h4>
                 </div>
                 <div class="modal-body clearfix">
-                    <div></div>
+                    New price: <input id="change-price-component-price" type="number" min="0" step="1" placeholder="eg. 0.00" style="height:30px">
                 </div>
-                <div class="modal-footer clearfix">
-                    <input id="change-price-component-price" type="number" min="0" step="1" placeholder="eg. 0.00">
+                <div class="modal-footer clearfix">                  
                     <button type="button" id="change-price-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
                 </div>
             </div>
@@ -260,10 +259,9 @@
                     <h4>{0}</h4>
                 </div>
                 <div class="modal-body clearfix">
-                    <div></div>
+                    New quantity: <input name="quantity" type="number" min="1" step="1" style="height:30px">
                 </div>
-                <div class="modal-footer clearfix">
-                    <input name="quantity" type="number" min="1" step="1">
+                <div class="modal-footer clearfix">                  
                     <button type="button" id="change-quantity-component-save" class="pull-right btn btn-lg btn-success">Save 保存</button>
                 </div>
             </div>
@@ -279,7 +277,7 @@
                     <h4>Input Phone</h4>
                 </div>
                 <div class="modal-body clearfix">
-                    Phone: <input name="phone" type="text" style="height:30px">
+                    Phone: <input name="phone" type="text" style="height:30px" value="<?php echo @$Order_detail['Order']['phone']; ?>">
                 </div>
                 <div class="modal-footer clearfix">
                     
@@ -430,6 +428,11 @@ echo $this->fetch('script');
     });
 
     $(document).ready(function () {
+    	
+        $('#edit-phone-component-modal').on('shown.bs.modal', function () {
+            $( "input[name='phone']").focus();
+        })  
+           	
 
         $(".search-clear").click(function () {
             $("#search-input").val('');
@@ -1030,7 +1033,8 @@ echo $this->fetch('script');
 
         }
 
-
+        if(selected_extras_id.length == 0) selected_extras_id="";
+        
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'addExtras')); ?>",
             method: "post",

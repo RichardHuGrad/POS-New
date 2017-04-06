@@ -69,9 +69,8 @@
 
 <?php
   echo $this->Html->css(array('report'));
-  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js'));
+  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','md5.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js'));
  ?>
-
 
 <script type="text/javascript">
 
@@ -186,3 +185,4 @@ $('button[name="print-items"]').on('click', function(e) {
     });
 });
 </script>
+
