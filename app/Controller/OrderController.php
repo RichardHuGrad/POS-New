@@ -304,7 +304,7 @@ class OrderController extends AppController {
         $this->Order->query("UPDATE orders set `phone` = '$phone' where id = $order_id");
 
         $this->Session->setFlash('Order successfully completed.', 'success');
-}
+    }
 
 
 

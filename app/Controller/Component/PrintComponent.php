@@ -476,7 +476,6 @@ class PrintComponent extends Component {
     }
 
 
-
 }
 
  ?>

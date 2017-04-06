@@ -4,13 +4,13 @@ info:
   description: POS system API
   version: "1.0.0"
 # the domain of the service
-host: localhost
+host: 127.0.0.1:8080
 # array of all schemes that your API supports
 schemes:
   - http
   - https
 # will be prefixed to all paths
-basePath: /pos-new/api
+basePath: /pos/api
 produces:
   - application/json
 paths:
@@ -487,9 +487,26 @@ paths:
         200:
           description: success
 
+  /orderHandler/editphone:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: remove discount of order
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/orderNo"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
 parameters:
   restaurantId:
-    name: resturant_id
+    name: restaurant_id
     in: formData
     description: the id of restaurant
     required: true

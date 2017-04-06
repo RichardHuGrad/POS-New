@@ -350,6 +350,22 @@ class OrderHandlerComponent extends Component {
     }
 
 
+    public function editPhone() {
+        ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id', 'order_no', 'phone']);
+
+        $restaurant_id = $args['restaurant_id'];
+        $order_no = $args['order_id'];
+        $phone    = $args['phone'];
+
+        
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        
+        $this->Order->query("UPDATE orders set `phone` = '$phone' where id = $order_id");
+
+        $this->set(compact('phone'));        
+    }
+
+
 }
 
 ?>
