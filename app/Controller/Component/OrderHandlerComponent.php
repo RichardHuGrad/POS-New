@@ -351,6 +351,24 @@ class OrderHandlerComponent extends Component {
         $this->OrderItem->updateExtraAmount($item_id);
     }
 
+	public function moveOrder($args) {
+		ApiHelperComponent::verifyRequiredParams($args, ['type', 'table', 'order_no']);
+		$type = $args['type'];
+        $table = $args['table'];
+        $order_no = $args['order_no'];
+
+        // $this->Order->updateAll(array('Order.table_no' => $table, 'Order.order_type' =>  $type), array('Order.order_no' => $order_no));
+		$orderDetail = $this->Order->find('first', array(
+							'conditions' => array('Order.order_no' => $order_no)
+						));
+		$orderDetail['Order']['table_no'] = $table;
+		$orderDetail['Order']['type'] = $type;
+		$this->Order->save($orderDetail, false);
+
+		return $this->Order->find('first', array(
+						'conditions' => array('Order.order_no' => $order_no)
+					));
+	}
 
 }
 

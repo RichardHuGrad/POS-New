@@ -49,9 +49,10 @@ class Cousine extends AppModel {
     }
 
 
-    public function getAllCousines() {
+    public function getAllCousines($status) {
         $CousineDetails = $this->find("all", array(
             "recursive" => -1,
+			"conditions" => $status
             // "fields" => array('Cousine.price', 'Cousine.is_tax', 'Cousine.comb_num', 'Cousine.category_id')
             )
         );

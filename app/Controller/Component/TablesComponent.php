@@ -41,6 +41,24 @@ class TablesComponent extends Component {
 		return $res;
 	}
 
+	public function getAllTablesSummary ($args) {
+		return $this->Order->find('all', array(
+                        'fields' => array('Order.id','Order.order_no', 'Order.table_status', 'Order.table_no','Order.order_type', 'Order.total', 'Order.paid', 'Order.created'),
+						'recursive' => -1,
+						'conditions' => array('Order.is_completed' => 'N')
+                    ));
+	}
+
+	public function getTablesSummaryByType ($args) {
+		ApiHelperComponent::verifyRequiredParams($args, ['type']);
+		return $this->Order->find('all', array(
+						'fields' => array('Order.id','Order.order_no', 'Order.table_status', 'Order.table_no','Order.order_type', 'Order.total', 'Order.paid', 'Order.created'),
+						'recursive' => -1,
+						'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => $args['type'])
+					));
+	}
+
+
     public function getOrderInfoByTable($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['type', 'table']);
         $tableType = $args['type'];
@@ -93,7 +111,7 @@ class TablesComponent extends Component {
 
     public function getAllCousines($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        return $this->Cousine->getAllCousines();
+        return $this->Cousine->getAllCousines($args['status']);
         // return $this->Cousine->find('all', array(
         //     'conditions' => array('Cousine.status' => $args['status'])
         // ));
@@ -101,7 +119,7 @@ class TablesComponent extends Component {
 
     public function getAllCousineCategories($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        return $this->Category->getAllCategories();
+        return $this->Category->getAllCategories($args['status']);
         // return $this->Category->find('all', array(
         //     'conditions' => array('Category.status' => $args['status'])
         // ));
@@ -133,36 +151,36 @@ class TablesComponent extends Component {
         // return null;
     }
 
-    public function getAllTableStatus() {
-        return $this->Order->find('list', array(
-                        'fields' => array('Order.table_no', 'Order.table_status', 'Order.order_type'),
-                        'conditions' => array('Order.is_completed' => 'N')
-                    ));
-    }
-
-    public function getAllDineinTableStatus() {
-        return $this->Order->find("list", array(
-                        'fields' => array('Order.table_no', 'Order.table_status'),
-                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'D')
-                            )
-                    );
-    }
-
-    public function getAllTakeoutTableStatus() {
-        return $this->Order->find("list", array(
-                        'fields' => array('Order.table_no', 'Order.table_status'),
-                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'T')
-                            )
-                    );
-    }
-
-    public function getAllWaitingTableStatus() {
-        return $this->Order->find("list", array(
-                        'fields' => array('Order.table_no', 'Order.table_status'),
-                        'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'W')
-                            )
-                    );
-    }
+    // public function getAllTableStatus() {
+    //     return $this->Order->find('list', array(
+    //                     'fields' => array('Order.table_no', 'Order.table_status', 'Order.order_type'),
+    //                     'conditions' => array('Order.is_completed' => 'N')
+    //                 ));
+    // }
+	//
+    // public function getAllDineinTableStatus() {
+    //     return $this->Order->find("list", array(
+    //                     'fields' => array('Order.table_no', 'Order.table_status'),
+    //                     'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'D')
+    //                         )
+    //                 );
+    // }
+	//
+    // public function getAllTakeoutTableStatus() {
+    //     return $this->Order->find("list", array(
+    //                     'fields' => array('Order.table_no', 'Order.table_status'),
+    //                     'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'T')
+    //                         )
+    //                 );
+    // }
+	//
+    // public function getAllWaitingTableStatus() {
+    //     return $this->Order->find("list", array(
+    //                     'fields' => array('Order.table_no', 'Order.table_status'),
+    //                     'conditions' => array('Order.is_completed' => 'N', 'Order.order_type' => 'W')
+    //                         )
+    //                 );
+    // }
 
 
 
