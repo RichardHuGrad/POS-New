@@ -93,7 +93,7 @@ class TablesComponent extends Component {
 
     public function getAllCousines($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        return $this->Cousine->getAllCousines();
+        return $this->Cousine->getAllCousines($args['status']);
         // return $this->Cousine->find('all', array(
         //     'conditions' => array('Cousine.status' => $args['status'])
         // ));
@@ -101,7 +101,7 @@ class TablesComponent extends Component {
 
     public function getAllCousineCategories($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['status']);
-        return $this->Category->getAllCategories();
+        return $this->Category->getAllCategories($args['status']);
         // return $this->Category->find('all', array(
         //     'conditions' => array('Category.status' => $args['status'])
         // ));
