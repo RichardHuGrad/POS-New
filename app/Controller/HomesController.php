@@ -19,8 +19,10 @@ class HomesController extends AppController {
 
         parent::beforeFilter();
         $this->Auth->allow('index', 'forgot_password');
+        
+        $this->Auth->allow('index', 'checkin');
+        
         $this->layout = "default";
-
     }
 
     /**
@@ -810,6 +812,69 @@ class HomesController extends AppController {
         return $amount;
     }
 
+    public function checkin() {
+
+        // get all params
+        $userid = $this->data['userid'];
+
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $this->loadModel('Attend');
+        
+        $time    = date('Y-m-d H:i:s');
+        $day     = substr ($time , 0, 10);
+        $checkin = substr ($time , -8); 
+                
+        $data = array();
+        $data['Attend']['userid']    = $userid;
+        $data['Attend']['day']       = $day;
+        $data['Attend']['checkin']  = $checkin;
+
+        $checkin = $this->Attend->field('checkin', array('userid' => $userid,'day' => $day,'checkout' => ''));
+        if($checkin != ""){
+        	return "You already check in at $checkin, Please check out first!";
+        }
+        
+        $this->Attend->save($data, false);
+
+        //$this->Session->setFlash('Checkin successfully', 'success');
+
+        echo "Sucess";
+    }
+
+    public function checkout() {
+
+        // get all params
+        $userid = $this->data['userid'];
+
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $this->loadModel('Attend');
+        
+        $time    = date('Y-m-d H:i:s');
+        $day     = substr ($time , 0, 10);
+        $checkout = substr ($time , -8); 
+                
+        $data = array();
+        $data['Attend']['userid']    = $userid;
+        $data['Attend']['day']       = $day;
+        $data['Attend']['checkout'] = $checkout;
+        
+        $id = $this->Attend->field('id', array('userid' => $userid,'day' => $day,'checkout' => ''));
+        if($id != ""){
+        	$data['Attend']['id']  = $id;
+        }else{
+        	return "Please checkin first!";
+        }
+        
+        $this->Attend->save($data, false);
+
+        //$this->Session->setFlash('Checkin successfully', 'success');
+
+        echo "Sucess";
+    }
 
     //End
 }

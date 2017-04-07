@@ -65,6 +65,14 @@
                     </ul>
                 </li>
 
+                <li>
+                    <a id="checkin-link" href="#" data-toggle="modal" data-target="#modal_checkin"><?php echo __('Checkin'); ?></a>
+                </li>
+
+                <li>
+                    <a id="checkout-link" href="#" data-toggle="modal" data-target="#modal_checkout"><?php echo __('Checkout'); ?></a>
+                </li>
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -95,8 +103,43 @@
        </div>
    </div>
 
+   <div class="modal fade clearfix" id="modal_checkin" role="dialog">
+       <div class="modal-dialog modal-lg" style="width:400px">
+           <div class="modal-content clearfix">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">&times;</button>
+                   <h4>Checkin - Input your id</h4>
+               </div>
+               <div class="modal-body clearfix">
+                    <input id="checkin-id" type="text" style="font-size:25px;height:38px" />
+               </div>
+               <div class="modal-footer clearfix">                   
+                   <button type="button" id="btn-checkin" class="pull-right btn btn-lg btn-success" data-dismiss="modal">OK 确认</button>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div class="modal fade clearfix" id="modal_checkout" role="dialog">
+       <div class="modal-dialog modal-lg" style="width:400px">
+           <div class="modal-content clearfix">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">&times;</button>
+                   <h4>Checkout - Input your id</h4>
+               </div>
+               <div class="modal-body clearfix">
+                    <input id="checkout-id" type="text" style="font-size:25px;height:38px" />
+               </div>
+               <div class="modal-footer clearfix">                   
+                   <button type="button" id="btn-checkout" class="pull-right btn btn-lg btn-success" data-dismiss="modal">OK 确认</button>
+               </div>
+           </div>
+       </div>
+   </div>
+
 
 <?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js' )); ?>
+
 <script type="text/javascript">
 
     $('.switch-lang').on('click', function() {
@@ -118,9 +161,14 @@
       $("#modal_input_password").on('shown.bs.modal', function () {
           $("#admin-link-input-pwd").focus();
       }) ; 
+      $("#modal_checkin").on('shown.bs.modal', function () {
+          $("#checkin-id").focus();
+      }) ; 
+      $("#modal_checkout").on('shown.bs.modal', function () {
+          $("#checkout-id").focus();
+      }) ; 
 
       $("#admin-link-confirm-pwd").on('click', function() {
-      
           var pass = $("#admin-link-input-pwd").val();
           pass = hex_md5(pass); 
           if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {  
@@ -129,6 +177,31 @@
           	alert("Error admin password!")
           }
       });
+
+    $('#btn-checkin').on('click', function() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'checkin')); ?>",
+            method: "post",
+            data: { userid: $("#checkin-id").val() },
+            success: function(html){ 
+            	alert(html);
+            	$("#checkin-id").val("");
+            }
+        })
+    });
+
+    $('#btn-checkout').on('click', function() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'checkout')); ?>",
+            method: "post",
+            data: { userid: $("#checkout-id").val() },
+            success: function(html){ 
+            	alert(html);
+            	$("#checkout-id").val("");
+            }
+        })
+    });
+
         
 </script>
 

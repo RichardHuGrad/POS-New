@@ -314,6 +314,23 @@ echo number_format($tax_amount, 2);
                 </ul>
             </div>
 
+
+                <div class="card-bot clearfix text-center">
+                    <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> <?php echo __('Card'); ?></button>
+                    <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> <?php echo __('Cash'); ?></button>
+
+                    <!-- <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button> -->
+
+
+                    <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> <?php echo __('Confirm'); ?></button>
+                    <input type="hidden" id="selected_card" value="" />
+                    <input type="hidden" id="card_val" name="card_val" value="" />
+                    <input type="hidden" id="cash_val" name="cash_val" value="" />
+                    <input type="hidden" id="tip_val"name="tip" value="" />
+                    <input type="hidden" id="tip_paid_by"name="tip_paid_by" value="" />
+                </div>
+
+
 <?php
 //Modified by Yishou Liao @ Oct 14 2016.
 for ($i = 0; $i < count($Order_detail); $i++) {
@@ -351,21 +368,6 @@ if ($table_status != 'P') {
                         <li id="Dot">.</li>
                         <li class="enter-txt" id="Enter"><?php echo __('Enter'); ?></li>
                     </ul>
-                </div>
-
-                <div class="card-bot clearfix text-center">
-                    <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> <?php echo __('Card'); ?></button>
-                    <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> <?php echo __('Cash'); ?></button>
-
-                    <!-- <button type="button" class="btn btn-warning select_card"  id="tip"><?php echo $this->Html->image("cash.png", array('alt' => "tip")); ?> Tip 小费</button> -->
-
-
-                    <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> <?php echo __('Confirm'); ?></button>
-                    <input type="hidden" id="selected_card" value="" />
-                    <input type="hidden" id="card_val" name="card_val" value="" />
-                    <input type="hidden" id="cash_val" name="cash_val" value="" />
-                    <input type="hidden" id="tip_val"name="tip" value="" />
-                    <input type="hidden" id="tip_paid_by"name="tip_paid_by" value="" />
                 </div>
 
 <?php } ?>

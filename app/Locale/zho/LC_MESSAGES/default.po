@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-04-04 11:47-0400\n"
-"PO-Revision-Date: 2017-04-04 11:48-0400\n"
+"POT-Creation-Date: 2017-04-07 16:26-0400\n"
+"PO-Revision-Date: 2017-04-07 16:26-0400\n"
 "Last-Translator: \n"
 "Language-Team: EMAIL@ADDRESS\n"
 "Language: zh_CN\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.8.11\n"
 
-#: Controller/HomesController.php:83
+#: Controller/HomesController.php:85
 msgid "%s you have successfully logged out"
 msgstr "%s 你已经成功登出"
 
@@ -43,7 +43,7 @@ msgstr "更多"
 msgid "Order Search"
 msgstr "订单搜索"
 
-#: View/Elements/navbar.ctp:44 View/Homes/dashboard.ctp:56;203;301
+#: View/Elements/navbar.ctp:44 View/Homes/dashboard.ctp:56;203;304
 msgid "Order"
 msgstr "订单"
 
@@ -51,7 +51,15 @@ msgstr "订单"
 msgid "Languages"
 msgstr "语言"
 
-#: View/Elements/navbar.ctp:72 View/Order/index.ctp:25
+#: View/Elements/navbar.ctp:69 View/Homes/index.ctp:21
+msgid "Checkin"
+msgstr "签入"
+
+#: View/Elements/navbar.ctp:73
+msgid "Checkout"
+msgstr "签出"
+
+#: View/Elements/navbar.ctp:80 View/Order/index.ctp:25
 msgid "Logout"
 msgstr "登出"
 
@@ -59,23 +67,23 @@ msgstr "登出"
 msgid "Dine In"
 msgstr "堂食"
 
-#: View/Homes/dashboard.ctp:59;210;309 View/Pay/index.ctp:70
+#: View/Homes/dashboard.ctp:59;210;312 View/Pay/index.ctp:70
 msgid "Change Table"
 msgstr "换桌"
 
-#: View/Homes/dashboard.ctp:65;218;317 View/Pay/index.ctp:74
+#: View/Homes/dashboard.ctp:65;218;320 View/Pay/index.ctp:74
 msgid "DINE IN"
 msgstr "堂食"
 
-#: View/Homes/dashboard.ctp:76;228;327 View/Pay/index.ctp:81
+#: View/Homes/dashboard.ctp:76;228;330 View/Pay/index.ctp:81
 msgid "TAKE OUT"
 msgstr "外卖"
 
-#: View/Homes/dashboard.ctp:86;238;337 View/Pay/index.ctp:88
+#: View/Homes/dashboard.ctp:86;238;340 View/Pay/index.ctp:88
 msgid "Delivery"
 msgstr "送餐"
 
-#: View/Homes/dashboard.ctp:95;252;351 View/Order/index.ctp:127
+#: View/Homes/dashboard.ctp:95;252;354 View/Order/index.ctp:127
 msgid "Pay"
 msgstr "付款"
 
@@ -107,13 +115,13 @@ msgstr "外卖桌"
 msgid "Takeout"
 msgstr "外卖"
 
-#: View/Homes/dashboard.ctp:282;295
+#: View/Homes/dashboard.ctp:285;298
 msgid "Delivery List"
 msgstr "送餐桌"
 
-#: View/Homes/dashboard.ctp:352 View/Merge/index.ctp:342
+#: View/Homes/dashboard.ctp:355 View/Merge/index.ctp:367
 #: View/Order/index.ctp:178 View/Order/summarypanel.ctp:26
-#: View/Pay/index.ctp:337
+#: View/Pay/index.ctp:362
 msgid "Clear"
 msgstr "清空"
 
@@ -141,11 +149,11 @@ msgstr "密码"
 msgid "Sign in"
 msgstr "登录"
 
-#: View/Homes/index.ctp:22
+#: View/Homes/index.ctp:27
 msgid "Forgot your password?"
 msgstr "忘记密码？"
 
-#: View/Merge/index.ctp:10;714 View/Order/index.ctp:45 View/Pay/index.ctp:59
+#: View/Merge/index.ctp:10;752 View/Order/index.ctp:45 View/Pay/index.ctp:59
 msgid "Order No."
 msgstr "订单号"
 
@@ -173,26 +181,26 @@ msgstr "打印收据"
 msgid "Order Summary"
 msgstr "订单摘要"
 
-#: View/Merge/index.ctp:110;716 View/Order/summarypanel.ctp:74
+#: View/Merge/index.ctp:110;754 View/Order/summarypanel.ctp:74
 #: View/Pay/index.ctp:153
 msgid "Subtotal"
 msgstr "小计"
 
-#: View/Merge/index.ctp:150;720 View/Order/summarypanel.ctp:93
+#: View/Merge/index.ctp:150;758 View/Order/summarypanel.ctp:93
 #: View/Pay/index.ctp:205
 msgid "Discount"
 msgstr "折扣"
 
-#: View/Merge/index.ctp:184;724 View/Order/summarypanel.ctp:109
+#: View/Merge/index.ctp:184;762 View/Order/summarypanel.ctp:109
 #: View/Pay/index.ctp:221
 msgid "After Discount"
 msgstr "折后价"
 
-#: View/Merge/index.ctp:207;728 View/Pay/index.ctp:232 View/Report/index.ctp:54
+#: View/Merge/index.ctp:207;766 View/Pay/index.ctp:232 View/Report/index.ctp:54
 msgid "Tax"
 msgstr "税"
 
-#: View/Merge/index.ctp:234;732 View/Order/summarypanel.ctp:126
+#: View/Merge/index.ctp:234;770 View/Order/summarypanel.ctp:126
 #: View/Pay/index.ctp:240 View/Report/index.ctp:55
 msgid "Total"
 msgstr "总计"
@@ -201,15 +209,15 @@ msgstr "总计"
 msgid "Received"
 msgstr "已收到"
 
-#: View/Merge/index.ctp:267;295;350 View/Pay/index.ctp:253;281;345;372
+#: View/Merge/index.ctp:267;295;320 View/Pay/index.ctp:253;281;321;382
 msgid "Cash"
 msgstr "现金"
 
-#: View/Merge/index.ctp:268;296;349 View/Pay/index.ctp:254;282;344;373
+#: View/Merge/index.ctp:268;296;319 View/Pay/index.ctp:254;282;320;383
 msgid "Card"
 msgstr "卡"
 
-#: View/Merge/index.ctp:275 View/Pay/index.ctp:261;371
+#: View/Merge/index.ctp:275 View/Pay/index.ctp:261;381
 msgid "Change"
 msgstr "找零"
 
@@ -217,52 +225,52 @@ msgstr "找零"
 msgid "Tip"
 msgstr "小费"
 
-#: View/Merge/index.ctp:301 View/Pay/index.ctp:287;370
+#: View/Merge/index.ctp:301 View/Pay/index.ctp:287;380
 msgid "Remaining"
 msgstr "剩余"
 
-#: View/Merge/index.ctp:344 View/Pay/index.ctp:339
-msgid "Enter"
-msgstr "输入"
-
-#: View/Merge/index.ctp:355 View/Pay/index.ctp:349
+#: View/Merge/index.ctp:325 View/Pay/index.ctp:325
 msgid "Confirm"
 msgstr "确认"
 
-#: View/Merge/index.ctp:714 View/Order/index.ctp:45
+#: View/Merge/index.ctp:369 View/Pay/index.ctp:364
+msgid "Enter"
+msgstr "输入"
+
+#: View/Merge/index.ctp:752 View/Order/index.ctp:45
 msgid "Table No."
 msgstr "桌号"
 
-#: View/Merge/index.ctp:714
+#: View/Merge/index.ctp:752
 msgid "Type"
 msgstr "类型"
 
-#: View/Merge/index.ctp:741 View/Order/summarypanel.ctp:44
+#: View/Merge/index.ctp:779 View/Order/summarypanel.ctp:44
 #: View/Pay/index.ctp:170
 msgid "Fix Discount"
 msgstr "固定折扣"
 
-#: View/Merge/index.ctp:745 View/Order/summarypanel.ctp:50
+#: View/Merge/index.ctp:783 View/Order/summarypanel.ctp:50
 #: View/Pay/index.ctp:176
 msgid "Discount in %"
 msgstr "%折扣"
 
-#: View/Merge/index.ctp:749 View/Order/summarypanel.ctp:56
+#: View/Merge/index.ctp:787 View/Order/summarypanel.ctp:56
 #: View/Pay/index.ctp:182
 msgid "Promo Code"
 msgstr "优惠码"
 
-#: View/Merge/index.ctp:752 View/Order/summarypanel.ctp:64
+#: View/Merge/index.ctp:790 View/Order/summarypanel.ctp:64
 #: View/Pay/index.ctp:190
 msgid "Apply"
 msgstr "应用"
 
-#: View/Merge/index.ctp:757 View/Order/summarypanel.ctp:33
+#: View/Merge/index.ctp:795 View/Order/summarypanel.ctp:33
 #: View/Pay/index.ctp:161
 msgid "Add Discount"
 msgstr "加入折扣"
 
-#: View/Merge/index.ctp:761
+#: View/Merge/index.ctp:799
 msgid "Delete Discount"
 msgstr "删除折扣"
 
