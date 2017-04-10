@@ -6,6 +6,7 @@ App::uses('PrintComponent', 'Component');
 
 class OrderHandlerComponent extends Component {
     public $status = 'success';
+    public $components = array('Paginator');
 
     public function __construct() {
         // register model
@@ -15,7 +16,7 @@ class OrderHandlerComponent extends Component {
         $this->Category = ClassRegistry::init('Category');
         $this->Cashier = ClassRegistry::init('Cashier');
         $this->Cousine = ClassRegistry::init('Cousine');
-        $this->Extra = ClassRegistry::init('Extra');
+        $this->Extra = ClassRegistry::init('Extra');        
     }
     /**
      * paras:
@@ -351,38 +352,90 @@ class OrderHandlerComponent extends Component {
         $this->OrderItem->updateExtraAmount($item_id);
     }
 
-	public function moveOrder($args) {
-		ApiHelperComponent::verifyRequiredParams($args, ['type', 'table', 'order_no']);
-		$type = $args['type'];
+    public function tableHistory($args) {
+
+        ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id','table']);
+
+        $restaurant_id = $args['restaurant_id'];
         $table = $args['table'];
-        $order_no = $args['order_no'];
 
-        // $this->Order->updateAll(array('Order.table_no' => $table, 'Order.order_type' =>  $type), array('Order.order_no' => $order_no));
-		$orderDetail = $this->Order->find('first', array(
-							'conditions' => array('Order.order_no' => $order_no)
-						));
-		$orderDetail['Order']['table_no'] = $table;
-		$orderDetail['Order']['type'] = $type;
-		$this->Order->save($orderDetail, false);
+        $conditions = array('Order.cashier_id' => $restaurant_id,
+            'Order.table_no' => $table,
+            'Order.is_completed' => 'Y',
+            'Order.order_type' => 'D',
+            'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
+        );
 
-		return $this->Order->find('first', array(
-						'conditions' => array('Order.order_no' => $order_no)
-					));
-	}
+        $Order_detail = $this->Order->find("all", array(
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
+            'conditions' => $conditions
+                )
+        );
+        
+        if (empty($Order_detail)) {
+        	  $json['Order_detail'] = "Sorry, there is no table history for today.";
+            return json_encode($json);
+        }
+/*
+        $this->paginate = array(
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
+            'conditions' => $conditions,
+            'limit' => 10,
+            'order' => array('Order.created' => 'desc')
+        );
 
-  public function editPhone($args) {
-      ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id', 'order_no', 'phone']);
+        $Order_detail = $this->paginate('Order');
+*/
+        $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
 
-      $restaurant_id = $args['restaurant_id'];
+        $json['Order_detail'] = $Order_detail;
+        $json['table_no'] = $table;
+        $json['today'] = $today;
+        return json_encode($json);
+    }
+
+
+    public function makeavailable($args) {
+
+	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
+	  	  	  	  
+        $order_no = $args['order_no'];        
+        $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
+    }
+
+
+	  public function moveOrder($args) {
+	  	ApiHelperComponent::verifyRequiredParams($args, ['type', 'table', 'order_no']);
+	  	$type = $args['type'];
+      $table = $args['table'];
       $order_no = $args['order_no'];
-      $phone    = $args['phone'];
-      
-      $order_id = $this->Order->getOrderIdByOrderNo($order_no);
-      
-      $this->Order->query("UPDATE orders set `phone` = '$phone' where id = $order_id");
-
-      return $phone;   
-  }
+    
+          // $this->Order->updateAll(array('Order.table_no' => $table, 'Order.order_type' =>  $type), array('Order.order_no' => $order_no));
+	  	$orderDetail = $this->Order->find('first', array(
+	  						'conditions' => array('Order.order_no' => $order_no)
+	  					));
+	  	$orderDetail['Order']['table_no'] = $table;
+	  	$orderDetail['Order']['type'] = $type;
+	  	$this->Order->save($orderDetail, false);
+    
+	  	return $this->Order->find('first', array(
+	  					'conditions' => array('Order.order_no' => $order_no)
+	  				));
+	  }
+    
+    public function editPhone($args) {
+        ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id', 'order_no', 'phone']);
+    
+        $restaurant_id = $args['restaurant_id'];
+        $order_no = $args['order_no'];
+        $phone    = $args['phone'];
+        
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        
+        $this->Order->query("UPDATE orders set `phone` = '$phone' where id = $order_id");
+    
+        return $phone;   
+    }
 
 
 }

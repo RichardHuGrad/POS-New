@@ -604,6 +604,10 @@ class HomesController extends AppController {
     }
 
     public function tableRestore() {
+
+        $this->layout = false;
+        $this->autoRender = NULL;
+    	
         $table_no = $this->data['table_no'];
         $order_id = $this->data['order_id'];
 

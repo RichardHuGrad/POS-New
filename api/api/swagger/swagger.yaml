@@ -4,13 +4,13 @@ info:
   description: POS system API
   version: "1.0.0"
 # the domain of the service
-host: pos.auroraeducationonline.info
+host: 127.0.0.1:8080
 # array of all schemes that your API supports
 schemes:
   - http
   - https
 # will be prefixed to all paths
-basePath: /api
+basePath: /pos/api
 produces:
   - application/json
 paths:
@@ -384,6 +384,53 @@ paths:
       responses:
         200:
           description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/tableHistory:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: table order history(today and current cashier_id)
+      description: |
+        table order history(today and current cashier_id)
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Order:
+                $ref: "#/definitions/Order"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/makeavailable:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: make table available(to an empty table)
+      description: |
+        make table (by order_no) to an empty table
+      parameters:
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Order:
+                $ref: "#/definitions/Order"
         default:
           $ref: "#/responses/MissingArgumentError"
 
