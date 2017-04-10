@@ -119,7 +119,7 @@ echo $this->fetch('script');
 	// variable for payment
 	var table_id = '<?php echo $table ?>';
 	var order_type = '<?php echo $type ?>';
-	var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+	var order_no = '<?php echo $Order_detail['Order']['order_no'] ?>';
 	// var reorder_no =
 
 
