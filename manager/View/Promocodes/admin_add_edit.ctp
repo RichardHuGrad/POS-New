@@ -164,6 +164,8 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
                                             <?php echo $this->Form->input('end_time', array('type' => 'text', 'class' => 'form-control validate[required]', 'div' => false, 'label' => false, 'required' => true, 'required' => true)); ?>
                                         </div>
                                     </div> 
+                                
+                                
 
                                 <div class="col-md-6">
                                     <div class="form-group">

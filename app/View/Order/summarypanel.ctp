@@ -313,10 +313,10 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
         <?php if (isset($Order_detail['Order']['order_no'])) { ?>
 
-    		var order_no = <?php echo $Order_detail['Order']['order_no'] ?>;
+    		var order_no = '<?php echo $Order_detail['Order']['order_no'] ?>';
     		order = loadOrder(order_no);
 
-    		// console.log(order);
+    		 console.log(order);
 
     		$('.order-summary-indent').append(OrderComponent.init(order, ItemComponent))
 
