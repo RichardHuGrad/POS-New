@@ -615,7 +615,7 @@ abstract class CountPage {
         printer_start_page($handle);
         
         if($font_bold == true){
-        	$font = printer_create_font('simsun', 28, 10, 1500, false, false, false, 0);
+        	$font =printer_create_font("Arial", 32, 14, 1200, false, false, false, 0);
         }else{
         	$font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         }

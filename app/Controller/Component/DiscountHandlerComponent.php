@@ -37,9 +37,9 @@ class DiscountHandlerComponent extends Component {
         }
 
         $Order_detail = $this->Order->find("first", array(
-	    	'fields' => array('Order.id', 'Order.fix_discount', 'Order.promocode', 'Order.percent_discount'),
-	    	'conditions' => array('Order.id' => $order_id)
-    	));
+	    	  'fields' => array('Order.id', 'Order.fix_discount', 'Order.promocode', 'Order.percent_discount'),
+	    	  'conditions' => array('Order.id' => $order_id)
+    	  ));
 
         // print_r($data);
         // update order amount

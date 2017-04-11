@@ -853,8 +853,8 @@ echo $this->fetch('script');
 				}
 			}
 		}
-        console.log("test")
-        console.log(changed)
+    
+    console.log(changed)
 
 		return changed;
 	}
@@ -866,6 +866,7 @@ echo $this->fetch('script');
 	
 	// print accounding order and suborders
 	function printSplitReceipt(order, suborders) {
+
 		var order = order;
 		var suborders = suborders;
 
@@ -873,25 +874,24 @@ echo $this->fetch('script');
 			var tempSuborder = suborders.suborders[i];
 			$.ajax({
 				url: '<?php echo $this->Html->url(array("controller" => "print", "action" => "printSplitReceipt", $Order_detail["Order"]["order_no"],$table, $type, $cashier_detail["Admin"]["service_printer_device"], true, true));?>',
-				method: 'post',
+				type: 'POST',
+				async: false,
 				data: {
 					suborder: tempSuborder.receiptInfo,
 					logo_name: '../webroot/img/logo.bmp',
-				}
+				},
+				dataType :"text",
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+        	 console.log("printSplitReceipt error! "+"status: "+XMLHttpRequest.status + "readyState: "+XMLHttpRequest.readyState);
+        },
+        success: function(msg){
+          console.log("printSplitReceipt successfully!");
+        } 				
 			});
 
 		}
 
 	}
-
-/*	$('#input-submit').on('click', function () {
-		if (suborders.isAllSuborderPaid()) {
-			// printSplitReceipt(order, suborders);
-			// $('#print-split-receipt').trigger('click');
-
-			deleteAllCookies();
-		}
-	})*/
 
 
 

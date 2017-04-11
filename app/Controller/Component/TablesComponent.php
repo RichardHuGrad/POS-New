@@ -185,8 +185,4 @@ class TablesComponent extends Component {
 
 
 
-
-
-
-
 }

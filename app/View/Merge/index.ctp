@@ -344,14 +344,6 @@ if ($table_status != 'P') {
                 <div class="card-wrap"><input type="text" id="screen" buffer="" lastinput="" maxlength="13" readonly></div>
                 <div class="card-indent clearfix">
                     <ul>
-                        <li>100</li>
-                        <li>50</li>
-                        <li class="back-txt" id="Back">Back</li>
-
-                        <li>20</li>
-                        <li>10</li>
-                        <li>0</li>
-
                         <li>1</li>
                         <li>2</li>
                         <li>3</li>
@@ -364,8 +356,12 @@ if ($table_status != 'P') {
                         <li>8</li>
                         <li>9</li>
 
-                        <li class="clear-txt" id="Clear"><?php echo __('Clear'); ?></li>
+                        <li>0</li>
                         <li id="Dot">.</li>
+                        <li class="back-txt" id="Back">Back</li>
+                        
+                        <li></li>
+                        <li class="clear-txt" id="Clear"><?php echo __('Clear'); ?></li>
                         <li class="enter-txt" id="Enter"><?php echo __('Enter'); ?></li>
                     </ul>
                 </div>
@@ -577,16 +573,8 @@ echo $this->fetch('script');
 				              var buffer = $('#screen').attr("buffer");
 				              if(Number(buffer) == 0) buffer = '';
 				              
-				              var new_value;
-				              
-				              if($.inArray( $(this).html(), ['100','50','20','10'])!= -1){
-				              	new_value = Number(buffer) + Number( $(this).html() );	
-				              	new_value = new_value.toString() ;									
-				              }else{
-				              	new_value = buffer + $(this).html();										
-				              }
-                      
-				              
+				              var new_value = buffer + $(this).html();										
+                                  
 				              $('#screen').attr("buffer", new_value);		
                       
                       $('#screen').attr("lastinput", $('#screen').val() );
@@ -712,37 +700,34 @@ echo $this->fetch('script');
 
             $("#Back").click(function () {
 
-								$('#screen').attr("buffer", $('#screen').attr("lastinput"));
-								if($('#screen').attr("buffer")=='00.00'){
-									$('#screen').attr("buffer",'');
-								}
-																
-								$('#screen').val($('#screen').attr("lastinput"));
-
-                $("#screen").focus();
+				       var current_val = $('#screen').val();
+				       var new_val = current_val.substring(0,current_val.length-1);		
+               
+				       $('#screen').val(new_val);
+               $('#screen').attr("buffer", new_val);		
+               
+               $("#screen").focus();
             })
 
 
-
-                    //Modified by Yishou Liao @ Oct 16 2016
-                    $("#screen").keydown(function (e) {
+            //Modified by Yishou Liao @ Oct 16 2016
+            $("#screen").keydown(function (e) {
             // Allow: backspace, delete, tab, escape, enter and .
-            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== - 1 ||
-                    // Allow: Ctrl+A, Command+A
-                            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                            // Allow: home, end, left, right, down, up
-                                    (e.keyCode >= 35 && e.keyCode <= 40)) {
-                    // let it happen, don't do anything
-                    return;
-                    }
-                    // Ensure that it is a number and stop the keypress
-                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
-                    }
-                    });
+               if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== - 1 ||
+                 // Allow: Ctrl+A, Command+A
+                         (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                         // Allow: home, end, left, right, down, up
+                                 (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+                 }
+                 // Ensure that it is a number and stop the keypress
+                 if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                 e.preventDefault();
+               }
+           });
                     //End.
     });
-
 
 
 

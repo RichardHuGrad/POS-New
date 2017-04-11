@@ -47,8 +47,10 @@ class PrintController extends AppController {
 
 
     public function printZh($str, $x, $y,$font_bold=false) {
+    	
         if($font_bold == true){
-          $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, 1500, false, false, false, 0);
+          //$font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, 1500, false, false, false, 0);
+          $font =printer_create_font("Arial", 32, 14, 1200, false, false, false, 0);
         }else{
           $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         }
@@ -110,8 +112,10 @@ class PrintController extends AppController {
     }
 
     public function printEn($str, $x, $y,$font_bold=false) {
+
         if($font_bold == true){
-          $font = printer_create_font("Arial", 28, 10, 1500, false, false, false, 0);
+          //$font = printer_create_font("Arial", 28, 10, 1500, false, false, false, 0);
+          $font =printer_create_font("Arial", 32, 14, 1200, false, false, false, 0);
         }else{
           $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         }
@@ -268,7 +272,7 @@ class PrintController extends AppController {
         } else {
             $this->printEn( "Total :", 58, $print_y,true);
         };
-        $this->printEn(number_format($total, 2), 360, $print_y);
+        $this->printEn(number_format($total, 2), 360, $print_y,true);
         $print_y += 30;
 
         /*if ($is_receipt == true) {
@@ -296,8 +300,6 @@ class PrintController extends AppController {
 
         echo true;
         exit;
-
-
     }
 
 
@@ -354,7 +356,7 @@ class PrintController extends AppController {
         }
 
 
-        $this->printBigEn("Order Number: #" . $order_no . '-' . $suborder_no , 32, $print_y);
+        $this->printBigEn("Order Number:#" . $order_no . '-' . $suborder_no , 32, $print_y);
         $print_y+=40;
         $this->printBigZh("Table:". $type . iconv("UTF-8", "gb2312", "# " . $table_no) , 32, $print_y);
         $print_y+=38;
@@ -444,7 +446,7 @@ class PrintController extends AppController {
         } else {
             $this->printEn( "Total :", 58, $print_y,true);
         };
-        $this->printEn(number_format($total, 2), 360, $print_y);
+        $this->printEn(number_format($total, 2), 360, $print_y,true);
         $print_y += 30;
 
 
@@ -495,5 +497,4 @@ class PrintController extends AppController {
 
 
 
-
- ?>
+?>
