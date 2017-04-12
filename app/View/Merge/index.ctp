@@ -358,9 +358,9 @@ if ($table_status != 'P') {
 
                         <li>0</li>
                         <li id="Dot">.</li>
-                        <li class="back-txt" id="Back">Back</li>
+                        <li class="txt" id="Back">Back</li>
                         
-                        <li></li>
+                        <li class="txt" id="Default"><?php echo __('Default'); ?></li>
                         <li class="clear-txt" id="Clear"><?php echo __('Clear'); ?></li>
                         <li class="enter-txt" id="Enter"><?php echo __('Enter'); ?></li>
                     </ul>
@@ -566,14 +566,24 @@ echo $this->fetch('script');
                               return false;
                       }
                       
-                      if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt") || $(this).hasClass("back-txt"))
-                         return false;                         
+                      
+                      if ($(this).hasClass("clear-txt") || $(this).hasClass("enter-txt") || $(this).attr("id") == "Back")
+                          return false;
+                      
+                      var new_value;
+                      
+                      if ($(this).attr("id") == "Default"){
+                      	new_value= $(".total_price").attr("alt");
+                      	$('#screen').attr("buffer", new_value);	
+                      	$('#screen').val(new_value);
+                      	return true;
+                      }
 
 
 				              var buffer = $('#screen').attr("buffer");
 				              if(Number(buffer) == 0) buffer = '';
 				              
-				              var new_value = buffer + $(this).html();										
+				              new_value = buffer + $(this).html();										
                                   
 				              $('#screen').attr("buffer", new_value);		
                       

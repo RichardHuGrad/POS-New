@@ -52,13 +52,13 @@ class OrderHandlerComponent extends Component {
             'conditions' => array('Order.cashier_id' => $restaurant_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
                 )
         );
-        // print_r($Order_detail);
 
         // print_r($Order_detail);
 
         if (empty($Order_detail)) {
             // to create a new order
-            $order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate);
+            //$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate);
+            return array('ret' => 0, 'message' => 'No order found!');
         } else {
             $order_id = $Order_detail['Order']['id'];
         }
@@ -129,6 +129,9 @@ class OrderHandlerComponent extends Component {
 
         // update order amount
         $this->Order->updateBillInfo($order_id);
+        
+        return array('ret' => 1, 'message' => 'Complete!');
+
     }
 
 
@@ -149,6 +152,11 @@ class OrderHandlerComponent extends Component {
                             )
                         )
                 );
+                
+            if(!$itemDetail){
+               return array('ret' => 0, 'message' => "Error order_items id: $item_id !");
+            }
+                
             $itemDetail['OrderItem']['price'] = $price;
 
             // print_r($itemDetail);
@@ -158,8 +166,13 @@ class OrderHandlerComponent extends Component {
 
         // recalculate price
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        
         $this->Order->updateBillInfo($order_id);
+
+        return array('ret' => 1, 'message' => 'Complete!');
+      
     }
+    
 
     public function changeQuantity($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id_list', 'table', 'type', 'order_no', 'quantity']);
@@ -178,6 +191,11 @@ class OrderHandlerComponent extends Component {
                             )
                         )
                 );
+            
+            if(!$itemDetail){
+               return array('ret' => 0, 'message' => "Error order_items id: $item_id !");
+            }
+            
             $itemDetail['OrderItem']['qty'] = $quantity;
 
             // print_r($itemDetail);
@@ -188,22 +206,28 @@ class OrderHandlerComponent extends Component {
         // recalculate price
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $this->Order->updateBillInfo($order_id);
+        
+        return array('ret' => 1, 'message' => 'Complete!');
 
     }
 
 
     public function takeout($args) {
-        ApiHelperComponent::verifyRequiredParams($args, ['item_id_list', 'table', 'type']);
+        ApiHelperComponent::verifyRequiredParams($args, ['item_id_list']);
 
         $item_id_list = $args['item_id_list'];
-        $table = $args['table'];
-        $type = $args['type'];
+        
         // $order_no = $args['order_no'];
 
         foreach ($item_id_list as $item_id) {
             // if the item is printed
             // send to kitchen print
             $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            
+            if(!$item_detail){
+            	return array('ret' => 0, 'message' => 'id '.$item_id.' not exist!');
+            } 
+            
             // print_r($item_detail);
             $is_print = $item_detail[0]['order_items']['is_print'];
             $printer = $item_detail[0]['categories']['printer'];
@@ -219,19 +243,18 @@ class OrderHandlerComponent extends Component {
             } // else do nothing
 
 
-            // set all item in order_item table as is_takeout 'Y'
-            // revert all is_takeout flag
+            // set all item in order_item table as is_takeout 'Y'            
             if ($item_detail[0]['order_items']['is_takeout'] == 'Y') {
-                $update_para['is_takeout'] = 'N';
+               //$update_para['is_takeout'] = 'N'; // revert is_takeout flag
             } else if ($item_detail[0]['order_items']['is_takeout'] == 'N') {
                 $update_para['is_takeout'] = 'Y';
             }
 
             $update_para['id'] = $item_id;
             $this->OrderItem->save($update_para, false);
-
-            // $this->OrderItem->delete($data);
         }
+        
+        return array('ret' => 1, 'message' => 'Complete!');
     }
 
 
@@ -399,8 +422,12 @@ class OrderHandlerComponent extends Component {
 
 	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
 	  	  	  	  
-        $order_no = $args['order_no'];        
-        $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
+        $order_no = $args['order_no'];     
+           
+        $ret = $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
+        
+        if($ret!==false) return array('ret' => 1, 'message' => 'Complete!');
+        else return array('ret' => 0, 'message' => 'Fail to delete order!');        
     }
 
 
@@ -432,9 +459,11 @@ class OrderHandlerComponent extends Component {
         
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         
-        $this->Order->query("UPDATE orders set `phone` = '$phone' where id = $order_id");
-    
-        return $phone;   
+        $this->Order->id = $order_id;
+        $ret=$this->Order->saveField('phone', $phone);
+       
+        if($ret) return array('ret' => 1, 'message' => 'Add successfully.');
+        else return array('ret' => 0, 'message' => 'Fail to update order!');        
     }
 
 

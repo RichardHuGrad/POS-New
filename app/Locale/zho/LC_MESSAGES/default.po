@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-04-07 16:26-0400\n"
-"PO-Revision-Date: 2017-04-07 16:26-0400\n"
+"POT-Creation-Date: 2017-04-12 17:10-0400\n"
+"PO-Revision-Date: 2017-04-12 17:11-0400\n"
 "Last-Translator: \n"
 "Language-Team: EMAIL@ADDRESS\n"
 "Language: zh_CN\n"
@@ -119,9 +119,9 @@ msgstr "外卖"
 msgid "Delivery List"
 msgstr "送餐桌"
 
-#: View/Homes/dashboard.ctp:355 View/Merge/index.ctp:367
+#: View/Homes/dashboard.ctp:355 View/Merge/index.ctp:364
 #: View/Order/index.ctp:178 View/Order/summarypanel.ctp:26
-#: View/Pay/index.ctp:362
+#: View/Pay/index.ctp:358
 msgid "Clear"
 msgstr "清空"
 
@@ -153,7 +153,7 @@ msgstr "登录"
 msgid "Forgot your password?"
 msgstr "忘记密码？"
 
-#: View/Merge/index.ctp:10;752 View/Order/index.ctp:45 View/Pay/index.ctp:59
+#: View/Merge/index.ctp:10;747 View/Order/index.ctp:45 View/Pay/index.ctp:59
 msgid "Order No."
 msgstr "订单号"
 
@@ -181,26 +181,26 @@ msgstr "打印收据"
 msgid "Order Summary"
 msgstr "订单摘要"
 
-#: View/Merge/index.ctp:110;754 View/Order/summarypanel.ctp:74
+#: View/Merge/index.ctp:110;749 View/Order/summarypanel.ctp:74
 #: View/Pay/index.ctp:153
 msgid "Subtotal"
 msgstr "小计"
 
-#: View/Merge/index.ctp:150;758 View/Order/summarypanel.ctp:93
+#: View/Merge/index.ctp:150;753 View/Order/summarypanel.ctp:93
 #: View/Pay/index.ctp:205
 msgid "Discount"
 msgstr "折扣"
 
-#: View/Merge/index.ctp:184;762 View/Order/summarypanel.ctp:109
+#: View/Merge/index.ctp:184;757 View/Order/summarypanel.ctp:109
 #: View/Pay/index.ctp:221
 msgid "After Discount"
 msgstr "折后价"
 
-#: View/Merge/index.ctp:207;766 View/Pay/index.ctp:232 View/Report/index.ctp:54
+#: View/Merge/index.ctp:207;761 View/Pay/index.ctp:232 View/Report/index.ctp:54
 msgid "Tax"
 msgstr "税"
 
-#: View/Merge/index.ctp:234;770 View/Order/summarypanel.ctp:126
+#: View/Merge/index.ctp:234;765 View/Order/summarypanel.ctp:126
 #: View/Pay/index.ctp:240 View/Report/index.ctp:55
 msgid "Total"
 msgstr "总计"
@@ -209,15 +209,15 @@ msgstr "总计"
 msgid "Received"
 msgstr "已收到"
 
-#: View/Merge/index.ctp:267;295;320 View/Pay/index.ctp:253;281;321;382
+#: View/Merge/index.ctp:267;295;320 View/Pay/index.ctp:253;281;321;377
 msgid "Cash"
 msgstr "现金"
 
-#: View/Merge/index.ctp:268;296;319 View/Pay/index.ctp:254;282;320;383
+#: View/Merge/index.ctp:268;296;319 View/Pay/index.ctp:254;282;320;378
 msgid "Card"
 msgstr "卡"
 
-#: View/Merge/index.ctp:275 View/Pay/index.ctp:261;381
+#: View/Merge/index.ctp:275 View/Pay/index.ctp:261;376
 msgid "Change"
 msgstr "找零"
 
@@ -225,7 +225,7 @@ msgstr "找零"
 msgid "Tip"
 msgstr "小费"
 
-#: View/Merge/index.ctp:301 View/Pay/index.ctp:287;380
+#: View/Merge/index.ctp:301 View/Pay/index.ctp:287;375
 msgid "Remaining"
 msgstr "剩余"
 
@@ -233,44 +233,48 @@ msgstr "剩余"
 msgid "Confirm"
 msgstr "确认"
 
-#: View/Merge/index.ctp:369 View/Pay/index.ctp:364
+#: View/Merge/index.ctp:363 View/Pay/index.ctp:357
+msgid "Default"
+msgstr "默认"
+
+#: View/Merge/index.ctp:365 View/Pay/index.ctp:359
 msgid "Enter"
 msgstr "输入"
 
-#: View/Merge/index.ctp:752 View/Order/index.ctp:45
+#: View/Merge/index.ctp:747 View/Order/index.ctp:45
 msgid "Table No."
 msgstr "桌号"
 
-#: View/Merge/index.ctp:752
+#: View/Merge/index.ctp:747
 msgid "Type"
 msgstr "类型"
 
-#: View/Merge/index.ctp:779 View/Order/summarypanel.ctp:44
+#: View/Merge/index.ctp:774 View/Order/summarypanel.ctp:44
 #: View/Pay/index.ctp:170
 msgid "Fix Discount"
 msgstr "固定折扣"
 
-#: View/Merge/index.ctp:783 View/Order/summarypanel.ctp:50
+#: View/Merge/index.ctp:778 View/Order/summarypanel.ctp:50
 #: View/Pay/index.ctp:176
 msgid "Discount in %"
 msgstr "%折扣"
 
-#: View/Merge/index.ctp:787 View/Order/summarypanel.ctp:56
+#: View/Merge/index.ctp:782 View/Order/summarypanel.ctp:56
 #: View/Pay/index.ctp:182
 msgid "Promo Code"
 msgstr "优惠码"
 
-#: View/Merge/index.ctp:790 View/Order/summarypanel.ctp:64
+#: View/Merge/index.ctp:785 View/Order/summarypanel.ctp:64
 #: View/Pay/index.ctp:190
 msgid "Apply"
 msgstr "应用"
 
-#: View/Merge/index.ctp:795 View/Order/summarypanel.ctp:33
+#: View/Merge/index.ctp:790 View/Order/summarypanel.ctp:33
 #: View/Pay/index.ctp:161
 msgid "Add Discount"
 msgstr "加入折扣"
 
-#: View/Merge/index.ctp:799
+#: View/Merge/index.ctp:794
 msgid "Delete Discount"
 msgstr "删除折扣"
 

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-04-08 04:24+0800\n"
+"POT-Creation-Date: 2017-04-13 05:07+0800\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -129,10 +129,10 @@ msgid "Delivery List"
 msgstr ""
 
 #: View/Homes/dashboard.ctp:355
-#: View/Merge/index.ctp:367
+#: View/Merge/index.ctp:364
 #: View/Order/index.ctp:178
 #: View/Order/summarypanel.ctp:26
-#: View/Pay/index.ctp:362
+#: View/Pay/index.ctp:358
 msgid "Clear"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Forgot your password?"
 msgstr ""
 
-#: View/Merge/index.ctp:10;752
+#: View/Merge/index.ctp:10;747
 #: View/Order/index.ctp:45
 #: View/Pay/index.ctp:59
 msgid "Order No."
@@ -198,31 +198,31 @@ msgstr ""
 msgid "Order Summary"
 msgstr ""
 
-#: View/Merge/index.ctp:110;754
+#: View/Merge/index.ctp:110;749
 #: View/Order/summarypanel.ctp:74
 #: View/Pay/index.ctp:153
 msgid "Subtotal"
 msgstr ""
 
-#: View/Merge/index.ctp:150;758
+#: View/Merge/index.ctp:150;753
 #: View/Order/summarypanel.ctp:93
 #: View/Pay/index.ctp:205
 msgid "Discount"
 msgstr ""
 
-#: View/Merge/index.ctp:184;762
+#: View/Merge/index.ctp:184;757
 #: View/Order/summarypanel.ctp:109
 #: View/Pay/index.ctp:221
 msgid "After Discount"
 msgstr ""
 
-#: View/Merge/index.ctp:207;766
+#: View/Merge/index.ctp:207;761
 #: View/Pay/index.ctp:232
 #: View/Report/index.ctp:54
 msgid "Tax"
 msgstr ""
 
-#: View/Merge/index.ctp:234;770
+#: View/Merge/index.ctp:234;765
 #: View/Order/summarypanel.ctp:126
 #: View/Pay/index.ctp:240
 #: View/Report/index.ctp:55
@@ -235,17 +235,17 @@ msgid "Received"
 msgstr ""
 
 #: View/Merge/index.ctp:267;295;320
-#: View/Pay/index.ctp:253;281;321;382
+#: View/Pay/index.ctp:253;281;321;377
 msgid "Cash"
 msgstr ""
 
 #: View/Merge/index.ctp:268;296;319
-#: View/Pay/index.ctp:254;282;320;383
+#: View/Pay/index.ctp:254;282;320;378
 msgid "Card"
 msgstr ""
 
 #: View/Merge/index.ctp:275
-#: View/Pay/index.ctp:261;381
+#: View/Pay/index.ctp:261;376
 msgid "Change"
 msgstr ""
 
@@ -255,7 +255,7 @@ msgid "Tip"
 msgstr ""
 
 #: View/Merge/index.ctp:301
-#: View/Pay/index.ctp:287;380
+#: View/Pay/index.ctp:287;375
 msgid "Remaining"
 msgstr ""
 
@@ -264,51 +264,56 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: View/Merge/index.ctp:369
-#: View/Pay/index.ctp:364
+#: View/Merge/index.ctp:363
+#: View/Pay/index.ctp:357
+msgid "Default"
+msgstr ""
+
+#: View/Merge/index.ctp:365
+#: View/Pay/index.ctp:359
 msgid "Enter"
 msgstr ""
 
-#: View/Merge/index.ctp:752
+#: View/Merge/index.ctp:747
 #: View/Order/index.ctp:45
 msgid "Table No."
 msgstr ""
 
-#: View/Merge/index.ctp:752
+#: View/Merge/index.ctp:747
 msgid "Type"
 msgstr ""
 
-#: View/Merge/index.ctp:779
+#: View/Merge/index.ctp:774
 #: View/Order/summarypanel.ctp:44
 #: View/Pay/index.ctp:170
 msgid "Fix Discount"
 msgstr ""
 
-#: View/Merge/index.ctp:783
+#: View/Merge/index.ctp:778
 #: View/Order/summarypanel.ctp:50
 #: View/Pay/index.ctp:176
 msgid "Discount in %"
 msgstr ""
 
-#: View/Merge/index.ctp:787
+#: View/Merge/index.ctp:782
 #: View/Order/summarypanel.ctp:56
 #: View/Pay/index.ctp:182
 msgid "Promo Code"
 msgstr ""
 
-#: View/Merge/index.ctp:790
+#: View/Merge/index.ctp:785
 #: View/Order/summarypanel.ctp:64
 #: View/Pay/index.ctp:190
 msgid "Apply"
 msgstr ""
 
-#: View/Merge/index.ctp:795
+#: View/Merge/index.ctp:790
 #: View/Order/summarypanel.ctp:33
 #: View/Pay/index.ctp:161
 msgid "Add Discount"
 msgstr ""
 
-#: View/Merge/index.ctp:799
+#: View/Merge/index.ctp:794
 msgid "Delete Discount"
 msgstr ""
 

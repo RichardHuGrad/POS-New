@@ -1000,7 +1000,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		   <li class="suborder-discount">{3}</li>
 		   <li class="suborder-after-discount">After Discount 打折后: $ {4}</li>
 		   <li class="suborder-tax">Tax 税 ({5}%): $ {6}</li>
-		   <li class="suborder-total">Total 总: $ {7}</li>
+		   <li class="suborder-total">Total 总: $ <span class="span-total">{7}</span></li>
 		   <li class="suborder-received">Received 收到: $ {8} Cash 现金: $ {9} Card 卡: $ {10}</li>
 		   <li class="suborder-remain">Remaining 其余: $ {11}</li>
 		   <li class="suborder-change">Change 找零: $ {12}</li>
@@ -1115,6 +1115,7 @@ var SubordersDetailComponent = function (suborders, cfg) {
 					});
 
 					$(this).addClass('active');
+										
 				});
 
 		tabComponent.append(tab);
@@ -1331,7 +1332,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	});
 
   keyComponent.append(screenBack);
-  keyComponent.append('<li data-num="">&nbsp;</li>' );
+  keyComponent.append('<li data-num="Default">Default</li>' );
   
 	var screenClear = $('<li id="input-clear">').text("Clear 清除")
 												.on('click', function() {
@@ -1359,24 +1360,26 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	keyComponent.find('li').each(function() {
 		var attr = $(this).attr('data-num')
 		if (typeof attr !== typeof undefined && attr !== false) {
+			
 			$(this).on('click', function () {
+				
 				// var value = $('#input-screen').val() ? parseFloat($('#input-screen').val() : 0;
 
-				var buffer = $('#input-screen').attr("data-buffer");
 				var new_value;
 				
-				if($.inArray($(this).attr('data-num'), ['100','50','20','10'])!= -1){
-					new_value = Number(buffer) + Number( $(this).attr('data-num') );	
-					new_value = new_value.toString() ;									
+				if($(this).attr('data-num')== "Default"){  //default to suborder total
+           var idx = $("#suborders-detail-tab-component li.active").attr("data-index");
+           new_value= $("#suborder-detail-"+ idx + " .span-total").html();
+           
+           $('#input-screen').attr("data-buffer", new_value);	
+           $('#input-screen').val(new_value);
+           return true;
+								
 				}else{
-					new_value = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');										
+					new_value = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');
 				}
-
-				
-				//var buffer = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');	
-				var buffer = new_value;								
-				
-				$('#input-screen').attr("data-buffer", buffer);				
+								
+				$('#input-screen').attr("data-buffer", new_value);				
 
         $('#input-screen').attr("data-lastinput", $('#input-screen').val() );
 				
@@ -1386,7 +1389,6 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 			});
 		}
 	});
-
 
 
 	keyScreenWrapper.append(screenComponent).append(keyComponent);

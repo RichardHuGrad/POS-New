@@ -4,13 +4,13 @@ info:
   description: POS system API
   version: "1.0.0"
 # the domain of the service
-host: 127.0.0.1:8080
+host: pos.auroraeducationonline.info
 # array of all schemes that your API supports
 schemes:
   - http
   - https
 # will be prefixed to all paths
-basePath: /pos/api
+basePath: /api
 produces:
   - application/json
 paths:
@@ -330,8 +330,6 @@ paths:
       summary: set takeout flag of order_items
       parameters:
         - $ref: "#/parameters/itemIdList"
-        - $ref: "#/parameters/tableType"
-        - $ref: "#/parameters/tableNo"
         - $ref: "#/parameters/accessToken"
       tags:
         - Order
@@ -497,12 +495,13 @@ paths:
       parameters:
         - $ref: "#/parameters/orderNo"
         - $ref: "#/parameters/accessToken"
-        - name: percent_discount
+        - name: discount_type
           in: query
           required: false
-          type: number
+          type: string
           format: float
-        - name: promocode
+          description: three type fix_discount, percent_discount, promocode
+        - name: discount_value
           in: query
           required: false
           type: string
@@ -1079,7 +1078,7 @@ parameters:
   itemIdList:
     name: item_id_list
     in: formData
-    description: a list of item id
+    description: a list of item id(id column of order_items table)
     required: true
     type: array
     items:
