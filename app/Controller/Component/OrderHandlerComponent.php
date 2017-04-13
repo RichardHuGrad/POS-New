@@ -1,7 +1,7 @@
 <?php
 App::uses('Component', 'Controller');
 App::uses('ApiHelperComponent', 'Component');
-App::uses('PrintComponent', 'Component');
+App::uses('PrintComponent', 'Controller/Component');
 
 
 class OrderHandlerComponent extends Component {
@@ -117,8 +117,11 @@ class OrderHandlerComponent extends Component {
         $cashier_id = $args['cashier_id'];
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $restaurant_id = $this->Cashier->getRestaurantId($cashier_id);
+        
+        $PrintC = new PrintComponent();
 
-        PrintComponent::printKitchenRemoveItem(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'item_id_list'=>$item_id_list));
+        //PrintComponent::printKitchenRemoveItem(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'item_id_list'=>$item_id_list));
+        $PrintC->printKitchenRemoveItem(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id, 'item_id_list'=>$item_id_list));
 
 
         foreach ($item_id_list as $item_id) {

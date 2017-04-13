@@ -291,10 +291,16 @@ class PrintComponent extends Component {
             // if the item is printed
             // send to kitchen print
             $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            
             // print_r($item_detail);
-
+            if(empty($item_detail)){
+            	//exit(json_encode(array('ret' => 0, 'message' => "$item_id is not a valid item id!")));
+            	continue;
+            }          
+            
             $is_print = $item_detail[0]['order_items']['is_print'];
-            $printer = $item_detail[0]['categories']['printer'];
+            $printer = $item_detail[0]['categories']['printer'];            
+            
             if ($is_print == 'Y') {
 
                 $selected_extras_list = json_decode($item_detail[0]['order_items']['selected_extras'], true);
@@ -317,7 +323,8 @@ class PrintComponent extends Component {
 
             $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            echo $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
+            
+            $debug_str = $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
         }
         if (!empty($cancel_items['C'])) {
 
@@ -325,6 +332,7 @@ class PrintComponent extends Component {
             $print = new PrintLib();
             $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
         }
+
     }
 
 
