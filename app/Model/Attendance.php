@@ -1,8 +1,8 @@
 <?php
 
-class Attend extends AppModel {
+class Attendance extends AppModel {
 
-    public $name = 'Attend';
+    public $name = 'Attendance';
     public $validate = array();
 
     public $belongsTo = array(

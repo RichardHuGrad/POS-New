@@ -824,23 +824,23 @@ class HomesController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-        $this->loadModel('Attend');
+        $this->loadModel('Attendance');
         
         $time    = date('Y-m-d H:i:s');
         $day     = substr ($time , 0, 10);
         $checkin = substr ($time , -8); 
                 
         $data = array();
-        $data['Attend']['userid']    = $userid;
-        $data['Attend']['day']       = $day;
-        $data['Attend']['checkin']  = $checkin;
+        $data['Attendance']['userid']    = $userid;
+        $data['Attendance']['day']       = $day;
+        $data['Attendance']['checkin']  = $checkin;
 
-        $checkin = $this->Attend->field('checkin', array('userid' => $userid,'day' => $day,'checkout' => ''));
+        $checkin = $this->Attendance->field('checkin', array('userid' => $userid,'day' => $day,'checkout' => ''));
         if($checkin != ""){
         	return "You already check in at $checkin, Please check out first!";
         }
         
-        $this->Attend->save($data, false);
+        $this->Attendance->save($data, false);
 
         //$this->Session->setFlash('Checkin successfully', 'success');
 
@@ -855,25 +855,25 @@ class HomesController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-        $this->loadModel('Attend');
+        $this->loadModel('Attendance');
         
         $time    = date('Y-m-d H:i:s');
         $day     = substr ($time , 0, 10);
         $checkout = substr ($time , -8); 
                 
         $data = array();
-        $data['Attend']['userid']    = $userid;
-        $data['Attend']['day']       = $day;
-        $data['Attend']['checkout'] = $checkout;
+        $data['Attendance']['userid']    = $userid;
+        $data['Attendance']['day']       = $day;
+        $data['Attendance']['checkout'] = $checkout;
         
-        $id = $this->Attend->field('id', array('userid' => $userid,'day' => $day,'checkout' => ''));
+        $id = $this->Attendance->field('id', array('userid' => $userid,'day' => $day,'checkout' => ''));
         if($id != ""){
-        	$data['Attend']['id']  = $id;
+        	$data['Attendance']['id']  = $id;
         }else{
         	return "Please checkin first!";
         }
         
-        $this->Attend->save($data, false);
+        $this->Attendance->save($data, false);
 
         //$this->Session->setFlash('Checkin successfully', 'success');
 

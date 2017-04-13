@@ -57,8 +57,8 @@ class OrderHandlerComponent extends Component {
 
         if (empty($Order_detail)) {
             // to create a new order
-            //$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate);
-            return array('ret' => 0, 'message' => 'No order found!');
+            $order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate);
+            //return array('ret' => 0, 'message' => 'No order found!');
         } else {
             $order_id = $Order_detail['Order']['id'];
         }
@@ -228,9 +228,11 @@ class OrderHandlerComponent extends Component {
             	return array('ret' => 0, 'message' => 'id '.$item_id.' not exist!');
             } 
             
+            /*
             // print_r($item_detail);
             $is_print = $item_detail[0]['order_items']['is_print'];
             $printer = $item_detail[0]['categories']['printer'];
+            
             if ($is_print == 'Y') {
                 if ($printer == 'K') {
                     // send to kitchen
@@ -241,6 +243,7 @@ class OrderHandlerComponent extends Component {
                 }
                 echo $is_print;
             } // else do nothing
+            */
 
 
             // set all item in order_item table as is_takeout 'Y'            
@@ -396,7 +399,8 @@ class OrderHandlerComponent extends Component {
         );
         
         if (empty($Order_detail)) {
-        	  $json['Order_detail'] = "Sorry, there is no table history for today.";
+        	  $json['ret'] = 0;
+        	  $json['message'] = "Sorry, there is no table history for today.";
             return json_encode($json);
         }
 /*
@@ -410,7 +414,8 @@ class OrderHandlerComponent extends Component {
         $Order_detail = $this->paginate('Order');
 */
         $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
-
+        
+        $json['ret'] = 1;
         $json['Order_detail'] = $Order_detail;
         $json['table_no'] = $table;
         $json['today'] = $today;
@@ -458,6 +463,7 @@ class OrderHandlerComponent extends Component {
         $phone    = $args['phone'];
         
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        if(!$order_id) return array('ret' => 0, 'message' => "Order $order_no not exist!");
         
         $this->Order->id = $order_id;
         $ret=$this->Order->saveField('phone', $phone);

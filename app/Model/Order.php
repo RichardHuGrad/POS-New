@@ -48,8 +48,11 @@ class Order extends AppModel {
                 'fields' => array('Order.id'),
                 'conditions' => array('Order.order_no' => $order_no)
             ));
-
-        return $data['Order']['id'];
+            
+        if(empty($data)) 
+           return false;
+        else 
+           return $data['Order']['id'];
     }
 
 

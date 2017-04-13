@@ -330,6 +330,8 @@ paths:
       summary: set takeout flag of order_items
       parameters:
         - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
         - $ref: "#/parameters/accessToken"
       tags:
         - Order
@@ -469,7 +471,7 @@ paths:
         - $ref: "#/parameters/orderNo"
         - $ref: "#/parameters/accessToken"
         - name: phone
-          in: query
+          in: formData
           required: true
           type: string
       tags:
@@ -495,13 +497,12 @@ paths:
       parameters:
         - $ref: "#/parameters/orderNo"
         - $ref: "#/parameters/accessToken"
-        - name: discount_type
+        - name: percent_discount
           in: query
           required: false
-          type: string
+          type: number
           format: float
-          description: three type fix_discount, percent_discount, promocode
-        - name: discount_value
+        - name: promocode
           in: query
           required: false
           type: string
@@ -671,7 +672,7 @@ paths:
       summary: get infomation about table
       description: |
         get infomation about table
-        - order information
+        - current order information
         - related order_item information
       parameters:
         - $ref: "#/parameters/tableNo"
@@ -1078,7 +1079,7 @@ parameters:
   itemIdList:
     name: item_id_list
     in: formData
-    description: a list of item id(id column of order_items table)
+    description: a list of item id
     required: true
     type: array
     items:

@@ -67,8 +67,11 @@ class TablesComponent extends Component {
         $orderDetail = $this->Order->find('first', array(
                             'conditions' => array('Order.order_type' => $tableType, 'Order.table_no' => $tableNo, 'Order.is_completed' => 'N')
                         ));
-        // $res = array('status' =>)
-        return $orderDetail;
+        if(empty($orderDetail)){
+        	return array('ret' => 0, 'message' => 'Currently no order on this table!');
+        }else{        
+        	return array('ret' => 1, 'order' => $orderDetail);
+        }
     }
 
     public function getOrderInfoById($args) {
