@@ -127,7 +127,7 @@ $option = array('K' => 'Kitchen', 'S' => 'Service');
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">&nbsp;</label>
-                                            <?php if ($this->request->data['Cook']['image']) { ?>
+                                            <?php if (@$this->request->data['Cook']['image']) { ?>
                                                 <?php echo $this->Html->image(COOK_IMAGE_PATH . $this->request->data['Cook']['image'], array('border' => 0, 'width' => 100)); ?>
                                             <?php } else { ?>
                                                 <?php echo $this->Html->image('/img/no_image.jpg', array('border' => 0, 'width' => 100)); ?>

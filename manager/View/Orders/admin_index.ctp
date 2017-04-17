@@ -205,16 +205,16 @@ $registered_till = @$search['registered_till'];
                                         <?php } else {
                                             ?>
                                             <th class="advance_panel">Display</th>
-                                            <th><?php echo $this->Paginator->sort('order_no'); ?></th>
+                                            <th><?php echo @$this->Paginator->sort('order_no'); ?></th>
                                             <th class="advance_panel">Reorder Number</th>
                                             <?php
                                         }?>
-                                        <th><?php echo $this->Paginator->sort('created'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('total'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('tip'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('card_val', 'Card'); ?> </th>
-                                        <th><?php echo $this->Paginator->sort('cash_val', 'Cash'); ?> </th>
-                                        <th><?php echo $this->Paginator->sort('table_status', 'Status'); ?></th>
+                                        <th><?php echo @$this->Paginator->sort('created'); ?></th>
+                                        <th><?php echo @$this->Paginator->sort('total'); ?></th>
+                                        <th><?php echo @$this->Paginator->sort('tip'); ?></th>
+                                        <th><?php echo @$this->Paginator->sort('card_val', 'Card'); ?> </th>
+                                        <th><?php echo @$this->Paginator->sort('cash_val', 'Cash'); ?> </th>
+                                        <th><?php echo @$this->Paginator->sort('table_status', 'Status'); ?></th>
                                         <th>Payment Type</th>
                                         <th>Action</th>
                                     </tr>
@@ -224,17 +224,20 @@ $registered_till = @$search['registered_till'];
                                     $total = 0;
                                     $tips = 0;
                                     $ids = [];
-                                    if (!empty($records)) { ?>
-                                        <?php foreach ($records as $customer) { $ids[] = $customer['Order']['id'];
+                                    if (!empty($records)) { 
+                                      foreach ($records as $customer) { 
+                                        	$ids[] = $customer['Order']['id'];
                                             /* if($customer['Order']['is_hide'] == 'N') { */
-                                                $total += $customer['Order']['total'];
-					                          $order_tips = $customer['Order']['tip'];
-                                                $tips += $order_tips;
-                                            if(($customer['Order']['paid_by'] == 'CARD') && !empty($order_tips)) {
-						                          $order_tips = "\$" . number_format($order_tips, 2);
-                                            } else {
-                                                $order_tips = " ";
-                                            }
+                                          $total += $customer['Order']['total'];
+					                                      
+					                                $order_tips = $customer['Order']['tip'];
+                                          $tips += $order_tips;
+                                          /*
+                                          if(($customer['Order']['paid_by'] == 'CARD') && !empty($order_tips)) {
+						                                 $order_tips = "\$" . number_format($order_tips, 2);
+                                          } else {
+                                             $order_tips = " ";
+                                          } */
 					/* } */
                                             ?>
                                             <tr>
@@ -280,7 +283,7 @@ $registered_till = @$search['registered_till'];
                                         }
                                             if('all' != $limit){ ?>
                                                 <tr>
-                                                    <td colspan="8">
+                                                    <td colspan="12">
                                                         <?php echo $this->element('pagination'); ?>
                                                     </td>
                                                 </tr>

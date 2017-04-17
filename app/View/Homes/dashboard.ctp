@@ -214,6 +214,7 @@
                                                ?>
                                             <ul class="dropdown-menu">
                                                 <div class="customchangemenu clearfix">
+                                                	  <a class="close-btn" href="javascript:void(0)">X</a>
                                                     <div class="left-arrow"></div>
                                                     <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('DINE IN'); ?></div>
                                                     <?php
@@ -316,6 +317,7 @@
                                                ?>
                                             <ul class="dropdown-menu">
                                                 <div class="customchangemenu clearfix">
+                                                	  <a class="close-btn" href="javascript:void(0)">X</a>
                                                     <div class="left-arrow"></div>
                                                     <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"> <?php echo __('DINE IN'); ?></div>
                                                     <?php

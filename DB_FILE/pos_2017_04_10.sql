@@ -10,3 +10,12 @@ ALTER TABLE `promocodes`
 
 ALTER TABLE `promocodes`
   ADD COLUMN `end_time` time NULL DEFAULT NULL AFTER `start_time`;
+  
+CREATE TABLE `attendances` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `day` date DEFAULT NULL,
+  `checkin` time DEFAULT NULL,
+  `checkout` time DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

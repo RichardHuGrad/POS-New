@@ -22,7 +22,7 @@ $cakeDescription = __d('cake_dev', 'Welcome to Tueeter');
     <head>
         <?php echo $this->Html->charset(); ?>
         <title>
-           POS Restaurant   Administrator panel  -:
+           POS Restaurant Administrator panel  -:
             <?php echo $title_for_layout; ?>
         </title>
         <?php echo $this->Html->meta('favicon.ico', 'images/favicon.ico', array('type' => 'icon')); ?>
