@@ -304,6 +304,7 @@ class PrintController extends AppController {
 
 
     public function printSplitReceipt($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=false) {
+    	
         $this->layout = false;
         $this->autoRender = NULL;
 
@@ -359,8 +360,17 @@ class PrintController extends AppController {
         $this->printBigEn("Order Number:#" . $order_no . '-' . $suborder_no , 32, $print_y);
         $print_y+=40;
         $this->printBigZh("Table:". $type . iconv("UTF-8", "gb2312", "# " . $table_no) , 32, $print_y);
-        $print_y+=38;
 
+        $this->loadModel('Order');
+        //$Order = ClassRegistry::init('Order');
+        $phone = $this->Order->getPhoneByOrderNo($order_no);
+        if($phone != ''){
+            $print_y += 42;
+          printer_draw_text($this->handle, "Phone:" . $phone, 32, $print_y);
+        }
+        
+        
+        $print_y+=38;
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($this->handle, $pen);
         printer_draw_line($this->handle, 21, $print_y, 600, $print_y);

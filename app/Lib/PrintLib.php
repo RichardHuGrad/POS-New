@@ -232,8 +232,10 @@ abstract class HeaderPage {
 
 // with logo, address information
 class KitchenHeaderPage extends HeaderPage {
+	
     private $order_no, $table_no, $table_type, $print_zh, $print_en;
     public function __construct($order_no, $table_no, $table_type, $print_zh=true, $print_en = false,$phone='') {
+    	
         $this->order_no = $order_no;
         $this->table_no = $table_no;
         $this->table_type = $table_type;
@@ -271,7 +273,7 @@ class KitchenHeaderPage extends HeaderPage {
         $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $y);
-
+                 
         $y += 42;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
         
@@ -305,6 +307,7 @@ class LogoHeaderPage extends HeaderPage {
     }
 
     public function printPage($handle) {
+    	
         printer_start_page($handle);
 
         $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
@@ -334,11 +337,19 @@ class LogoHeaderPage extends HeaderPage {
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
 
-        printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $print_y);
+        printer_draw_text($handle, "OrderNumber: #" . $this->order_no, 32, $print_y);
         $print_y+=40;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $print_y);
+        
+        //$this->loadModel('Order');
+        $Order = ClassRegistry::init('Order');
+        $phone = $Order->getPhoneByOrderNo($this->order_no);
+        if($phone != ''){
+            $print_y += 42;
+          printer_draw_text($handle, "Phone:" . $phone, 32, $print_y);
+        }
+        
         $print_y+=38;
-
         $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
         printer_select_pen($handle, $pen);
         printer_draw_line($handle, 21, $print_y, 600, $print_y);
@@ -705,7 +716,7 @@ class ReceiptPage extends CountPage {
         }
         $this->format3Columns($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
 
-        $this->format3Columns($handle, "Total", "总计:", $total,1200);
+        $this->format3Columns($handle, "Total", "总计:", $total,true);
 
         $this->format3Columns($handle, "Paid", "付款:", $paid);
         $this->format3Columns($handle, "Change", "找零:", $change);

@@ -42,7 +42,7 @@ class PayHandlerComponent extends Component {
         $data['Order']['card_val'] = $args['card_val'];
         $data['Order']['cash_val'] = $args['cash_val'];
         $data['Order']['tip_paid_by'] = $args['tip_paid_by'];
-        $data['Order']['tip'] = $args['tip_val'];
+        $data['Order']['tip'] = $args['tip'];
 
         $this->Order->save($data, false);
 

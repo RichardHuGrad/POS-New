@@ -252,6 +252,8 @@
     	                                    </li>
                                             <li <?php if(@$takeway_tables_status[$i] <> 'N' and @$takeway_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$takeway_tables_status[$i] == 'N' OR @$takeway_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'T')); else echo "javascript:void(0)";?>"> <?php echo __('Pay')?></a></li>
     	                                    <li <?php if(@$takeway_tables_status[$i] <> 'N')echo 'class="disabled"';?>><a tabindex="-1" href="javascript:makeavailable('<?php if(@$takeway_tables_status[$i] <> 'A')echo $this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'T', 'order'=>@$orders_no[$i]['T']));?>');"><?php echo __('Clear Table')?></a></li>
+    	                                    
+    	                                    <li><a tabindex="-1" href="<?php echo $this->Html->url(array('controller'=>'homes', 'action'=>'tableHistory', 'table_no'=>$i, 'order_type'=>'T')); ?>"><?php echo __('History'); ?></a></li>
 
     		                        	</ul>
                                         </div>

@@ -419,7 +419,13 @@ echo $this->fetch('script');
             success: function(html) {
                 // $(".summary_box").html(html);
                 // renderOrder();
-                window.location = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')); ?>";
+                <?php
+                if($type == 'D')
+                  echo "window.location = '{$this->Html->url(array('controller' => 'homes', 'action' => 'dashboard'))} ' ;";
+                else
+                  echo "window.location = window.location;"
+                ?>              
+                
             },
             beforeSend: function () {
                 $(".summary_box").addClass('load1 csspinner');

@@ -13,7 +13,7 @@ ALTER TABLE `promocodes`
   
 CREATE TABLE `attendances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userid` int(11) NOT NULL DEFAULT '0',
+  `userid` varchar(10) NOT NULL DEFAULT '',
   `day` date DEFAULT NULL,
   `checkin` time DEFAULT NULL,
   `checkout` time DEFAULT NULL,

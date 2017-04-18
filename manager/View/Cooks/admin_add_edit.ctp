@@ -57,12 +57,21 @@ $option = array('K' => 'Kitchen', 'S' => 'Service');
                                  <?php } else {
                                     echo $this->Form->input('restaurant_id', array('type' => 'hidden', 'value'=>$this->Session->read('Admin.id'), 'required' => false));
                                 }?>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">UserID <span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('userid', array('type' => 'text', 'maxlength' => '10', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                    </div>
+                                </div>
+                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">First Name <span class="symbol required"></span></label>
                                         <?php echo $this->Form->input('firstname', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
                                     </div>
                                 </div>
+
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -71,12 +80,6 @@ $option = array('K' => 'Kitchen', 'S' => 'Service');
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Email <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('email', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
-                                    </div>
-                                </div>
                                 <?php if('' == $id){ ?>
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -102,8 +105,15 @@ $option = array('K' => 'Kitchen', 'S' => 'Service');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label class="control-label">Email <span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('email', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label class="control-label">Job Position <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('job_position', array('options' => $option, 'class' => 'form-control', 'empty' => "Select Position", 'label' => false, 'div' => false, 'required'=>true)); ?>
+                                        <?php echo $this->Form->input('position', array('options' => $option, 'class' => 'form-control', 'empty' => "Select Position", 'label' => false, 'div' => false, 'required'=>true)); ?>
                                     </div>
                                 </div>
 

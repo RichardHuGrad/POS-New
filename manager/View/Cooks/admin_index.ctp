@@ -33,6 +33,8 @@ $option_order = array(
     'Cook.status DESC, Cook.created DESC' => 'Status Descending',
     'Cook.created ASC' => 'Registered On Ascending',
     'Cook.created DESC' => 'Registered On Descending',
+    'Cook.userid ASC' => 'UserID On Ascending',
+    'Cook.userid DESC' => 'UserID On Descending',
 );
 
 $search_txt = $status = $is_verified = $registered_from = $registered_till = '';
@@ -148,8 +150,9 @@ if($this->Session->check('cashier_search')){
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                     <tr>
-                                        <th>Restaurant Name</th>
-                                        <th>Cook Name</th>
+                                        <th>Restaurant</th>
+                                        <th>UserID</th>
+                                        <th>Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
                                         <!-- <th>Is Verified</th> -->
@@ -163,6 +166,7 @@ if($this->Session->check('cashier_search')){
                                         <?php foreach ($customer_list as $customer) { ?>
                                             <tr>
                                                 <td><?php echo ucfirst($customer['Admin']['restaurant_name']); ?></td>
+                                                <td><?php echo $customer['Cook']['userid']; ?></td>
                                                 <td><?php echo ucfirst($customer['Cook']['firstname']) . ' ' . ucfirst($customer['Cook']['lastname']); ?></td>
                                                 <td><?php echo $customer['Cook']['email']; ?></td>
                                                 <td><?php echo $customer['Cook']['mobile_no']; ?></td>

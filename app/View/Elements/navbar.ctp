@@ -171,7 +171,7 @@
       $("#admin-link-confirm-pwd").on('click', function() {
           var pass = $("#admin-link-input-pwd").val();
           pass = hex_md5(pass); 
-          if (pass == "<?php echo $admin_passwd[0]['admins']['password']?>") {  
+          if (pass == "<?php echo @$admin_passwd[0]['admins']['password']?>") {  
               window.location.assign('<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'index')) ?>');
           }else{
           	alert("Error admin password!")

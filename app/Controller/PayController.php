@@ -112,7 +112,7 @@ class PayController extends AppController {
             'card_val' => $this->data['card_val'],
             'cash_val' => $this->data['cash_val'],
             'tip_paid_by' => $this->data['tip_paid_by'],
-            'tip' => $this->data['tip'] ? $this->data['tip'] : 0
+            'tip' => $this->data['tip_val'] ? $this->data['tip_val'] : 0
         ));
 
 

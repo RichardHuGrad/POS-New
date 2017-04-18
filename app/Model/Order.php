@@ -55,6 +55,22 @@ class Order extends AppModel {
            return $data['Order']['id'];
     }
 
+    public function getPhoneByOrderNo($order_no) {
+    	
+    	  //merged order_nos like "D61704181612,D81704181613"
+    	  $order_no = explode(",", $order_no);
+    	  
+        $data = $this->find("first", array(
+                'fields' => array('Order.phone'),
+                'conditions' => array('Order.order_no' => $order_no)
+            ));
+            
+        if(empty($data)) 
+           return '';
+        else 
+           return $data['Order']['phone'];
+    }
+
 
     // recalculate order's bill info by count the OrderItem
     // include: subtotal, tax_amount, total, discount

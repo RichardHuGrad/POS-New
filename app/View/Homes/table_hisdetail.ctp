@@ -8,7 +8,7 @@
     <div class="order-wrap">
     <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 [[Dinein]] #<?php echo $table_no; ?>, @ <?php echo $today ?></h2>
+            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 [[<?php echo $order_type=='D'?'Dinein':'Takeout'; ?>]]#<?php echo $table_no; ?>, @ <?php echo $today ?></h2>
 
             <div class="paid-box">
                 <div class="checkbox-btn">
@@ -134,7 +134,7 @@
     </div>
 </div>
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js','md5.js'));
 echo $this->fetch('script');
 ?>
 

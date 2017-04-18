@@ -473,14 +473,17 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
+        
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
 
         $table_no = $this->params['named']['table_no'];
         $order_id = $this->params['named']['order_id'];
+        $order_type = empty($this->params['named']['order_type'])?'D':$this->params['named']['order_type'];
 
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
-        $dinein_table_status = $this->Order->query("SELECT table_status FROM orders WHERE cashier_id='{$cashier_detail['Admin']['id']}' and is_completed='N' and order_type='D' and table_no='$table_no' ");
+        $dinein_table_status = $this->Order->query("SELECT table_status FROM orders WHERE cashier_id='{$cashier_detail['Admin']['id']}' and is_completed='N' and order_type='$order_type' and table_no='$table_no' ");
         if($dinein_table_status){
             $dinein_table_status = $dinein_table_status[0]['orders']['table_status'];
         }else{
@@ -489,9 +492,9 @@ class HomesController extends AppController {
         
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.id' => $order_id,
-        	'Order.table_no' => $table_no,
+        	  'Order.table_no' => $table_no,
             'Order.is_completed' => 'Y',
-            'Order.order_type' => 'D',
+            'Order.order_type' => $order_type,
             'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
         );
 
@@ -507,7 +510,7 @@ class HomesController extends AppController {
 
         $today = date('Y-m-d H:i', strtotime($Order_detail['Order']['created']));
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'order_id', 'today','dinein_table_status'));
+        $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no', 'order_id','order_type','today','dinein_table_status'));
     }
 
     public function tableHisupdate() {
@@ -666,7 +669,11 @@ class HomesController extends AppController {
                 )
         );
 
-        $table_no = $this->params['named']['table_no'];
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
+
+
+        $table_no   = $this->params['named']['table_no'];
+        $order_type = empty($this->params['named']['order_type'])?'D':$this->params['named']['order_type'];
 
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
@@ -674,8 +681,8 @@ class HomesController extends AppController {
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.table_no' => $table_no,
             'Order.is_completed' => 'Y',
-            'Order.order_type' => 'D',
-            'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
+            'Order.order_type' => $order_type,
+            'Order.created >=' => date("Ymd")/*, strtotime("-2 weeks")) */
         );
 
         $Order_detail = $this->Order->find("all", array(
@@ -698,7 +705,7 @@ class HomesController extends AppController {
         $Order_detail = $this->paginate('Order');
         $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'today'));
+        $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no','order_type', 'today'));
     }
 
 
@@ -823,6 +830,11 @@ class HomesController extends AppController {
 
         $this->layout = false;
         $this->autoRender = NULL;
+        
+        $this->loadModel('Cook');
+        if(empty($this->Cook->findByUserid($userid))){
+        	return "Userid is not valid!";
+        }
 
         $this->loadModel('Attendance');
         
@@ -854,6 +866,11 @@ class HomesController extends AppController {
 
         $this->layout = false;
         $this->autoRender = NULL;
+
+        $this->loadModel('Cook');
+        if(empty($this->Cook->findByUserid($userid))){
+        	return "Userid is not valid!";
+        }
 
         $this->loadModel('Attendance');
         
