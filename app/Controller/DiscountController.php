@@ -10,9 +10,8 @@ class DiscountController extends AppController {
 
 		$res = $this->DiscountHandler->addDiscount(array(
 			'order_no' => $this->data['order_no'],
-			'fix_discount' => $this->data['fix_discount'],
-			'percent_discount' => $this->data['discount_percent'],
-			'promocode' => $this->data['promocode']
+			'discountType' => $this->data['discountType'],
+			'discountValue' => $this->data['discountValue'],
 		));
 
         return json_encode($res);

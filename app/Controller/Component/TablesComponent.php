@@ -35,7 +35,7 @@ class TablesComponent extends Component {
 									)
 							));
 		$res = array(
-					'dineIn' => $tableDetail['Admin']['no_of_tables'],
+					'dineIn'  => $tableDetail['Admin']['no_of_tables'],
 					'takeout' => $tableDetail['Admin']['no_of_takeout_tables'],
 					'waiting' => $tableDetail['Admin']['no_of_waiting_tables']);
 		return $res;
@@ -70,7 +70,7 @@ class TablesComponent extends Component {
         if(empty($orderDetail)){
         	return array('ret' => 0, 'message' => 'Currently no order on this table!');
         }else{        
-        	return array('ret' => 1, 'order' => $orderDetail);
+        	return $orderDetail;
         }
     }
 
@@ -151,7 +151,6 @@ class TablesComponent extends Component {
         return $this->Extrascategory->find('all', array(
             'conditions' => array('Extrascategory.status' => $args['status'])
         ));
-        // return null;
     }
 
     // public function getAllTableStatus() {
@@ -184,8 +183,6 @@ class TablesComponent extends Component {
     //                         )
     //                 );
     // }
-
-
 
 
 }

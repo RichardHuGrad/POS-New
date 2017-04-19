@@ -47,8 +47,8 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="discount_percent" style="font-size:11px;"><?php echo __('Discount in %'); ?></label>
-                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">
+                        <label for="percent_discount" style="font-size:11px;"><?php echo __('Discount in %'); ?></label>
+                        <input type="text" id="percent_discount" required="required" class="form-control discount_section" maxlength="5"   name="percent_discount">
                     </div>
                 </div>
                 <div class="col-md-3">

@@ -21,6 +21,11 @@ class ApiController extends Controller {
 			$this->{$component}->initialize($this);
 			$action = Inflector::camelize($command);
 			$return = $this->{$component}->{$action}($args);
+			
+			if(@$return['ret'] === 0){
+				$this->{$component}->status = 'error';
+			} 
+			
 			if ($this->{$component}->status === 'success') {
 			  $result = $this->_success($return);
 			} else {
@@ -52,7 +57,7 @@ class ApiController extends Controller {
 	}
 
 	protected function _fail($data = null) {
-	  return $this->_format('fail', array('data' => $data));
+	  return $this->_format('error', array('data' => $data));
 	}
 
 	protected function _error($message = 'Unknown', $code = 0, $data = array()) {

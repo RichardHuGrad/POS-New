@@ -110,6 +110,7 @@ class AccessComponent extends Component {
 
   // cashier password is based on hash md5
   public function generateToken($args) {
+  	
     if (empty($args['email'])) {
       throw new Exception('Missing argument: email');
     }
@@ -148,11 +149,14 @@ class AccessComponent extends Component {
         ));
         $Api->create();
       }
+      $api_data['Api']['cashier_id'] = $data['Cashier']['id'];
       return $Api->save($api_data);
     }
-
-    $this->status = "failure";
-    return false;
+    
+    //$this->status = 'error';
+    return array('ret'=> 0,'message'=>'Error, incorrect email!');   
+    
+    // return false;
 
   }
 

@@ -469,7 +469,7 @@ echo $this->fetch('script');
         if ($(this).val()) {
             $(".discount_section").attr("disabled", "disabled");
             $(this).removeAttr("disabled");
-			$(this).focus();
+			      $(this).focus();
         } else {
             $(".discount_section").removeAttr("disabled");
         }
@@ -478,25 +478,28 @@ echo $this->fetch('script');
     $(document).on("click", "#apply-discount", function () {
 
         var fix_discount = $("#fix_discount").val();
-        var discount_percent = $("#discount_percent").val();
+        var percent_discount = $("#percent_discount").val();
         var promocode = $("#promocode").val();
 
-        if (fix_discount || discount_percent || promocode) {
-            // apply promocode here
+        
+        if (fix_discount || percent_discount || promocode) {
+
+            var discountType  = $("input.discount_section:enabled").attr('id');
+            var discountValue = $("input.discount_section:enabled").val();
+       
             $.ajax({
                 url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: $("#Order_no").val()},
+                data: {"discountType":discountType,"discountValue":discountValue,"order_no": $("#Order_no").val()},
                 success: function (res) {
                     renderOrder();
 
-                    if (res.error) {
+                    if (res.ret === 0) {
                         alert(res.message);
                     }
                 }
             })
-
 
         } else {
             // alert("Please add discount first. 请加入折扣。");

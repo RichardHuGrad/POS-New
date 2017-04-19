@@ -15,7 +15,7 @@ class DiscountHandlerComponent extends Component {
     // value
     // order_no
     public function addDiscount($args) {
-        ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
+        ApiHelperComponent::verifyRequiredParams($args, ['order_no','discountType','discountValue']);
 
         // get all params
         $order_no      = $args['order_no'];

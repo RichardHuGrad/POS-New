@@ -182,7 +182,7 @@ class PrintComponent extends Component {
         // get all params
         $restaurant_id = $args['restaurant_id'];
         $item_id_list = $args['item_id_list'];
-        $order_id = $arg['order_id'];
+        $order_id = $args['order_id'];
 
         $orderDetail = $this->Order->find('first', array(
                 'recursive' => -1,

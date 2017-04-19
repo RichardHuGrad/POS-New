@@ -173,8 +173,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="discount_percent" style="font-size:11px;"><?php echo __('Discount in %'); ?></label>
-                                        <input type="text" id="discount_percent" required="required" class="form-control discount_section" maxlength="5"   name="discount_percent">
+                                        <label for="percent_discount" style="font-size:11px;"><?php echo __('Discount in %'); ?></label>
+                                        <input type="text" id="percent_discount" required="required" class="form-control discount_section" maxlength="5"   name="percent_discount">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -691,23 +691,26 @@ echo $this->fetch('script');
     $(document).on("click", "#apply-discount", function () {
 
         var fix_discount = $("#fix_discount").val();
-        var discount_percent = $("#discount_percent").val();
+        var percent_discount = $("#percent_discount").val();
         var promocode = $("#promocode").val();
 
-        if (fix_discount || discount_percent || promocode) {
-            // apply promocode here
+        if (fix_discount || percent_discount || promocode) {
+        	
+            var discountType  = $("input.discount_section:enabled").attr('id');
+            var discountValue = $("input.discount_section:enabled").val();
+
             $.ajax({
                 url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
                 method: "post",
                 dataType: "json",
-                data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: "<?php echo $Order_detail['Order']['order_no'] ?>"},
-                success: function (html) {
-                    if (html.error) {
-                        $.notify(html.message,  {
+                data: {"discountType":discountType,"discountValue":discountValue,"order_no": "<?php echo $Order_detail['Order']['order_no'] ?>"},
+                success: function (response) {
+                    if (response.ret===0) {
+                        $.notify(response.message,  {
                             position: "top center",
                             className:"warn",
                         });
-                        // alert(html.message);
+                        // alert(response.message);
                         $(".discount_section").val("").removeAttr("disabled");
                         $(".RIGHT-SECTION").removeClass('load1 csspinner');
                         return false;

@@ -4,4 +4,7 @@ ALTER TABLE `cooks`
 ALTER TABLE `cooks`
   ADD COLUMN `position` enum('K','S') NOT NULL DEFAULT 'K' COMMENT 'K-kitchen, S-service' AFTER `lastname`;
 
+ALTER TABLE `apis`
+  ADD COLUMN `cashier_id` int(11) NOT NULL DEFAULT 0 AFTER `id`;
+
 

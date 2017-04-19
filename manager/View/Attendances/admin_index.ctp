@@ -139,7 +139,7 @@ $to_day   = @$search['to_day'];
                             <table class="table table-striped table-bordered table-hover table-full-width">
                                 <thead>
                                     <tr>
-                                    	  <th>Display</th>
+                                    	  <th>Select</th>
                                         <th><?php echo @$this->Paginator->sort('userid'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('day'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('checkin'); ?></th>
