@@ -736,6 +736,9 @@ class HomesController extends AppController {
         $type = @$this->params['named']['type'];
         $table = @$this->params['named']['table'];
         $order_no = @$this->params['named']['order_no'];
+	  	  //modify order_no with new table and type
+	  	  //$order_no = $type.$table.substr($order_no,-10);
+        
         $ref = @$this->params['named']['ref'];
 
         // update order to database

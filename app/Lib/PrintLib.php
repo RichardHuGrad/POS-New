@@ -272,7 +272,7 @@ class KitchenHeaderPage extends HeaderPage {
         //Print order information
         $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "Order Number: #" . $this->order_no, 32, $y);
+        printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
                  
         $y += 42;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
@@ -337,7 +337,7 @@ class LogoHeaderPage extends HeaderPage {
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
 
-        printer_draw_text($handle, "OrderNumber: #" . $this->order_no, 32, $print_y);
+        printer_draw_text($handle, "Order#: " . $this->order_no, 32, $print_y);
         $print_y+=40;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $print_y);
         

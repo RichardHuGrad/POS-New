@@ -1472,7 +1472,7 @@ class DbHandler {
 		
 		//echo $table_no;die;
 
-		$this->printBigEn("Order Number: #" . $order_no . '-' . $suborder_no , 32, $print_y);
+		$this->printBigEn("Order#: " . $order_no . '-' . $suborder_no , 32, $print_y);
 		$print_y+=40;
 		$this->printBigZh("Table:". $type . iconv("UTF-8", "gb2312", "#" . $table_no) , 32, $print_y);
 		$print_y+=38;

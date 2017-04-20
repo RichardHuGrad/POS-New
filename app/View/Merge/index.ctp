@@ -483,7 +483,7 @@ echo $this->fetch('script');
                         if (parseFloat($(".change_price").attr("amount")) >= 0) {
                             // submit form for complete payment process
                             $.ajax({
-                                url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'complete', $table, $type)); ?>",
+                                url: "<?php echo $this->Html->url(array('controller' => 'merge', 'action' => 'completeMergeOrder', $table, $type)); ?>",
                                 method: "post",
                                 data: {
                                     pay: $(".received_price").attr("amount"),
@@ -501,7 +501,7 @@ echo $this->fetch('script');
                                                     };
                                                     echo $main_order_id;
                                                     ?>",
-                                    order_id: "<?php
+                                    order_ids: "<?php
                                                 $order_id = "";
                                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                                     $order_id .= $Order_detail[$i]['Order']['id'] . ",";

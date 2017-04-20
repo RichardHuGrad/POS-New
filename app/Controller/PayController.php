@@ -101,7 +101,6 @@ class PayController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-
         $this->PayHandler->completeOrder(array(
             'order_id' => $this->data['order_id'],
             'table' => $this->data['table'],

@@ -6,7 +6,7 @@ class DiscountController extends AppController {
 
 	public function addDiscount() {
 		$this->layout = false;
-        $this->autoRender = NULL;
+    $this->autoRender = NULL;
 
 		$res = $this->DiscountHandler->addDiscount(array(
 			'order_no' => $this->data['order_no'],
@@ -14,7 +14,7 @@ class DiscountController extends AppController {
 			'discountValue' => $this->data['discountValue'],
 		));
 
-        return json_encode($res);
+    return json_encode($res);
 	}
 
 	public function removeDiscount() {

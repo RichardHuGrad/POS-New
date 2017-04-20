@@ -445,12 +445,16 @@ class OrderHandlerComponent extends Component {
       $table = $args['table'];
       $order_no = $args['order_no'];
     
-          // $this->Order->updateAll(array('Order.table_no' => $table, 'Order.order_type' =>  $type), array('Order.order_no' => $order_no));
+      // $this->Order->updateAll(array('Order.table_no' => $table, 'Order.order_type' =>  $type), array('Order.order_no' => $order_no));
 	  	$orderDetail = $this->Order->find('first', array(
 	  						'conditions' => array('Order.order_no' => $order_no)
 	  					));
 	  	$orderDetail['Order']['table_no'] = $table;
 	  	$orderDetail['Order']['type'] = $type;
+	  	
+	  	//modify order_no with new table and type
+	  	$order_no = $type.$table.substr($order_no,-10);
+	  	
 	  	$this->Order->save($orderDetail, false);
     
 	  	return $this->Order->find('first', array(

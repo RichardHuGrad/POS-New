@@ -280,10 +280,12 @@ class OrdersController extends AppController {
         // $this->Order->updateAll(array('Order.status' => "'D'"), array('Order.id' => $id));
 
         $this->Session->setFlash('Order has been deleted successfully', 'success');
-        $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
-
+        
+        //cannot run in ajax call
+        //$this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
 
     }
+    
 
     /**
      * delete method

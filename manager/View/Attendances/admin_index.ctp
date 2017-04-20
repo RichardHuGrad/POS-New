@@ -250,8 +250,6 @@ $(document).ready(function() {
             method: "post",
             data: {"ids": ids},
             success: function(html) {
-                $('#edit-phone-component-modal .close').trigger('click');
-                //renderOrder();
                 window.location.reload();
             } 
         })

@@ -138,7 +138,7 @@ class PrintComponent extends Component {
         $phone = $orderDetail['Order']['phone'];
 
 
-        // get all un printed items
+        // get all unprinted items
         $printItems = $this->OrderItem->getUnprintItemsByOrderId($order_id);
 
         // print_r($printItems);

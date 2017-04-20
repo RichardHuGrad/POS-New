@@ -71,9 +71,9 @@ paths:
     post:
       consumes:
         - application/x-www-form-urlencoded
-      summary: print payment bill
+      summary: print bill
       description: |
-        print payment receipt
+        print bill(not include customer payment information)
       parameters:
         - $ref: "#/parameters/restaurantId"
         - $ref: "#/parameters/orderId"
@@ -579,6 +579,67 @@ paths:
           type: string
         - name: tip
           in: query
+          description: the tip
+          required: true
+          type: string
+      tags:
+        - Pay
+      responses:
+        200:
+          description: success
+
+  /payHandler/completeMergeOrder:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: complete the merged order
+      description: |
+        set all merged order as complete
+      parameters:
+        - $ref: "#/parameters/accessToken"
+        - $ref: "#/parameters/tableNo"
+        - name: table_merge
+          in: formData
+          description: all tables number
+          required: true
+          type: string
+        - name: order_ids
+          in: formData
+          description: all order ids
+          required: true
+          type: string
+        - name: main_order_id
+          in: formData
+          description: the main order id
+          required: true
+          type: string
+        - name: pay
+          in: formData
+          description: the total of payment
+          required: true
+          type: string
+        - name: change
+          in: formData
+          description: the change of payment
+          required: true
+          type: string
+        - name: card_val
+          in: formData
+          description: the customer payment with card
+          required: true
+          type: string
+        - name: cash_val
+          in: formData
+          description: the customer payment with cash
+          required: true
+          type: string
+        - name: tip_paid_by
+          in: formData
+          description: the method of tip paid
+          required: true
+          type: string
+        - name: tip
+          in: formData
           description: the tip
           required: true
           type: string

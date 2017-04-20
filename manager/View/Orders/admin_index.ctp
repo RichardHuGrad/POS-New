@@ -312,7 +312,7 @@ $registered_till = @$search['registered_till'];
                                     <!-- <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
                                         <label  id="delete_order"> Delete</label>
                                     </div>    -->
-                                    <button class="btn btn-info" id="delete_order">Delete</button>                
+                                    <button type="button" class="btn btn-info" id="delete_order">Delete</button>                
                                 </div>
                                 <input type="hidden" name="data[Reorder][ids]" value=<?php echo implode(",", $ids); ?> />
                                 <?php
@@ -364,6 +364,9 @@ $(document).ready(function() {
             url:  "<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'batch_delete', 'admin' => true)); ?>",
             method: "post",
             data: {order_nos: order_nos}, 
+            success: function(response) {
+                window.location.reload();
+            } 
         })
     })
 })

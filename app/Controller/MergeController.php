@@ -1,6 +1,8 @@
 <?php 
 App::uses('PrintLib', 'Lib');
 class MergeController extends AppController {
+	
+	  public $components = array('PayHandler');
 
     public function beforeFilter() {
 
@@ -97,10 +99,8 @@ class MergeController extends AppController {
         return json_encode($orders);
     }
 
+/*
     public function complete() {
-
-        $this->layout = false;
-        $this->autoRender = NULL;
 
         // pr($this->data); die;
         // get all params
@@ -165,8 +165,17 @@ class MergeController extends AppController {
 
         $this->Session->setFlash('Order successfully completed.', 'success');
         echo true;
+       
     }
+*/ 
+    public function completeMergeOrder() {
 
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+		    $res = $this->PayHandler->completeMergeOrder($this->request->data);
+        return $res;
+    }
 
     public function printBill() {
         $this->layout = false;
