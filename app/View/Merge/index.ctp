@@ -833,31 +833,40 @@ echo $this->fetch('script');
                 var fix_discount = $("#fix-discount-" + id).val();
                 var discount_percent = $("#percent-discount-" + id).val();
                 var promocode = $("#promo-discount-" + id).val();
+                
                 console.log("#promo-discount-" + id);
                 console.log(fix_discount);
-
-                if (fix_discount || discount_percent || promocode) {
-                    // apply promocode here
-                    $.ajax({
-                        url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
-                        method: "post",
-                        dataType: "json",
-                        data: {fix_discount: fix_discount, discount_percent: discount_percent, promocode: promocode, order_no: order_no},
-                        success: function (res) {
-
-                            if (res.error) {
-                                alert(res.message);
-                            } else {
-                                window.location.reload();
-                            }
-                        }
-                    })
-
-
-                } else {
-                    alert("Please add discount first.");
-                    return false;
+                
+                var discountType, discountValue;
+                if(fix_discount){
+                  discountType  = 'fix_discount';
+                  discountValue = fix_discount;
+                }else if(discount_percent){
+                  discountType  = 'percent_discount';
+                  discountValue = discount_percent;                
+                }else if(promocode){
+                  discountType  = 'promocode';
+                  discountValue = promocode;                
+                }else{
+                  alert("Please add discount first.");
+                  return false;                
                 }
+
+
+                $.ajax({
+                    url: "<?php echo $this->Html->url(array('controller' => 'discount', 'action' => 'addDiscount')); ?>",
+                    method: "post",
+                    dataType: "json",
+                    data: {discountType: discountType, discountValue: discountValue, order_no: order_no},
+                    success: function (res) {
+                        if (res.error) {
+                           alert(res.message);
+                        } else {
+                           window.location.reload();
+                        }
+                    }
+                });
+
             });
 
             removeDiscountBtn.on('click', function() {

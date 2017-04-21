@@ -717,9 +717,21 @@ class HomesController extends AppController {
         $order_no = $this->params['named']['order'];
 
         $this->loadModel('Order');
+        $this->loadModel('OrderLog');
+
+        $order_detail = $this->Order->find('first', array(
+                            'recursive' => -1,
+                            'conditions' => array(
+                                    'order_no' => $order_no
+                                )
+                        ));
+        
+        $this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');
+        
         //delete order and order_item
         $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
-
+        
+        
         //$this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
 
         // save all
@@ -736,20 +748,25 @@ class HomesController extends AppController {
         $type = @$this->params['named']['type'];
         $table = @$this->params['named']['table'];
         $order_no = @$this->params['named']['order_no'];
+	  	  
 	  	  //modify order_no with new table and type
-	  	  //$order_no = $type.$table.substr($order_no,-10);
+	  	  $new_order_no = $type.$table.substr($order_no,-10);
         
         $ref = @$this->params['named']['ref'];
+        
+        // update order to database 
+        // need to quoto the string value(only field new value,not condition)
+        $this->loadModel('Order');                     
+        $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'" , 'Order.order_no' => "'$new_order_no'") , array('Order.order_no' => $order_no));
+        
 
-        // update order to database
-        $this->loadModel('Order');
-        $this->Order->updateAll(array('table_no' => $table, 'order_type' => "'" . $type . "'"), array('Order.order_no' => $order_no));
         $this->Session->setFlash('Order table successfully changed 成功换桌.', 'success');
         if ($ref)
-            return $this->redirect(array('controller' => 'pay', 'action' => 'index', 'table' => $table, 'type' => $type));
+          return $this->redirect(array('controller' => 'pay', 'action' => 'index', 'table' => $table, 'type' => $type));
         else
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+          return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     }
+
 
     public function inquiry() {
 

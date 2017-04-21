@@ -1,7 +1,6 @@
 ALTER TABLE `orders`
   CHANGE COLUMN `order_no` `order_no` varchar(15) NOT NULL DEFAULT '0';
 
-
 ALTER TABLE `promocodes`
   ADD COLUMN `week_days` varchar(100) NULL DEFAULT NULL AFTER `valid_to`;
 

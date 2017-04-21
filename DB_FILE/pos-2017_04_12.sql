@@ -1,1 +1,0 @@
-RENAME TABLE `attends` TO `pos`.`attendances`;

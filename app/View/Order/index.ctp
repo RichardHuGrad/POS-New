@@ -171,8 +171,8 @@
                 </div>
                 <div class="modal-footer clearfix">
                     <div class="clearfix">
-                        <label class="pull-left" for="taste-component-special">Special Instructions:</label>
-                        <input class="pull-left" id="taste-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
+                        <label class="pull-left" for="taste-component-special">Special Instructions: </label>
+                        <input class="pull-left" id="taste-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30" style="height:26px">
                     </div>
                     <div class="clearfix">
                          <button style="display:none;" type="button" id="taste-component-clear" class="pull-left btn btn-lg btn-danger"><?php echo __('Clear');?></button>
@@ -217,8 +217,8 @@
                 </div>
                 <div class="modal-footer clearfix">
                     <div class="clearfix">
-                        <label class="pull-left" for="single-extra-component-special">Special Instructions:</label>
-                        <input class="pull-left" id="single-extra-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30">
+                        <label class="pull-left" for="single-extra-component-special">Special Instructions: </label>
+                        <input class="pull-left" id="single-extra-component-special" type="text" placeholder="e.g. no onions, no mayo" size="30" style="height:26px">
                     </div>
                     <div class="clearfix">
                          <button style="display:none;" type="button" id="single-extra-component-clear" class="pull-left btn btn-lg btn-danger">Clear 清除</button>

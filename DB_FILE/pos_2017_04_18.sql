@@ -7,4 +7,6 @@ ALTER TABLE `cooks`
 ALTER TABLE `apis`
   ADD COLUMN `cashier_id` int(11) NOT NULL DEFAULT 0 AFTER `id`;
 
+ALTER TABLE `apis`
+  ADD COLUMN `restaurant_id` int(11) NOT NULL DEFAULT 0 AFTER `id`;
 

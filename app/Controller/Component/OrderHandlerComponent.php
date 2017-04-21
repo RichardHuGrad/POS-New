@@ -12,15 +12,14 @@ class OrderHandlerComponent extends Component {
         // register model
         $this->Admin = ClassRegistry::init('Admin');
         $this->Order = ClassRegistry::init('Order');
+        $this->OrderLog  = ClassRegistry::init('OrderLog');
         $this->OrderItem = ClassRegistry::init('OrderItem');
-        $this->Category = ClassRegistry::init('Category');
-        $this->Cashier = ClassRegistry::init('Cashier');
-        $this->Cousine = ClassRegistry::init('Cousine');
-        $this->Extra = ClassRegistry::init('Extra');        
+        $this->Category  = ClassRegistry::init('Category');
+        $this->Cashier   = ClassRegistry::init('Cashier');
+        $this->Cousine   = ClassRegistry::init('Cousine');
+        $this->Extra     = ClassRegistry::init('Extra');        
     }
-    /**
-     * paras:
-     */
+
     public function addItem($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'table', 'type', 'cashier_id']);
 
@@ -431,7 +430,17 @@ class OrderHandlerComponent extends Component {
 	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
 	  	  	  	  
         $order_no = $args['order_no'];     
+        
+        $order_detail = $this->Order->find('first', array(
+                            'recursive' => -1,
+                            'conditions' => array(
+                                    'order_no' => $order_no
+                                )
+                        ));
            
+                
+        $this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');
+
         $ret = $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
         
         if($ret!==false) return array('ret' => 1, 'message' => 'Complete!');

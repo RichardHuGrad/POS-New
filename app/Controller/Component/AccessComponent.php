@@ -149,7 +149,10 @@ class AccessComponent extends Component {
         ));
         $Api->create();
       }
-      $api_data['Api']['cashier_id'] = $data['Cashier']['id'];
+      
+      $api_data['Api']['restaurant_id'] = $data['Cashier']['restaurant_id'];
+      $api_data['Api']['cashier_id']    = $data['Cashier']['id'];
+      
       return $Api->save($api_data);
     }
     
