@@ -958,13 +958,20 @@ echo $this->fetch('script');
         // console.log(selected_extras_id);
         // console.log(selected_item_id_list);
         // console.log(selected_extras_amount);
-
+        
+        if(selected_extras_id.length == 0){
+        	$.notify("No taste selected 没有选择口味",  { position: "top center", className:"warn"});
+         return false;
+        }
+        
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'batchAddExtras')); ?>",
             method: "post",
             data: {selected_item_id_list: selected_item_id_list, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", special: $("#taste-component-special").val()},
             success: function (html) {
                 renderOrder();
+                
+                $('#taste-component-special').val('');
                 $('#taste-component-modal .close').trigger('click');
             }
         });

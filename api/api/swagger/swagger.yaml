@@ -40,10 +40,30 @@ paths:
         200:
           description: authentication success
           schema:
-            properties:
-              access_token:
-                type: string
-                description: the access token of cashier
+            type: array
+            items:
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                restaurant_id:
+                  description: the id of restaurant
+                  type: integer
+                  format: int32
+                cashier_id:
+                  description: the id of cashier
+                  type: integer
+                  format: int32
+                email:
+                  description: cashier email
+                  type: string
+                password:
+                  description: the id of cashier
+                  type: string
+                  format: password
+                token:
+                  description: access token generated
+                  type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -83,7 +103,7 @@ paths:
         - Pay
       responses:
         200:
-          description: access token
+          description: success
         default:
           $ref: "#/responses/MissingArgumentError"
 
