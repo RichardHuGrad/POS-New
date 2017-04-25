@@ -19,6 +19,8 @@ class MergeController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
+
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
         
         $order_no = @$this->params['url']['order_no'];
 
@@ -73,7 +75,7 @@ class MergeController extends AppController {
 
         // print_r($order_id_merge);
 
-        $this->set(compact('Order_detail', 'order_id_merge', 'cashier_detail', 'type', 'table', 'tablemerge', 'orders_no'));
+        $this->set(compact('Order_detail', 'order_id_merge', 'cashier_detail', 'admin_passwd' ,'type', 'table', 'tablemerge', 'orders_no'));
     }
 
 

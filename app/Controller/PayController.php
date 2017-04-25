@@ -20,6 +20,8 @@ class PayController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
+        
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
 
         $order_no = @$this->params['url']['order_no'];
 
@@ -64,7 +66,7 @@ class PayController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'admin_passwd', 'type', 'table', 'orders_no'));
     }
 
     public function printReceipt() {

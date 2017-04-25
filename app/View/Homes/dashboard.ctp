@@ -487,9 +487,15 @@ echo $this->fetch('script');
 
         });
 
-        $('.merge-checkbox').on('click', function(e) {
+        $('.merge-checkbox').on('click', function(e) {        
+        	 $(this).find(':checkbox').click();
+           e.stopPropagation();           
+        });
+
+        $('input[type=checkbox]').click(function (e) {
             e.stopPropagation();
         });
+
 
 	});
 

@@ -75,27 +75,27 @@
                             <?php for ($t = 1; $t <= DINEIN_TABLE; $t++) {
                                 if (!@$orders_no[$t]['D']) {
                                     ?>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">D<?php echo $t; ?></a></div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable" style="cursor:pointer" onclick="location.href='<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'D', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>';">D<?php echo $t; ?></div>
                                 <?php }
                             } ?>
                             <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('TAKE OUT'); ?></div>
                             <?php for ($t = 1; $t <= TAKEOUT_TABLE; $t++) {
                                 if (!@$orders_no[$t]['T']) {
                                     ?>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">T<?php echo $t; ?></a></div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable" style="cursor:pointer" onclick="location.href='<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'T', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>';">T<?php echo $t; ?></div>
                                 <?php }
                             } ?>
                             <div class="col-md-12 col-sm-12 col-xs-12 text-center timetable"><?php echo __('Delivery'); ?></div>
-    <?php for ($t = 1; $t <= WAITING_TABLE; $t++) {
-        if (!@$orders_no[$t]['W']) {
-            ?>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>">W<?php echo $t; ?></a></div>
-        <?php }
-    } ?>
+                            <?php for ($t = 1; $t <= WAITING_TABLE; $t++) {
+                                if (!@$orders_no[$t]['W']) {
+                            ?>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 text-center timetable" style="cursor:pointer" onclick="location.href='<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'move_order', 'table' => $t, 'type' => 'W', 'order_no' => @$Order_detail['Order']['order_no'], 'ref' => 'pay')); ?>';">Delv<?php echo $t; ?></div>
+                                <?php }
+                             } ?>
                         </div>
                     </ul>
                 </div>
-<?php } ?>
+       <?php } ?>
 
             <div class="avoid-this text-center reprint"><button type="button" class="submitbtn"><?php echo __('Print Receipt'); ?></button></div>
             <div class="order-summary">
@@ -152,7 +152,7 @@
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Subtotal'); ?></div>
 							<div class="col-md-3 col-sm-4 col-xs-4 sub-price">
-                                $<?php echo number_format($Order_detail['Order']['subtotal'], 2);?>
+                                $<?php echo round($Order_detail['Order']['subtotal'], 2);?>
 							</div>
 
                     <?php
@@ -205,7 +205,7 @@
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Discount'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price">
                                     $<?php
-                                echo number_format($Order_detail['Order']['discount_value'], 2);
+                                echo round($Order_detail['Order']['discount_value'], 2);
                                 if ($Order_detail['Order']['percent_discount']) {
                                     echo "<span class='txt12'> " . $Order_detail['Order']['promocode'] . " (" . $Order_detail['Order']['percent_discount'] . "%)</span>";
                                 }
@@ -218,7 +218,7 @@
 
                     <li class="clearfix">
                         <div class="row">
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('After Discount'); ?>: </div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('After Discount'); ?>: </div><div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo round(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></div>
 
                         </div>
                     </li>
@@ -230,7 +230,7 @@
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tax'); ?>(<?php echo $Order_detail['Order']['tax'] ?>%)</div>
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo number_format($Order_detail['Order']['tax_amount'], 2) ?></div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo round($Order_detail['Order']['tax_amount'], 2) ?></div>
                         </div>
                     </li>
 					<!-- End -->
@@ -238,7 +238,7 @@
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Total'); ?></div>
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="<?php echo round($Order_detail['Order']['total'],2); ?>">$<?php echo number_format($Order_detail['Order']['total'], 2) ?></div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="<?php echo round($Order_detail['Order']['total'],2); ?>">$<?php echo round($Order_detail['Order']['total'], 2) ?></div>
                         </div>
                     </li>
 <?php
@@ -366,7 +366,7 @@ if ($Order_detail['Order']['table_status'] <> 'P') {
 </div>
 
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js', 'flowtype.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js', 'barcode.js', 'epos-print-5.0.0.js', 'fanticonvert.js', 'jquery.kinetic.min.js', 'notify.min.js','flowtype.js'));
 echo $this->fetch('script');
 ?>
 <script>
@@ -635,10 +635,10 @@ echo $this->fetch('script');
                 $(".card_price").html(text_card + ": $" + (0).toFixed(2));
 
             }
-            if (selected_card == 'tip') {
-                $("#tip_val").val(0);
-            }
-
+            
+            $("#tip_val").val(0);
+            $(".tip_price").html("$" + (0).toFixed(2));
+            
             var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
             var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
             var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;

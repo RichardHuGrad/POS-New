@@ -125,7 +125,7 @@ class DiscountHandlerComponent extends Component {
 		$response = array('ret' => 1, 'message' => 'Discount successfully added');
 
     if (empty($promo_detail)) {
-      $response = array( 'error' => true, 'message' => 'Promocode does not exist.');
+      $response = array( 'ret' => 0, 'message' => 'Promocode does not exist.');
     } else {
 
 			if (!(time() >= strtotime($promo_detail['Promocode']['valid_from']) and time() <= strtotime($promo_detail['Promocode']['valid_to']))) {
@@ -136,9 +136,14 @@ class DiscountHandlerComponent extends Component {
 			} else if ($promo_detail['Promocode']['discount_type'] == 1) {// percent discount
 				$Order_detail['Order']['promocode'] = $promocode;
 				$Order_detail['Order']['percent_discount'] = $promo_detail['Promocode']['discount_value'];
-
-        $Order_detail['Order']['fix_discount'] = 0;
-
+				
+				$Order_detail['Order']['fix_discount'] = 0;
+			  $this->Order->save($Order_detail, false);
+			} else if ($promo_detail['Promocode']['discount_type'] == 0) {// fixed discount
+				$Order_detail['Order']['promocode'] = $promocode;
+				$Order_detail['Order']['fix_discount'] = $promo_detail['Promocode']['discount_value'];
+				
+				$Order_detail['Order']['percent_discount'] = 0;
 			  $this->Order->save($Order_detail, false);
       }
     }

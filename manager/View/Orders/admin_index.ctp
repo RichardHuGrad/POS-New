@@ -238,7 +238,7 @@ $registered_till = @$search['registered_till'];
                                           } else {
                                              $order_tips = " ";
                                           } */
-					/* } */
+					                             /* } */
                                             ?>
                                             <tr>
                                                 <?php 
@@ -257,7 +257,7 @@ $registered_till = @$search['registered_till'];
                                                     <td><a href="<?php echo $this->Html->url(array('controller' => 'orders', 'action' => 'vieworder', 'admin' => true, base64_encode($customer['Order']['id']))) ?>"><u class="order_no"><?php echo $customer['Order']['order_no']; ?></u></a></td>
                                                     <td class="advance_panel">
                                                         <?php 
-                                                        if($customer['Order']['is_hide'] == 'N')
+                                                        if($customer['Order']['is_hide'] == 'N') 
                                                             echo $customer['Order']['reorder_no']?str_pad($customer['Order']['reorder_no'], 4, 0, STR_PAD_LEFT):""; 
                                                         else    
                                                             echo $customer['Order']['hide_no']?"H".str_pad($customer['Order']['hide_no'], 4, 0, STR_PAD_LEFT):""; 
@@ -316,7 +316,7 @@ $registered_till = @$search['registered_till'];
                                 </div>
                                 <input type="hidden" name="data[Reorder][ids]" value=<?php echo implode(",", $ids); ?> />
                                 <?php
-                                echo $this->Form->button('Reorder <i class="fa fa-refresh"></i>',array('class' => 'btn btn-primary btn-wide pull-right margin-right-10 advance_panel','type' => 'submit','id' => 'reorder_button')) ?>
+                                //echo $this->Form->button('Reorder <i class="fa fa-refresh"></i>',array('class' => 'btn btn-primary btn-wide pull-right margin-right-10 advance_panel','type' => 'submit','id' => 'reorder_button')) ?>
                             <?php }?>
 
                             </div>

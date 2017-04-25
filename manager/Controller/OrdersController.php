@@ -32,7 +32,7 @@ class OrdersController extends AppController {
         $conditions = array();
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
         if('Y' <> $is_super_admin){
-            $conditions = array('is_hide'=>'N');
+          $conditions = array('is_hide'=>'N');
         }
 
         if (!empty($this->request->data)) {

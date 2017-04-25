@@ -119,7 +119,7 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     $subtotal += $Order_detail[$i]['Order']['subtotal'];
                                 };
-                                echo number_format($subtotal, 2);
+                                echo round($subtotal, 2);
                                 ?>
                             </div>
 
@@ -157,7 +157,7 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                                 $table_discount_value += $Order_detail[$i]['Order']['discount_value'];
                             //}; //End
                         };
-                        echo number_format($table_discount_value, 2);
+                        echo round($table_discount_value, 2);
 
        //                  for ($i = 0; $i < count($Order_detail); $i++) {
        //                      if ($Order_detail[$i]['Order']['table_no'] == $table) {
@@ -191,7 +191,7 @@ for ($i = 0; $i < count($Order_detail); $i++) {
 
     $after_discount += $temp_after_discount;
 };
-echo number_format($after_discount, 2);
+echo round($after_discount, 2);
 
 ?></div>
 </li>
@@ -222,7 +222,7 @@ $tax_amount = 0;
 for ($i = 0; $i < count($Order_detail); $i++) {
     $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
 };
-echo number_format($tax_amount, 2);
+echo round($tax_amount, 2);
 //End.
 ?></div>
                         </div>
@@ -238,14 +238,14 @@ echo number_format($tax_amount, 2);
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     $total += $Order_detail[$i]['Order']['total'];
                                 };
-                                echo number_format($total, 2)
+                                echo round($total, 2);
                                 ?>">$<?php
                                 //Modified by Yishou Liao @ Oct 14 2016.
                                 $total = 0;
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     $total += $Order_detail[$i]['Order']['total'];
                                 };
-                                echo number_format($total, 2)
+                                echo round($total, 2);
                                 ?></div>
                         </div>
                     </li>
