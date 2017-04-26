@@ -1251,4 +1251,14 @@ echo $this->fetch('script');
         })
     }
 
+
+    $('body').on('click', '.selected-extra-item', function() {
+    	
+    	if($(this).has('button').length){
+        $(this).remove();
+      }
+       
+    });
+    
+
 </script>

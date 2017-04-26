@@ -11,8 +11,10 @@ echo $this->Html->script(array('bootstrap-datepicker')); ?>
     });
 </script>
 
-<?php $option_yes_no = array('Y' => 'Yes', 'N' => 'No');
-$option_status = array('A' => 'Active', 'I' => 'Inactive');
+<?php 
+$option_position = array('K' => 'Kitchen', 'S' => 'Service');
+$option_yes_no   = array('Y' => 'Yes', 'N' => 'No');
+$option_status   = array('A' => 'Active', 'I' => 'Inactive');
 ?>
 
 <div id="app">
@@ -29,7 +31,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                 <section id="page-title">
                     <div class="row">
                         <div class="col-sm-8">
-                            <h1 class="mainTitle"><?php echo ('' == $id) ? 'Add' : 'Edit'; ?> Cashier</h1>
+                            <h1 class="mainTitle"><?php echo ('' == $id) ? 'Add' : 'Edit'; ?> Employee</h1>
                         </div>                        
                     </div>
                 </section>
@@ -58,6 +60,21 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                 <?php } else {
                                     echo $this->Form->input('restaurant_id', array('type' => 'hidden', 'value'=>$this->Session->read('Admin.id'), 'required' => false));
                                 }?>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">UserID <span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('userid', array('type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Select Position  <span class="symbol required"></span></label>
+                                        <?php echo $this->Form->input('position', array('options' => $option_position, 'class' => 'form-control', 'empty' => 'Select position', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">First Name <span class="symbol required"></span></label>

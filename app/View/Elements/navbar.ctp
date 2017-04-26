@@ -23,7 +23,7 @@
                 </li>
                 <!-- <li><div id='print-today-all' class="pull-left paid-txt">打印总单 </div></li>
                   <li><div id='print-today-items' class="pull-left paid-txt">打印销量</div></li> -->
-
+             <!--
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo __('More'); ?>
     <span class="caret"></span></a>
@@ -47,7 +47,8 @@
                         </li>
                     </ul>
                 </li>
-
+             -->
+             
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo __('Languages'); ?>
     <span class="caret"></span></a>

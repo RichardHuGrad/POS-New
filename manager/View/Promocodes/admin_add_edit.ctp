@@ -92,7 +92,8 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
                                 <?php } else {
                                     echo $this->Form->input('restaurant_id', array('type' => 'hidden', 'value'=>$this->Session->read('Admin.id'), 'required' => false));
                                 }?>
-
+                                
+                             <!--
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <?php echo $this->Form->input('category_id', array('type' => 'select', 'options' => $categories, 'empty' => 'Select', 'label' => 'Select Category', 'div' => false, 'required' => false, 'class' => 'form-control')); ?>
@@ -103,7 +104,8 @@ $option_status = array('1' => 'Active', '0' => 'Inactive');
                                     <div class="form-group">
                                         <?php echo $this->Form->input('item_id', array('type' => 'select', 'options' => @$items_list, 'empty' => 'Select', 'label' => 'Select Menu', 'div' => false, 'required' => false, 'class' => 'form-control')); ?>
                                     </div>
-                                </div>
+                                </div>  
+                             -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">

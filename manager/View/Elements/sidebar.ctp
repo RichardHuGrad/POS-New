@@ -103,7 +103,8 @@
                         </div>
                     </a>
                 </li>  
-
+               
+               <!--               
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'cooks') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cooks','action' => 'index', 'admin' => 'true')); ?>">
                         <div class="item-content">
@@ -116,6 +117,7 @@
                         </div>
                     </a>
                 </li>   
+               -->
 
                 <li class="slide_class <?php echo (isset($tab_open) && in_array($tab_open, array('promocodes', 'specials'))) ? 'active open' : '' ?>">
                     <a href="javascript:void(0)">

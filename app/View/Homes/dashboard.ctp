@@ -259,7 +259,7 @@
                                         </div>
     	                                <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
     		                                <!-- <div class="takeout-txt">Takeout</div> -->
-                                                <div class="number-txt for-dine">Out<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                                                <div class="number-txt for-dine">Out <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                                 <?php
                                                 if(@$takeway_tables_status[$i]) {
                                                 ?>

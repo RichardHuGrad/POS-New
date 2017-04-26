@@ -37,13 +37,14 @@ class HomesController extends AppController {
                 $username = $this->request->data['Cashier']['username'];
                 $password = Security::hash($this->data['Cashier']['password'], 'md5', false);
 
-                $cond = array(
-                    'Cashier.password' => $password,
-                    'OR' => array(
-                        'Cashier.email' => $username,
-                    // 'OR' => array('Cashier.mobile_no' => $username)
-                    )
+                $cond = array(                    
+                    "OR" => array(
+                        'Cashier.email'  => $username,
+                        'Cashier.userid' => $username,
+                    ),
+                    "Cashier.password" => $password,
                 );
+                
                 $user = $this->Cashier->find('first', array(
                     'conditions' => $cond,
                 ));
@@ -851,8 +852,8 @@ class HomesController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
         
-        $this->loadModel('Cook');
-        if(empty($this->Cook->findByUserid($userid))){
+        $this->loadModel('Cashier');
+        if(empty($this->Cashier->findByUserid($userid))){
         	return "Userid is not valid!";
         }
 
@@ -887,8 +888,8 @@ class HomesController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-        $this->loadModel('Cook');
-        if(empty($this->Cook->findByUserid($userid))){
+        $this->loadModel('Cashier');
+        if(empty($this->Cashier->findByUserid($userid))){
         	return "Userid is not valid!";
         }
 

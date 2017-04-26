@@ -69,9 +69,11 @@ class AttendancesController extends AppController {
         }
 
         $this->Attendance->virtualFields = array(
-            'working_hours' => 'round((TIME_TO_SEC(Attendance.checkout)-TIME_TO_SEC(Attendance.checkin))/3600,2)',
-            );
-
+            'working_hours' => 'round((TIME_TO_SEC(Attendance.checkout)-TIME_TO_SEC(Attendance.checkin))/3600,2)',            
+          );
+          
+        $this->Attendance->virtualFields['name'] = "Select concat(firstname,' ',lastname) as name from cashiers where cashiers.userid = Attendance.userid";
+        
         $query = array(
             'conditions' => $conditions,
             'order' => $order,
