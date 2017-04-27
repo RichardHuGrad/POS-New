@@ -37,8 +37,9 @@ class PayHandlerComponent extends Component {
         $data['Order']['change'] = $change;
         $data['Order']['is_kitchen'] = 'Y';
 
-        $data['Order']['is_completed'] = 'Y';
-
+        $data['Order']['is_completed']   = 'Y';
+        $data['Order']['cooking_status'] = 'COOKED';
+        
         $data['Order']['card_val'] = $args['card_val'];
         $data['Order']['cash_val'] = $args['cash_val'];
         $data['Order']['tip_paid_by'] = $args['tip_paid_by'];
@@ -82,6 +83,7 @@ class PayHandlerComponent extends Component {
             $data['Order']['table_status'] = 'P';
             $data['Order']['is_kitchen'] = 'Y';
             $data['Order']['is_completed'] = 'Y';
+            $data['Order']['cooking_status'] = 'COOKED';
 
 
             if ($table_detail['Order']['table_no'] == $table) {
