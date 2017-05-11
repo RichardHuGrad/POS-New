@@ -683,6 +683,7 @@ echo $this->fetch('script');
         if ($(this).val()) {
             $(".discount_section").attr("disabled", "disabled");
             $(this).removeAttr("disabled");
+            $(this).focus();
         } else {
             $(".discount_section").removeAttr("disabled");
         }

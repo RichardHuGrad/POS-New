@@ -77,8 +77,9 @@
 
 
         <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
-            <div class="tab-content">
-                <!-- <?php print_r ($records); ?> -->
+        	
+            <div class="tab-content <?php if($Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
+
                 <?php
                 if (!empty($records)) {
                     $count = 0;
@@ -123,7 +124,7 @@
 
     </div>
     <div class="col-md-12 col-sm-12 col-xs-12 " id="button-group">
-        <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary"><strong><?php echo __('Send to Kitchen')?></strong></button>
+        <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary" disabled><strong><?php echo __('Send to Kitchen')?></strong></button>
         <button id="pay-btn" class="btn btn-lg btn-success"><strong><?php echo __('Pay')?></strong></button>
         <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong><?php echo __('CHange Taste');?></strong></button>
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong><?php echo __('Batch Add Taste');?></strong></button>
@@ -463,7 +464,16 @@ echo $this->fetch('script');
         });
 
         renderOrder();
+        
+        //hide some buttons for online orders
+        <?php 
+           if($Order_detail['Order']['table_status']=='P'){
+           	 echo "$('#pay-btn,#delete-btn,#quantity-btn,#change-price-btn,#edit-phone-btn').hide();";
+           }              
+        ?>
+        
     });
+
 
     $(document).on("keyup", ".discount_section", function () {
         if ($(this).val()) {
@@ -943,7 +953,6 @@ echo $this->fetch('script');
     $('body').append(tastesComponent);
 
 
-
     // save button, send ajax to the backend and store the data in database
     $('body').on('click', '#taste-component-save', function() {
         // console.log($('#selected-extra li'));
@@ -1073,15 +1082,16 @@ echo $this->fetch('script');
             }
         });
     }();
+    
     // when part of selected items are printed, only allow delete action
     $('body').on('click contentChanged','#order-component, #select-all',function() {
         // console.log('click');
-        ChangeBtnDisabled(['#delete-btn, #change-price-btn', '#urge-btn']);
+        ChangeBtnDisabled(['#delete-btn, #change-price-btn' , '#urge-btn']);
     });
 
     function ChangeBtnDisabled(selectors) {
-        //
-        // var selectorStr = selectors.join(',');
+        
+        //var selectorStr = selectors.join(',');
         if ($('#order-component li.selected.is-print').length > 0) {
             $.notify("If you want to modify items which have been sent to kitchen, please delete it and readd it. \n 已选项中包含已送厨菜品，若要修改已送厨菜品，请删除后重新添加",{ position: "top center", className:"info"});
             $('#button-group .btn').not(selectors[0]).attr('disabled', true);

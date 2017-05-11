@@ -76,8 +76,6 @@ class AppController extends Controller {
         if (!$this->Session->read('Config.language')) {
             $this->Session->write('Config.language', 'zho');
         }
-
-
     }
 
     function resize($image_name, $size, $folder_name) {

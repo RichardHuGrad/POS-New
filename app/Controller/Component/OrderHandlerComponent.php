@@ -461,8 +461,15 @@ class OrderHandlerComponent extends Component {
 	  	$orderDetail['Order']['table_no'] = $table;
 	  	$orderDetail['Order']['type'] = $type;
 	  	
+	  	/* 换桌时不修改订单号
 	  	//modify order_no with new table and type
-	  	$order_no = $type.$table.substr($order_no,-10);
+	  	//online orders 的编码规则和pos系统里面不一样
+	  	if(strpos($order_no ,"-") !== FALSE){
+	  		$order_no = $type.$table.substr($order_no,strpos($order_no,'-'));
+	  	}else{
+	  		$order_no = $type.$table.substr($order_no,-10);
+	  	}
+	  	*/
 	  	
 	  	$this->Order->save($orderDetail, false);
     

@@ -76,6 +76,7 @@ class DiscountHandlerComponent extends Component {
 
 
     public function fixDiscountStrategy($order_id, $discount_value) {
+    	
 		$Order_detail = $this->Order->find("first", array(
         	'fields' => array('Order.id', 'Order.fix_discount', 'Order.promocode', 'Order.percent_discount'),
         	'conditions' => array('Order.id' => $order_id)

@@ -5,9 +5,10 @@
  * Note*- here cashier id is related to the restaurant id
  */
 App::uses('PrintLib', 'Lib');
+App::uses('OpencartController', 'Controller');
+
 class HomesController extends AppController {
     public $fontStr1 = "simsun";
-
 
     public $components = array('Paginator');
 
@@ -136,7 +137,7 @@ class HomesController extends AppController {
         // get all table details
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", array(
-            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device'),
+            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
@@ -160,6 +161,11 @@ class HomesController extends AppController {
         $waiting_tables_status = $this->Order->find("list", array(
             'fields' => array('Order.table_no', 'Order.table_status'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N', 'Order.order_type' => 'W')
+                )
+        );
+        $online_tables_status = $this->Order->find("list", array(
+            'fields' => array('Order.table_no', 'Order.table_status'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N', 'Order.order_type' => 'L')
                 )
         );
 
@@ -194,8 +200,9 @@ class HomesController extends AppController {
             'recursive' => false
                 )
         );
+        
         $colors = array(
-            'P' => 'greenwrap',
+            'P' => 'greenwrap',      //table_status='P' :Paid
             'N' => 'notpaidwrap',
             'A' => 'availablebwrap',
             'V' => 'notpaidwrap',
@@ -203,7 +210,7 @@ class HomesController extends AppController {
 
         // print_r($orders_total);
 
-        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no','orders_phone','orders_time', 'orders_total','admin_passwd'));
+        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'online_tables_status', 'colors', 'orders_no','orders_phone','orders_time', 'orders_total','admin_passwd'));
     }
 
     public function allorders() {
@@ -709,6 +716,32 @@ class HomesController extends AppController {
         $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no','order_type', 'today'));
     }
 
+    public function closeOrder() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        // get all params
+        $order_no = $this->params['named']['order'];
+
+        $this->loadModel('Order');
+        
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $data['Order']['id'] = $order_id;
+        $data['Order']['table_status'] = 'P';
+        $data['Order']['is_kitchen'] = 'Y';
+        $data['Order']['is_completed']   = 'Y';
+        $data['Order']['cooking_status'] = 'COOKED';
+        
+        $this->Order->save($data, false);
+                
+        $oc = new OpencartController();
+        $oc->setApi(); //beforeFilter not called in this case
+        $oc->closeOcOrders($order_no);
+        
+        $this->Session->setFlash('Close order successfully! 成功关闭订单.', 'success');
+        return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+    }
+
 
     public function makeavailable() {
         $this->layout = false;
@@ -749,16 +782,23 @@ class HomesController extends AppController {
         $type = @$this->params['named']['type'];
         $table = @$this->params['named']['table'];
         $order_no = @$this->params['named']['order_no'];
-	  	  
-	  	  //modify order_no with new table and type
-	  	  $new_order_no = $type.$table.substr($order_no,-10);
         
+        /* 换桌时不修改订单号
+        //modify order_no with new table and type
+        //online orders 的编码规则和pos系统里面不一样
+        if(strpos($order_no ,"-") !== FALSE){
+            $order_no = $type.$table.substr($order_no,strpos($order_no,'-'));
+        }else{
+            $order_no = $type.$table.substr($order_no,-10);
+        }
+        */
+
         $ref = @$this->params['named']['ref'];
         
         // update order to database 
         // need to quoto the string value(only field new value,not condition)
         $this->loadModel('Order');                     
-        $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'" , 'Order.order_no' => "'$new_order_no'") , array('Order.order_no' => $order_no));
+        $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
         
 
         $this->Session->setFlash('Order table successfully changed 成功换桌.', 'success');
