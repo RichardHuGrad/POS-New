@@ -148,6 +148,16 @@ class HomesController extends AppController {
 
         // get table availability
         $this->loadModel('Order');
+        $tables_status = $this->Order->find("list", array(
+            'fields' => array('Order.table_no', 'Order.table_status','Order.order_type'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N')
+                )
+        );
+        $dinein_tables_status  = $tables_status['D'];
+        $takeway_tables_status = $tables_status['T'];
+        $waiting_tables_status = $tables_status['W'];
+        $online_tables_status  = $tables_status['L'];
+/*
         $dinein_tables_status = $this->Order->find("list", array(
             'fields' => array('Order.table_no', 'Order.table_status'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N', 'Order.order_type' => 'D')
@@ -169,6 +179,8 @@ class HomesController extends AppController {
                 )
         );
 
+*/
+
         // get all order no.
         $orders_no = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
@@ -185,6 +197,17 @@ class HomesController extends AppController {
                 )
         );
 
+/*
+        // if there is split-order on this table 
+        //$this->loadModel('OrderSplit');
+        $this->Order->virtualFields['isSplit']= "Select 'Y' from cookies where cookies.key like concat(Order.order_no,'%') limit 1";
+        $orders_split = $this->Order->find("list", array(
+            'fields' => array('Order.order_type', 'Order.isSplit', 'Order.table_no'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => -1
+                )
+        );
+*/
 
         $orders_total = $this->Order->find("list", array(
             'fields' => array('Order.order_no', 'Order.total'),
@@ -206,11 +229,12 @@ class HomesController extends AppController {
             'N' => 'notpaidwrap',
             'A' => 'availablebwrap',
             'V' => 'notpaidwrap',
+            'R' => 'receiptwrap',
         );
 
         // print_r($orders_total);
 
-        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'online_tables_status', 'colors', 'orders_no','orders_phone','orders_time', 'orders_total','admin_passwd'));
+        $this->set(compact('tables','dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd'));
     }
 
     public function allorders() {
@@ -603,7 +627,7 @@ class HomesController extends AppController {
         }
 
         if ($logs != '') {
-        	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'], 'logs' => $logs);
+        	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'],'operation'=>'tableHisupdate', 'logs' => $logs);
         	$this->Log->save($logArr);
         	$data['id'] = $order_id;
         	$this->Order->save($data);
@@ -655,8 +679,8 @@ class HomesController extends AppController {
        	$data['table_status']= 'N';
        	$data['is_completed']= 'N';
 
-        $logs = "Table#$table_no, orderid:$order_id restored at ".date('Y-m-d H:i:s');
-       	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'], 'logs' => $logs);
+        $logs = "Table#$table_no, orderid:$order_id";
+       	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'], 'operation'=>'Table restore','logs' => $logs);
         $this->Log->save($logArr);
         
         $data['id'] = $order_id;
@@ -733,6 +757,8 @@ class HomesController extends AppController {
         $data['Order']['cooking_status'] = 'COOKED';
         
         $this->Order->save($data, false);
+        
+        
                 
         $oc = new OpencartController();
         $oc->setApi(); //beforeFilter not called in this case
@@ -751,27 +777,32 @@ class HomesController extends AppController {
         $order_no = $this->params['named']['order'];
 
         $this->loadModel('Order');
-        $this->loadModel('OrderLog');
+        //$this->loadModel('OrderLog');
+        $this->loadModel('Log');
 
         $order_detail = $this->Order->find('first', array(
-                            'recursive' => -1,
-                            'conditions' => array(
-                                    'order_no' => $order_no
-                                )
-                        ));
+               'recursive' => -1,
+               'conditions' => array(
+                       'order_no' => $order_no
+                   )
+           ));
         
-        $this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');
-        
-        //delete order and order_item
-        $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
-        
-        
-        //$this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
 
-        // save all
+        $logArr = array('cashier_id' => $this->Session->read('Front.id'), 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'Void(makeavailable)', 'logs' => json_encode($order_detail));
+        $this->Log->save($logArr);
+
+            
+        //$this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');        
+        //delete order and order_item
+        //$this->Order->deleteAll(array('Order.order_no' => $order_no), false);        
+        
+        // update order
+        $this->Order->updateAll(array('table_status'=>"'V'",'is_completed' => "'Y'"), array('Order.order_no' => $order_no));
+        
         $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
         return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     }
+
 
     public function move_order() {
 
@@ -795,11 +826,31 @@ class HomesController extends AppController {
 
         $ref = @$this->params['named']['ref'];
         
+        $this->loadModel('Order'); 
+          
+        // get old order infomation       
+        $Order_detail = $this->Order->find("first", array(
+            'fields' => array('Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
+            'conditions' => array('Order.order_no' => $order_no),
+            'recursive' => false
+                )
+        );        
+        $restaurant_id = $Order_detail['Order']['cashier_id'];
+        $old_type      = $Order_detail['Order']['order_type'];
+        $old_table     = $Order_detail['Order']['table_no'];
+        $phone         = $Order_detail['Order']['phone'];
+        //print kitchen notification when change table(not from online table)
+        if($old_type != 'L'){        	
+          $this->loadModel('Admin');    
+          $printerName = $this->Admin->getKitchenPrinterName($restaurant_id);
+          $print = new PrintLib();
+        //  $print->printKitchenChangeTable($order_no, $table, $type, $old_table,$old_type, $printerName,true,$phone);
+        }
+        
         // update order to database 
         // need to quoto the string value(only field new value,not condition)
-        $this->loadModel('Order');                     
         $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
-        
+                
 
         $this->Session->setFlash('Order table successfully changed 成功换桌.', 'success');
         if ($ref)

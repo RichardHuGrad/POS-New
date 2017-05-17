@@ -20,6 +20,7 @@ class ApiController extends Controller {
 			$this->{$component} = $this->Components->load($component);
 			$this->{$component}->initialize($this);
 			$action = Inflector::camelize($command);
+
 			$return = $this->{$component}->{$action}($args);
 			
 			if(@$return['ret'] === 0){
@@ -68,7 +69,7 @@ class ApiController extends Controller {
 	  ));
 	}
 
-	protected function _validateAccess($args) {
+	protected function _validateAccess(&$args) {
 		$this->Access = $this->Components->load('Access');
 		if (!$this->Access->validate($args)) {
 			throw new ForbiddenException();

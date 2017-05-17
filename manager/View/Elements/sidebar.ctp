@@ -179,6 +179,19 @@
                     </a>
                 </li>
 
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'Logs') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'logs','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Logs</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+
                 <!-- comment out by Ty Dec 13 2016 -->
                 <!-- Modified by Yishou Liao @ Dec 06 2016 -->
                <!-- 

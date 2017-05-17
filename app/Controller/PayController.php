@@ -55,6 +55,15 @@ class PayController extends AppController {
             $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
             return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
         }
+        
+        //if this order splited, redirect to split controller
+        $this->loadModel('Cookie');
+        $is_split = $this->Cookie->hasAny(array( 'key like' => @$Order_detail['Order']['order_no'].'%'));
+        if($is_split){
+           return $this->redirect(array('controller'=>'split', 'action'=>'index', 'table'=>$table, 'type'=>$type, 'split_method' =>'1'));
+        }     
+           
+           
         $type = @$Order_detail['Order']['order_type'] ? @$Order_detail['Order']['order_type'] : $type;
         $table = @$Order_detail['Order']['table_no'] ? @$Order_detail['Order']['table_no'] : $table;
 
@@ -83,6 +92,8 @@ class PayController extends AppController {
         $this->Print->printPayReceipt(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
     }
 
+
+    //two ways call this function: one is from pay page, one is from dashboard
     public function printBill() {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -91,10 +102,22 @@ class PayController extends AppController {
         $this->loadModel('Order');
 
         $order_no = $this->data['order_no'];
+        if(!$this->request->is('ajax')){
+           $order_no = $this->request->params['named']['order'];
+        }
+        
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        $this->Print->printPayBill(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+        //$this->Print->printPayBill(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+               
+        $this->Order->save(array('Order' => array('id' => $order_id, 'table_status'=>'R')));
+        //$this->Order->updateAll(array('table_status'=>"'R'"), array('Order.order_no' => $order_no));
+        
+        if(!$this->request->is('ajax')){
+          return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+        }
+
     }
 
 

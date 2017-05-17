@@ -158,8 +158,6 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 <script>
 
-
-
         if (!String.prototype.format) {
           String.prototype.format = function() {
             var args = arguments;
@@ -239,8 +237,6 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
             ?>
             return tempOrder;
         }
-
-
 
 
         var ItemComponent = (function() {
@@ -373,7 +369,6 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                 }
             });
         });
-
 
 
 </script>

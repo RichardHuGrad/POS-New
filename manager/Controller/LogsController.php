@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class AttendancesController
+ * Class LogsController
  */
-class AttendancesController extends AppController {
+class LogsController extends AppController {
 
-    public $uses = array('Attendance');
+    public $uses = array('Log');
     public $components = array('Session', 'Paginator');
 
     /**
@@ -14,7 +14,7 @@ class AttendancesController extends AppController {
      */
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->set('tab_open', 'attendances');
+        $this->set('tab_open', 'Logs');
     }
 
     /**
@@ -23,11 +23,13 @@ class AttendancesController extends AppController {
      */
     public function admin_index() {
 
-        $this->checkAccess('Attendance', 'can_view');
+        $this->checkAccess('Log', 'can_view');
 
         $this->layout = 'admin';
+        $this->loadModel('Log');
+        
         $limit = DEFAULT_PAGE_SIZE;
-        $order = 'Attendance.day DESC';
+        $order = 'Log.created DESC';
 
         $conditions = array();
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
@@ -37,9 +39,9 @@ class AttendancesController extends AppController {
 
         if (!empty($this->request->data)) {
 
-            if(isset($this->request->data['Attendance']) && !empty($this->request->data['Attendance'])) {
-                $search_data = $this->request->data['Attendance'];
-                $this->Session->write('attendance_search', $search_data);
+            if(isset($this->request->data['Log']) && !empty($this->request->data['Log'])) {
+                $search_data = $this->request->data['Log'];
+                $this->Session->write('log_search', $search_data);
             }
 
             if(isset($this->request->data['PageSize']['records_per_page']) && !empty($this->request->data['PageSize']['records_per_page'])) {
@@ -53,26 +55,25 @@ class AttendancesController extends AppController {
             //$limit = strtolower($this->Session->read('page_size'))=='all'? 100000000 : $this->Session->read('page_size');
         }
 
-        if($this->Session->check('attendance_search')){
-            $search = $this->Session->read('attendance_search');
+        if($this->Session->check('log_search')){
+            $search = $this->Session->read('log_search');
 
-            if(!empty($search['search'])){
-                $conditions['Attendance.userid'] = str_replace("#", "", $search['search']);
+            if(!empty($search['name'])){
+                $conditions['Log.name like'] = '%'.$search['name'].'%';
             }
-            if(!empty($search['from_day'])){
-                $conditions['date(Attendance.day) >='] = $search['from_day'];
+            if(!empty($search['operation'])){
+                $conditions['Log.operation like '] = '%'.$search['operation'].'%';
             }
-            if(!empty($search['to_day'])){
-                $conditions['date(Attendance.day) <='] = $search['to_day'];
+            if(!empty($search['logs'])){
+                $conditions['Log.logs like '] = '%'.$search['logs'].'%';
+            }
+            if(!empty($search['created'])){
+                $conditions['Log.created like '] = '%'.$search['created'].'%';
             }
 
         }
-
-        $this->Attendance->virtualFields = array(
-            'working_hours' => 'round((TIME_TO_SEC(Attendance.checkout)-TIME_TO_SEC(Attendance.checkin))/3600,2)',            
-          );
-          
-        $this->Attendance->virtualFields['name'] = "Select concat(firstname,' ',lastname) as name from cashiers where cashiers.userid = Attendance.userid";
+       
+        $this->Log->virtualFields['name'] = "Select concat(firstname,' ',lastname) as name from cashiers where cashiers.id = Log.cashier_id";
         
         $query = array(
             'conditions' => $conditions,
@@ -81,7 +82,7 @@ class AttendancesController extends AppController {
         );
         
         if('all' == $limit){
-            $records = $this->Attendance->find('all', $query);
+            $records = $this->Log->find('all', $query);            
         }else{
             $query['limit'] = $limit;
             $this->paginate = $query;
@@ -97,16 +98,13 @@ class AttendancesController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-        $this->loadModel('Attendance');
+        $this->loadModel('Log');
         
         $ids = $this->data['ids'];
-        $ret = $this->Attendance->deleteAll(array('Attendance.id' => $ids), false);
+        $ret = $this->Log->deleteAll(array('Log.id' => $ids), false);
         
         $this->Session->setFlash('Records have been deleted successfully', 'success');
         
-        //should redirect in ajax success method
-        //$this->redirect(array('plugin' => false, 'controller' => 'attendances', 'action' => 'index', 'admin' => true));
-
     }
 
 

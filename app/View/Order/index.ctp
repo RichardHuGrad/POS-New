@@ -78,7 +78,7 @@
 
         <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
         	
-            <div class="tab-content <?php if($Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
+            <div class="tab-content <?php if(@$Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
 
                 <?php
                 if (!empty($records)) {
@@ -120,13 +120,10 @@
                 ?>
             </div>
         </div>
-
-
     </div>
+    
     <div class="col-md-12 col-sm-12 col-xs-12 " id="button-group">
-        <button id="send-to-kitchen-btn" class="btn btn-lg btn-primary" disabled><strong><?php echo __('Send to Kitchen')?></strong></button>
-        <button id="pay-btn" class="btn btn-lg btn-success"><strong><?php echo __('Pay')?></strong></button>
-        <button id="add-taste-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong><?php echo __('CHange Taste');?></strong></button>
+    	<div class="col-md-8">
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong><?php echo __('Batch Add Taste');?></strong></button>
         <button id="delete-btn" class="btn btn-lg btn-danger"><strong><?php echo __('Delete');?></strong></button>
         <button id="quantity-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-quantity-component-modal"><strong><?php echo __('Change Quantity');?></strong></button>
@@ -136,8 +133,13 @@
         <!-- <button id="free-price-btn" class="btn btn-lg"><strong>免费</strong></button> -->
         <!-- <button id="add-discount-btn" class="btn btn-lg">Add Discount</button>  -->
         <button id="edit-phone-btn" class="btn btn-lg btn-info" data-toggle="modal" data-target="#edit-phone-component-modal"><strong><?php echo __('Edit Phone');?></strong></button>        
+      </div>
+      <div class="col-md-4">
+        <button id="send-to-kitchen-btn" class="btn btn-xl btn-primary" disabled style="margin-left:auto"><strong><?php echo __('Send to Kitchen')?></strong></button>
+        <button id="pay-btn" class="btn btn-xl btn-success"><strong><?php echo __('Pay')?></strong></button>
+        <button id="add-taste-btn" class="btn btn-xl btn-info" data-toggle="modal" data-target="#single-extra-component-modal"><strong><?php echo __('CHange Taste');?></strong></button>
+      </div>
     </div>
-
 
 </div>
 
@@ -467,7 +469,7 @@ echo $this->fetch('script');
         
         //hide some buttons for online orders
         <?php 
-           if($Order_detail['Order']['table_status']=='P'){
+           if(@$Order_detail['Order']['table_status']=='P'){
            	 echo "$('#pay-btn,#delete-btn,#quantity-btn,#change-price-btn,#edit-phone-btn').hide();";
            }              
         ?>
@@ -989,18 +991,21 @@ echo $this->fetch('script');
 
 
     $('body').on('click', '#add-taste-btn' ,function() {
+    	
         var selected_item_id_list = getSelectedItem();
+        
+        if (selected_item_id_list.length == 0) { 
+        	           
+            // $.notify("No item selected 没有选择菜",{position:"top center",className:"warn"}); return false;
+            
+            //default select the first item
+            $("#order-component li:first").click();
 
-        if (selected_item_id_list.length == 0) {
-            // alert("No item selected");
-            $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
-            return false;
         } else if (selected_item_id_list.length > 1) {
             // alert("Please select only one item");
             $.notify("Please select only one item 请只选择一个菜。",  { position: "top center", className:"warn"});
             return false;
         }
-
 
 
         var selected_item_id = parseInt(selected_item_id_list[0]);
@@ -1025,8 +1030,8 @@ echo $this->fetch('script');
         var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special);
         $('body').append(singleExtraComponent);
 
-
     });
+
 
     $('body').on('click', '#single-extra-component-save', function() {
 
@@ -1132,6 +1137,7 @@ echo $this->fetch('script');
 
     });
 
+
     $('body').on('click', '#change-price-component-save', function() {
         var selected_item_id_list = getSelectedItem();
 
@@ -1187,7 +1193,7 @@ echo $this->fetch('script');
 
         if (selected_item_id_list.length == 0) {
             // alert("No item selected");
-            $.notify("No item selected 没有选择菜",  { position: "top center", className:"warn"});
+            $.notify("No item selected 没有选择菜",{ position: "top center",className:"warn" });
             return false;
         }
 

@@ -181,7 +181,8 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .dine-wrap li:nth-child(9n) { margin-right: 0; }
 .dine-wrap li .notpaidwrap { height: 65px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .availablebwrap { height: 65px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; border-radius: 10px;}
-.dine-wrap li .greenwrap { height: 75px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; border-radius: 10px;}
+.dine-wrap li .greenwrap { height: 65px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; border-radius: 10px;}
+.dine-wrap li .receiptwrap { height: 65px; width: 100%; background: #B15BFF; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .number-txt {
 	color: #fff;
     font-size: 17px;
@@ -192,11 +193,17 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .dine-wrap li .dropdown-menu.dropdown-overlay { position: fixed; width: 100%; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); z-index: 8000; }
 .dine-wrap li .dropdown-menu, .dine-wrap li .dropdown-menu ul { position: fixed; top: 15%; left: 35%; background: #c30e23; width: 310px; box-shadow: none; border-radius: 10px; padding: 5px; border: 0px; }
 .dine-wrap li .dropdown-menu li { border-bottom: 1px solid #cb4555; border-right: 1px solid #cb4555; margin: 0; width: 50%; }
+/*
 .dine-wrap li .dropdown-menu li:nth-child(3) { border-right: 0 none; }
 .dine-wrap li .dropdown-menu li:nth-child(4) { border-bottom: 0 none; }
+
 .dine-wrap li .dropdown-menu .dine-tables li:nth-child(2n + 3) { border-bottom: 1px solid #cb4555; border-right: 0 none; }
 .dine-wrap li .dropdown-menu .dine-tables li:nth-child(2n + 4) { border-bottom: 1px solid #cb4555; border-right: 1px solid #cb4555; }
+
 .dine-wrap li .dropdown-menu li:last-child { border-bottom: 0px !important; border-right: 0px !important; }
+*/
+.dine-wrap li .dropdown-menu .dine-tables li:last-child { border-bottom: 0px !important; border-right: 0px !important; }
+
 .dine-wrap li .dropdown-menu > li > a, .dine-wrap li .dropdown-menu ul > li > a { color: #fff; padding: 5px 15px; }
 .dine-wrap li .dropdown-menu > ul > li > a { display: block; clear: both; font-size:15px; font-weight: bold; line-height: 3; white-space: nowrap; }
 .dine-wrap li .dropdown-menu > li > a:hover, .dine-wrap li .dropdown-menu > li > a:focus,
@@ -236,6 +243,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .dine-wrap li .dropdown-submenu.bottom-submenu .sub-open .left-arrow { top: 30px; }
 .takeout-txt { font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 55px; line-height: 45px; }
 .paidb { width: 20px; height: 20px; margin-right: 10px; background: #57ad12; }
+.printedb { width: 20px; height: 20px; margin-right: 10px; background: #B15BFF; }
 .notpaid { width: 20px; height: 20px; margin-right: 10px; background: #ff8400; }
 .availableb { width: 20px; height: 20px; margin-right: 10px; background: #e3e3e4; border: 1px solid #eee; }
 .paid-txt { font-size: 18px; font-weight: 600; color: #fff; }
@@ -951,3 +959,9 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 #print-today-all:hover, #print-today-items:hover{background: #f7f7f7;color: #c30e23;}
+
+.btn-xl {
+    padding: 12px 20px;
+    font-size: 26px;
+    border-radius: 8px;
+}

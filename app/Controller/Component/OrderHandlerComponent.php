@@ -432,12 +432,17 @@ class OrderHandlerComponent extends Component {
         $order_no = $args['order_no'];     
         
         $order_detail = $this->Order->find('first', array(
-                            'recursive' => -1,
-                            'conditions' => array(
-                                    'order_no' => $order_no
-                                )
-                        ));
-           
+                 'recursive' => -1,
+                 'conditions' => array(
+                 'order_no' => $order_no
+              )
+        ));
+        
+        
+        $this->loadModel('Log');
+        $logArr = array('cashier_id' => $order_detail['Order']['counter_id'], 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'delete(makeavailable)', 'logs' => json_encode($order_detail));
+        $this->Log->save($logArr);
+
                 
         $this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');
 
@@ -450,17 +455,38 @@ class OrderHandlerComponent extends Component {
 
 	  public function moveOrder($args) {
 	  	ApiHelperComponent::verifyRequiredParams($args, ['type', 'table', 'order_no']);
-	  	$type = $args['type'];
+	  	$type  = $args['type'];
       $table = $args['table'];
       $order_no = $args['order_no'];
     
       // $this->Order->updateAll(array('Order.table_no' => $table, 'Order.order_type' =>  $type), array('Order.order_no' => $order_no));
-	  	$orderDetail = $this->Order->find('first', array(
+	  	$Order_detail = $this->Order->find('first', array(
 	  						'conditions' => array('Order.order_no' => $order_no)
 	  					));
-	  	$orderDetail['Order']['table_no'] = $table;
-	  	$orderDetail['Order']['type'] = $type;
-	  	
+
+      $Order_detail = $this->Order->find("first", array(
+          'fields' => array('Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
+          'conditions' => array('Order.order_no' => $order_no),
+          'recursive' => false
+              )
+      );        
+
+      $restaurant_id = $Order_detail['Order']['cashier_id'];
+      $old_type      = $Order_detail['Order']['order_type'];
+      $old_table     = $Order_detail['Order']['table_no'];
+      $phone         = $Order_detail['Order']['phone'];
+      //print kitchen notification when change table(not from online table)
+      if($old_type != 'L'){        	
+        $this->loadModel('Admin');    
+        $printerName = $this->Admin->getKitchenPrinterName($restaurant_id);
+        $print = new PrintLib();
+        $print->printKitchenChangeTable($order_no, $table, $type, $old_table,$old_type, $printerName,true,$phone);
+      }
+
+
+      // update new table information to database 	  					
+	  	$Order_detail['Order']['table_no'] = $table;
+	  	$Order_detail['Order']['type'] = $type;	  		  	
 	  	/* 换桌时不修改订单号
 	  	//modify order_no with new table and type
 	  	//online orders 的编码规则和pos系统里面不一样
@@ -469,14 +495,14 @@ class OrderHandlerComponent extends Component {
 	  	}else{
 	  		$order_no = $type.$table.substr($order_no,-10);
 	  	}
-	  	*/
-	  	
-	  	$this->Order->save($orderDetail, false);
+	  	*/	  	
+	  	$this->Order->save($Order_detail, false);
     
 	  	return $this->Order->find('first', array(
 	  					'conditions' => array('Order.order_no' => $order_no)
 	  				));
 	  }
+    
     
     public function editPhone($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id', 'order_no', 'phone']);

@@ -163,7 +163,7 @@ class AccessComponent extends Component {
 
   }
 
-  public function validate($args) {
+  public function validate(&$args) {
     // args['access_token']
     if (!empty($args['access_token'])) {
       $Api = ClassRegistry::init('Api');
@@ -174,7 +174,8 @@ class AccessComponent extends Component {
         ));
 
       if (!empty($data)) {
-        return true;
+          $args['cashier_id'] = $data['Api']['cashier_id'];
+          return true;
       }
     }
 

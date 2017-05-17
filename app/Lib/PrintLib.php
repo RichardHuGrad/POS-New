@@ -106,6 +106,56 @@ class PrintLib {
         return $debug_str;
     }
 
+    public function printKitchenChangeTable($order_no, $table_no, $table_type, $old_table,$old_type, $printer_name, $print_zh=true,$phone='') {
+
+        $handle = printer_open($printer_name);
+        printer_start_doc($handle, "Doc");
+        printer_start_page($handle);
+
+        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]', 'L' => '[[网订]]');
+        $table_type_str     = $type_map[$table_type];
+        $old_table_type_str = $type_map[$old_type];
+
+        $y = 0;
+
+        if ($print_zh == true) {
+            $font = printer_create_font('simsun', 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
+        } else {
+            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+            printer_select_font($handle, $font);
+            printer_draw_text($handle, "Kitchen", 138, $y);
+        }
+
+        //printer_end_page($handle);
+        //printer_start_page($handle);
+
+        $y += 60;
+        //Print change table information   
+        $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        printer_select_font($handle, $font);
+        printer_draw_text($handle, "Order#: " . $order_no. iconv("UTF-8", "gb2312", "  换桌"), 32, $y);
+                 
+        $y += 50;
+        printer_draw_text($handle, "From " . iconv("UTF-8", "gb2312", $old_table_type_str . '# ' . $old_table). " to ". iconv("UTF-8", "gb2312", $table_type_str . '# ' . $table_no), 32, $y);
+        
+        if($phone!=''){
+          $y += 50;
+          printer_draw_text($handle, "Phone:" . $phone, 32, $y);
+        }
+        //End
+
+        printer_delete_font($font);
+        printer_end_page($handle);
+
+        $footerPage = new TimeFooterPage();
+        $footerPage->printPage($handle);
+       
+        printer_end_doc($handle);
+    }
+
+
     public function printPayBillDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $bill_info,$logo_name,$print_zh=true, $print_en=false) {
         $debug_str = json_encode($item_detail);
         $debug_str .= json_encode($bill_info);
@@ -307,7 +357,18 @@ class LogoHeaderPage extends HeaderPage {
     }
 
     public function printPage($handle) {
-    	
+
+        $adminModel = ClassRegistry::init('Admin');
+        $query = array(
+            'conditions' => array('is_super_admin' => 'N'),
+            'recursive' => -1, 
+            'fields' => array('mobile_no','address','city','province','zipcode','print_offset'),
+        );
+        $data = $adminModel->find('first',$query);
+        $addressLine1 = $data['Admin']['address'];
+        $addressLine2 = $data['Admin']['city'] . ' '. $data['Admin']['province'];
+        $offset = explode(',' , $data['Admin']['print_offset']);
+        
         printer_start_page($handle);
 
         $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
@@ -319,9 +380,9 @@ class LogoHeaderPage extends HeaderPage {
         $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         // print address line
-        printer_draw_text($handle, PrintConfig::$addressLine1["content"], PrintConfig::$addressLine1["offset_x"], 130);
-        printer_draw_text($handle, PrintConfig::$addressLine2["content"], PrintConfig::$addressLine2["offset_x"], 168);
-        printer_draw_text($handle, PrintConfig::$phone["content"], printConfig::$phone["offset_x"], 206);
+        printer_draw_text($handle, $addressLine1, $offset[0] , 130);
+        printer_draw_text($handle, $addressLine2, $offset[1] , 168);
+        printer_draw_text($handle, $data['Admin']['mobile_no'] , $offset[2] , 206);
 
         $print_y = 244;
         if ($this->print_zh == true) {
@@ -776,9 +837,7 @@ class ReportCountDetailPage extends CountPage {
             printer_end_page($handle);
         }
 
-
-        printer_delete_pen($pen);
-
+        //printer_delete_pen($pen);
         printer_delete_font($font);
     }
 }
@@ -870,6 +929,14 @@ class TimeFooterPage extends FooterPage {
 
 class TimeHSTFooterPage extends FooterPage {
     public function printPage($handle) {
+
+        $adminModel = ClassRegistry::init('Admin');
+        $query = array(
+            'conditions' => array('is_super_admin' => 'N'),
+            'recursive' => -1, 'fields' => array('hst_number'),
+        );
+        $data = $adminModel->find('first',$query);
+    	
         printer_start_page($handle);
 
         date_default_timezone_set("America/Toronto");
@@ -883,11 +950,11 @@ class TimeHSTFooterPage extends FooterPage {
         $print_y += 10;
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        if (PrintConfig::$hasHstNumber) {
-            printer_draw_text($handle, "Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
+        if($data['Admin']['hst_number'] != "") {
+            printer_draw_text($handle, "Hst Number: " . $data['Admin']['hst_number'], 80, $print_y);
             $print_y += 30;
         }
-        printer_draw_text($handle, $date_time, 80, $print_y);
+        printer_draw_text($handle, $date_time, 70, $print_y);
 
         printer_delete_font($font);
         printer_end_page($handle);
@@ -895,9 +962,7 @@ class TimeHSTFooterPage extends FooterPage {
 }
 
 
-/**
-*
-*/
+
 class BasicDoc
 {
     private $pages;

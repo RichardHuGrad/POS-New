@@ -91,8 +91,8 @@ $(document).ready(function() {
                                 <!-- location panel goes here -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Street</label>
-                                        <?php echo $this->Form->input('street', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                        <label class="control-label">Address</label>
+                                        <?php echo $this->Form->input('address', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -110,7 +110,7 @@ $(document).ready(function() {
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Zip code</label>
-                                        <?php echo $this->Form->input('zip_code', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                        <?php echo $this->Form->input('zipcode', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
                                 <!-- location end here -->
@@ -205,6 +205,14 @@ $(document).ready(function() {
                                     <div class="form-group">
                                         <label class="control-label">Tax <span class="symbol required"></span></label>
                                         <?php echo $this->Form->input('tax', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">HST Number</label>
+                                        <?php echo $this->Form->input('hst_number', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>

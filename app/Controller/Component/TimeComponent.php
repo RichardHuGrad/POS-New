@@ -6,33 +6,38 @@ class TimeComponent extends Component {
     public function getTimelineArray($type) {
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
-        $timeline = strtotime(date("Y-m-d 11:00:00"));
+        $timeline = strtotime(date("Y-m-d 10:00:00"));
         $nowtm = time();
         if ($timeline > $nowtm) {
             // before 11 am
-            $timeline -= 86400;
+            $timeline -= 86400;  //one day before
         }
 
         if ($type == "today") {
+        	
             // $timeline = $this->getTimeline();
             $tm11 = $timeline;
-            $tm17 = $timeline + 3600 * 6;
-            $tm23 = $timeline + 3600 * 12;
-            $tm04 = $timeline + 3600 * 17;
+            $tm17 = $timeline + 3600 * 6;    // 6  hours
+            $tm23 = $timeline + 3600 * 12;   // 12 hours
+            //$tm04 = $timeline + 3600 * 17;
+            $tm04 = $timeline + 86400 - 60;   //from 10:00 to second day 09:59
 
             return array($tm11, $tm17, $tm23, $tm04);
+            
         } else if ($type == "yesterday") {
             $timeline -= 86400;
             $tm11 = $timeline;
             $tm17 = $timeline + 3600 * 6;
             $tm23 = $timeline + 3600 * 12;
-            $tm04 = $timeline + 3600 * 17;
+            //$tm04 = $timeline + 3600 * 17;
+            $tm04 = $timeline + 86400 - 60;   //from 10:00 to second day 09:59
 
             return array($tm11, $tm17, $tm23, $tm04);
+            
         } else if ($type == "month") {
             date_default_timezone_set("America/Toronto");
             $date_time = date("l M d Y h:i:s A");
-            $timeline = strtotime(date("Y-m-01 11:00:00"));
+            $timeline = strtotime(date("Y-m-01 10:00:00"));
             $nowtm = time();
 
             return array($timeline, $nowtm);
