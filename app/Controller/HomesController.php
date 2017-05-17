@@ -153,10 +153,10 @@ class HomesController extends AppController {
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N')
                 )
         );
-        $dinein_tables_status  = $tables_status['D'];
-        $takeway_tables_status = $tables_status['T'];
-        $waiting_tables_status = $tables_status['W'];
-        $online_tables_status  = $tables_status['L'];
+        $dinein_tables_status  = @$tables_status['D'];
+        $takeway_tables_status = @$tables_status['T'];
+        $waiting_tables_status = @$tables_status['W'];
+        $online_tables_status  = @$tables_status['L'];
 /*
         $dinein_tables_status = $this->Order->find("list", array(
             'fields' => array('Order.table_no', 'Order.table_status'),
