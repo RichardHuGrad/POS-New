@@ -74,7 +74,7 @@ class SplitController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
-    	$this->loadModel('Cousine');
+    	  $this->loadModel('Cousine');
         $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id')");
 
 

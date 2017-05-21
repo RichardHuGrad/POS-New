@@ -10,7 +10,7 @@ App::uses('OpencartController', 'Controller');
 class HomesController extends AppController {
     public $fontStr1 = "simsun";
 
-    public $components = array('Paginator');
+    public $components = array('Paginator','OrderHandler');
 
     /**
      * beforeFilter
@@ -773,6 +773,12 @@ class HomesController extends AppController {
         $this->layout = false;
         $this->autoRender = NULL;
 
+		    $res = $this->OrderHandler->makeavailable(array(
+		    	'order_no' => $this->params['named']['order'],
+		    	'cashier_id' => $this->Session->read('Front.id')
+		    ));
+
+/*
         // get all params
         $order_no = $this->params['named']['order'];
 
@@ -787,7 +793,6 @@ class HomesController extends AppController {
                    )
            ));
         
-
         $logArr = array('cashier_id' => $this->Session->read('Front.id'), 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'Void(makeavailable)', 'logs' => json_encode($order_detail));
         $this->Log->save($logArr);
 
@@ -798,8 +803,13 @@ class HomesController extends AppController {
         
         // update order
         $this->Order->updateAll(array('table_status'=>"'V'",'is_completed' => "'Y'"), array('Order.order_no' => $order_no));
+*/      
+        if($res['ret'] == 1){
+        	$this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
+        }else{
+        	$this->Session->setFlash($res['message'], 'error');
+        }
         
-        $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
         return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     }
 
@@ -824,6 +834,7 @@ class HomesController extends AppController {
         }
         */
 
+        //app\View\Pay\index.ctp 付款界面move_order时有该参数
         $ref = @$this->params['named']['ref'];
         
         $this->loadModel('Order'); 

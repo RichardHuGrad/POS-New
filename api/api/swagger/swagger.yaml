@@ -702,6 +702,10 @@ paths:
                   description: the number of waiting tables
                   type: integer
                   format: int32
+                online:
+                  description: the number of online tables
+                  type: integer
+                  format: int32
         default:
           $ref: "#/responses/MissingArgumentError"
 

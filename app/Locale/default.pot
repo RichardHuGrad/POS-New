@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-04-13 05:07+0800\n"
+"POT-Creation-Date: 2017-05-19 05:41+0800\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,15 +14,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/HomesController.php:85
+#: Controller/HomesController.php:87
 msgid "%s you have successfully logged out"
 msgstr ""
 
 #: View/Elements/footer.ctp:6
+#: View/Homes/dashboard.ctp:495
 msgid "On-going"
 msgstr ""
 
 #: View/Elements/footer.ctp:11
+#: View/Homes/dashboard.ctp:499
 msgid "Available"
 msgstr ""
 
@@ -44,96 +46,122 @@ msgid "Order Search"
 msgstr ""
 
 #: View/Elements/navbar.ctp:44
-#: View/Homes/dashboard.ctp:56;203;304
+#: View/Homes/dashboard.ctp:57;201;310;415
 msgid "Order"
 msgstr ""
 
-#: View/Elements/navbar.ctp:52
+#: View/Elements/navbar.ctp:53
 msgid "Languages"
 msgstr ""
 
-#: View/Elements/navbar.ctp:69
+#: View/Elements/navbar.ctp:70
 #: View/Homes/index.ctp:21
 msgid "Checkin"
 msgstr ""
 
-#: View/Elements/navbar.ctp:73
+#: View/Elements/navbar.ctp:74
 msgid "Checkout"
 msgstr ""
 
-#: View/Elements/navbar.ctp:80
+#: View/Elements/navbar.ctp:81
 #: View/Order/index.ctp:25
 msgid "Logout"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:55
+#: View/Homes/dashboard.ctp:56
 msgid "Dine In"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:59;210;312
+#: View/Homes/dashboard.ctp:60;204;314;418
 #: View/Pay/index.ctp:70
 msgid "Change Table"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:65;218;320
+#: View/Homes/dashboard.ctp:66;213;323;427
 #: View/Pay/index.ctp:74
 msgid "DINE IN"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:76;228;330
+#: View/Homes/dashboard.ctp:77;223;333;437
 #: View/Pay/index.ctp:81
 msgid "TAKE OUT"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:86;238;340
+#: View/Homes/dashboard.ctp:87;233;343;447
 #: View/Pay/index.ctp:88
 msgid "Delivery"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:95;252;354
-#: View/Order/index.ctp:127
+#: View/Homes/dashboard.ctp:97;248;358;462
+#: View/Order/index.ctp:139
 msgid "Pay"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:97;253
+#: View/Homes/dashboard.ctp:99;250
 msgid "Clear Table"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:106;115
+#: View/Homes/dashboard.ctp:103;111
 msgid "Merge Bill"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:145
+#: View/Homes/dashboard.ctp:137
 msgid "Split Bill"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:149
+#: View/Homes/dashboard.ctp:142;253;363;464
+msgid "CloseOrder"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:145;256
 msgid "History"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:153
+#: View/Homes/dashboard.ctp:148;259;367
+msgid "Receipt"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:154
 msgid "Dine"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:182
+#: View/Homes/dashboard.ctp:184
 msgid "Takeout Tables"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:197
-#: View/Order/index.ctp:132
+#: View/Homes/dashboard.ctp:198
+#: View/Order/index.ctp:130
 msgid "Takeout"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:285;298
+#: View/Homes/dashboard.ctp:296;308
 msgid "Delivery List"
 msgstr ""
 
-#: View/Homes/dashboard.ctp:355
+#: View/Homes/dashboard.ctp:360;466
 #: View/Merge/index.ctp:364
-#: View/Order/index.ctp:178
+#: View/Order/index.ctp:181
 #: View/Order/summarypanel.ctp:26
 #: View/Pay/index.ctp:358
 msgid "Clear"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:397
+msgid "Online"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:409
+msgid "Online List"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:503
+#: View/Merge/index.ctp:44
+#: View/Pay/index.ctp:64
+msgid "Paid"
+msgstr ""
+
+#: View/Homes/dashboard.ctp:507
+msgid "Printed"
 msgstr ""
 
 #: View/Homes/forgot_password.ctp:11
@@ -183,11 +211,6 @@ msgstr ""
 msgid "merge"
 msgstr ""
 
-#: View/Merge/index.ctp:44
-#: View/Pay/index.ctp:64
-msgid "Paid"
-msgstr ""
-
 #: View/Merge/index.ctp:48
 #: View/Pay/index.ctp:100
 msgid "Print Receipt"
@@ -218,14 +241,14 @@ msgstr ""
 
 #: View/Merge/index.ctp:207;761
 #: View/Pay/index.ctp:232
-#: View/Report/index.ctp:54
+#: View/Report/index.ctp:57
 msgid "Tax"
 msgstr ""
 
 #: View/Merge/index.ctp:234;765
 #: View/Order/summarypanel.ctp:126
 #: View/Pay/index.ctp:240
-#: View/Report/index.ctp:55
+#: View/Report/index.ctp:58
 msgid "Total"
 msgstr ""
 
@@ -325,51 +348,51 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: View/Order/index.ctp:126
-msgid "Send to Kitchen"
-msgstr ""
-
-#: View/Order/index.ctp:128
-msgid "CHange Taste"
-msgstr ""
-
-#: View/Order/index.ctp:129
+#: View/Order/index.ctp:127
 msgid "Batch Add Taste"
 msgstr ""
 
-#: View/Order/index.ctp:130
+#: View/Order/index.ctp:128
 msgid "Delete"
 msgstr ""
 
-#: View/Order/index.ctp:131
+#: View/Order/index.ctp:129
 msgid "Change Quantity"
 msgstr ""
 
-#: View/Order/index.ctp:133
+#: View/Order/index.ctp:131
 msgid "Urge"
 msgstr ""
 
-#: View/Order/index.ctp:134
+#: View/Order/index.ctp:132
 msgid "Change Price"
 msgstr ""
 
-#: View/Order/index.ctp:137
+#: View/Order/index.ctp:135
 msgid "Edit Phone"
 msgstr ""
 
-#: View/Order/index.ctp:158
+#: View/Order/index.ctp:138
+msgid "Send to Kitchen"
+msgstr ""
+
+#: View/Order/index.ctp:140
+msgid "CHange Taste"
+msgstr ""
+
+#: View/Order/index.ctp:161
 msgid "Taste"
 msgstr ""
 
-#: View/Order/index.ctp:179
+#: View/Order/index.ctp:182
 msgid "Save"
 msgstr ""
 
-#: View/Order/index.ctp:205
+#: View/Order/index.ctp:208
 msgid "Selected Taste"
 msgstr ""
 
-#: View/Order/index.ctp:211
+#: View/Order/index.ctp:214
 msgid "Selected Combo"
 msgstr ""
 
@@ -425,19 +448,19 @@ msgstr ""
 msgid "Print Sales Items"
 msgstr ""
 
-#: View/Report/index.ctp:56
-msgid "Received Total"
-msgstr ""
-
-#: View/Report/index.ctp:57
+#: View/Report/index.ctp:54
 msgid "Received Cash"
 msgstr ""
 
-#: View/Report/index.ctp:58
+#: View/Report/index.ctp:55
 msgid "Received Card"
 msgstr ""
 
-#: View/Report/index.ctp:59
+#: View/Report/index.ctp:56
 msgid "Tips by Card"
+msgstr ""
+
+#: View/Report/index.ctp:59
+msgid "Received Total"
 msgstr ""
 

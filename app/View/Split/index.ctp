@@ -339,7 +339,7 @@ echo $this->fetch('script');
         			}
         		}
 
-                var tempSuborders
+            var tempSuborders
 
         		$.ajax({
         			url: "<?php echo $this->Html->url(array('controller' => 'split', 'action' => 'getCookie')); ?>",
@@ -477,7 +477,7 @@ echo $this->fetch('script');
         console.log(orderCookie)
         console.log(subordersCookie)
         KVStorage.set(orderCookie, order, { expires: 3, path: '' });
-		KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
+		    KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
     }
 
 	function persistentOrder(callback) {
@@ -690,9 +690,6 @@ echo $this->fetch('script');
 			callback();
 		}
 	}
-
-
-
 
 
 	function drawUI(callback) {

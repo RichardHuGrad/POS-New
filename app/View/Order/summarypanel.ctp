@@ -29,7 +29,7 @@
 
 <div class="bgwhite clearfix">
     <?php if(empty($Order_detail) OR !$Order_detail['Order']['discount_value']) { ?>
-        <div class="padding10 adddoscount <?php if($Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
+        <div class="padding10 adddoscount <?php if(@$Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
             <?php echo __('Add Discount'); ?>  <i class="fa fa-plus-circle pull-right add-discount <?php
 if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
     ?>" aria-hidden="true"></i>

@@ -37,13 +37,13 @@ foreach ($Extrascategory_data as $categories){
                                 <?php
                                     echo $this->Form->input('cousine_id', array('type' => 'hidden', 'value'=>$cousine_id, 'required' => false));
                                 ?>
-
+                             <!--
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <?php echo $this->Form->input('type', array('options' => array('T' => 'Topping', 'E' => 'Extra'), 'type' => 'select', 'label' => 'Type <span class="symbol required"></span>', 'div' => false, 'required' => true, 'class' => 'form-control validate[required]', 'empty' => 'Select')); ?>
                                     </div>
                                 </div>
-
+                             -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Extra Name (EN)<span class="symbol required"></span></label>

@@ -14,6 +14,7 @@ class OrderHandlerComponent extends Component {
         $this->Order = ClassRegistry::init('Order');
         $this->OrderLog  = ClassRegistry::init('OrderLog');
         $this->OrderItem = ClassRegistry::init('OrderItem');
+        $this->Log       = ClassRegistry::init('Log');
         $this->Category  = ClassRegistry::init('Category');
         $this->Cashier   = ClassRegistry::init('Cashier');
         $this->Cousine   = ClassRegistry::init('Cousine');
@@ -437,19 +438,19 @@ class OrderHandlerComponent extends Component {
                  'order_no' => $order_no
               )
         ));
-        
-        
-        $this->loadModel('Log');
-        $logArr = array('cashier_id' => $order_detail['Order']['counter_id'], 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'delete(makeavailable)', 'logs' => json_encode($order_detail));
-        $this->Log->save($logArr);
-
                 
-        $this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');
 
-        $ret = $this->Order->deleteAll(array('Order.order_no' => $order_no), false);
+        // update order
+        try{
+          $this->Order->updateAll(array('table_status'=>"'V'",'is_completed' => "'Y'"), array('Order.order_no' => $order_no));
+        }catch(Exception $e){
+        	return array('ret' => 0, 'message' => $e->getMessage() );
+        }
+
+        $logArr = array('cashier_id' => $args['cashier_id'], 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'Void(makeavailable)', 'logs' => json_encode($order_detail));
+        $this->Log->save($logArr);
         
-        if($ret!==false) return array('ret' => 1, 'message' => 'Complete!');
-        else return array('ret' => 0, 'message' => 'Fail to delete order!');        
+        return array('ret' => 1, 'message' => 'Complete!');             
     }
 
 

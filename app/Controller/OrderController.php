@@ -264,7 +264,7 @@ class OrderController extends AppController {
 
 
         if (!empty($Order_detail['Order']['id'])) {
-            $this->Order->updateBillInfo($Order_detail['Order']['id']);
+           //$this->Order->updateBillInfo($Order_detail['Order']['id']);
         }
         // print_r($Order_detail);
         // print_r($cashier_detail);

@@ -28,7 +28,8 @@ class TablesComponent extends Component {
 									'fields' => array(
 										'Admin.no_of_tables',
 										'Admin.no_of_takeout_tables',
-										'Admin.no_of_waiting_tables'
+										'Admin.no_of_waiting_tables',
+										'Admin.no_of_online_tables'
 									),
 									'conditions' => array(
 										'Admin.id' => $args['restaurant_id']
@@ -37,7 +38,8 @@ class TablesComponent extends Component {
 		$res = array(
 					'dineIn'  => $tableDetail['Admin']['no_of_tables'],
 					'takeout' => $tableDetail['Admin']['no_of_takeout_tables'],
-					'waiting' => $tableDetail['Admin']['no_of_waiting_tables']);
+					'waiting' => $tableDetail['Admin']['no_of_waiting_tables'],
+					'online'  => $tableDetail['Admin']['no_of_online_tables']);
 		return $res;
 	}
 

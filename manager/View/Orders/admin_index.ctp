@@ -298,15 +298,15 @@ $registered_till = @$search['registered_till'];
                             </table>
 
 
-                            <div class="col-md-6" style="margin-top: 22px;">
+                            <div class="col-md-8" style="margin-top: 22px;">
                                 <?php 
                                 if('Y' == $is_super_admin){
                                 ?>
-                                <div class="pull-left advance_panel col-md-8">
+                                <div class="pull-left advance_panel col-md-12">
                                     <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
                                         <label id="select_all">Select All</label>
                                     </div>  
-                                    <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
+                                    <div class="checkbox col-md-5" style="margin-left:0px; margin-top:0px">
                                         <label  id="unselect_all"> Unselect All</label>
                                     </div>          
                                     <!-- <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
@@ -320,7 +320,7 @@ $registered_till = @$search['registered_till'];
                             <?php }?>
 
                             </div>
-                            <div class="col-md-6" style="margin-top: 22px;">
+                            <div class="col-md-4" style="margin-top: 22px;">
                                 <span class="btn btn-primary btn-wide pull-left margin-right-10">Total: $<?php echo number_format($total, 2); ?></span>
                                 <span class="btn btn-primary btn-wide pull-left margin-right-10">Total Tips: $<?php echo number_format($tips, 2); ?></span>
                             </div>

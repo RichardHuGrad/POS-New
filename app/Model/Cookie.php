@@ -7,7 +7,7 @@ class Cookie extends AppModel {
 
     public function setCookie($key, $value) {
 
-		// $this->removeCookie($key);
+		    //$this->removeCookie($key);
         $data = $this->find('first', array(
     			'conditions' => array(
     				'key' => $key
