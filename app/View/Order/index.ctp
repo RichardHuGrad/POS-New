@@ -441,6 +441,14 @@ echo $this->fetch('script');
         $('#edit-phone-component-modal').on('shown.bs.modal', function () {
             $( "input[name='phone']").focus();
         })  
+
+        $('#change-price-component-modal').on('shown.bs.modal', function () {
+            $( "input[type='number']").focus();
+        })  
+
+        $('#change-quantity-component-modal').on('shown.bs.modal', function () {
+            $( "input[name='quantity']").focus();
+        })  
            	
 
         $(".search-clear").click(function () {
@@ -1197,18 +1205,22 @@ echo $this->fetch('script');
             return false;
         }
 
-        //popup an input for new price
         $('#change-quantity-component-modal').modal('hide').remove();
         var changeQuantityComponent = ChangeQuantityComponent.init();
         $('body').append(changeQuantityComponent);
     });
 
     $('body').on('click', '#change-quantity-component-save', function() {
-        var selected_item_id_list = getSelectedItem();
 
         var quantity = $('input[name="quantity"]').val();
+        if(quantity == ''){
+        	alert("Please input quantity!");
+        	$('input[name="quantity"]').focus();
+        	return;
+        }
         quantity = Math.round(parseInt(quantity));
-        console.log(quantity);
+    	  
+        var selected_item_id_list = getSelectedItem();
 
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'changeQuantity')); ?>",

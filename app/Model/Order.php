@@ -180,7 +180,7 @@ class Order extends AppModel {
             $Orders = $this->find("all", array(
                 'recursive' => -1,
                 'fields' =>  array('Order.order_no', 'Order.cashier_id', 'Order.table_no', 'Order.total', 'Order.paid', 'Order.cash_val', 'Order.card_val', 'Order.tax_amount', 'Order.discount_value', 'Order.percent_discount','Order.paid_by', 'Order.tip','Order.tip_paid_by', 'Order.change'),
-                'conditions' => array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $timeline_arr[$i]), 'Order.created <' => date('c', $timeline_arr[$i + 1]))
+                'conditions' => array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.order_type <>' => 'L', 'Order.created >=' => date('c', $timeline_arr[$i]), 'Order.created <' => date('c', $timeline_arr[$i + 1]))
 
                 ));
 

@@ -43,10 +43,8 @@ class OrderController extends AppController {
         $this->Category->virtualFields['zh_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'zh'";
 
         $records = $this->Category->find("all", array(
-            // 'fields'=>array('Admin.table_size', 'Admin.takeout_table_size', 'Admin.waiting_table_size'),
             'conditions' => array('Category.status' => 'A')
-                )
-        );
+        ));
 
         // get popular dishes
         $this->loadModel('Cousine');
@@ -81,13 +79,7 @@ class OrderController extends AppController {
         $this->loadModel('Extra');
         $taste = $this->Extra->find('all', array(
                 'conditions'=> array('Extra.category_id' => 1)
-            ));
-
-
-        //Modified by Yishou Liao @ Dec 09 2016
-        //$order_id = $this->Order->find('all',array('fields' => 'Max(id) as max_id'));
-        //$order_no = str_pad(($order_id[0][0]['max_id']+1), 5, rand(98753, 87563), STR_PAD_LEFT);
-        //End @ Dec 09 2016
+        ));
 
         $query_str = "SELECT extras.* FROM `extras`";
 
@@ -101,16 +93,17 @@ class OrderController extends AppController {
         $all_extra_categories = $this->Extra->query($query_str);
         $extra_categories= array();
         foreach ($all_extra_categories as $category){
-            array_push($extra_categories, $category['extrascategories']);
+          array_push($extra_categories, $category['extrascategories']);
         }
 
 
-        if (!empty($Order_detail['Order']['id'])) {
-            $this->Order->updateBillInfo($Order_detail['Order']['id']);
-        }
-        // $this->Order->updateBillInfo($)
+        //if(!empty($Order_detail['Order']['id'])) {
+        //  $this->Order->updateBillInfo($Order_detail['Order']['id']);
+        //}
+        
         // print_r ($Order_detail);
         // print_r($all_extras);
+        
         $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
 
         // print_r($tastes);
@@ -243,7 +236,6 @@ class OrderController extends AppController {
         $this->loadModel('OrderItem');
         $this->loadModel('Order');
 
-
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
@@ -258,7 +250,7 @@ class OrderController extends AppController {
                 'Order.is_completed' => 'N',
                 'Order.order_type' => $type
             )
-                )
+          )
         );
         $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
 

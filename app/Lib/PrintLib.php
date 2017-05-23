@@ -684,12 +684,14 @@ abstract class CountPage {
     abstract function printPage($handle);
 
     public function format3Columns($handle, $str1, $str2, $num,$font_bold=false) {
+    	
         printer_start_page($handle);
         
         if($font_bold == true){
-        	$font =printer_create_font("Arial", 32, 14, 1200, false, false, false, 0);
+        	$font =printer_create_font("Arial", 35, 15, 1200, false, false, false, 0);
         }else{
-        	$font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
+        	//$font = printer_create_font('simsun', 28, 11, PRINTER_FW_MEDIUM, false, false, false, 0);        	
+        	$font = printer_create_font('simsun', 28, 11, 570, false, false, false, 0);
         }
         
         printer_select_font($handle, $font);
@@ -779,7 +781,7 @@ class ReceiptPage extends CountPage {
 
         $this->format3Columns($handle, "Total", "总计:", $total,true);
 
-        $this->format3Columns($handle, "Paid", "付款:", $paid);
+        $this->format3Columns($handle, "Paid", "付款({$bill_info['paid_by']}):", $paid);
         $this->format3Columns($handle, "Change", "找零:", $change);
     }
 }

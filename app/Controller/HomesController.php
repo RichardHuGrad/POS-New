@@ -562,14 +562,15 @@ class HomesController extends AppController {
 
         $this->loadModel('Order');
         $this->loadModel('Log');
-
+/*
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.id' => $order_id,
         	'Order.table_no' => $table_no,
             'Order.is_completed' => 'Y',
             'Order.order_type' => 'D',
-            'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
-        );
+            'Order.created >=' => date("Ymd")
+        );  */
+        $conditions = array('Order.id' => $order_id);  
 
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
@@ -592,6 +593,14 @@ class HomesController extends AppController {
 
         $logs = '';
         $data = array();
+
+        if ($cash_val > 0 and $card_val > 0)
+            $data['paid_by'] = "MIXED";
+        elseif ($card_val > 0)
+            $data['paid_by'] = "CARD";
+        elseif ($cash_val > 0)
+            $data['paid_by'] = "CASH";
+        
         if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) {
         	$logs .= 'subtotal[' . $subtotal . ' <= ' . $Order_detail['Order']['subtotal'] . "]";
         	$data['subtotal'] = $subtotal;
@@ -823,6 +832,10 @@ class HomesController extends AppController {
         $type = @$this->params['named']['type'];
         $table = @$this->params['named']['table'];
         $order_no = @$this->params['named']['order_no'];
+
+		    $query = $this->OrderHandler->moveOrder(
+		       array( 'type'  => $type, 'table' => $table, 'order_no' => $order_no
+		    ));
         
         /* 换桌时不修改订单号
         //modify order_no with new table and type
@@ -836,7 +849,9 @@ class HomesController extends AppController {
 
         //app\View\Pay\index.ctp 付款界面move_order时有该参数
         $ref = @$this->params['named']['ref'];
-        
+
+		    
+        /*
         $this->loadModel('Order'); 
           
         // get old order infomation       
@@ -861,7 +876,7 @@ class HomesController extends AppController {
         // update order to database 
         // need to quoto the string value(only field new value,not condition)
         $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
-                
+        */        
 
         $this->Session->setFlash('Order table successfully changed 成功换桌.', 'success');
         if ($ref)

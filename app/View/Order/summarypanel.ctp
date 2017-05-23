@@ -215,7 +215,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                                 selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
                                 price = '<?php echo $value['price'] ?>',
                                 extras_amount = '<?php echo $value['extras_amount'] ?>',
-                                quantity = '<?php echo $value['qty'] > 1 ? intval($value['qty']) : 1 ?>',
+                                quantity = '<?php echo $value['qty'] ?>',
                                 order_item_id = '<?php echo $value['id'] ?>',
                                 state = "keep",
                                 shared_suborders = null,
