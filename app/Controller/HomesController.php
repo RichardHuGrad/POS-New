@@ -833,7 +833,7 @@ class HomesController extends AppController {
         $table = @$this->params['named']['table'];
         $order_no = @$this->params['named']['order_no'];
 
-		    $query = $this->OrderHandler->moveOrder(
+		    $data = $this->OrderHandler->moveOrder(
 		       array( 'type'  => $type, 'table' => $table, 'order_no' => $order_no
 		    ));
         

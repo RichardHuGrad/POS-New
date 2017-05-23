@@ -66,6 +66,41 @@ paths:
                   type: string
         default:
           $ref: "#/responses/MissingArgumentError"
+          
+  /apihelper/isAdminPassword:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: verify admin password
+      description: |
+        verify if the password is admin password
+      parameters:
+        - $ref: "#/parameters/accessToken"
+        - name: password
+          in: formData
+          description: the password of admin
+          required: true
+          type: string
+          format: password
+      tags:
+        - Access
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 is admin, 0 is not admin.
+                  message:
+                     type: string
+        default:
+          $ref: "#/responses/MissingArgumentError"
+          
 
   /print/printPayReceipt:
     post:
@@ -449,8 +484,14 @@ paths:
           schema:
             type: object
             properties:
-              Order:
-                $ref: "#/definitions/Order"
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                  message:
+                     type: string
+                
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -474,8 +515,13 @@ paths:
           schema:
             type: object
             properties:
-              Order:
-                $ref: "#/definitions/Order"
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -1000,95 +1046,6 @@ paths:
                   $ref: "#/definitions/ExtraCategory"
         default:
           $ref: "#/responses/MissingArgumentError"
-
-  # /tables/getAllTableStatus:
-  #   post:
-  #     consumes:
-  #       - application/x-www-form-urlencoded
-  #     summary: get infomation of extra
-  #     description: |
-  #       get all cousines information
-  #     parameters:
-  #       - $ref: "#/parameters/accessToken"
-  #     tags:
-  #       - Table
-  #     responses:
-  #       200:
-  #         description: D for dine in, T for takeout, W for waiting
-  #         # schema:
-  #         #   properties:
-  #         #     access_token:
-  #         #       type: string
-  #         #       description: the access token of cashier
-  #       default:
-  #         $ref: "#/responses/MissingArgumentError"
-
-  # /tables/getAllDineinTableStatus:
-  #   post:
-  #     consumes:
-  #       - application/x-www-form-urlencoded
-  #     summary: get infomation of extra
-  #     description: |
-  #       get all cousines information
-  #     parameters:
-  #       - $ref: "#/parameters/accessToken"
-  #     tags:
-  #       - Table
-  #     responses:
-  #       200:
-  #         description: success
-  #         # schema:
-  #         #   properties:
-  #         #     access_token:
-  #         #       type: string
-  #         #       description: the access token of cashier
-  #       default:
-  #         $ref: "#/responses/MissingArgumentError"
-
-  # /tables/getAllTakeoutTableStatus:
-  #   post:
-  #     consumes:
-  #       - application/x-www-form-urlencoded
-  #     summary: get infomation of extra
-  #     description: |
-  #       get all cousines information
-  #     parameters:
-  #       - $ref: "#/parameters/accessToken"
-  #     tags:
-  #       - Table
-  #     responses:
-  #       200:
-  #         description: success
-  #         # schema:
-  #         #   properties:
-  #         #     access_token:
-  #         #       type: string
-  #         #       description: the access token of cashier
-  #       default:
-  #         $ref: "#/responses/MissingArgumentError"
-
-  # /tables/getAllWaitingTableStatus:
-  #   post:
-  #     consumes:
-  #       - application/x-www-form-urlencoded
-  #     summary: get infomation of extra
-  #     description: |
-  #       get all cousines information
-  #     parameters:
-  #       - $ref: "#/parameters/accessToken"
-  #     tags:
-  #       - Table
-  #     responses:
-  #       200:
-  #         description: success
-  #         # schema:
-  #         #   properties:
-  #         #     access_token:
-  #         #       type: string
-  #         #       description: the access token of cashier
-  #       default:
-  #         $ref: "#/responses/MissingArgumentError"
-
 
 
 

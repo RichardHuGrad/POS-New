@@ -2,7 +2,7 @@
 App::uses('Component', 'Controller');
 App::uses('ApiHelperComponent', 'Component');
 App::uses('PrintComponent', 'Controller/Component');
-
+App::uses('PrintLib', 'Lib');
 
 class OrderHandlerComponent extends Component {
     public $status = 'success';
@@ -480,12 +480,11 @@ class OrderHandlerComponent extends Component {
 	  	*/	  
 	  		
       // update new table information to database 	  					
-      $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
-    
-	  	return $this->Order->find('first', array(
-	  					'conditions' => array('Order.order_no' => $order_no)
-	    ));
-	    
+      $ret = $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
+
+      if($ret) return array('ret' => 1, 'message' => 'Move successfully.');
+      else return array('ret' => 0, 'message' => 'Fail to move order!');        
+    	    
 	  }
     
     
