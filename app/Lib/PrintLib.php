@@ -49,7 +49,6 @@ class PrintLib {
         }
 
 
-
         $headerPage = new KitchenHeaderPage($order_no, $table_no, $table_type);
         $itemsPage = new KitchenItemsPage($item_detail, $table_type);
         $footerPage = new TimeFooterPage();
@@ -107,6 +106,10 @@ class PrintLib {
     }
 
     public function printKitchenChangeTable($order_no, $table_no, $table_type, $old_table,$old_type, $printer_name, $print_zh=true,$phone='') {
+       
+        if (!function_exists('printer_open')) {
+            return "function printer_open() not exists in server!";
+        }
 
         $handle = printer_open($printer_name);
         printer_start_doc($handle, "Doc");

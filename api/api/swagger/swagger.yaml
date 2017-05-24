@@ -67,7 +67,7 @@ paths:
         default:
           $ref: "#/responses/MissingArgumentError"
           
-  /apihelper/isAdminPassword:
+  /access/isAdminPassword:
     post:
       consumes:
         - application/x-www-form-urlencoded
@@ -96,6 +96,70 @@ paths:
                   ret:
                      type: number
                      description: 1 is admin, 0 is not admin.
+                  message:
+                     type: string
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /access/checkin:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      description: |
+        checkin for attendance record
+      parameters:
+        - $ref: "#/parameters/accessToken"
+        - name: userid
+          in: formData
+          description: the userid
+          required: true
+          type: string
+      tags:
+        - Access
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /access/checkout:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      description: |
+        checkout for attendance record
+      parameters:
+        - $ref: "#/parameters/accessToken"
+        - name: userid
+          in: formData
+          description: the userid
+          required: true
+          type: string
+      tags:
+        - Access
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
                   message:
                      type: string
         default:

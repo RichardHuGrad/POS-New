@@ -2,6 +2,8 @@
 App::uses('Component', 'Controller');
 App::uses('Security', 'Utility');
 App::uses('ClassRegistry', 'Utility');
+App::uses('ApiHelperComponent', 'Component');
+
 
 class AccessComponent extends Component {
 
@@ -182,4 +184,96 @@ class AccessComponent extends Component {
     $this->status = "failure";
     return false;
   }
+
+
+  //verify admin password
+  public function isAdminPassword($args) {
+  	
+      ApiHelperComponent::verifyRequiredParams($args, ['password']);
+
+      $Admin = ClassRegistry::init('Admin');
+
+      $password     = md5($args['password']);
+      $ret = $Admin->find("first", array(
+          'fields' => array('Admin.id'),
+          'conditions' => array('Admin.is_super_admin'=>'Y','Admin.password' => $password)
+      ));
+
+      if (empty($ret)) {
+         return array('ret' => 0, 'message' => 'Not admin password');
+      } else {
+         return array('ret' => 1, 'message' => 'It is admin password');
+      }
+      
+  }
+
+
+  public function checkin($args) {
+  	
+      ApiHelperComponent::verifyRequiredParams($args, ['userid']);
+
+      $Cashier   = ClassRegistry::init('Cashier');
+      $Attendance= ClassRegistry::init('Attendance');
+
+      $userid     = $args['userid'];
+      if(empty($Cashier->findByUserid($userid))){
+      	return array('ret' => 0, 'message' => "Userid is not valid!");
+      }
+
+      
+      $time    = date('Y-m-d H:i:s');
+      $day     = substr ($time , 0, 10);
+      $checkin = substr ($time , -8); 
+              
+      $data = array();
+      $data['Attendance']['userid']   = $userid;
+      $data['Attendance']['day']      = $day;
+      $data['Attendance']['checkin']  = $checkin;
+
+      $checkin = $Attendance->field('checkin', array('userid' => $userid,'day' => $day,'checkout' => ''));
+      if($checkin != ""){
+      	return array('ret' => 0, 'message' => "You already check in at $checkin, Please check out first!");
+      }
+      
+      $Attendance->save($data, false);
+      
+      return array('ret' => 1, 'message' => 'Successfully!');
+  }
+
+
+  public function checkout($args) {
+  	
+      ApiHelperComponent::verifyRequiredParams($args, ['userid']);
+
+      $Cashier   = ClassRegistry::init('Cashier');
+      $Attendance= ClassRegistry::init('Attendance');
+
+      $userid     = $args['userid'];
+      if(empty($Cashier->findByUserid($userid))){
+      	return array('ret' => 0, 'message' => "Userid is not valid!");
+      }
+
+      $time    = date('Y-m-d H:i:s');
+      $day     = substr ($time , 0, 10);
+      $checkout = substr ($time , -8); 
+              
+      $data = array();
+      $data['Attendance']['userid']    = $userid;
+      $data['Attendance']['day']       = $day;
+      $data['Attendance']['checkout'] = $checkout;
+      
+      $id = $Attendance->field('id', array('userid' => $userid,'day' => $day,'checkout' => ''));
+      if($id != ""){
+      	$data['Attendance']['id']  = $id;
+      }else{
+      	return array('ret' => 0, 'message' => "Please checkin first!");
+      }
+      
+      $Attendance->save($data, false);
+    
+      return array('ret' => 1, 'message' => 'Successfully!');
+  }
+
+ 
+  
 }

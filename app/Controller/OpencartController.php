@@ -206,7 +206,12 @@ class OpencartController extends AppController {
     }
     
     $count = count($orders);
-    exit("Complete, total orders: $count, already exists orders: $already_exists!");
+    //exit("Complete, total orders: $count, already exists orders: $already_exists!");
+    
+    $this->Session->setFlash("Complete, get online orders: $count, already exists orders: $already_exists!", 'success');
+    
+    return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+    
     
 	}
 

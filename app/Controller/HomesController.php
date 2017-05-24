@@ -10,7 +10,7 @@ App::uses('OpencartController', 'Controller');
 class HomesController extends AppController {
     public $fontStr1 = "simsun";
 
-    public $components = array('Paginator','OrderHandler');
+    public $components = array('Paginator','OrderHandler','Access');
 
     /**
      * beforeFilter
@@ -963,48 +963,29 @@ class HomesController extends AppController {
 
     public function checkin() {
 
-        // get all params
-        $userid = $this->data['userid'];
-
         $this->layout = false;
         $this->autoRender = NULL;
-        
-        $this->loadModel('Cashier');
-        if(empty($this->Cashier->findByUserid($userid))){
-        	return "Userid is not valid!";
-        }
 
-        $this->loadModel('Attendance');
-        
-        $time    = date('Y-m-d H:i:s');
-        $day     = substr ($time , 0, 10);
-        $checkin = substr ($time , -8); 
-                
-        $data = array();
-        $data['Attendance']['userid']    = $userid;
-        $data['Attendance']['day']       = $day;
-        $data['Attendance']['checkin']  = $checkin;
+        // get params
+        $userid = $this->data['userid'];
 
-        $checkin = $this->Attendance->field('checkin', array('userid' => $userid,'day' => $day,'checkout' => ''));
-        if($checkin != ""){
-        	return "You already check in at $checkin, Please check out first!";
-        }
-        
-        $this->Attendance->save($data, false);
+		    $data = $this->Access->checkin(array( 'userid'  => $userid));
 
-        //$this->Session->setFlash('Checkin successfully', 'success');
-
-        echo "Sucess";
+        echo $data['message'];
     }
 
     public function checkout() {
 
-        // get all params
-        $userid = $this->data['userid'];
-
         $this->layout = false;
         $this->autoRender = NULL;
 
+        // get params
+        $userid = $this->data['userid'];
+
+		    $data = $this->Access->checkout(array( 'userid'  => $userid));
+
+        echo $data['message'];
+/*
         $this->loadModel('Cashier');
         if(empty($this->Cashier->findByUserid($userid))){
         	return "Userid is not valid!";
@@ -1033,6 +1014,7 @@ class HomesController extends AppController {
         //$this->Session->setFlash('Checkin successfully', 'success');
 
         echo "Sucess";
+*/        
     }
 
     //End

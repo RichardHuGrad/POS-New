@@ -205,7 +205,7 @@ class Order extends AppModel {
 
             foreach ($Orders as $o) {
                 $order = $o['Order'];
-                $totalArr['paid_cash_total'] += $order['cash_val'] - $order['change'];
+                $totalArr['paid_cash_total'] += ($order['cash_val'] - $order['change']);
                 $totalArr['paid_card_total'] += $order['card_val'];
 
                 $totalArr['total'] += $order['total'];
@@ -216,7 +216,7 @@ class Order extends AppModel {
                     $totalArr['card_total'] += $order['total'];
                 } else {
                     $totalArr['card_mix_total'] += $order['card_val'];
-                    $totalArr['cash_mix_total'] += $order['total'] - $order['card_val'];
+                    $totalArr['cash_mix_total'] += ($order['total'] - $order['card_val']);
                 }
                 $totalArr['total_tip'] += $order['tip'];
                 if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
