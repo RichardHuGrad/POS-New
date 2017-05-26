@@ -125,7 +125,11 @@ class OpencartController extends AppController {
     $data = array('store_id' => $this->oc_store_id);
     
     list($ret, $response) = $this->makeCall("/order/getOcOrders", $data);
-    if($ret == 0) exit($response);
+    if($ret == 0){
+    	$this->Session->setFlash($response, 'error');
+      return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+    	//exit($response);
+    } 
   
     
     $orders = json_decode($response);

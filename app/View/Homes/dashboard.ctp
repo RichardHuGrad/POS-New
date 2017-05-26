@@ -526,7 +526,7 @@
     <div class="form-group">
         <div class="col-sm-12 controls">
             <input class="btn btn-primary btn-lg enter" type="button" value="Enter" onclick="checkPassword('<?php echo $admin_passwd[0]['admins']['password']?>')"/>
-        <input class="btn btn-secondary btn-lg cancel" type="button" value="Cancel" onclick="checkPasswordC()"/>
+            <input class="btn btn-secondary btn-lg cancel" type="button" value="Cancel" onclick="checkPasswordC()"/>
         </div>
 
     </div>
@@ -659,21 +659,19 @@ echo $this->fetch('script');
 		$(".EntPassword").val("");
 		$('#url').val(url);
 	}
-	// modified by Yu Dec 15, 2016
-    // move hide() inside
+	
 	function checkPassword(passwd){
 		// $('#dialog').hide();
-        var pwd_makeavailable = hex_md5($(".EntPassword").val());
+    var pwd_makeavailable = hex_md5($(".EntPassword").val());
 		if (pwd_makeavailable == passwd){
-            $('#dialog').hide();
-			document.location = $('#url').val();;
+      $('#dialog').hide();
+			document.location = $('#url').val();
 		} else {
 			// alert("Your password is incorrect!");
-            $('.popPassword .input-group-addon').notify("Your password is incorrect!", {position: "top",
-                className: "error"}
-            );
+      $('.popPassword .input-group-addon').notify("Your password is incorrect!", {position: "top", className: "error"});
 		};
-    }
+  }
+    
 	function checkPasswordC(){
 		$('#dialog').hide();
 	}

@@ -109,7 +109,7 @@ class PayController extends AppController {
         $order_id = $this->Order->getOrderIdByOrderNo($order_no);
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
 
-        //$this->Print->printPayBill(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+        $this->Print->printPayBill(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
                
         $this->Order->save(array('Order' => array('id' => $order_id, 'table_status'=>'R')));
         //$this->Order->updateAll(array('table_status'=>"'R'"), array('Order.order_no' => $order_no));

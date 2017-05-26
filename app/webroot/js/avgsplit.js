@@ -377,11 +377,11 @@ class Suborders {
 		}
 
 		if (card_val > 0 && cash_val > 0) {
-			paid_by = "mixed";
+			paid_by = "MIXED";
 		} else if (card_val > 0 ) {
-			paid_by = "card";
-		} else if (cash_val > 0 ) {
-			paid_by = "cash";
+			paid_by = "CARD";
+		} else {
+			paid_by = "CASH";
 		}
 
 
@@ -616,11 +616,11 @@ class Suborder {
 
 		var type;
 		if (this._tip.card > 0 && this._tip.cash) {
-			type = "mixed";
+			type = "MIXED";
 		} else if (this._tip.card > 0) {
-			type = "card";
+			type = "CARD";
 		} else if (this._tip.cash) {
-			type = "cash";
+			type = "CASH";
 		} else {
 			type = "no tip";
 		}

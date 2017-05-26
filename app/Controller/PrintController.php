@@ -164,14 +164,22 @@ class PrintController extends AppController {
         $this->handle = printer_open($printer_name);
         printer_start_doc($this->handle, "my_Receipt");
         printer_start_page($this->handle);
-        /*$this->printBigEn("2038 Yonge St.", 156, 130);
-        $this->printBigEn("Toronto ON M4S 1Z9", 110, 168);
-        $this->printBigEn("416-792-4476", 156, 206);*/
         printer_draw_bmp($this->handle, $logo_name, 100, 20, 263, 100);
 
-        $this->printBigEn(PrintConfig::$addressLine1['content'], PrintConfig::$addressLine1['offset_x'], 130);
-        $this->printBigEn(PrintConfig::$addressLine2['content'], PrintConfig::$addressLine2['offset_x'], 168);
-        $this->printBigEn(PrintConfig::$phone['content'], PrintConfig::$phone['offset_x'], 206);
+        $adminModel = ClassRegistry::init('Admin');
+        $query = array(
+            'conditions' => array('is_super_admin' => 'N'),
+            'recursive' => -1, 
+            'fields' => array('mobile_no','address','city','province','zipcode','print_offset'),
+        );
+        $data = $adminModel->find('first',$query);
+        $addressLine1 = $data['Admin']['address'];
+        $addressLine2 = $data['Admin']['city'] . ' '. $data['Admin']['province'];
+        $offset = explode(',' , $data['Admin']['print_offset']);
+
+        $this->printBigEn($addressLine1, $offset[0], 130);
+        $this->printBigEn($addressLine2, $offset[1], 168);
+        $this->printBigEn($data['Admin']['mobile_no'] , $offset[2], 206);
 
         $print_y = 244;
 
@@ -275,24 +283,11 @@ class PrintController extends AppController {
         $this->printEn(number_format($total, 2), 360, $print_y,true);
         $print_y += 30;
 
-        /*if ($is_receipt == true) {
-            if ($print_zh == true) {
-                printZh("Paid", 58, $print_y);
-                printZh("付款：", 148, $print_y);
-            } else {
-                printEn("Paid :", 58, $print_y);
-            }
-            // printEn()
-        }*/
-
-
         if (PrintConfig::$hasHstNumber) {
             $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
             $print_y += 30;
         }
         $this->printEn($date_time, 80, $print_y);
-
-
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
@@ -328,6 +323,14 @@ class PrintController extends AppController {
         $tip_cash = $suborder['tip_cash'];
         $change = $suborder['change'];
 
+        if ($received_card>0 and $received_cash>0) {
+            $paid_by = "MIXED";
+        } elseif ($received_card>0) {
+            $paid_by = "CARD";
+        } else {
+            $paid_by = "CASH";
+        };
+
         $logo_name = $this->data['logo_name'];
 
         $type = (($table_type == 'D') ? '[[堂食]]' : (($table_type == 'T') ? '[[外卖]]' : (($table_type == 'W') ? '[[等候]]' : '')));
@@ -335,17 +338,31 @@ class PrintController extends AppController {
         date_default_timezone_set("America/Toronto");
         $date_time = date("l M d Y h:i:s A");
 
-
         $this->handle = printer_open($printer_name);
         printer_start_doc($this->handle, "my_Receipt");
         printer_start_page($this->handle);
-        /*$this->printBigEn("2038 Yonge St.", 156, 130);
-        $this->printBigEn("Toronto ON M4S 1Z9", 110, 168);
-        $this->printBigEn("416-792-4476", 156, 206);*/
+
         printer_draw_bmp($this->handle, $logo_name, 100, 20, 263, 100);
+
+        $adminModel = ClassRegistry::init('Admin');
+        $query = array(
+            'conditions' => array('is_super_admin' => 'N'),
+            'recursive' => -1, 
+            'fields' => array('mobile_no','address','city','province','zipcode','print_offset'),
+        );
+        $data = $adminModel->find('first',$query);
+        $addressLine1 = $data['Admin']['address'];
+        $addressLine2 = $data['Admin']['city'] . ' '. $data['Admin']['province'];
+        $offset = explode(',' , $data['Admin']['print_offset']);
+
+        $this->printBigEn($addressLine1, $offset[0], 130);
+        $this->printBigEn($addressLine2, $offset[1], 168);
+        $this->printBigEn($data['Admin']['mobile_no'] , $offset[2], 206);
+/*        
         $this->printBigEn(PrintConfig::$addressLine1['content'], PrintConfig::$addressLine1['offset_x'], 130);
         $this->printBigEn(PrintConfig::$addressLine2['content'], PrintConfig::$addressLine2['offset_x'], 168);
         $this->printBigEn(PrintConfig::$phone['content'], PrintConfig::$phone['offset_x'], 206);
+*/
 
         $print_y = 244;
 
@@ -463,9 +480,9 @@ class PrintController extends AppController {
         if ($is_receipt == true) {
             if ($print_zh == true) {
                 $this->printZh("Paid", 58, $print_y);
-                $this->printZh("付款：", 148, $print_y);
+                $this->printZh("付款({$paid_by})：", 148, $print_y);
             } else {
-                $this->printEn("Paid :", 58, $print_y);
+                $this->printEn("Paid({$paid_by}):", 58, $print_y);
             }
             $this->printEn(number_format($paid, 2), 360, $print_y);
             $print_y += 30;
@@ -483,10 +500,10 @@ class PrintController extends AppController {
         $print_y += 30;
 
         if (PrintConfig::$hasHstNumber) {
-            $this->printEn("Hst Number11: " . PrintConfig::$hstNumber, 80, $print_y);
+            $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
             $print_y += 30;
         }
-        $this->printEn($date_time, 80, $print_y);
+        $this->printEn($date_time, 90, $print_y);
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);

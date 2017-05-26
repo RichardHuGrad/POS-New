@@ -28,7 +28,7 @@ class PayHandlerComponent extends Component {
             $data['Order']['paid_by'] = "MIXED";
         elseif ($args['card_val'] > 0)
             $data['Order']['paid_by'] = "CARD";
-        elseif ($args['cash_val'] > 0)
+        else
             $data['Order']['paid_by'] = "CASH";
 
         $data['Order']['table_status'] = 'P';
@@ -77,9 +77,10 @@ class PayHandlerComponent extends Component {
                 $data['Order']['paid_by'] = "MIXED";
             } elseif ($args['card_val']) {
                 $data['Order']['paid_by'] = "CARD";
-            } elseif ($args['cash_val']) {
+            } else {
                 $data['Order']['paid_by'] = "CASH";
             };
+            
             $data['Order']['table_status'] = 'P';
             $data['Order']['is_kitchen'] = 'Y';
             $data['Order']['is_completed'] = 'Y';

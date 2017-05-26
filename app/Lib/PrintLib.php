@@ -903,7 +903,6 @@ class ReportCountPage extends CountPage
         printer_delete_font($font);
     }
 
-
 }
 
 abstract class FooterPage {

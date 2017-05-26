@@ -598,7 +598,7 @@ class HomesController extends AppController {
             $data['paid_by'] = "MIXED";
         elseif ($card_val > 0)
             $data['paid_by'] = "CARD";
-        elseif ($cash_val > 0)
+        else
             $data['paid_by'] = "CASH";
         
         if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) {
@@ -766,9 +766,7 @@ class HomesController extends AppController {
         $data['Order']['cooking_status'] = 'COOKED';
         
         $this->Order->save($data, false);
-        
-        
-                
+                               
         $oc = new OpencartController();
         $oc->setApi(); //beforeFilter not called in this case
         $oc->closeOcOrders($order_no);
