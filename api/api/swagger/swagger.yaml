@@ -182,7 +182,18 @@ paths:
         - Pay
       responses:
         200:
-          description: success print
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -203,6 +214,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -224,6 +246,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -266,6 +299,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -417,6 +461,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -439,6 +494,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 

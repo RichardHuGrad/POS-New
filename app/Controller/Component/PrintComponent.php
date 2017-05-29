@@ -24,25 +24,27 @@ class PrintComponent extends Component {
      */
 	public function printPayReceipt($args) {
 
-        if (empty($args['restaurant_id'])) {
-            throw new Exception('Missing argument: restaurant_id');
-        }
-        if (empty($args['order_id'])) {
-            throw new Exception('Missing argument: order_id');
-        }
-
-        $order_id = $args['order_id'];
-
-        $orderDetail = $this->Order->find('first', array(
-                // 'recursive' => -1,
-                'conditions' => array(
-                        'Order.id' => $order_id
-                    )
-            ));
-
-        $type = $orderDetail['Order']['order_type'];
-        $table_no = $orderDetail['Order']['table_no'];
-        $order_no = $orderDetail['Order']['order_no'];
+      if (empty($args['restaurant_id'])) {
+          throw new Exception('Missing argument: restaurant_id');
+      }
+      if (empty($args['order_id'])) {
+          throw new Exception('Missing argument: order_id');
+      }
+      
+      $order_id = $args['order_id'];
+      
+      $orderDetail = $this->Order->find('first', array(
+          // 'recursive' => -1,
+          'conditions' => array('Order.id' => $order_id)
+      ));
+      
+      if(empty($orderDetail)){
+      	return array('ret'=> 0,'message'=>'Error, Order not found!');
+      }
+      
+      $type = $orderDetail['Order']['order_type'];
+      $table_no = $orderDetail['Order']['table_no'];
+      $order_no = $orderDetail['Order']['order_no'];
 	    $logoPath = $this->Admin->getLogoPathByid($args['restaurant_id']);
 
 	    $printItems = $orderDetail['OrderItem'];
@@ -50,11 +52,12 @@ class PrintComponent extends Component {
 
 	    $printItems = $this->OrderItem->getMergedItems($order_id);
 
-
 	    $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
-	    $print = new PrintLib();
-	    echo $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
-
+	    
+	    $print = new PrintLib();	    
+	    $data = $print->printPayReceiptDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
+	    
+	    return array('ret'=> 1,'message'=>$data);   
 
 	}
 
@@ -82,6 +85,10 @@ class PrintComponent extends Component {
                     )
             ));
 
+        if(empty($orderDetail)){
+      	  return array('ret'=> 0,'message'=>'Error, Order not found!');
+        }
+
         $type = $orderDetail['Order']['order_type'];
         $table_no = $orderDetail['Order']['table_no'];
         $order_no = $orderDetail['Order']['order_no'];
@@ -92,10 +99,12 @@ class PrintComponent extends Component {
 
         $printItems = $this->OrderItem->getMergedItems($order_id);
 
-
         $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+        
         $print = new PrintLib();
-        echo $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
+        $data = $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
+        
+        return array('ret'=> 1,'message'=>$data);   
     }
 
     /**

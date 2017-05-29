@@ -27,6 +27,7 @@ class Order extends AppModel {
     // insert a new order in orders
     // return Order.id
     public function insertOrder($cashier_id, $counter_id, $table_no, $order_type, $tax) {
+    	  sleep(1);
         $insert_data = array(
             'order_no'   => $order_type.$table_no.date('ymdHi'),
             'cashier_id' => $cashier_id, // cashier should be restaurant_id

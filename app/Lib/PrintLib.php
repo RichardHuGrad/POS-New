@@ -39,7 +39,7 @@ class PrintLib {
         $debug_str = json_encode($item_detail);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+          return "function printer_open() not exists in server!";
         }
 
         // add cancel for each item
@@ -66,7 +66,7 @@ class PrintLib {
         $debug_str = json_encode($item_detail);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+           return "function printer_open() not exists in server!";
         }
 
 
@@ -85,7 +85,7 @@ class PrintLib {
         $debug_str = json_encode($item_detail);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+           return "function printer_open() not exists in server!";
         }
 
         // add cancel for each item
@@ -102,7 +102,7 @@ class PrintLib {
         $doc->printDoc();
 
         // send feedback to server
-        return $debug_str;
+        return 'success';
     }
 
     public function printKitchenChangeTable($order_no, $table_no, $table_type, $old_table,$old_type, $printer_name, $print_zh=true,$phone='') {
@@ -156,6 +156,8 @@ class PrintLib {
         $footerPage->printPage($handle);
        
         printer_end_doc($handle);
+        
+        return 'success';
     }
 
 
@@ -164,19 +166,19 @@ class PrintLib {
         $debug_str .= json_encode($bill_info);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+           return "function printer_open() not exists in server!";
         }
 
 
         $headerPage = new LogoHeaderPage($order_no, $table_no, $table_type, $logo_name);
-        $itemsPage = new PayItemsPage($item_detail);
-        $countPage = new BillPage($bill_info);
+        $itemsPage  = new PayItemsPage($item_detail);
+        $countPage  = new BillPage($bill_info);
         $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         $doc->printDoc();
 
-        return $debug_str;
+        return 'success';
     }
 
 
@@ -186,21 +188,22 @@ class PrintLib {
         $debug_str .= json_encode($bill_info);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+            return "Printer function not exists!";
         }
 
         $headerPage = new LogoHeaderPage($order_no, $table_no, $table_type, $logo_name);
-        $itemsPage = new PayItemsPage($item_detail);
-        $countPage = new ReceiptPage($bill_info);
+        $itemsPage  = new PayItemsPage($item_detail);
+        $countPage  = new ReceiptPage($bill_info);
         $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
         if($bill_info['paid_by'] != 'CARD'){
           $doc->setOpenDrawer(true);
         }
+        
         $doc->printDoc();
 
-        return $debug_str;
+        return "success";
     }
 
     public function printMergeBillDoc($order_nos, $table_nos, $table_type, $printer_name, $item_details, $bill_info, $logo_name,$print_zh=true, $print_en=false) {
