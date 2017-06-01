@@ -211,29 +211,32 @@ class PrintLib {
         $debug_str .= json_encode($bill_info);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+           return array('ret'=>0,'message'=>"Printer function not exists!");
         }
 
         $headerPage = new LogoHeaderPage($order_nos, $table_nos, $table_type, $logo_name);
-        $itemsPage = new MergeItemsPage($item_details);
-        $countPage = new BillPage($bill_info);
+        $itemsPage  = new MergeItemsPage($item_details);
+        $countPage  = new BillPage($bill_info);
         $footerPage = new TimeHSTFooterPage();
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
+        
         $doc->printDoc();
+        return array('ret'=>1,'message'=>'success');
     }
 
     public function printMergeReceiptDoc($order_nos, $table_nos, $table_type, $printer_name, $item_details, $bill_info, $logo_name,$print_zh=true, $print_en=false) {
+        
         $debug_str = json_encode($item_details);
         $debug_str .= json_encode($bill_info);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+           return array('ret'=>0,'message'=>"Printer function not exists!");
         }
 
         $headerPage = new LogoHeaderPage($order_nos, $table_nos, $table_type, $logo_name);
-        $itemsPage = new MergeItemsPage($item_details);
-        $countPage = new ReceiptPage($bill_info);
+        $itemsPage  = new MergeItemsPage($item_details);
+        $countPage  = new ReceiptPage($bill_info);
         $footerPage = new TimeHSTFooterPage();
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $countPage, $footerPage));
 
@@ -242,6 +245,7 @@ class PrintLib {
         }
 
         $doc->printDoc();
+        return array('ret'=>1,'message'=>'success');
     }
 
     public function printDailyReportDoc($printer_name, $dailyAmount, $dailyAmountTotal) {
@@ -249,7 +253,7 @@ class PrintLib {
         // $debug_str .= json_encode($dailyItems);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+          return "Printer function not exists!";
         }
 
         $headerPage = new TextHeaderPage("All Orders (总单)", 108);
@@ -267,7 +271,7 @@ class PrintLib {
         $debug_str .= json_encode($dailyItems);
 
         if (!function_exists('printer_open')) {
-            return $debug_str;
+          return "Printer function not exists!";
         }
 
         $dailyItemHeaderPage = new TextHeaderPage("Sales Statistics 销量统计", 30);

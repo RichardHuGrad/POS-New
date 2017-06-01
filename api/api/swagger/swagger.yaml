@@ -328,6 +328,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -346,6 +357,17 @@ paths:
       responses:
         200:
           description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 
@@ -582,6 +604,7 @@ paths:
       parameters:
         - $ref: "#/parameters/restaurantId"
         - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/tableType"
         - $ref: "#/parameters/accessToken"
       tags:
         - Order
@@ -593,6 +616,106 @@ paths:
             properties:
               Order:
                 $ref: "#/definitions/Order"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/tableHisupdate:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      description: restore table order
+      parameters:
+        - $ref: "#/parameters/orderId"
+        - name: subtotal
+          in: query
+          description: the subtotal of payment
+          required: true
+          type: string
+        - name: discount_value
+          in: query
+          description: the discount_value
+          required: true
+          type: string
+        - name: total
+          in: query
+          description: the total of payment
+          required: true
+          type: string
+        - name: pay
+          in: query
+          description: paid money
+          required: true
+          type: string
+        - name: cash_val
+          in: query
+          description: the customer payment with cash
+          required: true
+          type: string
+        - name: card_val
+          in: query
+          description: the customer payment with card
+          required: true
+          type: string
+        - name: change
+          in: query
+          description: the change of order找零
+          required: true
+          type: string
+        - name: tip
+          in: query
+          description: the tip
+          required: true
+          type: string
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  url:
+                     type: string
+                     description: when ret=1, redirect to url.
+                  message:
+                     type: string
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+
+  /orderHandler/tableRestore:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      description: restore table order
+      parameters:
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ret:
+                     type: number
+                     description: 1 for success, 0 for error.
+                  url:
+                     type: string
+                     description: when ret=1, redirect to url.
+                  message:
+                     type: string
         default:
           $ref: "#/responses/MissingArgumentError"
 

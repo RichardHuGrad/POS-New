@@ -79,11 +79,9 @@ class PrintComponent extends Component {
         $order_id = $args['order_id'];
 
         $orderDetail = $this->Order->find('first', array(
-                // 'recursive' => -1,
-                'conditions' => array(
-                        'Order.id' => $order_id
-                    )
-            ));
+          // 'recursive' => -1,
+          'conditions' => array('Order.id' => $order_id)
+        ));
 
         if(empty($orderDetail)){
       	  return array('ret'=> 0,'message'=>'Error, Order not found!');
@@ -103,6 +101,10 @@ class PrintComponent extends Component {
         
         $print = new PrintLib();
         $data = $print->printPayBillDoc($order_no, $table_no, $type, $printerName, $printItems, $billInfo, $logoPath,true, false);
+
+        //after print bill, mark this table as 'Receipt Printed'
+        $this->Order->save(array('Order' => array('id' => $order_id, 'table_status'=>'R')));
+        //$this->Order->updateAll(array('table_status'=>"'R'"), array('Order.order_no' => $order_no));
         
         return array('ret'=> 1,'message'=>$data);   
     }
@@ -346,7 +348,7 @@ class PrintComponent extends Component {
 
 
     /**
-     * printMergeBill
+     * printMergeBill, 
      *
      * Parameters:
      *      $args['restaurant_id']
@@ -381,8 +383,12 @@ class PrintComponent extends Component {
         $mergeData = $this->Order->getMergeOrderInfo($order_ids);
 
         $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+        
         $print = new PrintLib();
-        echo $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
+        
+        $arr = $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
+        
+        return $arr;
 
         // print_r($mergeData);
 
@@ -425,9 +431,12 @@ class PrintComponent extends Component {
         $mergeData = $this->Order->getMergeOrderInfo($order_ids);
 
         $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
+        
         $print = new PrintLib();
-        echo $print->printMergeReceiptDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
+        
+        $arr = $print->printMergeReceiptDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
 
+        return $arr;
         // print_r($mergeData);
 
     }

@@ -188,7 +188,9 @@ class MergeController extends AppController {
 
         $order_ids = $this->data['order_ids'];
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
-        $this->Print->printMergeBill(array('restaurant_id'=> $restaurant_id, 'order_ids'=>$order_ids));
+        
+        $res = $this->Print->printMergeBill(array('restaurant_id'=> $restaurant_id, 'order_ids'=>$order_ids));
+        return json_encode($res);
     }
 
 
@@ -201,6 +203,7 @@ class MergeController extends AppController {
 
         $order_ids = $this->data['order_ids'];
         $restaurant_id = $this->Cashier->getRestaurantId($this->Session->read('Front.id'));
+        
         $this->Print->printMergeReceipt(array('restaurant_id'=> $restaurant_id, 'order_ids'=>$order_ids));
     }
 }

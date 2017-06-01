@@ -155,8 +155,8 @@ $(document).on('click', ".updatefee", function () {
             data: {table_no: "<?php echo $table_no ?>", order_id: "<?php echo $order_id ?>", subtotal: subtotal, discount_value: discount_value, total: total, paid: paid, cash_val: cash_val, card_val: card_val, change: change, tip: tip},
             dataType: "json",
             success: function (json) {
-            	if (json.status == 'OK') {
-            		window.location.href = json.url;
+            	if (json.ret == 1) {
+            		window.location.href = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'tableHistory',  'table_no' => $table_no, 'order_type' => $order_type)); ?>";
             	} else {
             		alert(json.message);
             	}
@@ -168,14 +168,14 @@ $(document).on('click', ".restore", function () {
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'tableRestore')); ?>",
             method: "post",
-            data: {table_no: "<?php echo $table_no ?>", order_id: "<?php echo $order_id ?>"},
+            data: {order_id: "<?php echo $order_id ?>"},
             dataType: "json",
-            success: function (json) {
-            	if (json.status == 'OK') {
+            success: function (json) {            	
+            	if (json.ret == 1) {
             		window.location.href = json.url;
             	} else {
             		alert(json.message);
-            	}
+            	} 
             }
         })
     });

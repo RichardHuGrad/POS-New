@@ -447,28 +447,28 @@ echo $this->fetch('script');
 
 
 
-                    $(document).ready(function () {
-                        $(".select_card").click(function () {
-                        $(".select_card").removeClass("active")
-                                $(this).addClass("active")
-                                var type = $(this).attr("id");
-                                if (type == 'card') {
-                        $("#cash").removeClass("active");
-                                var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
-                                $("#screen").attr('buffer', card_val);
-                                $("#screen").val($("#card_val").val());
-                        } else if (type == 'cash') {
-                        var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
-                                $("#screen").attr('buffer', cash_val);
-                                $("#screen").val($("#cash_val").val());
-                        } else {
-                        var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
-                                $("#screen").attr('buffer', tip_val);
-                                $("#screen").val($("#tip_val").val());
-                        }
-                 
-                 $("#selected_card").val(type);
-              })
+            $(document).ready(function () {
+                $(".select_card").click(function () {
+                $(".select_card").removeClass("active")
+                        $(this).addClass("active")
+                        var type = $(this).attr("id");
+                        if (type == 'card') {
+                $("#cash").removeClass("active");
+                        var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
+                        $("#screen").attr('buffer', card_val);
+                        $("#screen").val($("#card_val").val());
+                } else if (type == 'cash') {
+                var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
+                        $("#screen").attr('buffer', cash_val);
+                        $("#screen").val($("#cash_val").val());
+                } else {
+                var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+                        $("#screen").attr('buffer', tip_val);
+                        $("#screen").val($("#tip_val").val());
+                }
+         
+                $("#selected_card").val(type);
+                  })
             
                 $(".select_tip").click(function () {
                     $(".select_card").removeClass("active");
@@ -476,7 +476,8 @@ echo $this->fetch('script');
                         var val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
                         $("#screen").attr('buffer', val);
                         $("#screen").val($("#tip_val").val());
-                    });
+             });
+                    
                 //Modified by Yishou Liao @ Oct 16 2016
                 $("#submit").click(function () {
                     if ($("#selected_card").val()) {

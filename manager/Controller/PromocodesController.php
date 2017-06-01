@@ -110,26 +110,33 @@ class PromocodesController extends AppController {
 
 
         if (!empty($this->request->data)) {
-            $this->Promocode->set($this->request->data);
-            if ($this->Promocode->validates()) {
-
-
-	            $start_time =  $this->request->data['Promocode']['start_time'];
-	            $end_time =  $this->request->data['Promocode']['end_time'];
-	            $this->request->data['Promocode']['start_time'] = date("H:i:s", strtotime(trim($start_time)));
-	            $this->request->data['Promocode']['end_time'] = date("H:i:s", strtotime(trim($end_time)));
-	            $this->request->data['Promocode']['week_days'] = implode(",", $this->request->data['Promocode']['week_days']);
-
-                if ($this->Promocode->save($this->request->data, $validate = false)) {
-
-                    if('' == $id){
-                        $this->Session->setFlash('Promocode has been added successfully', 'success');
-                    }else{
-                        $this->Session->setFlash('Promocode has been updated successfully', 'success');
-                    }
-
-                    $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'index', 'admin' => true));
-                }
+        	
+    	      //已经存在该promocode则给出提示并返回
+    	      $ret =$this->Promocode->hasAny(['code'=>$this->request->data['Promocode']['code']]);
+    	      if($ret){
+    	      	$this->Session->setFlash('Promocode already exists!', 'error');
+    	      }else{
+        	
+              $this->Promocode->set($this->request->data);
+              
+              if ($this->Promocode->validates()) {
+              
+	              $start_time =  $this->request->data['Promocode']['start_time'];
+	              $end_time =  $this->request->data['Promocode']['end_time'];
+	              $this->request->data['Promocode']['start_time'] = date("H:i:s", strtotime(trim($start_time)));
+	              $this->request->data['Promocode']['end_time'] = date("H:i:s", strtotime(trim($end_time)));
+	              $this->request->data['Promocode']['week_days'] = implode(",", $this->request->data['Promocode']['week_days']);
+              
+                  if ($this->Promocode->save($this->request->data, $validate = false)) {
+                      if('' == $id){
+                          $this->Session->setFlash('Promocode has been added successfully', 'success');
+                      }else{
+                          $this->Session->setFlash('Promocode has been updated successfully', 'success');
+                      }
+              
+                      $this->redirect(array('plugin' => false, 'controller' => 'promocodes', 'action' => 'index', 'admin' => true));
+                  }
+              }
             }
         }
 
@@ -150,10 +157,10 @@ class PromocodesController extends AppController {
               $this->request->data = $customer_data;
             }
         }
+        
         $this->loadModel('Admin');
         $restaurants = $this->Admin->find('list',
             array('fields' => array('Admin.id', 'Admin.restaurant_name'), 'conditions' => array('Admin.status' => 'A', 'Admin.is_super_admin' => 'N'), 'order' => array('Admin.firstname' => 'ASC')));
-
         
         $this->loadModel('CategoryLocale');
         $categories = $this->CategoryLocale->find('list',
@@ -164,12 +171,14 @@ class PromocodesController extends AppController {
             )
         );
 
-		$is_super_admin = $this->Session->read('Admin.is_super_admin');
+		    $is_super_admin = $this->Session->read('Admin.is_super_admin');
+		    
         if('Y' <> $is_super_admin)
-    		$restaurant_id = $this->Session->read('Admin.id');
-		else
-    		$restaurant_id = @$customer_data['Promocode']['restaurant_id'];
-
+        		$restaurant_id = $this->Session->read('Admin.id');
+		    else
+    		    $restaurant_id = @$customer_data['Promocode']['restaurant_id'];
+           
+           
         $this->loadModel('CousineLocal');
         $items_list = $this->CousineLocal->find('all', array(
             'conditions' => array(
@@ -179,13 +188,16 @@ class PromocodesController extends AppController {
                 'CousineLocal.parent_id', 'CousineLocal.name'
             )
         )); 
+        
         $arr = [];
-        if(!empty($items_list))
+        if(!empty($items_list)){
         	foreach ($items_list as $key => $value) {
         		# code...
         		$arr[$value['CousineLocal']['parent_id']] = $value['CousineLocal']['name'];
-        	}
-    	$items_list = $arr;
+          }
+        }
+    	  
+    	  $items_list = $arr;
         
         $this->set(compact('id', 'restaurants', 'categories', 'items_list'));
     }

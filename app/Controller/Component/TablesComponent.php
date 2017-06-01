@@ -80,7 +80,7 @@ class TablesComponent extends Component {
         ApiHelperComponent::verifyRequiredParams($args, ['order_id']);
         $orderId = $args['order_id'];
         $orderDetail = $this->Order->find('first', array(
-                            'conditions' => array('Order.order_id' => $orderId)
+                            'conditions' => array('Order.id' => $orderId)
                         ));
         return $orderDetail;
     }

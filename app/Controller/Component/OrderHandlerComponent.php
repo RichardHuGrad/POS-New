@@ -273,6 +273,9 @@ class OrderHandlerComponent extends Component {
 
         $selected_extras_list = [];
         foreach ($selected_extras_id_list as $extra_id) {
+        	
+        	  if($extra_id == '') continue;
+                  	
             $extra_details = $this->Extra->find("first", array(
                     "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
                     'conditions' => array('Extra.id' => $extra_id)
@@ -287,7 +290,11 @@ class OrderHandlerComponent extends Component {
         }
         // echo json_encode($selected_extras_list);
 
-        foreach ($selected_item_id_list as $item_id) {
+        if(empty($selected_extras_list)){
+	        return array('ret' => 1, 'message' => 'No extras selected!');
+        }
+
+        foreach ((array)$selected_item_id_list as $item_id) {
             $item_detail = $this->OrderItem->find("first", array(
                 'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
                 'conditions' => array('OrderItem.id' => $item_id)
@@ -310,8 +317,10 @@ class OrderHandlerComponent extends Component {
 
             // update extra amount will also incur the updateBillInfo() function
             $this->OrderItem->updateExtraAmount($item_id);
-
         }
+        
+        return array('ret' => 1, 'message' => 'success');
+
     }
 
 
@@ -336,23 +345,28 @@ class OrderHandlerComponent extends Component {
         $extras_amount = 0;
 
         $selected_extras_list = [];
-        foreach ($selected_extras_id_list as $extra_id) {
-            $extra_details = $this->Extra->find("first", array(
-                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
-                    'conditions' => array('Extra.id' => $extra_id)
-                ));
-            $temp_data = array(
-                    'id' => $extra_details['Extra']['id'],
-                    'price' => $extra_details['Extra']['price'],
-                    'name' => $extra_details['Extra']['name_zh'],
-                    'category_id' => $extra_details['Extra']['category_id']
-                );
-            array_push($selected_extras_list, $temp_data);
+        foreach ((array)$selected_extras_id_list as $extra_id) {
+        	
+        	 if($extra_id == '') continue;
+          
+           $extra_details = $this->Extra->find("first", array(
+                   "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
+                   'conditions' => array('Extra.id' => $extra_id)
+               ));
+           $temp_data = array(
+                   'id' => $extra_details['Extra']['id'],
+                   'price' => $extra_details['Extra']['price'],
+                   'name' => $extra_details['Extra']['name_zh'],
+                   'category_id' => $extra_details['Extra']['category_id']
+               );
+           array_push($selected_extras_list, $temp_data);
         }
         // echo json_encode($selected_extras_list);
 
-
-
+        if(empty($selected_extras_list)){
+	        return array('ret' => 1, 'message' => 'No extras selected!');
+        }
+        
         $item_detail = $this->OrderItem->find("first", array(
             'recursive' => -1,
             'fields' => array('OrderItem.id', 'OrderItem.extras_amount', 'OrderItem.selected_extras'),
@@ -367,19 +381,22 @@ class OrderHandlerComponent extends Component {
 
         // update extra amount will also incur the updateBillInfo() function
         $this->OrderItem->updateExtraAmount($item_id);
+        
+        return array('ret' => 1, 'message' => 'success');
     }
 
     public function tableHistory($args) {
 
-        ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id','table']);
+        ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id','table','type']);
 
         $restaurant_id = $args['restaurant_id'];
-        $table = $args['table'];
+        $table         = $args['table'];
+        $order_type    = $args['type'];
 
         $conditions = array('Order.cashier_id' => $restaurant_id,
             'Order.table_no' => $table,
             'Order.is_completed' => 'Y',
-            'Order.order_type' => 'D',
+            'Order.order_type' => $order_type,
             'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
         );
 
@@ -414,6 +431,98 @@ class OrderHandlerComponent extends Component {
     }
 
 
+    public function tableHisupdate($args) {
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        ApiHelperComponent::verifyRequiredParams($args, ['order_id', 'subtotal', 'discount_value', 'total', 'paid', 'cash_val', 'card_val', 'change', 'tip']);
+
+        $order_id = $args['order_id'];
+        $conditions = array('Order.id' => $order_id);  
+        
+        $Order_detail = $this->Order->find("first", array(
+            'fields' => array('Order.cashier_id','Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
+            'conditions' => $conditions
+                )
+        );
+        
+        if (empty($Order_detail)) {
+        	 return array('ret' => 0, 'message' => 'Error, order detail not found.'); 	 
+        }
+
+        $subtotal = $args['subtotal'];
+        $discount_value = $args['discount_value'];
+        $total = $args['total'];
+        $paid = $args['paid'];
+        $cash_val = $args['cash_val'];
+        $card_val = $args['card_val'];
+        $change = $args['change'];
+        $tip = $args['tip'];
+
+        $logs = '';
+        $data = array();
+
+        if ($cash_val > 0 and $card_val > 0)
+            $data['paid_by'] = "MIXED";
+        elseif ($card_val > 0)
+            $data['paid_by'] = "CARD";
+        else
+            $data['paid_by'] = "CASH";
+        
+        if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) {
+        	$logs .= 'subtotal[' . $subtotal . ' <= ' . $Order_detail['Order']['subtotal'] . "]";
+        	$data['subtotal'] = $subtotal;
+        	$data['tax_amount'] = $subtotal *  $Order_detail['Order']['tax'] / 100;
+        }
+        if ($discount_value != number_format($Order_detail['Order']['discount_value'],2)) {
+        	$logs .= 'discount_value[' . $discount_value . ' <= ' . $Order_detail['Order']['discount_value'] . "]";
+        	$data['discount_value'] = $discount_value;
+        }
+        if ($total != number_format($Order_detail['Order']['total'],2)) {
+        	$logs .= 'total[' . $total . ' <= ' . $Order_detail['Order']['total'] . "]";
+        	$data['total'] = $total;
+        }
+        if ($paid != number_format($Order_detail['Order']['paid'],2)) {
+        	$logs .= 'paid[' . $paid . ' <= ' . $Order_detail['Order']['paid'] . "]";
+        	$data['paid'] = $paid;
+        }
+        if ($cash_val != number_format($Order_detail['Order']['cash_val'],2)) {
+        	$logs .= 'cash_val[' . $cash_val . ' <= ' . $Order_detail['Order']['cash_val'] . "]";
+        	$data['cash_val'] = $cash_val;
+        }
+        if ($card_val != number_format($Order_detail['Order']['card_val'],2)) {
+        	$logs .= 'card_val[' . $card_val . ' <= ' . $Order_detail['Order']['card_val'] . "]";
+        	$data['card_val'] = $card_val;
+        }
+        if ($change != number_format($Order_detail['Order']['change'],2)) {
+        	$logs .= 'change[' . $change . ' <= ' . $Order_detail['Order']['change'] . "]";
+        	$data['change'] = $change;
+        }
+        if ($tip != number_format($Order_detail['Order']['tip'],2)) {
+        	$logs .= 'tip[' . $tip . ' <= ' . $Order_detail['Order']['tip'] . "]";
+        	$data['tip'] = $tip;
+        }
+
+        if ($logs != '') {
+        	$logs = 'OrderNo: '.$Order_detail['Order']['order_no']."}". $logs ."}";
+        	
+        	$logArr = array('cashier_id' => $args['cashier_id'], 'admin_id' => $Order_detail['Order']['cashier_id'],'operation'=>'tableHisupdate', 'logs' => $logs);
+        	$this->Log->save($logArr);
+        	
+        	$data['id'] = $order_id;
+        	$ret = $this->Order->save($data);
+        }else{
+        	$ret = 1;
+        }
+        
+        if ($ret)
+        	return array('ret' => 1, 'message' => 'Success');
+        else 
+        	return array('ret' => 0, 'message' => 'Update error.');        
+        
+    }
+    
+        
     public function makeavailable($args) {
 
 	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
@@ -503,6 +612,49 @@ class OrderHandlerComponent extends Component {
        
         if($ret) return array('ret' => 1, 'message' => 'Add successfully.');
         else return array('ret' => 0, 'message' => 'Fail to update order!');        
+    }
+
+    public function tableRestore($args) {
+
+	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_id']);
+
+        $order_id  = $args['order_id'];
+
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $order_detail = $this->Order->find('first', array(
+            'recursive' => -1,
+            'conditions' => array('id' => $order_id)
+        ));
+    	
+        $logs = '';
+        $data = array();
+
+       	$data['paid']     = '';
+       	$data['paid_by']  = '';
+       	$data['cash_val'] = '';
+       	$data['card_val'] = '';
+       	$data['change']   = '';
+       	$data['tip'] = '';
+       	$data['tip'] = '';
+       	$data['tip_paid_by'] = '';
+       	$data['table_status']= 'N';
+       	$data['is_completed']= 'N';
+
+        $logArr = array('cashier_id' => $args['cashier_id'], 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'Table restore', 'logs' => json_encode($order_detail));
+        
+        $this->Log->save($logArr);
+        
+        $data['id'] = $order_id;
+        $ret = $this->Order->save($data);
+
+        if ($ret)
+        	return array('ret' => 1, 'url' => Router::url(array('controller' => 'homes', 'action' => 'dashboard')), 'message' => 'Success');
+        else 
+        	return array('ret' => 0, 'message' => 'Error.');
+        
+        //echo json_encode($r);
     }
 
 
