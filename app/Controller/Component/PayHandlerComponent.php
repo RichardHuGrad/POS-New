@@ -9,6 +9,7 @@ class PayHandlerComponent extends Component {
     public function __construct() {
         // register model
         $this->Order = ClassRegistry::init('Order');
+        $this->Log       = ClassRegistry::init('Log');
     }
 
     public function completeOrder($args) {
@@ -57,10 +58,11 @@ class PayHandlerComponent extends Component {
 
 
     public function completeMergeOrder($args) {
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',0,'' )");
     	
         ApiHelperComponent::verifyRequiredParams($args, ['order_ids','main_order_id','table','table_merge','pay','change','card_val','cash_val','tip_val','tip_paid_by']);
 
-$this->Order->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'' )");
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'' )");
 
         // pr($args); die;
         // get all params
@@ -76,7 +78,7 @@ $this->Order->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'
         for ($i = 0; $i < count($order_id); $i++) {
             $data['Order']['id'] = $order_id[$i];
             
-$this->Order->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'i = $i' )");
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'i = $i' )");
             
             $table_detail = $this->Order->find("first", array('fields' => array('Order.table_no', 'total'), 'conditions' => array('Order.id' => $data['Order']['id']), 'recursive' => false));
 
@@ -119,7 +121,7 @@ $this->Order->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'
             //$this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id[$i]')");
         };
 
-$this->Order->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',3,'' )");
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',3,'' )");
 
         return array('ret' => 1, 'message' => 'success');
     }
