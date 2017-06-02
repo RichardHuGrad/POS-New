@@ -336,7 +336,7 @@ class OrderHandlerComponent extends Component {
         $special = $args['special'];
         $cashier_id = $args['cashier_id'];
 
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'{$selected_extras_id_list[0]}' )");
+//$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'{$selected_extras_id_list[0]}' )");
 
         // selected_extras_id_list maybe empty
         if(@$selected_extras_id_list[0]==''){
