@@ -917,14 +917,10 @@ paths:
       parameters:
         - $ref: "#/parameters/accessToken"
         - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/orderIdList"
         - name: table_merge
           in: formData
           description: all tables number
-          required: true
-          type: string
-        - name: order_ids
-          in: formData
-          description: all order ids
           required: true
           type: string
         - name: main_order_id

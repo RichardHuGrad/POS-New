@@ -329,27 +329,19 @@ class OrderHandlerComponent extends Component {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
 
         $item_id = $args['item_id'];
-        // selected_extras_id_list maybe empty
+        
         $selected_extras_id_list = $args['extra_id_list'];
         $table = $args['table'];
         $type = $args['type'];
         $special = $args['special'];
         $cashier_id = $args['cashier_id'];
 
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'$selected_extras_id_list')");
-
-        if(empty($selected_extras_id_list)){
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'')");
-
+        // selected_extras_id_list maybe empty
+        if(@$selected_extras_id_list[0]==''){
 	        return array('ret' => 1, 'message' => 'No extras selected!');
 	        exit;
         }
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',3,'')");
         
-print_r($selected_extras_id_list);
-exit;
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',4,'')");
-
         // get cashier details
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
@@ -361,9 +353,7 @@ $this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',4,'')
 
         $selected_extras_list = [];
         foreach ((array)$selected_extras_id_list as $extra_id) {
-        	
-        	 if($extra_id == '') continue;
-          
+        	          
            $extra_details = $this->Extra->find("first", array(
                    "fields" => array('Extra.id', 'Extra.price', 'Extra.name_zh', 'Extra.category_id'),
                    'conditions' => array('Extra.id' => $extra_id)
@@ -378,10 +368,6 @@ $this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',4,'')
         }
         // echo json_encode($selected_extras_list);
 
-        if(empty($selected_extras_list)){
-	        return array('ret' => 1, 'message' => 'No extras selected!');
-	        exit;
-        }
         
         $item_detail = $this->OrderItem->find("first", array(
             'recursive' => -1,

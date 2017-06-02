@@ -50,6 +50,8 @@ class PayHandlerComponent extends Component {
         // update popularity status
         // $this->loadModel('Cousine');
         // $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id')");
+        
+        return array('ret' => 1, 'message' => 'success');
     }
 
 
@@ -60,7 +62,7 @@ class PayHandlerComponent extends Component {
 
         // pr($args); die;
         // get all params
-        $order_id = explode(",", $args['order_ids']);
+        $order_id = $args['order_ids'];
         $table = $args['table'];
         $table_merge = explode(",", $args['table_merge']);
         $main_order_id = $args['main_order_id'];
@@ -106,12 +108,14 @@ class PayHandlerComponent extends Component {
             };
 
             $this->Order->save($data, false);
+            
+            return array('ret' => 1, 'message' => 'success');
 
             //$this->loadModel('Cousine');
             //$this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id[$i]')");
         };
 
-        return true;
+        return array('ret' => 1, 'message' => 'order id is empty.');
     }
 
     
