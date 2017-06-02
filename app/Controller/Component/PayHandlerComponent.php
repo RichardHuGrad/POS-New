@@ -108,15 +108,13 @@ class PayHandlerComponent extends Component {
                 $data['Order']['merge_id'] = $main_order_id; 
             };
 
-            $this->Order->save($data, false);
-            
-            return array('ret' => 1, 'message' => 'success');
+            $this->Order->save($data, false);                        
 
             //$this->loadModel('Cousine');
             //$this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id[$i]')");
         };
 
-        return array('ret' => 1, 'message' => 'order id is empty.');
+        return array('ret' => 1, 'message' => 'success');
     }
 
     
