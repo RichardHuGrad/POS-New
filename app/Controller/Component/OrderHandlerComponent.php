@@ -336,6 +336,20 @@ class OrderHandlerComponent extends Component {
         $special = $args['special'];
         $cashier_id = $args['cashier_id'];
 
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'$selected_extras_id_list')");
+
+        if(empty($selected_extras_id_list)){
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'')");
+
+	        return array('ret' => 1, 'message' => 'No extras selected!');
+	        exit;
+        }
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',3,'')");
+        
+print_r($selected_extras_id_list);
+exit;
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',4,'')");
+
         // get cashier details
         $cashier_detail = $this->Cashier->find("first", array(
             'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
