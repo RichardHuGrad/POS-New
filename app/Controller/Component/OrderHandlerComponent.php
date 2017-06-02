@@ -327,7 +327,7 @@ class OrderHandlerComponent extends Component {
     	
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
         
-        echo 'success';
+        echo json_encode(array('ret' => 1, 'message' => 'No extras selected!'));
         exit;
   return array('ret' => 1, 'message' => 'No extras selected!');
   
@@ -610,6 +610,7 @@ class OrderHandlerComponent extends Component {
     
     
     public function editPhone($args) {
+return array('ret' => 1, 'message' => 'No extras selected!');    	
         ApiHelperComponent::verifyRequiredParams($args, ['restaurant_id', 'order_no', 'phone']);
     
         $restaurant_id = $args['restaurant_id'];
