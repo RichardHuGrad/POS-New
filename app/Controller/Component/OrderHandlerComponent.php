@@ -343,9 +343,9 @@ $this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',1,'{$
 
         // selected_extras_id_list maybe empty
         if(@$selected_extras_id_list[0]==''){
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'' )");
+$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'1' )");
         	
-	        echo json_encode(array('ret' => 1, 'message' => 'No extras selected!'));
+	        return array('ret' => 1, 'message' => 'No extras selected!');
 	        exit;
         }
 
