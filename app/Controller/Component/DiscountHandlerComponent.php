@@ -3,7 +3,7 @@ App::uses('Component', 'Controller');
 App::uses('ApiHelperComponent', 'Component');
 
 class DiscountHandlerComponent extends Component {
-	public $status = 'success';
+	  public $status = 'success';
 
     public function __construct() {
         $this->Order = ClassRegistry::init('Order');

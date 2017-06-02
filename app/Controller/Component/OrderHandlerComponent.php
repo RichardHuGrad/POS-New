@@ -125,7 +125,6 @@ class OrderHandlerComponent extends Component {
 
     }
 
-
     public function changePrice($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['item_id_list', 'table', 'type', 'order_no', 'price']);
         // get all params
@@ -327,7 +326,7 @@ class OrderHandlerComponent extends Component {
     public function addExtras($args) {
     	
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
-  
+  return array('ret' => 1, 'message' => 'No extras selected!');
         $item_id = $args['item_id'];
         
         $selected_extras_id_list = $args['extra_id_list'];
@@ -340,13 +339,14 @@ class OrderHandlerComponent extends Component {
 
         // selected_extras_id_list maybe empty
         if(@$selected_extras_id_list[0]==''){
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'1' )");
+
+//$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',2,'1' )");
         	
 	        return array('ret' => 1, 'message' => 'No extras selected!');
 	        exit;
         }
 
-$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',3,'' )");
+//$this->Log->query("INSERT INTO logs(cashier_id,operation,logs) VALUES ('0',3,'' )");
         
         // get cashier details
         $cashier_detail = $this->Cashier->find("first", array(
