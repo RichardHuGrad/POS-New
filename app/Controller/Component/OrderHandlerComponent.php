@@ -325,6 +325,7 @@ class OrderHandlerComponent extends Component {
 
 
     public function addExtras($args) {
+    	
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
 
         $item_id = $args['item_id'];
@@ -365,6 +366,7 @@ class OrderHandlerComponent extends Component {
 
         if(empty($selected_extras_list)){
 	        return array('ret' => 1, 'message' => 'No extras selected!');
+	        exit;
         }
         
         $item_detail = $this->OrderItem->find("first", array(
