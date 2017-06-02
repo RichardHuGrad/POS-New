@@ -326,7 +326,11 @@ class OrderHandlerComponent extends Component {
     public function addExtras($args) {
     	
         ApiHelperComponent::verifyRequiredParams($args, ['item_id', 'extra_id_list', 'table', 'type', 'special', 'cashier_id']);
+        
+        echo 'success';
+        exit;
   return array('ret' => 1, 'message' => 'No extras selected!');
+  
         $item_id = $args['item_id'];
         
         $selected_extras_id_list = $args['extra_id_list'];
