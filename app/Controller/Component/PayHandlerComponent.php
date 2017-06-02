@@ -13,10 +13,11 @@ class PayHandlerComponent extends Component {
 
     public function completeOrder($args) {
         ApiHelperComponent::verifyRequiredParams($args, ['order_id', 'table', 'type', 'paid_by', 'pay', 'change', 'card_val', 'cash_val', 'tip_paid_by', 'tip']);
+        
         // get all params
         $order_id = $args['order_id'];
         $table = $args['table'];
-        $type = $args['type'];
+        $type  = $args['type'];
         $paid_by = strtoupper($args['paid_by']);
 
         $pay = $args['pay'];
