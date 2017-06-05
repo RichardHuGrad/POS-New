@@ -814,7 +814,7 @@ class ReportCountDetailPage extends CountPage {
 
             $print_y = 30;
             // print time title
-            printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
+            printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . "-" .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
             $print_y+=32;
 
             printer_draw_line($handle, 21, $print_y, 600, $print_y);
@@ -827,21 +827,31 @@ class ReportCountDetailPage extends CountPage {
                 $paid_cash_percent = "-";
                 $paid_card_percent = "-";
             }
+          
             if ($this->print_zh == true) {
+
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+                /*
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡付小费 : ') . sprintf('%0.2f', $spanAmount['card_tip_total']), 32, $print_y); $print_y+=32;
+                */
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
 
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
 
             } else {
+
+                printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
+                printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
+                /*
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", 'Tips by Card : ') . sprintf('%0.2f', $spanAmount['card_tip_total']), 32, $print_y); $print_y+=32;
+                */
+
                 printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
 
                 printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
-                printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-                printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
 
             }
             $print_y+=30;
@@ -877,7 +887,7 @@ class ReportCountPage extends CountPage
 
             $print_y = 30;
             // print time title
-            printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . " - " .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
+            printer_draw_text($handle, date("Y-m-d H:i", $spanAmount['start_time']) . "-" .date("Y-m-d H:i", $spanAmount['end_time']), 30, $print_y);
             $print_y+=32;
 
             printer_draw_line($handle, 21, $print_y, 600, $print_y);

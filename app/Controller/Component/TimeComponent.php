@@ -3,8 +3,11 @@
 App::uses('Component', 'Controller');
 
 class TimeComponent extends Component {
-    public function getTimelineArray($type) {
+	
+    public function getTimelineArray($type,$from_date='',$to_date='') {
+    	
         date_default_timezone_set("America/Toronto");
+        
         $date_time = date("l M d Y h:i:s A");
         $timeline = strtotime(date("Y-m-d 10:00:00"));
         $nowtm = time();
@@ -35,12 +38,19 @@ class TimeComponent extends Component {
             return array($tm11, $tm17, $tm23, $tm04);
             
         } else if ($type == "month") {
-            date_default_timezone_set("America/Toronto");
+
             $date_time = date("l M d Y h:i:s A");
             $timeline = strtotime(date("Y-m-01 10:00:00"));
             $nowtm = time();
 
             return array($timeline, $nowtm);
+            
+        } else if ($type == "period") {
+        	
+            $from_date = strtotime(date($from_date." 10:00:00")); 
+            $to_date   = strtotime($to_date." 09:59:00" ."+1 day"); 
+
+            return array($from_date, $to_date);
         }
     }
 

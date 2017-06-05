@@ -457,12 +457,13 @@ class PrintComponent extends Component {
             throw new Exception('Missing argument: type');
         }
 
-        $timeArray = TimeComponent::getTimelineArray($args['type']);
+        $timeArray = TimeComponent::getTimelineArray($args['type'],$args['from_date'],$args['to_date']);
 
 
         if ($args['type'] != "month") {
             $dailyAmount = $this->Order->getDailyOrderInfo($timeArray);
         }
+        
         $dailyAmountTotal = $this->Order->getDailyOrderInfo(array(reset($timeArray), end($timeArray)));
         // $dailyItems = $this->OrderItem->getDailyItemCount(array($tm11, $tm04));
 
@@ -488,7 +489,7 @@ class PrintComponent extends Component {
             throw new Exception('Missing argument: type');
         }
 
-        $timeArray = TimeComponent::getTimelineArray($args['type']);
+        $timeArray = TimeComponent::getTimelineArray($args['type'],$args['from_date'],$args['to_date']);
 
         // $dailyAmount = $this->Order->getDailyOrderInfo(array($tm11, $tm17, $tm23, $tm04));
         $dailyItems = $this->OrderItem->getDailyItemCount(array(reset($timeArray), end($timeArray)));

@@ -10,10 +10,20 @@
   </div>
     <div class="col-md-3 col-sm-3 col-xs-12">
         <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a data-toggle="pill" href="#today-menu"><?php echo __('Today'); ?></a></li>
-            <li><a data-toggle="pill" href="#yesterday-menu"><?php echo __('Yesterday'); ?></a></li>
-            <li><a data-toggle="pill" href="#month-menu"><?php echo __('Current Month'); ?></a></li>
+            <li class="active" report-type='today'><a data-toggle="pill" href="#today-menu"><?php echo __('Today'); ?></a></li>
+            <li report-type='yesterday'><a data-toggle="pill" href="#yesterday-menu"><?php echo __('Yesterday'); ?></a></li>
+            <li report-type='period'><a data-toggle="pill" href="#period-menu"><?php echo __('Period'); ?></a></li>
         </ul>
+        
+        <div id='period-input' style='display:none'>
+            <div style='margin-top:10px;'>
+                <input placeholder="From date" class="form-control datepicker reset-field" type="text" id="from_date"/>  
+            </div>
+            <div style='margin-top:10px;'>
+                <input placeholder="To date" class="form-control datepicker reset-field" type="text" id="to_date"/>  
+            </div>
+        </div>
+        
     </div>
 
     <div class="tab-content col-md-9 col-sm-9 col-xs-12 ">
@@ -33,15 +43,15 @@
                 <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="yesterday"><?php echo __('Print Sales Items'); ?></button>
             </div>
         </div>
-        <div id="month-menu" class="tab-pane fade">
+        <div id="period-menu" class="tab-pane fade">
             <div class="button-group">
-                <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="month"><?php echo __('Check Sales Total'); ?></button>
-                <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="month"><?php echo __('Print Sales Total'); ?></button>
-                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="month"><?php echo __('Check Sales Items'); ?></button>
-                <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="month"><?php echo __('Print Sales Items'); ?></button>
+                <button class="btn btn-lg btn-info" type="button" name="view-amount" data-type="period"><?php echo __('Check Sales Total'); ?></button>
+                <button class="btn btn-lg btn-info" type="button" name="print-amount" data-type="period"><?php echo __('Print Sales Total'); ?></button>
+                <button class="btn btn-lg btn-info" type="button" name="view-items" data-type="period"><?php echo __('Check Sales Items'); ?></button>
+                <button class="btn btn-lg btn-info" type="button" name="print-items" data-type="period"><?php echo __('Print Sales Items'); ?></button>
             </div>
         </div>
-        <div class="report-content">
+        <div class="report-content" style="margin-top:10px">
         </div>
     </div>
 </div>
@@ -68,11 +78,27 @@
 </body>
 
 <?php
-  echo $this->Html->css(array('report'));
-  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','md5.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js'));
+  echo $this->Html->css(array('report','datepicker'));
+  echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery.mCustomScrollbar.concat.min.js','md5.js', 'barcode.js', 'fanticonvert.js', 'notify.min.js', 'flowtype.js','bootstrap-datepicker'));
  ?>
 
 <script type="text/javascript">
+
+ jQuery(document).ready(function () {
+
+    jQuery('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        endDate: '0d'
+    });
+
+    var firstday = new Date();
+    firstday.setMonth(firstday.getMonth() , 1);
+        
+    $('#from_date').datepicker('setDate',firstday );
+    $('#to_date').datepicker('setDate', 'today');
+
+ });
+
 
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -100,17 +126,34 @@ function getTimeStr(timeStamp) {
 }
 
 
-$('.nav').on('click', function () {
+$('.nav-pills li').on('click', function () {
     $('.report-content').empty();
+    var report_type = $(this).attr('report-type');
+    
+    if(report_type == 'period'){
+    	$("#period-input").css('display','block'); 
+    }else{
+    	$("#period-input").css('display','none'); 
+    }
 });
 
 $('button[name="view-amount"]').on('click', function(e) {
-    console.log($(this).data("type"));
+
+    var from_date = $("#from_date").val();
+    var to_date   = $("#to_date").val();
+    if($(this).data("type")=='period' && (from_date=='' || to_date=='')){
+    	alert("Please input date range!");
+    	from_date.focus(); 
+    	return;
+    } 
+       
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getAmountInfo')); ?>",
         method: "post",
         data: {
-          type: $(this).data("type"),
+          type     : $(this).data("type"),
+          from_date: from_date,
+          to_date  : to_date,          
         },
         success: function (json) {
             // console.log(JSON.parse(json));
@@ -128,13 +171,25 @@ $('button[name="view-amount"]').on('click', function(e) {
     })
 });
 
-$('button[name="print-amount"]').on('click', function(e) {
+$('button[name="print-amount"]').on('click', function(e) 
+{
+    var from_date = $("#from_date").val();
+    var to_date   = $("#to_date").val();
+
+    if($(this).data("type")=='period' && (from_date=='' || to_date=='')){
+    	alert("Please input date range!");
+    	from_date.focus(); 
+    	return;
+    } 
+
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayOrders')); ?>",
         method: "post",
         // async: false,
         data:{
           type: $(this).data("type"),
+          from_date: from_date,
+          to_date  : to_date,          
         },
         success: function (html) {
             alert("Finished");
@@ -146,12 +201,24 @@ $('button[name="print-amount"]').on('click', function(e) {
 });
 
 $('button[name="view-items"]').on('click', function(e) {
+
+    var from_date = $("#from_date").val();
+    var to_date   = $("#to_date").val();
+
+    if($(this).data("type")=='period' && (from_date=='' || to_date=='')){
+    	alert("Please input date range!");
+    	from_date.focus(); 
+    	return;
+    } 
+
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'getItemsInfo')); ?>",
         method: "post",
         cache:false,
         data: {
           type: $(this).data("type"),
+          from_date: from_date,
+          to_date  : to_date,          
         },
         success: function (json) {
             // console.log(json);
@@ -169,12 +236,24 @@ $('button[name="view-items"]').on('click', function(e) {
 });
 
 $('button[name="print-items"]').on('click', function(e) {
+
+    var from_date = $("#from_date").val();
+    var to_date   = $("#to_date").val();
+
+    if($(this).data("type")=='period' && (from_date=='' || to_date=='')){
+    	alert("Please input date range!");
+    	from_date.focus(); 
+    	return;
+    } 
+
     $.ajax({
         url: "<?php echo $this->Html->url(array('controller' => 'report', 'action' => 'printTodayItems')); ?>",
         method: "post",
         // async: false,
         data:{
           type: $(this).data("type"),
+          from_date: from_date,
+          to_date  : to_date,          
         },
         success: function (html) {
             alert("Finished");
@@ -184,5 +263,6 @@ $('button[name="print-items"]').on('click', function(e) {
         }
     });
 });
+
 </script>
 
