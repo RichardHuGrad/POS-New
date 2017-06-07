@@ -63,7 +63,6 @@ class PrintComponent extends Component {
 
     /**
      * printPayBill
-     *
      * Parameters:
      *      $args['restaurant_id']
      *      $args['order_id']

@@ -1,0 +1,49 @@
+2017-05-26 15:03:31 Error: [MissingConnectionException] Database connection "Mysql" is missing, or could not be created.
+Exception Attributes: array (
+  'class' => 'Mysql',
+  'message' => 'SQLSTATE[HY000] [1045] Access denied for user \'pos\'@\'localhost\' (using password: YES)',
+  'enabled' => true,
+)
+Request URL: /pos/cook/
+Stack Trace:
+#0 E:\www\pos\lib\Cake\Model\Datasource\DboSource.php(260): Mysql->connect()
+#1 E:\www\pos\lib\Cake\Model\ConnectionManager.php(105): DboSource->__construct(Array)
+#2 E:\www\pos\lib\Cake\Model\Model.php(3476): ConnectionManager::getDataSource('default')
+#3 E:\www\pos\lib\Cake\Model\Model.php(1126): Model->setDataSource('default')
+#4 E:\www\pos\lib\Cake\Model\Model.php(3498): Model->setSource('cooks')
+#5 E:\www\pos\lib\Cake\Model\Model.php(2902): Model->getDataSource()
+#6 E:\www\pos\lib\Cake\Model\Model.php(2874): Model->_readDataSource('first', Array)
+#7 E:\www\pos\cook\Controller\HomesController.php(42): Model->find('first', Array)
+#8 [internal function]: HomesController->index()
+#9 E:\www\pos\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(HomesController), Array)
+#10 E:\www\pos\lib\Cake\Routing\Dispatcher.php(185): Controller->invokeAction(Object(CakeRequest))
+#11 E:\www\pos\lib\Cake\Routing\Dispatcher.php(160): Dispatcher->_invoke(Object(HomesController), Object(CakeRequest), Object(CakeResponse))
+#12 E:\www\pos\cook\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#13 {main}
+2017-05-26 15:03:32 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /pos/cook/css/cake.generic.css
+Stack Trace:
+#0 E:\www\pos\cook\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-26 15:03:32 Error: [MissingControllerException] Controller class Favicon.icoController could not be found.
+Exception Attributes: array (
+  'class' => 'Favicon.icoController',
+  'plugin' => NULL,
+)
+Request URL: /pos/cook/favicon.ico
+Stack Trace:
+#0 E:\www\pos\cook\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2017-05-26 15:03:32 Error: [MissingControllerException] Controller class ImgController could not be found.
+Exception Attributes: array (
+  'class' => 'ImgController',
+  'plugin' => NULL,
+)
+Request URL: /pos/cook/img/cake.power.gif
+Stack Trace:
+#0 E:\www\pos\cook\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}

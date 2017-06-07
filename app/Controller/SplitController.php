@@ -170,6 +170,4 @@ class SplitController extends AppController {
     }
 }
 
-
-
- ?>
+?>

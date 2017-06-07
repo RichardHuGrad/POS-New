@@ -122,11 +122,11 @@ class PrintLib {
         $y = 0;
 
         if ($print_zh == true) {
-            $font = printer_create_font('simsun', 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+            $font = printer_create_font('simsun', 40, 19, PRINTER_FW_BOLD, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
         } else {
-            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font("Arial", 40, 19, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, "Kitchen", 138, $y);
         }
@@ -136,7 +136,7 @@ class PrintLib {
 
         $y += 60;
         //Print change table information   
-        $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("simsun", 39, 17, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, "Order#: " . $order_no. iconv("UTF-8", "gb2312", "  换桌"), 32, $y);
                  
@@ -168,7 +168,6 @@ class PrintLib {
         if (!function_exists('printer_open')) {
            return "function printer_open() not exists in server!";
         }
-
 
         $headerPage = new LogoHeaderPage($order_no, $table_no, $table_type, $logo_name);
         $itemsPage  = new PayItemsPage($item_detail);
@@ -314,11 +313,11 @@ class KitchenHeaderPage extends HeaderPage {
 
 
         if ($this->print_zh == true) {
-            $font = printer_create_font('simsun', 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+            $font = printer_create_font('simsun', 40, 19, PRINTER_FW_BOLD, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
         } else {
-            $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font("Arial", 40, 19, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, "Kitchen", 138, $y);
         }
@@ -330,7 +329,7 @@ class KitchenHeaderPage extends HeaderPage {
 
         $y = 0;
         //Print order information
-        $font = printer_create_font("Arial", 40, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("simsun", 39, 17, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
                  
@@ -387,7 +386,7 @@ class LogoHeaderPage extends HeaderPage {
         // print Logo image
         printer_draw_bmp($handle, $this->logo_name, 100, 20, 263, 100);
 
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("simsun", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         // print address line
         printer_draw_text($handle, $addressLine1, $offset[0] , 130);
@@ -405,7 +404,7 @@ class LogoHeaderPage extends HeaderPage {
             $print_y+=40;
         };
 
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("simsun", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
 
         printer_draw_text($handle, "Order#: " . $this->order_no, 32, $print_y);
@@ -463,11 +462,13 @@ class KitchenItemsPage extends ItemsPage {
         foreach ($this->item_detail as $item) {
             printer_start_page($handle);
 
-            $font1H = 32;
-            $font2H = 38;
-            $font3H = 32;
+            $font1H = 30;
+            $font2H = 36;
+            $font3H = 30;
+            
             $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-            $font2 = printer_create_font('simsun', $font2H, 16, PRINTER_FW_BOLD, false, false, false, 0);
+            
+            $font2 = printer_create_font('simsun', $font2H, 15, PRINTER_FW_BOLD, false, false, false, 0);
 
             $font3 = printer_create_font('simsun', $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
 
@@ -698,7 +699,7 @@ abstract class CountPage {
         printer_start_page($handle);
         
         if($font_bold == true){
-        	$font =printer_create_font("Arial", 35, 15, 1200, false, false, false, 0);
+        	$font =printer_create_font("simsun", 33, 15, 1200, false, false, false, 0);
         }else{
         	//$font = printer_create_font('simsun', 28, 11, PRINTER_FW_MEDIUM, false, false, false, 0);        	
         	$font = printer_create_font('simsun', 28, 11, 570, false, false, false, 0);
@@ -707,7 +708,7 @@ abstract class CountPage {
         printer_select_font($handle, $font);
 
         printer_draw_text($handle, iconv("UTF-8", "gb2312", $str1), 58, 0);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", $str2), 148, 0);
+        printer_draw_text($handle, iconv("UTF-8", "gb2312", $str2), 180, 0);
 
         printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($num, 2)), 400, 0);
 
@@ -724,7 +725,7 @@ class BillPage extends CountPage {
     }
 
     public function printPage($handle) {
-        // $billArr = array()`
+        // $billArr = array()
         $bill_info = $this->bill_info;
         $subtotal = $bill_info['subtotal'];
         $discount_amount = $bill_info['discount_value'];
@@ -747,7 +748,7 @@ class BillPage extends CountPage {
 
         if (floatval($discount_amount) > 0 ) {
             $this->format3Columns($handle, "Discount", "折扣:", $discount_amount);
-            $this->format3Columns($handle, "After Discount", "折后价:", $after_discount);
+            $this->format3Columns($handle, "AfterDiscount", "折后价:", $after_discount);
         }
         $this->format3Columns($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
 

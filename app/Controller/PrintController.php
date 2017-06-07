@@ -13,24 +13,19 @@ class PrintController extends AppController {
     public $charNo = 20;
     public $lineStartPos = 10;
 
+/*
     public function printBill() {
         $this->layout = false;
         $this->autoRender = NULL;
-
         $items = json_decode($this->data['items']);
-
         echo json_encode($items[0]);
     }
-
+*/
     public function printReceipt() {
         $this->layout = false;
         $this->autoRender = NULL;
 
         $items = json_decode($this->data['items']);
-
-
-
-
         echo json_encode($items[0]);
     }
 
@@ -50,7 +45,7 @@ class PrintController extends AppController {
     	
         if($font_bold == true){
           //$font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, 1500, false, false, false, 0);
-          $font =printer_create_font("Arial", 32, 14, 1200, false, false, false, 0);
+          $font =printer_create_font("simsun", 32, 14, 1200, false, false, false, 0);
         }else{
           $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         }
@@ -114,7 +109,6 @@ class PrintController extends AppController {
     public function printEn($str, $x, $y,$font_bold=false) {
 
         if($font_bold == true){
-          //$font = printer_create_font("Arial", 28, 10, 1500, false, false, false, 0);
           $font =printer_create_font("Arial", 32, 14, 1200, false, false, false, 0);
         }else{
           $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
@@ -252,7 +246,7 @@ class PrintController extends AppController {
             $print_y += 30;
 
             if ($print_zh == true) {
-                $this->printZh("After Discount", 58, $print_y);
+                $this->printZh("AfterDiscount", 58, $print_y);
                 $this->printZh("折后价：", 148, $print_y);
             } else {
                 $this->printEn("After Discount :", 58, $print_y);
@@ -287,7 +281,7 @@ class PrintController extends AppController {
             $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
             $print_y += 30;
         }
-        $this->printEn($date_time, 80, $print_y);
+        $this->printEn($date_time, 60, $print_y);
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
@@ -448,7 +442,7 @@ class PrintController extends AppController {
                 $this->printZh("After Discount", 58, $print_y);
                 $this->printZh("折后价：", 148, $print_y);
             } else {
-                $this->printEn("After Discount :", 58, $print_y);
+                $this->printEn("AfterDiscount :", 58, $print_y);
             }
 
             $this->printEn(number_format($after_discount, 2), 360, $print_y);
@@ -503,7 +497,7 @@ class PrintController extends AppController {
             $this->printEn("Hst Number: " . PrintConfig::$hstNumber, 80, $print_y);
             $print_y += 30;
         }
-        $this->printEn($date_time, 90, $print_y);
+        $this->printEn($date_time, 60, $print_y);
 
         printer_end_page($this->handle);
         printer_end_doc($this->handle);
@@ -521,7 +515,6 @@ class PrintController extends AppController {
 
     }
 }
-
 
 
 ?>
