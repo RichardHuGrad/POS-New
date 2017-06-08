@@ -566,7 +566,7 @@ class OrderHandlerComponent extends Component {
       $Order_detail = $this->Order->find("first", array(
           'fields' => array('Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
           'conditions' => array('Order.order_no' => $order_no),
-          'recursive' => false
+          'recursive' => -1
               )
       );        
 

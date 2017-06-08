@@ -71,7 +71,7 @@ class PayController extends AppController {
         $orders_no = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
             'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
                 )
         );
 

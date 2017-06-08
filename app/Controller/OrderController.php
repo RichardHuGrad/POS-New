@@ -53,7 +53,7 @@ class OrderController extends AppController {
         $populars = $this->Cousine->find("all", array(
             'conditions' => array('Cousine.status' => 'A', 'Cousine.restaurant_id' => $cashier_detail['Cashier']['restaurant_id']),
             'order' => 'Cousine.popular DESC',
-            'recursive' => false,
+            'recursive' => -1,
             'limit' => 30
                 )
         );
@@ -72,7 +72,7 @@ class OrderController extends AppController {
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.order_no', 'Order.order_type', 'Order.table_status', 'Order.id','Order.phone'),
             'conditions' => $conditions,
-            'recursive' => false
+            'recursive' => -1
                 )
         );
 

@@ -327,7 +327,7 @@ class HomesController extends AppController {
             array(
                 'conditions'=>array('Cousine.status'=>'A', 'Cousine.restaurant_id'=>$cashier_detail['Cashier']['restaurant_id']),
                 'order'=>'Cousine.popular DESC',
-                'recursive'=>false,
+                'recursive'=>-1,
                 'limit'=>30
                 )
             );
@@ -346,7 +346,7 @@ class HomesController extends AppController {
             array(
                 'fields'=>array('Order.order_no'),
                 'conditions'=> $conditions,
-                'recursive'=>false                
+                'recursive'=>-1                
                 )
             );  
 

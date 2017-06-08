@@ -229,10 +229,17 @@ class AccessComponent extends Component {
       $data['Attendance']['userid']   = $userid;
       $data['Attendance']['day']      = $day;
       $data['Attendance']['checkin']  = $checkin;
-
-      $checkin = $Attendance->field('checkin', array('userid' => $userid,'day' => $day,'checkout' => ''));
-      if($checkin != ""){
-      	return array('ret' => 0, 'message' => "You already check in at $checkin, Please check out first!");
+      
+      $r =$Attendance->find("first", array(
+             'fields' => array('Attendance.day','Attendance.checkin'),
+             'conditions' => array('Attendance.userid' => $userid,'Attendance.checkout' => ''),
+             'recursive' => -1
+         )
+      );
+      
+      //$checkin = $Attendance->field('checkin', array('userid' => $userid,'checkout' => ''));
+      if(!empty($r)){
+      	return array('ret' => 0, 'message' => "You already check in at {$r['Attendance']['day']} {$r['Attendance']['checkin']}, Please check out first!");
       }
       
       $Attendance->save($data, false);
@@ -262,7 +269,7 @@ class AccessComponent extends Component {
       $data['Attendance']['day']       = $day;
       $data['Attendance']['checkout'] = $checkout;
       
-      $id = $Attendance->field('id', array('userid' => $userid,'day' => $day,'checkout' => ''));
+      $id = $Attendance->field('id', array('userid' => $userid,'checkout' => ''));
       if($id != ""){
       	$data['Attendance']['id']  = $id;
       }else{

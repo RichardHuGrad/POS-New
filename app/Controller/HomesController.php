@@ -185,7 +185,7 @@ class HomesController extends AppController {
         $orders_no = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
                 )
         );
 
@@ -193,7 +193,7 @@ class HomesController extends AppController {
         $orders_phone = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.phone', 'Order.table_no'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
                 )
         );
 
@@ -212,7 +212,7 @@ class HomesController extends AppController {
         $orders_total = $this->Order->find("list", array(
             'fields' => array('Order.order_no', 'Order.total'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
                 )
         );
 
@@ -220,7 +220,7 @@ class HomesController extends AppController {
         $orders_time = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.created', 'Order.table_no'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
                 )
         );
         
@@ -738,7 +738,7 @@ class HomesController extends AppController {
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
             'conditions' => array('Order.order_no' => $order_no),
-            'recursive' => false
+            'recursive' => -1
                 )
         );        
         $restaurant_id = $Order_detail['Order']['cashier_id'];
