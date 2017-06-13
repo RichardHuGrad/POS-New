@@ -339,7 +339,7 @@ class OrderHandlerComponent extends Component {
 
         // selected_extras_id_list maybe empty
         if(@$selected_extras_id_list[0]==''){
-        	        	
+        	$this->OrderItem->query("UPDATE order_items set selected_extras = '' where id =$item_id ");           	
 	        return array('ret' => 1, 'message' => 'No extras selected!');
 	        exit;
         }
