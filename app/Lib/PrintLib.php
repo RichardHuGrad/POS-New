@@ -115,7 +115,7 @@ class PrintLib {
         printer_start_doc($handle, "Doc");
         printer_start_page($handle);
 
-        $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]', 'L' => '[[网订]]');
+        $type_map = array('D' => '[堂食]', 'T' => '[外卖]', 'W' => '[送餐]', 'L' => '[网订]');
         $table_type_str     = $type_map[$table_type];
         $old_table_type_str = $type_map[$old_type];
 
@@ -124,11 +124,11 @@ class PrintLib {
         if ($print_zh == true) {
             $font = printer_create_font('simsun', 40, 19, PRINTER_FW_BOLD, false, false, false, 0);
             printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
+            printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 150, $y);
         } else {
             $font = printer_create_font("Arial", 40, 19, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
-            printer_draw_text($handle, "Kitchen", 138, $y);
+            printer_draw_text($handle, "Kitchen", 150, $y);
         }
 
         //printer_end_page($handle);
@@ -141,7 +141,7 @@ class PrintLib {
         printer_draw_text($handle, "Order#: " . $order_no. iconv("UTF-8", "gb2312", "  换桌"), 32, $y);
                  
         $y += 50;
-        printer_draw_text($handle, "From " . iconv("UTF-8", "gb2312", $old_table_type_str . '# ' . $old_table). " to ". iconv("UTF-8", "gb2312", $table_type_str . '# ' . $table_no), 32, $y);
+        printer_draw_text($handle, "From " . iconv("UTF-8", "gb2312", $old_table_type_str . '#' . $old_table). " to ". iconv("UTF-8", "gb2312", $table_type_str . '#' . $table_no), 32, $y);
         
         if($phone!=''){
           $y += 50;

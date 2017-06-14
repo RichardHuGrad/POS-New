@@ -33,10 +33,10 @@ $created    = @$search['created'];
     margin-left: 22px;
 }
 .checkbox label{
-      background-color: #7E7E7E;
+  background-color: #7E7E7E;
   border-color: #7E7E7E;
   color: #ffffff;
-    transition: all 0.3s ease 0s !important;
+  transition: all 0.3s ease 0s !important;
   background-image: none !important;
   box-shadow: none !important;
   outline: none !important;
@@ -147,10 +147,10 @@ $created    = @$search['created'];
                                 <thead>
                                     <tr>
                                     	  <th>Select</th>
+                                        <th><?php echo @$this->Paginator->sort('created'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('name'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('operation'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('logs'); ?></th>
-                                        <th><?php echo @$this->Paginator->sort('created'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -169,13 +169,13 @@ $created    = @$search['created'];
                                                    <td><input value="<?php echo $row['Log']['id']; ?>"  type="checkbox" class="ids" /></td>
                                                 <?php //} 
                                                 ?>
+                                                <td><?php echo $row['Log']['created']; ?></td>
                                             	
                                             	  <td><?php echo $row['Log']['name']; ?>
                                                 </td>
                                             	  <td><?php echo $row['Log']['operation']; ?>
                                                 </td>
                                                 <td><?php echo $row['Log']['logs']; ?></td>
-                                                <td><?php echo $row['Log']['created']; ?></td>
                                             </tr>
                                             <?php
                                         }

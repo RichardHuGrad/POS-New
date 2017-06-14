@@ -113,7 +113,7 @@ class PromocodesController extends AppController {
         	
     	      //已经存在该promocode则给出提示并返回
     	      $ret =$this->Promocode->hasAny(['code'=>$this->request->data['Promocode']['code']]);
-    	      if($ret){
+    	      if($ret && $id==''){
     	      	$this->Session->setFlash('Promocode already exists!', 'error');
     	      }else{
         	
@@ -122,7 +122,7 @@ class PromocodesController extends AppController {
               if ($this->Promocode->validates()) {
               
 	              $start_time =  $this->request->data['Promocode']['start_time'];
-	              $end_time =  $this->request->data['Promocode']['end_time'];
+	              $end_time   =  $this->request->data['Promocode']['end_time'];
 	              $this->request->data['Promocode']['start_time'] = date("H:i:s", strtotime(trim($start_time)));
 	              $this->request->data['Promocode']['end_time'] = date("H:i:s", strtotime(trim($end_time)));
 	              $this->request->data['Promocode']['week_days'] = implode(",", $this->request->data['Promocode']['week_days']);
