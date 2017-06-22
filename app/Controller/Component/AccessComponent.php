@@ -219,19 +219,13 @@ class AccessComponent extends Component {
       if(empty($Cashier->findByUserid($userid))){
       	return array('ret' => 0, 'message' => "Userid is not valid!");
       }
-
-      
-      $time    = date('Y-m-d H:i:s');
-      $day     = substr ($time , 0, 10);
-      $checkin = substr ($time , -8); 
               
       $data = array();
       $data['Attendance']['userid']   = $userid;
-      $data['Attendance']['day']      = $day;
-      $data['Attendance']['checkin']  = $checkin;
+      $data['Attendance']['checkin']  = date('Y-m-d H:i:s');
       
       $r =$Attendance->find("first", array(
-             'fields' => array('Attendance.day','Attendance.checkin'),
+             'fields' => array('Attendance.checkin'),
              'conditions' => array('Attendance.userid' => $userid,'Attendance.checkout' => ''),
              'recursive' => -1
          )
@@ -239,7 +233,7 @@ class AccessComponent extends Component {
       
       //$checkin = $Attendance->field('checkin', array('userid' => $userid,'checkout' => ''));
       if(!empty($r)){
-      	return array('ret' => 0, 'message' => "You already check in at {$r['Attendance']['day']} {$r['Attendance']['checkin']}, Please check out first!");
+      	return array('ret' => 0, 'message' => "You already check in at {$r['Attendance']['checkin']}, Please check out first!");
       }
       
       $Attendance->save($data, false);
@@ -259,15 +253,10 @@ class AccessComponent extends Component {
       if(empty($Cashier->findByUserid($userid))){
       	return array('ret' => 0, 'message' => "Userid is not valid!");
       }
-
-      $time    = date('Y-m-d H:i:s');
-      $day     = substr ($time , 0, 10);
-      $checkout = substr ($time , -8); 
               
       $data = array();
-      $data['Attendance']['userid']    = $userid;
-      $data['Attendance']['day']       = $day;
-      $data['Attendance']['checkout'] = $checkout;
+      $data['Attendance']['userid']   = $userid;
+      $data['Attendance']['checkout'] = date('Y-m-d H:i:s');
       
       $id = $Attendance->field('id', array('userid' => $userid,'checkout' => ''));
       if($id != ""){

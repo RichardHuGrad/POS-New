@@ -27,7 +27,7 @@ class AttendancesController extends AppController {
 
         $this->layout = 'admin';
         $limit = DEFAULT_PAGE_SIZE;
-        $order = 'Attendance.day DESC';
+        $order = 'Attendance.checkin DESC';
 
         $conditions = array();
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
@@ -60,10 +60,10 @@ class AttendancesController extends AppController {
                 $conditions['Attendance.userid'] = str_replace("#", "", $search['search']);
             }
             if(!empty($search['from_day'])){
-                $conditions['date(Attendance.day) >='] = $search['from_day'];
+                $conditions['Attendance.checkin >='] = $search['from_day']." 00:00:00";
             }
             if(!empty($search['to_day'])){
-                $conditions['date(Attendance.day) <='] = $search['to_day'];
+                $conditions['Attendance.checkin <='] = $search['to_day']." 23:59:59";
             }
 
         }

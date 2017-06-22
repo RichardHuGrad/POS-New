@@ -142,7 +142,6 @@ $to_day   = @$search['to_day'];
                                     	  <th>Select</th>
                                         <th><?php echo @$this->Paginator->sort('userid'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('name'); ?></th>
-                                        <th><?php echo @$this->Paginator->sort('day'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('checkin'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('checkout'); ?></th>
                                         <th><?php echo @$this->Paginator->sort('working_hours'); ?></th>
@@ -169,7 +168,6 @@ $to_day   = @$search['to_day'];
                                                 </td>
                                             	  <td><?php echo $row['Attendance']['name']; ?>
                                                 </td>
-                                                <td><?php echo $row['Attendance']['day']; ?></td>
                                                 <td><?php echo $row['Attendance']['checkin']; ?></td>
                                                 <td><?php echo $row['Attendance']['checkout']; ?></td>
                                                 <td><?php echo $row['Attendance']['working_hours']; ?></td>
