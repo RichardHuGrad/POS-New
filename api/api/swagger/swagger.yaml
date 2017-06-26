@@ -432,13 +432,21 @@ paths:
         - Order
       responses:
         200:
-          description: return order_item_id
+          description: return order_item_id and comb id, comb_num
           schema:
             properties:
               order_item_id:
                 type: integer
                 format: int32
                 description: the id of order_item which is added
+              comb_id:
+                type: integer
+                format: int32
+                description: the extra comb id
+              comb_num:
+                type: integer
+                format: int32
+                description: the number extras which comb needs
         default:
           $ref: "#/responses/MissingArgumentError"
 

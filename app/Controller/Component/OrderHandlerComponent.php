@@ -91,7 +91,8 @@ class OrderHandlerComponent extends Component {
         $this->Order->updateBillInfo($order_id);
 
         $json['order_item_id'] = $order_item_id;
-        $json['comb_id'] = $comb_id;
+        $json['comb_id']  = $comb_id;
+        $json['comb_num'] = $comb_num[0]['cousines']['comb_num'];
         return json_encode($json);
     }
 
