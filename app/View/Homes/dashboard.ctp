@@ -390,11 +390,12 @@
             </div>
 
         </div>
-
+<!--
         <div class="col-md-10 col-sm-10 col-xs-10" id="online-list-component">
 
             <div class="col-md-1 col-sm-1 col-xs-1 dine-wrap" id="online-list-title">
-               <?php echo __('Online'); ?>&nbsp;<a href="<?php echo $this->Html->url(array('controller' => 'opencart', 'action' =>'getOcOrders')); ?>" style="color:#fff" title="Fetch online orders."><icon class="fa fa-refresh icon_size16"></icon></a>
+               <?php echo __('Online'); ?>&nbsp;              
+               <a href="<?php echo $this->Html->url(array('controller' => 'opencart', 'action' =>'getOcOrders')); ?>" style="color:#fff" title="Fetch online orders."><icon class="fa fa-refresh icon_size16"></icon></a>     	
             </div>
 
             <div class="col-md-11 col-sm-11 col-xs-11 dine-wrap">
@@ -458,9 +459,7 @@
                                         </ul>
                                         <?php }?>
                                  </li>
-                            <!--     
-                                 <li <?php if(@$online_tables_status[$i] <> 'N' and @$online_tables_status[$i] <> 'V')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$online_tables_status[$i] == 'N' OR @$online_tables_status[$i] == 'V')echo $this->Html->url(array('controller'=>'pay', 'action'=>'index', 'table'=>$i, 'type'=>'L')); else echo "javascript:void(0)";?>"><?php echo __('Pay'); ?></a></li>
-                            -->
+
                                  <li <?php if(@$online_tables_status[$i] <> 'N' and @$online_tables_status[$i] <> 'P')echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$online_tables_status[$i] == 'P') echo $this->Html->url(array('controller'=>'homes', 'action'=>'closeOrder', 'table'=>$i, 'type'=>'L', 'order'=>@$orders_no[$i]['L'])); else echo "javascript:void(0)";?>"><?php echo __('CloseOrder'); ?></a></li>
 
                                  <li <?php if(@$online_tables_status[$i] <> 'N' and @$online_tables_status[$i] <> 'P') echo 'class="disabled"';?>><a tabindex="-1" href="<?php if(@$online_tables_status[$i] == 'N' or @$online_tables_status[$i] == 'P') echo "javascript:makeavailable('".$this->Html->url(array('controller'=>'homes', 'action'=>'makeavailable', 'table'=>$i, 'type'=>'L', 'order'=>@$orders_no[$i]['L']))."')"; else echo "javascript:void(0)"; ?>"><?php echo __('Clear'); ?></a></li>
@@ -488,7 +487,7 @@
                 </ul>
             </div>
         </div>
-
+-->
         <div class="col-md-2 dine-wrap">
             <div class="clearfix marginB15 col-md-6">
                 <div class="pull-left notpaid"></div>
