@@ -47,8 +47,10 @@ class OpencartController extends AppController {
   
   }
   
-	public function addProcuct() {
-		$this->layout = false;
+  
+  //add local product,option etc.. to remote opencart site
+  public function addProcuct() {
+	$this->layout = false;
     $this->autoRender = NULL;
 
     //ApiHelperComponent::verifyRequiredParams($args, ['order_no','discountType','discountValue']);
@@ -70,18 +72,18 @@ class OpencartController extends AppController {
     $rows3  = $db->fetchAll($sql_options);
     $rows4  = $db->fetchAll($sql_optionvalues);
 		
-		foreach($rows1 as $row1){
-			$categorys[] = $row1['categorys'];
-		}
-		foreach($rows2 as $rows2){
-			$products[] = $rows2['products'];
-		}
-		foreach($rows3 as $row3){
-			$options[] = $row3['0'];
-		}
-		foreach($rows4 as $row4){
-			$optionvalues[] = $row4['0'];
-		}
+	foreach($rows1 as $row1){
+		$categorys[] = $row1['categorys'];
+	}
+	foreach($rows2 as $rows2){
+		$products[] = $rows2['products'];
+	}
+	foreach($rows3 as $row3){
+		$options[] = $row3['0'];
+	}
+	foreach($rows4 as $row4){
+		$optionvalues[] = $row4['0'];
+	}
 
     $data = array(
         'categorys' => $categorys, 
@@ -99,12 +101,65 @@ class OpencartController extends AppController {
     
     exit($response);
     
+  }
+
+
+  //add local orders&order_items to remote opencart site
+  public function addOrders() {
+	$this->layout = false;
+    $this->autoRender = NULL;
+
+    //ApiHelperComponent::verifyRequiredParams($args, ['order_no','discountType','discountValue']);
+
+    $db = ConnectionManager::getDataSource("default"); 
+
+	//取出上次的运行时间作为本次开始时间,没有的话就设为3天前
+    $sql = "select id,oc_last_push_order_time from admins where is_super_admin !='Y'  limit 1";
+    $r  = $db->query($sql); 
+    $stime = $r[0]['admins']['oc_last_push_order_time'];
+	if(!$stime || $stime==""){
+		$stime = date('Y-m-d H:i:s',strtotime('-3 day'));
+	}
+	//截止时间为当前时间
+	$etime = date('Y-m-d H:i:s'); 
+
+    $sql_orders = "select * from orders where created>'$stime'";
+    $sql_order_items  = "select * from order_items where order_id in (select id from orders where created>'$stime')";
+		
+    $rows1  = $db->fetchAll($sql_orders);
+    $rows2  = $db->fetchAll($sql_order_items);
+		
+	foreach($rows1 as $row1){
+		$orders[] = $row1['orders'];
+	}
+	foreach($rows2 as $rows2){
+		$order_items[] = $rows2['order_items'];
 	}
 
+    $data = array(
+        'store_id' => $this->oc_store_id, 
+        'orders'   => $orders, 
+        'order_items'   => $order_items, 
+    ); 
+              
+    unset($rows1,$row1,$rows2,$row2,$orders,$order_items);
+    
+    ini_set('post_max_size',"64M");
 
-	public function getOcOrders() {
+    //use curl api call to add product
+    list($ret, $response) = $this->makeCall("/order/addFromPos", $data);
+    
+    if($ret == 1){ //更新时间戳
+    	$db->query("update admins set oc_last_push_order_time='$etime' where id ={$r[0]['admins']['oc_last_push_order_time']}");
+    }
+    exit($response);
+    
+  }
+
+
+  public function getOcOrders() {
 		
-		$this->layout = false;
+	$this->layout = false;
     $this->autoRender = NULL;
 
     $this->loadModel('Order');
@@ -130,8 +185,7 @@ class OpencartController extends AppController {
       return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     	//exit($response);
     } 
-  
-    
+      
     $orders = json_decode($response);
     $already_exists = 0;
     foreach($orders as $order){
@@ -142,20 +196,17 @@ class OpencartController extends AppController {
     		$already_exists++;
     		continue;
     	}	
-    	
-    	
+    	    	
     	//取当前Online可用桌号
-    	for($i=1; $i<=$no_of_online_tables; $i++){
-    		
+    	for($i=1; $i<=$no_of_online_tables; $i++){    		
     		$ret =$this->Order->hasAny(['order_type'=>'L','is_completed'=>'N','table_no'=>$i]);
     		if(!$ret){
     			$table_no = $i;
     			break;
     		}
-
     	}
     	
-      $insert_order_data = array(
+        $insert_order_data = array(
             'order_no'     => "L".$order->order_id,
             'cashier_id'   => $restaurant_id, // cashier should be restaurant_id
             'counter_id'   => 0,              // online订单，初始counter_id = 0;
@@ -215,13 +266,13 @@ class OpencartController extends AppController {
     $this->Session->setFlash("Complete, get online orders: $count, already exists orders: $already_exists!", 'success');
     
     return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-    
-    
-	}
+        
+  }
 
-	public function closeOcOrders($order_no='') {
+
+  public function closeOcOrders($order_no='') {
 		
-		$this->layout = false;
+	$this->layout = false;
     $this->autoRender = NULL;
 
     ini_set('post_max_size',"32M");
@@ -232,11 +283,12 @@ class OpencartController extends AppController {
     list($ret, $response) = $this->makeCall("/order/completeOcOrders",$data);
     if($ret == 0) return $response;
   
-    return $response;
+      return $response;
     
-	}
+  }
 
-	private function makeCall($action,$data='') {
+
+  private function makeCall($action,$data='') {
 
     //Firstly, login to get token
     $ch = curl_init ();
@@ -248,11 +300,16 @@ class OpencartController extends AppController {
     $response = json_decode(curl_exec ( $ch ));
     curl_close ( $ch );
     if(isset($response->token)) {
-      $token = $response->token;
+        $token = $response->token;
     } else {
-      return array(0, "Fail to get token!");
+        $msg = "Fail to get token!";
+        if (isset($response->error)) {
+            $msg = implode((array)$response->error, ";");
+        }
+
+        return array(0, $msg);
     }
-    
+
     //use token to call api
     $url = $this->oc_api_url.$action.'/&token=' . $token ;
     $ch = curl_init( $url );
@@ -272,11 +329,11 @@ class OpencartController extends AppController {
     }else{
     	return array(1, $response);
     }
-    
-    
-	}
+        
+  }
 
-	private function getToken($url='') {
+  
+  private function getToken($url='') {
 
     //begin api login to get token
     if($url==''){
@@ -304,9 +361,10 @@ class OpencartController extends AppController {
       return array(0, "Fail to get token!");
     }
     
-	}
+  }
 
-	public function setApikey($key='') {    
+	
+  public function setApikey($key='') {    
     if($key == ''){
     	$key = 'RMhYxl3UZZql2ddEglH3TAraQo2fKJ7wuaWcGyJ5kF41WD8H7sZxJDy4CLZ0r7skcwQ14Q2M2EqjqE2sNyia7EN9yfjQWUYASuHo1r2MnfFPl6WtAV6gmkfEQ7pxgAkBgF8oWdz7o0NRSHpPYV7fMOiJcJsFWfeieBG1OWr5Z6ww7qiSw34EXIOlDfxvVaLb8b1j8pQH3ziuLFsC8o8UHZ1jh2E6gxWlEiYlMCsL6PlNIRP3GtHa65vNNUb97xno';
     }
@@ -314,7 +372,7 @@ class OpencartController extends AppController {
     $this->oc_api_key = array(
        'key' => $key
     );            
-	}
+  }
 
 
 }

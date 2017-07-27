@@ -390,7 +390,7 @@
             </div>
 
         </div>
-<!--
+
         <div class="col-md-10 col-sm-10 col-xs-10" id="online-list-component">
 
             <div class="col-md-1 col-sm-1 col-xs-1 dine-wrap" id="online-list-title">
@@ -487,7 +487,7 @@
                 </ul>
             </div>
         </div>
--->
+
         <div class="col-md-2 dine-wrap">
             <div class="clearfix marginB15 col-md-6">
                 <div class="pull-left notpaid"></div>
