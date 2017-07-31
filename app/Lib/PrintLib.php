@@ -480,7 +480,7 @@ class KitchenItemsPage extends ItemsPage {
             // $price = $item['price'];
             $selected_extras = $item['selected_extras'];
 
-            if ($item['is_takeout'] == 'Y' || $this->table_type == "T") {
+            if ($item['is_takeout'] == 'Y' || $this->table_type == "T" || $this->table_type == "W") {
                 $name_zh = "(外卖)" . $name_zh;
                 $name_en = "(Take out)" . $name_en;
             }
