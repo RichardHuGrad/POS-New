@@ -394,7 +394,7 @@
         <div class="col-md-10 col-sm-10 col-xs-10" id="online-list-component">
 
             <div class="col-md-1 col-sm-1 col-xs-1 dine-wrap" id="online-list-title">
-               <?php echo __('Online'); ?>&nbsp;              
+               <?php echo __('Online'); ?><br>              
                <a href="<?php echo $this->Html->url(array('controller' => 'opencart', 'action' =>'getOcOrders')); ?>" style="color:#fff" title="Fetch online orders."><icon class="fa fa-refresh icon_size16"></icon></a>     	
             </div>
 

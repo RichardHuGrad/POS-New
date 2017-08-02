@@ -14,12 +14,12 @@
 
 #online-list-title {
 	background-color: #c30e23;
-	text-align: left;
+	text-align: center;
 	color: #fff;
 	font-size: 18px;
 	font-weight: bold;
 	height: 80px;
-	line-height: 80px;
+	//line-height: 80px;
 }
 
 .order_total_box {
