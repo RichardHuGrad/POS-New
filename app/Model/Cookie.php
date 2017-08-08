@@ -7,7 +7,7 @@ class Cookie extends AppModel {
 
     public function setCookie($key, $value) {
 
-		    //$this->removeCookie($key);
+		//$this->removeCookie($key);
         $data = $this->find('first', array(
     			'conditions' => array(
     				'key' => $key
@@ -15,12 +15,25 @@ class Cookie extends AppModel {
     		));
 
         if (!empty($data)) {
+        	
+        	//判断如果没有suborder,则删除所有cookie
+        	$arr = explode("_", $key);
+        	if($arr[2] == 'suborder'){
+        		$ord = json_decode($value);
+        		if(empty($ord->suborders)){
+        			$order_no = $arr[0];
+        			$this->deleteAll(array('Cookie.key like' => $order_no.'%'), false);
+        			return false;
+        		}
+        	}
+        	#判断结束
+        	
             $data['Cookie']['value'] = $value;
             $data['Cookie']['created'] = date('Y-m-d H:i:s');
             $this->save($data, false);
         } else {
             $this->createCookie($key, $value);
-        }
+        }        
 
     }
 
