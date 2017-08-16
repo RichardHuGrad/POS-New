@@ -534,7 +534,6 @@ class PayItemsPage extends ItemsPage {
         foreach ($this->item_detail as $item) {
             printer_start_page($handle);
 
-
             $font = printer_create_font('simsun', 28, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
 
             $name_zh = $item['name_xh'];
@@ -563,8 +562,8 @@ class PayItemsPage extends ItemsPage {
             printer_draw_text($handle, $qty, 10, $origin_y);
             printer_draw_text($handle, number_format($price, 2), 400, $origin_y);
 
-
-           /* if (strlen($selected_extras) > 0) {
+			/*
+            if (strlen($selected_extras) > 0) {
                 $selected_extras_arr = mbStrSplit($selected_extras, 14);
                 foreach($selected_extras_arr as $line) {
                     printer_draw_text($handle, iconv("UTF-8", "gb2312", $line), 80, $y);
@@ -572,7 +571,22 @@ class PayItemsPage extends ItemsPage {
                 }
             }
             */
-
+            
+            //if extras price is not 0, should print it
+            if (strlen($selected_extras) > 0) {
+            	$font1 = printer_create_font('simsun', 24, 11, PRINTER_FW_MEDIUM, false, false, false, 0);
+				printer_select_font($handle, $font1);
+                $selected_extras_arr = json_decode($selected_extras);
+                foreach($selected_extras_arr as $line) {
+                	if($line->price > 0){
+	                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $line->name), 80, $y);
+            			printer_draw_text($handle, number_format($line->price, 2), 400, $y);
+	                    
+	                    $y += $font3H;                		
+                	}
+                }
+            }
+                        
             printer_delete_font($font);
 
             printer_end_page($handle);
@@ -602,7 +616,6 @@ class MergeItemsPage extends ItemsPage {
             foreach ($item_detail as $item) {
                 printer_start_page($handle);
 
-
                 $font = printer_create_font('simsun', 28, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
 
                 $name_zh = $item['name_xh'];
@@ -630,18 +643,23 @@ class MergeItemsPage extends ItemsPage {
                 printer_draw_text($handle, $qty, 10, $origin_y);
                 printer_draw_text($handle, number_format($price, 2), 400, $origin_y);
 
-
-               /* if (strlen($selected_extras) > 0) {
-                    $selected_extras_arr = mbStrSplit($selected_extras, 14);
-                    foreach($selected_extras_arr as $line) {
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", $line), 80, $y);
-                        $y += $font3H;
-                    }
-                }
-                */
+	            //if extras price is not 0, should print it
+	            if (strlen($selected_extras) > 0) {
+	            	$font1 = printer_create_font('simsun', 24, 11, PRINTER_FW_MEDIUM, false, false, false, 0);
+					printer_select_font($handle, $font1);
+	                $selected_extras_arr = json_decode($selected_extras);
+	                foreach($selected_extras_arr as $line) {
+	                	if($line->price > 0){
+	                		$y += 30;
+		                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $line->name), 80, $y);
+	            			printer_draw_text($handle, number_format($line->price, 2), 400, $y);
+		                    
+		                    $y += $font3H;                		
+	                	}
+	                }
+	            }
 
                 printer_delete_font($font);
-
                 printer_end_page($handle);
             }
         }
@@ -649,9 +667,8 @@ class MergeItemsPage extends ItemsPage {
 
 }
 
-/**
-*
-*/
+
+
 class ReportItemsPage extends ItemsPage {
     private $item_detail, $print_zh, $pritn_en;
     function __construct($item_detail, $print_zh=true, $print_en=false) {

@@ -18,9 +18,9 @@ class Cookie extends AppModel {
         	
         	//判断如果没有suborder,则删除所有cookie
         	$arr = explode("_", $key);
-        	if($arr[2] == 'suborder'){
+        	if($arr[2] == 'order'){
         		$ord = json_decode($value);
-        		if(empty($ord->suborders)){
+        		if($ord->suborderNum==0){
         			$order_no = $arr[0];
         			$this->deleteAll(array('Cookie.key like' => $order_no.'%'), false);
         			return false;

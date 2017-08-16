@@ -62,6 +62,7 @@ class PrintController extends AppController {
     }
 
     // each chinese character take two byte
+    // 注意$y是引用型参数
     public function printItemZh($str, $x, &$y) {
         $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
@@ -69,7 +70,6 @@ class PrintController extends AppController {
         // change the str to chinese string
         // $str =  iconv("UTF-8", "gb2312", $str);
         $start = 0;
-
         while (mb_strlen($str, 'UTF-8') > 0) {
             $print_str = mb_substr($str, $start, 10);
             printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $print_str), $x, $y);
@@ -77,15 +77,14 @@ class PrintController extends AppController {
             if (mb_strlen($str, 'UTF-8') > 0 ) {
                 $y += $this->fontH + 2; // change the line
             }
-
             $start += 10;
-
         }
 
         // printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
         printer_delete_font($font);
     }
 
+	// 注意$y是引用型参数
     public function printItemEn($str, $x, &$y) {
         $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($this->handle, $font);
@@ -99,8 +98,8 @@ class PrintController extends AppController {
             if (mb_strlen($str, 'UTF-8') > 0 ) {
                 $y += $this->fontH + 2; // change the line
             }
-            $start += 20;
-            break;
+            $start += 20; //每行打印20个字符
+            //break;
         }
 
         printer_delete_font($font);
@@ -201,21 +200,15 @@ class PrintController extends AppController {
             $this->printEn(number_format($items[$i]['price'], 2), 360, $print_y);
             $this->printItemEn($items[$i]['name_en'], 50, $print_y);
 
-            // $print_y += 30;
             if ($print_zh == true) {
                 $this->printItemZh($items[$i]['name_zh'], 50, $print_y);
             };
 
-            // $print_y += 30;
-
-            // if (!empty(trim($items[$i]['selected_extras_name']))) {
-            //     // $print_y += 30;
-            //     $this->printItemZh( $items[$i]['selected_extras_name'], 32, $print_y);
-
-            //     $this->printEn( number_format($items[$i]['extra_amount'], 2), 360, $print_y);
-            // }
-
-            // $print_y += 40;
+			//如果extra的价格不为0,则打印
+            if (isset($items[$i]['extras_amount']) && $items[$i]['extras_amount']>0) {
+                $this->printEn(number_format($items[$i]['extras_amount'], 2), 360, $print_y);
+                $this->printItemZh($items[$i]['selected_extras_name'], 32, $print_y);
+            }
         }
 
         $print_y += 10;
@@ -291,7 +284,8 @@ class PrintController extends AppController {
         exit;
     }
 
-
+	
+	//最后一个参数为1,则打印付款账单;false则打印receipt
     public function printSplitReceipt($order_no, $table_no, $table_type, $printer_name, $print_zh=true, $is_receipt=false) {
     	
         $this->layout = false;
@@ -401,14 +395,11 @@ class PrintController extends AppController {
 
             // $print_y += 30;
 
-            // if (!empty(trim($items[$i]['selected_extras_name']))) {
-            //     // $print_y += 30;
-            //     $this->printItemZh( $items[$i]['selected_extras_name'], 32, $print_y);
+			//如果extra的价格不为0,则打印name(注意:item price已经包含了extra price)
+            if (isset($items[$i]['extras_amount']) && $items[$i]['extras_amount']>0) {
+                $this->printItemZh($items[$i]['selected_extras_name'], 32, $print_y);
+            }
 
-            //     // $this->printEn( number_format($items[$i]['extra_amount'], 2), 360, $print_y);
-            // }
-
-            // $print_y += 40;
         }
 
         $print_y += 10;

@@ -723,7 +723,7 @@ class Item {
 	get printInfo() {
 		return {
 			"selected_extras_name": this.selected_extras_name,
-			// "extras_amount": this._extras_amount,
+			"extras_amount": this._extras_amount,
 			"name_zh": this.print_name_zh,
 			"name_en": this.print_name_en,
 			"price": this.price,
@@ -1397,9 +1397,6 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	return keypadComponent;
 }
-
-
-
 
 
 function round2(number) {

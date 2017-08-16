@@ -252,8 +252,6 @@ echo $this->fetch('script');
 	function init() {
 		restoreFromCookie();
 
-
-
 		if (isOrderChanged()) {
 			console.log('order has changed');
 			// alert("由于订单修改，请重新分菜");
@@ -477,7 +475,7 @@ echo $this->fetch('script');
         console.log(orderCookie)
         console.log(subordersCookie)
         KVStorage.set(orderCookie, order, { expires: 3, path: '' });
-		    KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
+		KVStorage.set(subordersCookie, suborders, { expires: 3, path: '' });
     }
 
 	function persistentOrder(callback) {

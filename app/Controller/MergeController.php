@@ -174,8 +174,11 @@ class MergeController extends AppController {
 
         $this->layout = false;
         $this->autoRender = NULL;
-
-		    $res = $this->PayHandler->completeMergeOrder($this->request->data);
+		
+		//这里传的是逗号分隔的order_ids(和api中传的数组不一样)
+		$this->request->data["order_ids"] = explode(",", $this->request->data["order_ids"]);
+		
+		$res = $this->PayHandler->completeMergeOrder($this->request->data);
         return $res;
     }
 
