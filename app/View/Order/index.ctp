@@ -10,7 +10,12 @@
 
         <div class="home-logo">
             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
-                <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
+                <?php                      
+                	if(substr($_SERVER['REQUEST_URI'],0,4)=='/pos')
+                  		echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); 
+                	else
+                  		echo $this->Html->image("logo-skip.jpg", array('alt' => "SKIP"));               
+                ?>
             </a>
 
             <div class="HomeText text-left">

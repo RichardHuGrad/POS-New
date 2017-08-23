@@ -8,7 +8,12 @@
         <!-- brand -->
         <div class="navbar-header">
             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
-            <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS", 'class' => 'logo-img')); ?>
+            <?php 
+                if(substr($_SERVER['REQUEST_URI'],0,4)=='/pos')
+                  echo $this->Html->image("logo-home.jpg", array('alt' => "POS", 'class' => 'logo-img')); 
+                else
+                  echo $this->Html->image("logo-skip.jpg", array('alt' => "SKIP", 'class' => 'logo-img'));                 
+            ?>
             </a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
             </button>
