@@ -121,7 +121,9 @@ class Restaurant extends AppModel {
     }
 
     public function allowNumberOnly($number) {
-        if (!is_numeric($number['mobile_no'])) {
+    	$no = str_replace("-","",$number['mobile_no']);
+        //if (!is_numeric($number['mobile_no'])) {
+        if (!is_numeric($no)) {
             return false;
         } else {
             return true;
