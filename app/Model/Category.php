@@ -1,5 +1,4 @@
 <?php
-
 class Category extends AppModel {
 
     public $name = 'Category';
@@ -41,6 +40,15 @@ class Category extends AppModel {
         }
 
         return $categoryDetails;
+    }
+
+    public function getPrinterAndGroupById($id) {
+        $item = $this->find('first', array(
+                'fields' => array('Category.printer','Category.group_id'),
+                'conditions' => array('Category.id' => $id)
+            )
+        );
+        return $item['Category'];
     }
 
 }

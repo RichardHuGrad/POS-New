@@ -35,7 +35,6 @@ class OrderItem extends AppModel {
             'comb_id' => $comb_id,
         );
 
-
         if($this->save($insert_data, false)) {
             $lastId = $this->id;
             return $lastId;
@@ -178,24 +177,30 @@ class OrderItem extends AppModel {
 
         foreach ($orderItemsDetail as $itemDetail) {
             $category_id = $itemDetail['OrderItem']['category_id'];
-            $printer = $this->Category->getPrinterById($category_id);
+            $rc = $this->Category->getPrinterAndGroupById($category_id);
+            $printer  = $rc['printer'];
+            $group_id = $rc['group_id'];
 
+			$itemDetail['OrderItem']['group_id'] = $group_id;
+			
             $selected_extras_list = json_decode($itemDetail['OrderItem']['selected_extras'], true);
             $selected_extras_arr = array();
-                if (!empty($selected_extras_list)) {
-                    foreach ($selected_extras_list as $selected_extra) {
-                        array_push($selected_extras_arr, $selected_extra['name']);
-                    }
+            if (!empty($selected_extras_list)) {
+                foreach ($selected_extras_list as $selected_extra) {
+                    array_push($selected_extras_arr, $selected_extra['name']);
                 }
+            }
                 
             $itemDetail['OrderItem']['selected_extras'] = join(',', $selected_extras_arr);
 
-
+			/*
             if (!isset($printItems[$printer])) {
                 $printItems[$printer] = array();
             }
-
             array_push($printItems[$printer], $itemDetail['OrderItem']);
+            */
+            //第二维group_id是控制分组打印(不同的category分属于不同组,同一组的item打印一张单子,例如:招牌面和火锅米线一张单,钵钵鸡、饭、小菜等一张单，这两张单都在kitchen打印,但是分属于kitchen不同的部门来做菜)
+            $printItems[$printer][$group_id][]=$itemDetail['OrderItem'];
         }
 
         return $printItems;

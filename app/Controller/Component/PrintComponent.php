@@ -130,17 +130,15 @@ class PrintComponent extends Component {
         $order_id = $args['order_id'];
 
         $orderDetail = $this->Order->find('first', array(
-                'recursive' => -1,
-                'fields' => array(
-                        'Order.order_type',
-                        'Order.table_no',
-                        'Order.order_no',
-                        'Order.phone'
-                    ),
-                'conditions' => array(
-                        'Order.id' => $order_id
-                    )
-            ));
+            'recursive' => -1,
+            'fields' => array(
+                    'Order.order_type',
+                    'Order.table_no',
+                    'Order.order_no',
+                    'Order.phone'
+                ),
+            'conditions' => array('Order.id' => $order_id)
+        ));
 
         $type = $orderDetail['Order']['order_type'];
         $table = $orderDetail['Order']['table_no'];
@@ -157,13 +155,18 @@ class PrintComponent extends Component {
 
             $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false,$phone);
+            //$print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false,$phone);
+            foreach($printItems['K'] as $item){
+                $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $item,true, false,$phone);
+            }
         }
 
         if (!empty($printItems['C'])) {
             $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['C'], true, false);
+            foreach($printItems['C'] as $item){
+                $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $item, true, false);
+            }
         }
 
         $this->OrderItem->setAllItemsToPrinted($order_id);
@@ -195,16 +198,14 @@ class PrintComponent extends Component {
         $order_id = $args['order_id'];
 
         $orderDetail = $this->Order->find('first', array(
-                'recursive' => -1,
-                'fields' => array(
-                        'Order.order_type',
-                        'Order.table_no',
-                        'Order.order_no'
-                    ),
-                'conditions' => array(
-                        'Order.id' => $order_id
-                    )
-            ));
+            'recursive' => -1,
+            'fields' => array(
+                    'Order.order_type',
+                    'Order.table_no',
+                    'Order.order_no'
+                ),
+            'conditions' => array('Order.id' => $order_id)
+        ));
 
         $type = $orderDetail['Order']['order_type'];
         $table = $orderDetail['Order']['table_no'];
@@ -214,13 +215,14 @@ class PrintComponent extends Component {
 
 
         foreach ($item_id_list as $item_id) {
-            // if the item is printed
-            // send to kitchen print
-            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            // if the item is printed, send urge to kitchen print
+            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer,categories.group_id FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
             // print_r($item_detail);
 
             $is_print = $item_detail[0]['order_items']['is_print'];
-            $printer = $item_detail[0]['categories']['printer'];
+            $printer  = $item_detail[0]['categories']['printer'];
+            $group_id = $item_detail[0]['categories']['group_id'];
+            
             if ($is_print == 'Y') {
 
                 $selected_extras_list = json_decode($item_detail[0]['order_items']['selected_extras'], true);
@@ -232,8 +234,10 @@ class PrintComponent extends Component {
                 }
 
                 $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
-                array_push($cancel_items[$printer], $item_detail[0]['order_items']);
-
+                
+                //array_push($cancel_items[$printer], $item_detail[0]['order_items']);
+                $cancel_items[$printer][$group_id][]= $item_detail[0]['order_items'];
+                
             } // else do nothing
 
         }
@@ -243,12 +247,16 @@ class PrintComponent extends Component {
         if (!empty($cancel_items['K'])) {
             $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
+            foreach($cancel_items['K'] as $items){
+            	$print->printUrgeItemDoc($order_no, $table, $type, $printerName, $items,true, false);
+            }            
         }
         if (!empty($cancel_items['C'])) {
             $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printUrgeItemDoc($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
+            foreach($cancel_items['C'] as $items){
+            	$print->printUrgeItemDoc($order_no, $table, $type, $printerName, $items,true, false);
+            }            
         }
     }
 
@@ -279,16 +287,14 @@ class PrintComponent extends Component {
         $order_id = $args['order_id'];
 
         $orderDetail = $this->Order->find('first', array(
-                'recursive' => -1,
-                'fields' => array(
-                        'Order.order_type',
-                        'Order.table_no',
-                        'Order.order_no'
-                    ),
-                'conditions' => array(
-                        'Order.id' => $order_id
-                    )
-            ));
+            'recursive' => -1,
+            'fields' => array(
+                    'Order.order_type',
+                    'Order.table_no',
+                    'Order.order_no'
+                ),
+            'conditions'=>array('Order.id' => $order_id)
+        ));
 
         $type = $orderDetail['Order']['order_type'];
         $table = $orderDetail['Order']['table_no'];
@@ -298,9 +304,8 @@ class PrintComponent extends Component {
 
 
         foreach ($item_id_list as $item_id) {
-            // if the item is printed
-            // send to kitchen print
-            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
+            // if the item is printed, send remove to kitchen print
+            $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer,categories.group_id FROM `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
             
             // print_r($item_detail);
             if(empty($item_detail)){
@@ -309,7 +314,8 @@ class PrintComponent extends Component {
             }          
             
             $is_print = $item_detail[0]['order_items']['is_print'];
-            $printer = $item_detail[0]['categories']['printer'];            
+            $printer  = $item_detail[0]['categories']['printer'];            
+            $group_id = $item_detail[0]['categories']['group_id'];
             
             if ($is_print == 'Y') {
 
@@ -322,7 +328,8 @@ class PrintComponent extends Component {
                 }
 
                 $item_detail[0]['order_items']['selected_extras'] = join(',', $selected_extras_arr);
-                array_push($cancel_items[$printer], $item_detail[0]['order_items']);
+                //array_push($cancel_items[$printer], $item_detail[0]['order_items']);
+                $cancel_items[$printer][$group_id][]= $item_detail[0]['order_items'];
 
             } // else do nothing
         }
@@ -330,17 +337,20 @@ class PrintComponent extends Component {
         // echo json_encode($cancel_items);
         // echo empty($cancel_items['K']);
         if (!empty($cancel_items['K'])) {
-
             $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
             $print = new PrintLib();
+            foreach($cancel_items['K'] as $items){
+            	$debug_str = $print->printCancelledItems($order_no, $table, $type, $printerName, $items,true, false);
+            }
             
-            $debug_str = $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['K'],true, false);
         }
         if (!empty($cancel_items['C'])) {
-
             $printerName = $this->Admin->getServicePrinterName($args['restaurant_id']);
             $print = new PrintLib();
-            $print->printCancelledItems($order_no, $table, $type, $printerName, $cancel_items['C'],true, false);
+            
+            foreach($cancel_items['C'] as $items){
+            	$print->printCancelledItems($order_no, $table, $type, $printerName, $items,true, false);
+            }            
         }
 
     }
@@ -364,16 +374,14 @@ class PrintComponent extends Component {
         $order_ids = $args['order_ids'];
 
         $orderDetail = $this->Order->find('first', array(
-                'recursive' => -1,
-                'fields' => array(
-                        'Order.order_type',
-                        'Order.table_no',
-                        'Order.order_no'
-                    ),
-                'conditions' => array(
-                        'Order.id' => $order_ids[0]
-                    )
-            ));
+            'recursive' => -1,
+            'fields' => array(
+                    'Order.order_type',
+                    'Order.table_no',
+                    'Order.order_no'
+                ),
+            'conditions' => array('Order.id' => $order_ids[0])
+        ));
 
         $type = $orderDetail['Order']['order_type'];
 
@@ -388,7 +396,6 @@ class PrintComponent extends Component {
         $arr = $print->printMergeBillDoc($mergeData['order_nos'], $mergeData['table_nos'], $type, $printerName, $mergeData['print_items'], $mergeData, $logoPath,true, false);
         
         return $arr;
-
         // print_r($mergeData);
 
     }

@@ -119,7 +119,8 @@ class PrintLib {
         $table_type_str     = $type_map[$table_type];
         $old_table_type_str = $type_map[$old_type];
 
-        $y = 0;
+        //$y = 0;
+        $y = 120;
 
         if ($print_zh == true) {
             $font = printer_create_font('simsun', 40, 19, PRINTER_FW_BOLD, false, false, false, 0);
@@ -309,15 +310,16 @@ class KitchenHeaderPage extends HeaderPage {
         $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
         $table_type_str = $type_map[$this->table_type];
 
-        $y = 10;
+        //$y = 10;
+        $y = 120;
 
 
         if ($this->print_zh == true) {
-            $font = printer_create_font('simsun', 40, 19, PRINTER_FW_BOLD, false, false, false, 0);
+            $font = printer_create_font('simsun', 42, 20, PRINTER_FW_BOLD, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组"), 138, $y);
         } else {
-            $font = printer_create_font("Arial", 40, 19, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font("Arial", 42, 20, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
             printer_draw_text($handle, "Kitchen", 138, $y);
         }
@@ -329,7 +331,7 @@ class KitchenHeaderPage extends HeaderPage {
 
         $y = 0;
         //Print order information
-        $font = printer_create_font("simsun", 39, 17, PRINTER_FW_MEDIUM, false, false, false, 0);
+        $font = printer_create_font("simsun", 42, 20, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
                  
@@ -439,7 +441,7 @@ class TextHeaderPage extends HeaderPage {
 
     public function printPage($handle) {
         printer_start_page($handle);
-        $font = printer_create_font('simsun', 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
+        $font = printer_create_font('simsun', 40, 18, PRINTER_FW_BOLD, false, false, false, 0);
         printer_select_font($handle, $font);
         printer_draw_text($handle, iconv("UTF-8", "gb2312", $this->text), $this->x, $this->y);
         printer_end_page($handle);
@@ -463,14 +465,14 @@ class KitchenItemsPage extends ItemsPage {
             printer_start_page($handle);
 
             $font1H = 30;
-            $font2H = 36;
-            $font3H = 30;
+            $font2H = 38;
+            $font3H = 32;
             
             $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
             
-            $font2 = printer_create_font('simsun', $font2H, 15, PRINTER_FW_BOLD, false, false, false, 0);
+            $font2 = printer_create_font('simsun', $font2H, 18, PRINTER_FW_BOLD, false, false, false, 0);
 
-            $font3 = printer_create_font('simsun', $font3H, 14, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
+            $font3 = printer_create_font('simsun', $font3H, 15, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
 
 
             $name_zh = $item['name_xh'];
