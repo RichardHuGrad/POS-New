@@ -79,7 +79,7 @@ class PrintComponent extends Component {
 
         $orderDetail = $this->Order->find('first', array(
           // 'recursive' => -1,
-          'conditions' => array('Order.id' => $order_id)
+          'conditions' => array('Order.id' => $order_id,'Order.is_completed !=' =>'Y')
         ));
 
         if(empty($orderDetail)){
