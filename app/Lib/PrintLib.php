@@ -656,7 +656,7 @@ class MergeItemsPage extends ItemsPage {
 		                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $line->name), 80, $y);
 	            			printer_draw_text($handle, number_format($line->price, 2), 400, $y);
 		                    
-		                    $y += $font3H;                		
+		                    $y += $font1;                		
 	                	}
 	                }
 	            }
