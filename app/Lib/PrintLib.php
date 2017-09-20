@@ -373,9 +373,11 @@ class LogoHeaderPage extends HeaderPage {
         $query = array(
             'conditions' => array('is_super_admin' => 'N'),
             'recursive' => -1, 
-            'fields' => array('mobile_no','address','city','province','zipcode','print_offset'),
+            'fields' => array('mobile_no','address','city','province','zipcode','print_offset','default_tip_rate'),
         );
+
         $data = $adminModel->find('first',$query);
+        
         $addressLine1 = $data['Admin']['address'];
         $addressLine2 = $data['Admin']['city'] . ' '. $data['Admin']['province'];
         $offset = explode(',' , $data['Admin']['print_offset']);
@@ -399,10 +401,16 @@ class LogoHeaderPage extends HeaderPage {
         if ($this->print_zh == true) {
             $font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
-            $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 110, $print_y);
-            // printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
+            if($data['Admin']['default_tip_rate']>0){
+            	printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单已包含小费，感谢您的光临"), 100, $print_y);
+            	$print_y+=40;
+            	printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are included"), 110, $print_y); 
+            }else{
+            	printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
+            	$print_y+=40;
+            	printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are not included"), 110, $print_y); 	
+            }
+
             $print_y+=40;
         };
 
@@ -751,10 +759,10 @@ class BillPage extends CountPage {
         $after_discount = $bill_info['after_discount'];
         $tax_rate = $bill_info['tax'];
         $tax_amount = $bill_info['tax_amount'];
+
         $total = $bill_info['total'];
         $paid = $bill_info['paid'];
         $change = $bill_info['change'];
-
 
         printer_start_page($handle);
         $print_y = 10;
@@ -770,6 +778,10 @@ class BillPage extends CountPage {
             $this->format3Columns($handle, "AfterDiscount", "折后价:", $after_discount);
         }
         $this->format3Columns($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
+		
+		if($bill_info['default_tip_rate'] >0){
+			$this->format3Columns($handle, "Tip"."(" . $bill_info['default_tip_rate'] . "%)", "小费:", $bill_info['default_tip_amount']);
+		}
 
         $this->format3Columns($handle, "Total", "总计:", $total,true);
     }
@@ -808,6 +820,11 @@ class ReceiptPage extends CountPage {
             $this->format3Columns($handle, "After Discount", "折后价:", $after_discount);
         }
         $this->format3Columns($handle, "Hst"."(" . $tax_rate . "%)", "税:", $tax_amount);
+
+		if($bill_info['default_tip_rate'] >0){
+			$this->format3Columns($handle, "Tip"."(" . $bill_info['default_tip_rate'] . "%)", "小费:", $bill_info['default_tip_amount']);
+		}
+
 
         $this->format3Columns($handle, "Total", "总计:", $total,true);
 

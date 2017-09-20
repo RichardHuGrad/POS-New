@@ -1,1 +1,0 @@
-ALTER TABLE `order_items` MODIFY COLUMN `price` decimal(25,2)

@@ -28,7 +28,7 @@
 </div>
 
 <div class="bgwhite clearfix">
-    <?php if(empty($Order_detail) OR !$Order_detail['Order']['discount_value']) { ?>
+    <?php if(empty($Order_detail) OR $Order_detail['Order']['discount_value']==0) { ?>
         <div class="padding10 adddoscount <?php if(@$Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
             <?php echo __('Add Discount'); ?>  <i class="fa fa-plus-circle pull-right add-discount <?php
 if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
@@ -36,7 +36,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         </div>
     <?php }?>
 
-    <?php if(!empty($Order_detail) and !$Order_detail['Order']['discount_value']) { ?>
+    <?php if(!empty($Order_detail) and $Order_detail['Order']['discount_value']==0) { ?>
     <div class="subtotalwrap discount_view" style="display:none;">
         <div class="row">
                 <div class="col-md-3">
@@ -86,7 +86,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 		</div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
     </div>
 
-    <?php if(!empty($Order_detail) and $Order_detail['Order']['discount_value'])  {
+    <?php if(!empty($Order_detail) and $Order_detail['Order']['discount_value']!=0)  {
             ?>
             <div class="subtotalwrap">
                 <div class="row">
@@ -104,23 +104,37 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                 </div>
             </div>
 
-            <div class="subtotalwrap"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
+            <div class="subtotalwrap">
                 <div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
                     <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('After Discount'); ?>: </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format(max($Order_detail['Order']['subtotal'] - $Order_detail['Order']['discount_value'], 0), 2); else echo '0.00'; ?></strong> </div>
 
                 </div>
-            </div><!-- Modified by Yishou Liao @ Nov 25 2016 -->
+            </div>
 
         <?php
         }
         ?>
 
-    <div class="subtotalwrap"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
-    	<div class="row"><!-- Modified by Yishou Liao @ Nov 25 2016 -->
+    <div class="subtotalwrap">
+    	<div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Taxes'); ?>(<?php if(!empty($Order_detail) and !empty(@$Order_detail['Order'] )) echo $Order_detail['Order']['tax'] ?>%): </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['tax_amount'], 2); else echo '0.00'; ?></strong> </div>
-
         </div>
     </div>
+<?php 
+  //如果缺省小费率不为0,则显示
+  if(@$Order_detail['Order']['default_tip_rate']>0){ 
+?>   
+    <div class="subtotalwrap">
+    	<div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Tip'); ?>(<?php if(!empty(@$Order_detail['Order'] )) echo $Order_detail['Order']['default_tip_rate'] ?>%): </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty(@$Order_detail['OrderItem'] )) echo $Order_detail['Order']['default_tip_amount']; else echo '0.00'; ?></strong> 
+            </div>
+        </div>
+    </div>
+<?php 
+  } 
+?>    
+       
     <div class="subtotalwrap">
         <div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8"><?php echo __('Total'); ?> : </div><div class="col-xs-4 col-sm-4 col-md-4 text-right"><strong>$<?php if(!empty($Order_detail) and !empty(@$Order_detail['OrderItem'] )) echo number_format($Order_detail['Order']['total'], 2); else echo '0.00'; ?></strong></div>

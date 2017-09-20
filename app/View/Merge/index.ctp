@@ -106,7 +106,6 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                 <ul>
                     <li class="clearfix">
                         <div class="row">
-                        	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Subtotal'); ?> <?php
 							$table_discount_value = 0;
 							for ($i = 0; $i < count($Order_detail); $i++) {
@@ -124,7 +123,6 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                             </div>
 
                                 <?php
-                                //Modified by Yishou Liao @ Oct 14 2016.
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     if ($Order_detail[$i]['Order']['table_no'] == $table) {
                                         $table_status = $Order_detail[$i]['Order']['table_status'];
@@ -133,14 +131,13 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                                 };
                                 if ($table_status != 'P' and $table_discount_value == 0) {
                                     ?>
-                            <?php } //End.   ?>
+                            <?php } ?>
                         </div>
                     </li>
 
 
                     <?php
-                    if ($table_discount_value) {
-                        //End.
+                    if ($table_discount_value) {                       
                         ?>
                         <li class="clearfix">
                             <div class="row">
@@ -158,18 +155,6 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                             //}; //End
                         };
                         echo round($table_discount_value, 2);
-
-       //                  for ($i = 0; $i < count($Order_detail); $i++) {
-       //                      if ($Order_detail[$i]['Order']['table_no'] == $table) {
-       //                          $table_percent_discount = $Order_detail[$i]['Order']['percent_discount'];
-       //                          $table_promocode = $Order_detail[$i]['Order']['promocode'];
-       //                      };
-       //                  };
-       //                  if ($table_percent_discount) {
-       //                      //echo "<span class='txt12'> " . $table_percent_discount . " (" . $table_percent_discount . "%)</span>";
-							// echo "<span class='txt12'> " . " (" . $table_percent_discount . "%)</span>";
-       //                  }
-                        //End.
                         ?>
 
                                 </div>
@@ -177,10 +162,9 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                             </div>
                         </li>
 
-<!-- Modified by Yishou Liao @ Nov 25 2016 -->
 <li class="clearfix">
     <div class="row">
-    	<!-- Modified by Yishou Liao @ Nov 25 2016 -->
+
         <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('After Discount'); ?>: </div>
         <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
 <?php
@@ -195,52 +179,76 @@ echo round($after_discount, 2);
 
 ?></div>
 </li>
-<!-- End -->
 
                                     <?php
                                 }
                                 ?>
 
-					<!-- Modified by Yishou Liao @ Nov 25 2016 -->
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tax'); ?> (
 <?php
-//Modified by Yishou Liao @ Oct 14 2016.
 for ($i = 0; $i < count($Order_detail); $i++) {
     if ($Order_detail[$i]['Order']['table_no'] == $table) {
         $table_tax = $Order_detail[$i]['Order']['tax'];
     };
 };
 echo $table_tax;
-//End.
-?>%)</div>
+
+?>%)
+							</div>
+							
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
 <?php
-//Modified by Yishou Liao @ Oct 14 2016.
 $tax_amount = 0;
 for ($i = 0; $i < count($Order_detail); $i++) {
     $tax_amount += $Order_detail[$i]['Order']['tax_amount'];
 };
 echo round($tax_amount, 2);
-//End.
-?></div>
+?>
+							</div>
                         </div>
                     </li>
-                    <!-- End -->
+
+<!-- default tip -->
+<?php if(@$Order_detail[0]['Order']['default_tip_rate']>0){    ?>
+                    <li class="clearfix">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tip'); ?> (
+						<?php
+						for ($i = 0; $i < count($Order_detail); $i++) {
+						    if ($Order_detail[$i]['Order']['table_no'] == $table) {
+						        $table_default_tip_rate = $Order_detail[$i]['Order']['default_tip_rate'];
+						    };
+						};
+						echo $table_default_tip_rate;
+
+						?>%)</div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$
+						<?php
+						$tip_amount = 0;
+						for ($i = 0; $i < count($Order_detail); $i++) {
+						    $tip_amount += $Order_detail[$i]['Order']['default_tip_amount'];
+						};
+						echo round($tip_amount, 2);
+						?></div>
+                        </div>
+                    </li>
+<?php }  ?>        
+<!-- end default tip -->
 
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Total'); ?></div>
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price total_price" alt="<?php
-                                //Modified by Yishou Liao @ Oct 14 2016.
+
                                 $total = 0;
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     $total += $Order_detail[$i]['Order']['total'];
                                 };
                                 echo round($total, 2);
                                 ?>">$<?php
-                                //Modified by Yishou Liao @ Oct 14 2016.
+
                                 $total = 0;
                                 for ($i = 0; $i < count($Order_detail); $i++) {
                                     $total += $Order_detail[$i]['Order']['total'];
@@ -263,20 +271,19 @@ echo round($tax_amount, 2);
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Received'); ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$<?php echo $Order_detail['Order']['paid']; ?></div>
 
-
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price"><?php echo __('Cash'); ?>: $<?php echo $Order_detail['Order']['cash_val']; ?></div>
                                 <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price"><?php echo __('Card'); ?>: $<?php echo $Order_detail['Order']['card_val']; ?></div>
                             </div>
                         </li>
 
-                                         <?php if ($Order_detail['Order']['change']) { ?>
-                            <li class="clearfix">
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt"><?php echo __('Change'); ?></div>
-                                    <div class="col-md-3 col-sm-4 col-xs-4 sub-price change_price">$<?php echo $Order_detail['Order']['change']; ?></div>
-                                </div>
-                            </li>
-                                    <?php } ?>
+                <?php if ($Order_detail['Order']['change']) { ?>
+                        <li class="clearfix">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt change_price_txt"><?php echo __('Change'); ?></div>
+                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price change_price">$<?php echo $Order_detail['Order']['change']; ?></div>
+                            </div>
+                        </li>
+                <?php } ?>
 
                         <li class="clearfix">
                             <div class="row">
@@ -762,6 +769,10 @@ echo $this->fetch('script');
                     <div class="col-md-6 col-sm-6 col-xs-12"><?php echo __('Tax'); ?>({8}%)</div>
                     <div class="col-md-6 col-sm-6 col-xs-12">$ {9}</div>
                 </li>
+                <li class="order-component-tax clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12"><?php echo __('Tip'); ?>({11}%)</div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">$ {12}</div>
+                </li>
                 <li class="order-component-total clearfix">
                     <div class="col-md-6 col-sm-6 col-xs-12"><?php echo __('Total'); ?> </div>
                     <div class="col-md-6 col-sm-6 col-xs-12">$ {10} </div>
@@ -795,15 +806,15 @@ echo $this->fetch('script');
             <button class="remove-discount-component btn btn-danger" data-id="{0}"><?php echo __('Delete Discount'); ?></button>
         `;
 
-        var createDom = function(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total) {
+        var createDom = function(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total,default_tip_rate,default_tip_amount) {
             if (percent_discount > 0) {
                 discount_type_str = "(" + percent_discount + "%)";
             } else {
                 discount_type_str = "";
             }
-            console.log(template.format(id, order_no, table_no, type, subtotal, discount_value, discount_type_str, after_discount, tax_rate, tax_amount, total));
+            console.log(template.format(id, order_no, table_no, type, subtotal, discount_value, discount_type_str, after_discount, tax_rate, tax_amount, total,default_tip_rate,default_tip_amount));
 
-            var orderComponent = $(template.format(id, order_no, table_no, type, subtotal, discount_value, discount_type_str, after_discount, tax_rate, tax_amount, total));
+            var orderComponent = $(template.format(id, order_no, table_no, type, subtotal, discount_value, discount_type_str, after_discount, tax_rate, tax_amount, total,default_tip_rate,default_tip_amount));
             var discountInputGroup = $(discountInputTemplate.format(id));
             var addDiscountBtn = $(addDiscountTemplate.format(id));
             var removeDiscountBtn = $(removeDiscountTemplate.format(id));
@@ -892,8 +903,6 @@ echo $this->fetch('script');
                 addDiscountBtn.hide();
             }
 
-
-
             return orderComponent
         }
 
@@ -901,8 +910,8 @@ echo $this->fetch('script');
 
         }
 
-        var init = function(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total) {
-            return createDom(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total);
+        var init = function(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total,default_tip_rate,default_tip_amount) {
+            return createDom(id, order_no, table_no, type, subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total,default_tip_rate,default_tip_amount);
         }
 
         return {
@@ -948,7 +957,10 @@ echo $this->fetch('script');
                     var tax_rate = parseFloat(orders[i]['tax']);
                     var tax_amount = round2(parseFloat(orders[i]['tax_amount']));
 
-                    var orderComponent = OrderComponent.init(id, order_no, table_no, type,subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total);
+                    var default_tip_rate = parseFloat(orders[i]['default_tip_rate']);
+                    var default_tip_amount = round2(parseFloat(orders[i]['default_tip_amount']));
+
+                    var orderComponent = OrderComponent.init(id, order_no, table_no, type,subtotal, after_discount, fix_discount, percent_discount, discount_value, tax_rate, tax_amount, total,default_tip_rate,default_tip_amount);
 
                     $('#mid-section').append(orderComponent);
                 }

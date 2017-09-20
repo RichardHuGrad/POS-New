@@ -73,8 +73,10 @@ class Order {
 			"discount_value": this.discount.value,
 			"discount_amount": this.discountAmount,
 			"after_discount": this.afterDiscount,
-			"tax_rate": this.tax.tax_rate,
+			"tax_rate": tax_rate,
 			"tax_amount": this.tax.tax_amount,
+			'default_tip_rate'  : this.default_tip.rate,
+			'default_tip_amount': this.default_tip.amount,
 			"total": this.total
 		}
 	}
@@ -114,15 +116,22 @@ class Order {
 	}
 
 	get tax() {
-		var tax_rate = 0.13;
 		return {
 			"tax_rate": tax_rate,
-			"tax_amount": round2(tax_rate * this.afterDiscount),
+			"tax_amount": round2(tax_rate * this.afterDiscount/100),
+		}
+	}
+
+	get default_tip() {
+		return {
+			"rate": default_tip_rate,
+			"amount": round2((this.afterDiscount+this.tax.tax_amount)*default_tip_rate/100)
 		}
 	}
 
 	get total() {
-		return round2 (parseFloat(this.subtotal) - parseFloat(this.discountAmount) + parseFloat(this.tax.tax_amount));
+		//return round2 (parseFloat(this.subtotal) - parseFloat(this.discountAmount) + parseFloat(this.tax.tax_amount));
+		return round2 (this.afterDiscount+this.tax.tax_amount+this.default_tip.amount);
 	}
 
 
@@ -386,7 +395,7 @@ class Suborders {
 
 
 		return {
-			"tax": 13,
+			"tax": tax_rate,
 			"tax_amount": tax_amount,
 			"subtotal": subtotal,
 			"total": total,
@@ -415,7 +424,10 @@ class Suborder {
 		this.items = [];
 		this.suborder_no = suborder_no;
 		// this._state = "unpaid";
-		this._tax_rate = 0.13;
+		this._tax_rate = tax_rate;
+
+		this._default_tip_rate = default_tip_rate;
+		this._default_tip_amount = 0;
 
 		this._received = {
 			"cash": 0,
@@ -479,8 +491,10 @@ class Suborder {
 			'subtotal': this.subtotal,
 			'discount_type': this.discount.type,
 			'discount_value': this.discount.value,
-			'tax_rate': this.tax.tax,
+			'tax_rate': tax_rate,
 			'tax_amount': this.tax.amount,
+			'default_tip_rate'  : this.default_tip.rate,
+			'default_tip_amount': this.default_tip.amount,
 			'total': this.total,
 			'items': items
 		}
@@ -499,8 +513,10 @@ class Suborder {
 			'discount_value': this.discount.value,
 			'discount_amount': this.discountAmount,
 			'after_discount': this.afterDiscount,
-			'tax_rate': this.tax.tax * 100,
+			'tax_rate': tax_rate,
 			'tax_amount': this.tax.amount,
+			'default_tip_rate'  : this.default_tip.rate,
+			'default_tip_amount': this.default_tip.amount,
 			'total': this.total,
 			'received_card': this.received.card,
 			'received_cash': this.received.cash,
@@ -584,15 +600,23 @@ class Suborder {
 	// return float with 2 precision
 	get tax() {
 		return {
-			"tax": this._tax_rate,
-			"amount": round2(this.afterDiscount * this._tax_rate)
+			"tax": tax_rate,
+			"amount": round2(this.afterDiscount * tax_rate/100)
 		}
 	}
+
+	get default_tip() {
+		return {
+			"rate": this._default_tip_rate,
+			"amount": round2((this.afterDiscount + this.tax.amount)*this._default_tip_rate/100)
+		}
+	}
+
 
 	// todo
 	// notice the discount, which should be seperate by multiple people
 	get total() {
-		return round2(this.afterDiscount + this.tax.amount);
+		return round2(this.afterDiscount + this.tax.amount + this.default_tip.amount);
 	}
 
 	get received() {
@@ -610,10 +634,6 @@ class Suborder {
 		// } else {
 		// 	tip_card = round2(this._tip.card);
 		// }
-
-
-
-
 		var type;
 		if (this._tip.card > 0 && this._tip.cash) {
 			type = "MIXED";
@@ -630,17 +650,9 @@ class Suborder {
 					"amount": round2(this._tip.card + this._tip.cash),
 					"type": type 
 				};
-
-		// return {
-		// 	"card": round2(tip_card),
-		// 	"cash": round2(this._tip.cash),
-		// 	"amount": round2(tip_card+ this._tip.cash),
-		// 	"type": type 
-		// }
 	}
 
 	get remain() {
-		// return this.total > this.received.total ? round2(this.total - this.received.total) : 0;
 		if (this.received.card >= this.total) {
 			return 0;
 		} else {
@@ -649,7 +661,6 @@ class Suborder {
 	}
 
 	get change() {
-		// return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
 
 		if (this.received.card >= this.total) {
 			return round2(this.received.cash);
@@ -672,8 +683,6 @@ class Suborder {
 			return "ERROR";
 		}
 	} 
-
-
 }
 
 class Item {
@@ -1000,6 +1009,7 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		   <li class="suborder-discount">{3}</li>
 		   <li class="suborder-after-discount">After Discount 打折后: $ {4}</li>
 		   <li class="suborder-tax">Tax 税 ({5}%): $ {6}</li>
+		   <li class="suborder-default-tip">Tip 缺省小费({16}%): $ {17}</li>
 		   <li class="suborder-total">Total 总: $ <span class="span-total">{7}</span></li>
 		   <li class="suborder-received">Received 收到: $ {8} Cash 现金: $ {9} Card 卡: $ {10}</li>
 		   <li class="suborder-remain">Remaining 其余: $ {11}</li>
@@ -1026,14 +1036,13 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	}
 
 
-	
 	var suborderDetailComponent = $(template.format(
 		suborderId, 
 		order_no + '-' + suborder.suborder_no, 
 		suborder.subtotal, 
 		discountText(suborder.discount.type, suborder.discount.value),
 		suborder.afterDiscount,
-		suborder.tax.tax * 100,
+		suborder.tax.tax,
 		suborder.tax.amount,
 		suborder.total,
 		suborder.received.total,
@@ -1043,7 +1052,9 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		suborder.change,
 		suborder.tip.amount,
 		suborder.tip.cash,
-		suborder.tip.card
+		suborder.tip.card,
+		suborder.default_tip.rate,
+		suborder.default_tip.amount
 	));
 
 	if (suborder.remain == 0) {
@@ -1210,8 +1221,10 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		                	"subtotal": tempSuborder.subtotal,
 		                	// "discount_type": tempSuborder.discount.type.toUpperCase(),
 			                "discount_value": tempSuborder.discount.value,
-		                	"tax": tempSuborder.tax.tax * 100,
+		                	"tax": tempSuborder.tax.tax,
 		                	"tax_amount": tempSuborder.tax.amount,
+		                	"default_tip_rate": tempSuborder.default_tip.rate,
+		                	"default_tip_amount": tempSuborder.default_tip.amount,
 			                "total": tempSuborder.total,
 			                "paid_card": tempSuborder.received.card,
 			                "paid_cash": tempSuborder.received.cash,

@@ -156,13 +156,13 @@
 							</div>
 
                     <?php
-                    if ($Order_detail['Order']['table_status'] != 'P' and ! $Order_detail['Order']['discount_value']) {
+                    if ($Order_detail['Order']['table_status'] != 'P' and $Order_detail['Order']['discount_value']==0) {
                         ?>
                                 <div class="col-md-6 col-sm-4 col-xs-4"><button type="button" class="addbtn pull-right add-discount"><i class="fa fa-plus-circle" aria-hidden="true"></i> <?php echo __('Add Discount'); ?></button></div>
-<?php } ?>
+					<?php } ?>
                         </div>
                     </li>
-<?php if (!$Order_detail['Order']['discount_value']) { ?>
+<?php if ($Order_detail['Order']['discount_value']==0) { ?>
                         <li class="clearfix discount_view" style="display:none;">
                             <div class="row">
                                 <div class="col-md-3">
@@ -195,7 +195,7 @@
                         </li>
 <?php } ?>
 
-<?php if ($Order_detail['Order']['discount_value']) {
+<?php if ($Order_detail['Order']['discount_value']!=0) {
     ?>
                         <li class="clearfix">
                             <div class="row">
@@ -230,9 +230,24 @@
                     <li class="clearfix">
                         <div class="row">
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tax'); ?>(<?php echo $Order_detail['Order']['tax'] ?>%)</div>
-                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo round($Order_detail['Order']['tax_amount'], 2) ?></div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo round($Order_detail['Order']['tax_amount'], 2) ?></div>                            
                         </div>
                     </li>
+
+				<?php 
+				  //如果缺省小费率不为0,则显示
+				  if($Order_detail['Order']['default_tip_rate']!=0){ 
+				?>   
+                    <li class="clearfix">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Tip'); ?>(<?php echo $Order_detail['Order']['default_tip_rate'] ?>%)</div>
+                            <div class="col-md-3 col-sm-4 col-xs-4 sub-price">$<?php echo $Order_detail['Order']['default_tip_amount'] ?></div>                            
+                        </div>
+                    </li>
+				<?php 
+				  } 
+				?>    
+
 					<!-- End -->
 
                     <li class="clearfix">

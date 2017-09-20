@@ -2,6 +2,11 @@
     <?php echo $this->element('navbar'); ?>
 </header>
 
+<script type='text/javascript'> 
+  var tax_rate = <?php echo !empty(@$Order_detail['Order']['tax'])?@$Order_detail['Order']['tax']:13; ?>; 
+  var default_tip_rate = <?php echo !empty(@$Order_detail['Order']['default_tip_rate'])?@$Order_detail['Order']['default_tip_rate']:0; ?>; 
+</script>
+
 <div class="col-md-12 col-sm-12 col-xs-12" id="whole-wrapper">
     <div id="customer-select-alert" class="alert alert-info alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -49,16 +54,11 @@
 			<!--     	<div id="discount-component-placeholder" class="pull-right"></div> -->		 </div>
 			</div>
 
-
 			<div id="dangerous-notice">
 				<p></p>
 			</div>
         </div>
-
-
     </div>
-
-
 
     <div class="col-md-3 col-sm-4 col-xs-12 order-left" id="left-side">
 

@@ -47,10 +47,11 @@ class PayController extends AppController {
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount','Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.after_discount','Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.default_tip_rate', 'Order.default_tip_amount'),
             'conditions' => $conditions
                 )
         );
+        
         if (empty($Order_detail)) {
             $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
             return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));

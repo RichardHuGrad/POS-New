@@ -26,7 +26,7 @@ class Order extends AppModel {
 
     // insert a new order in orders
     // return Order.id
-    public function insertOrder($cashier_id, $counter_id, $table_no, $order_type, $tax) {
+    public function insertOrder($cashier_id, $counter_id, $table_no, $order_type, $tax, $default_tip_rate=0) {
     	  sleep(1);
         $insert_data = array(
             'order_no'   => $order_type.$table_no.date('ymdHi'),
@@ -37,6 +37,7 @@ class Order extends AppModel {
 
             'order_type' => $order_type,
             'tax' => $tax,
+            'default_tip_rate' => $default_tip_rate,
             'created' => date('Y-m-d H:i:s')
         );
         $this->save($insert_data, false);
@@ -82,8 +83,7 @@ class Order extends AppModel {
         $Order_detail = $this->find('first', array(
                 'recursive' => -1,
                 'conditions' => array('Order.id' => $order_id)
-            ));
-
+        ));
 
         // get all items from OrderItem
         $order_item_list = $this->OrderItem->find('all', array(
@@ -98,8 +98,6 @@ class Order extends AppModel {
         $data['Order']['tax_amount'] = 0;
         $data['Order']['total'] = 0;
         $data['Order']['discount_value'] = 0;
-
-
 
         foreach ($order_item_list as $order_item) {
             $data['Order']['subtotal'] += ($order_item['OrderItem']['price'] + ($order_item['OrderItem']['extras_amount'] ? $order_item['OrderItem']['extras_amount'] : 0)) * $order_item['OrderItem']['qty'];
@@ -119,7 +117,10 @@ class Order extends AppModel {
         // tax should be after discount
         $data['Order']['tax_amount'] = $after_discount * $data['Order']['tax'] / 100;
 
-        $data['Order']['total'] = $after_discount + $data['Order']['tax_amount'];
+		//缺省小费为税后金额乘以tip rate
+		$data['Order']['default_tip_amount'] = ($after_discount + $data['Order']['tax_amount']) * $Order_detail['Order']['default_tip_rate']/100;
+		
+        $data['Order']['total'] = $after_discount + $data['Order']['tax_amount'] + $data['Order']['default_tip_amount'];
 
         $this->save($data, false);
     }
@@ -135,12 +136,13 @@ class Order extends AppModel {
                 "after_discount" => 0,
                 "tax" => 0,
                 "tax_amount" => 0,
+                "default_tip_rate" => 0,
+                "default_tip_amount" => 0,
                 "total" => 0,
                 "paid" => 0,
                 "change" => 0,
                 "paid_by"=>"",
             );
-
 
         $order_nos = array();
         $table_nos = array();
@@ -150,13 +152,17 @@ class Order extends AppModel {
             $Order_detail = $this->find('first', array(
                     'conditions' => array('Order.id' => $order_id)
                 ));
-            // array_push($data['print_items'], $Order_detail['OrderItem']);
+                
             array_push($data['print_items'], $this->OrderItem->getMergedItems($order_id));
             $data['subtotal'] += $Order_detail['Order']['subtotal'];
             $data['discount_value'] += $Order_detail['Order']['discount_value'];
             $data['after_discount'] += $Order_detail['Order']['after_discount'];
             $data['tax'] = $Order_detail['Order']['tax'];
             $data['tax_amount'] += $Order_detail['Order']['tax_amount'];
+
+            $data['default_tip_rate'] = $Order_detail['Order']['default_tip_rate'];
+            $data['default_tip_amount'] += $Order_detail['Order']['default_tip_amount'];
+
             $data['total'] += $Order_detail['Order']['total'];
             $data['paid'] += $Order_detail['Order']['paid'];
             $data['change'] += $Order_detail['Order']['change'];

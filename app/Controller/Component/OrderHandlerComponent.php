@@ -31,7 +31,7 @@ class OrderHandlerComponent extends Component {
         $cashier_id = $args['cashier_id'];
 
         $admin_detail = $this->Cashier->find("first", array(
-            'fields' => array('Admin.tax', 'Admin.id'),
+            'fields' => array('Admin.tax', 'Admin.default_tip_rate', 'Admin.id'),
             'conditions' => array('Cashier.id' => $cashier_id)
                 )
         );
@@ -39,6 +39,8 @@ class OrderHandlerComponent extends Component {
         // print_r($admin_detail);
 
         $tax_rate = $admin_detail['Admin']['tax']; // 13
+        $default_tip_rate = $admin_detail['Admin']['default_tip_rate']; 
+
         $restaurant_id = $admin_detail['Admin']['id'];
         // print_r($tax_rate);
         // print_r($restaurant_id);
@@ -57,7 +59,7 @@ class OrderHandlerComponent extends Component {
 
         if (empty($Order_detail)) {
             // to create a new order
-            $order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate);
+            $order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
             //return array('ret' => 0, 'message' => 'No order found!');
         } else {
             $order_id = $Order_detail['Order']['id'];

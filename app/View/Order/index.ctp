@@ -11,10 +11,10 @@
         <div class="home-logo">
             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
                 <?php                      
-                	if(substr($_SERVER['REQUEST_URI'],0,4)=='/pos')
-                  		echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); 
-                	else
+                	if(substr($_SERVER['REQUEST_URI'],0,5)=='/skip')
                   		echo $this->Html->image("logo-skip.jpg", array('alt' => "SKIP"));               
+                	else
+                  		echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); 
                 ?>
             </a>
 
@@ -24,8 +24,6 @@
             </div>
 
         </div>
-
-
 
         <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>"><?php echo __('Logout')?></a></div>
 
@@ -40,7 +38,6 @@
             }
             ?>
         </ul>
-
 
     </header>
     <div class="clearfix cartwrap-wrap col-md-12 col-sm-12 col-xs-12">

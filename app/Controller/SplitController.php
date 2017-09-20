@@ -45,7 +45,7 @@ class SplitController extends AppController {
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax',  'Order.default_tip_rate', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => $conditions
                 )
         );
@@ -68,8 +68,6 @@ class SplitController extends AppController {
         $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
     }
 
-
-
     public function addPopular($order_id) {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -81,7 +79,6 @@ class SplitController extends AppController {
         $this->Session->setFlash('Order successfully completed.', 'success');
     }
 
-    //
     public function updateOriginalOrder() {
         $this->layout = false;
         $this->autoRender = NULL;
@@ -115,7 +112,6 @@ class SplitController extends AppController {
 
         echo json_encode($data);
         $this->OrderSplit->save($data);
-
     }
 
 

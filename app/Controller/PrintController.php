@@ -143,6 +143,10 @@ class PrintController extends AppController {
         $after_discount = $order['after_discount'];
         $tax_rate = $order['tax_rate'];
         $tax_amount = $order['tax_amount'];
+
+        $default_tip_rate   = $order['default_tip_rate'];
+        $default_tip_amount = $order['default_tip_amount'];        
+        
         $total = $order['total'];
         $logo_name = $this->data['logo_name'];
 
@@ -177,7 +181,11 @@ class PrintController extends AppController {
         $print_y = 244;
 
         if ($print_zh == true) {
-            $this->printZh("此单不包含小费，感谢您的光临", 100, $print_y);
+        	if($default_tip_rate>0){
+            	$this->printZh("此单已包含小费，感谢您的光临", 100, $print_y);
+        	}else{
+            	$this->printZh("此单不包含小费，感谢您的光临", 100, $print_y);
+        	}
             $print_y+=40;
             $this->printZh("谢谢", 210, $print_y);
             $print_y+=40;
@@ -260,6 +268,20 @@ class PrintController extends AppController {
         }
         $this->printEn(number_format($tax_amount, 2), 360, $print_y);
         $print_y += 30;
+	
+		//缺省收小费，则打印
+		if($default_tip_rate >0){
+	        if ($print_zh == true) {
+	            $this->printZh("Tip", 58, $print_y);
+	            $this->printZh("(" . $default_tip_rate . "%)", 100, $print_y);
+	            $this->printZh("小费：", 168, $print_y);
+	        } else {
+	            $this->printEn("Tip", 58, $print_y);
+	            $this->printEn("(" . $tax_rate . "%) :", 100, $print_y);
+	        }
+	        $this->printEn(number_format($default_tip_amount, 2), 360, $print_y);
+	        $print_y += 30;
+		}
 
         if ($print_zh == true) {
             $this->printZh("Total", 58, $print_y,true);
@@ -301,6 +323,10 @@ class PrintController extends AppController {
         $after_discount = $suborder['after_discount'];
         $tax_rate = $suborder['tax_rate'];
         $tax_amount = $suborder['tax_amount'];
+
+        $default_tip_rate   = $suborder['default_tip_rate'];
+        $default_tip_amount = $suborder['default_tip_amount'];
+
         $total = $suborder['total'];
         $received_card = $suborder['received_card'];
         $received_cash = $suborder['received_cash'];
@@ -355,7 +381,11 @@ class PrintController extends AppController {
         $print_y = 244;
 
         if ($print_zh == true) {
-            $this->printZh("此单不包含小费，感谢您的光临", 100, $print_y);
+            if($default_tip_rate>0){
+                $this->printZh("此单已包含小费，感谢您的光临", 100, $print_y);
+            }else{
+                $this->printZh("此单不包含小费，感谢您的光临", 100, $print_y);
+            }
             $print_y+=40;
             $this->printZh("谢谢", 210, $print_y);
             $print_y+=40;
@@ -451,6 +481,20 @@ class PrintController extends AppController {
         }
         $this->printEn(number_format($tax_amount, 2), 360, $print_y);
         $print_y += 30;
+
+        //缺省收小费，则打印
+        if($default_tip_rate >0){
+            if ($print_zh == true) {
+                $this->printZh("Tip", 58, $print_y);
+                $this->printZh("(" . $default_tip_rate . "%)", 100, $print_y);
+                $this->printZh("小费：", 168, $print_y);
+            } else {
+                $this->printEn("Tip", 58, $print_y);
+                $this->printEn("(" . $tax_rate . "%) :", 100, $print_y);
+            }
+            $this->printEn(number_format($default_tip_amount, 2), 360, $print_y);
+            $print_y += 30;
+        }
 
         if ($print_zh == true) {
             $this->printZh("Total", 58, $print_y,true);
