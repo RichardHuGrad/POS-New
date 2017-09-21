@@ -401,7 +401,7 @@ class LogoHeaderPage extends HeaderPage {
         if ($this->print_zh == true) {
             $font = printer_create_font('simsun', 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
             printer_select_font($handle, $font);
-            if($data['Admin']['default_tip_rate']>0){
+            if($data['Admin']['default_tip_rate']>0 && $this->table_type == 'D'){
             	printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单已包含小费，感谢您的光临"), 100, $print_y);
             	$print_y+=40;
             	printer_draw_text($handle, iconv("UTF-8", "gb2312", "The tips are included"), 110, $print_y); 
@@ -678,7 +678,6 @@ class MergeItemsPage extends ItemsPage {
 }
 
 
-
 class ReportItemsPage extends ItemsPage {
     private $item_detail, $print_zh, $pritn_en;
     function __construct($item_detail, $print_zh=true, $print_en=false) {
@@ -951,9 +950,7 @@ class ReportCountPage extends CountPage
             printer_end_page($handle);
         }
 
-
         printer_delete_pen($pen);
-
         printer_delete_font($font);
     }
 
@@ -1020,7 +1017,6 @@ class TimeHSTFooterPage extends FooterPage {
 }
 
 
-
 class BasicDoc
 {
     private $pages;
@@ -1070,12 +1066,4 @@ class BasicDoc
     }
 }
 
-
-// columnsFormater($numOfColumns, column_array($key=>$value))
-
-// bill formater
-
-// kitchen item formater
-
-
- ?>
+?>

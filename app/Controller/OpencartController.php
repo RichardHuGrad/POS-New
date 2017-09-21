@@ -156,7 +156,7 @@ class OpencartController extends AppController {
     
   }
 
-
+  //fetch online orders into local
   public function getOcOrders() {
 		
 	$this->layout = false;
@@ -214,6 +214,8 @@ class OpencartController extends AppController {
             'table_status' => 'P',            // Paid and display green
             'tax' => $tax_rate,
             'tax_amount' => $order->order_tax,
+            'default_tip_rate'   => 0,
+            'default_tip_amount' => 0,
             'subtotal'   => $order->sub_total,
             'total'      => $order->total,
             'card_val'   => $order->total,

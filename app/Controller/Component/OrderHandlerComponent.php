@@ -39,8 +39,12 @@ class OrderHandlerComponent extends Component {
         // print_r($admin_detail);
 
         $tax_rate = $admin_detail['Admin']['tax']; // 13
-        $default_tip_rate = $admin_detail['Admin']['default_tip_rate']; 
-
+        if($type == 'D'){
+        	$default_tip_rate = $admin_detail['Admin']['default_tip_rate']; 
+        }else{
+        	$default_tip_rate = 0;
+        }
+        
         $restaurant_id = $admin_detail['Admin']['id'];
         // print_r($tax_rate);
         // print_r($restaurant_id);
@@ -533,7 +537,7 @@ class OrderHandlerComponent extends Component {
         
     public function makeavailable($args) {
 
-	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
+	  	ApiHelperComponent::verifyRequiredParams($args, ['order_no']);
 	  	  	  	  
         $order_no = $args['order_no'];     
         
@@ -559,15 +563,16 @@ class OrderHandlerComponent extends Component {
     }
 
 
-	  public function moveOrder($args) {
+	public function moveOrder($args) {
 	  	
-	  	ApiHelperComponent::verifyRequiredParams($args, ['type', 'table', 'order_no']);
-	  	$type  = $args['type'];
+	  ApiHelperComponent::verifyRequiredParams($args, ['type', 'table', 'order_no']);
+	  
+	  $type  = $args['type'];
       $table = $args['table'];
       $order_no = $args['order_no'];
     
       $Order_detail = $this->Order->find("first", array(
-          'fields' => array('Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
+          'fields' => array('Order.id,Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
           'conditions' => array('Order.order_no' => $order_no),
           'recursive' => -1
               )
@@ -577,6 +582,7 @@ class OrderHandlerComponent extends Component {
       $old_type      = $Order_detail['Order']['order_type'];
       $old_table     = $Order_detail['Order']['table_no'];
       $phone         = $Order_detail['Order']['phone'];
+
       
       //print kitchen notification when change table(not from online table)
       if($old_type != 'L'){        	
@@ -584,25 +590,37 @@ class OrderHandlerComponent extends Component {
         $print = new PrintLib();
         $print->printKitchenChangeTable($order_no, $table, $type, $old_table,$old_type, $printerName,true,$phone);
       }
+	  
+	  #think about default_tip when changing table
+	  // update new table information to database		
+ 	  if($old_type == $type || substr($order_no,0,1) == 'L'){ 
+ 	  	$ret = $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
+ 	  }else{
+ 	  	
+ 	    if($type == 'D'){
+			$query = array(
+			    'conditions' => array('is_super_admin' => 'N'),
+			    'recursive' => -1, 
+			    'fields' => array('default_tip_rate'),
+			);
 
- 		  	
-	  	/* 换桌时不修改订单号
-	  	//modify order_no with new table and type
-	  	//online orders 的编码规则和pos系统里面不一样
-	  	if(strpos($order_no ,"-") !== FALSE){
-	  		$order_no = $type.$table.substr($order_no,strpos($order_no,'-'));
-	  	}else{
-	  		$order_no = $type.$table.substr($order_no,-10);
-	  	}
-	  	*/	  
-	  		
-      // update new table information to database 	  					
-      $ret = $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
-
+			$admin_detail = $this->Admin->find('first',$query);
+			$default_tip_rate = $admin_detail['Admin']['default_tip_rate']; 
+ 	    	
+ 	  		$ret = $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'", 'default_tip_rate' => $default_tip_rate) , array('Order.order_no' => $order_no));
+ 	  		
+ 	  	}else{
+ 	  		$ret = $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'", 'default_tip_rate' => 0) , array('Order.order_no' => $order_no));
+ 	  	}
+ 	  	//这种情况需要更新小费信息
+ 	  	$this->Order->updateBillInfo($Order_detail['Order']['id']);
+ 	  }
+	  
+      
       if($ret) return array('ret' => 1, 'message' => 'Move successfully.');
       else return array('ret' => 0, 'message' => 'Fail to move order!');        
     	    
-	  }
+	}
     
     
     public function editPhone($args) {
@@ -624,7 +642,7 @@ class OrderHandlerComponent extends Component {
 
     public function tableRestore($args) {
 
-	  	  ApiHelperComponent::verifyRequiredParams($args, ['order_id']);
+	  	ApiHelperComponent::verifyRequiredParams($args, ['order_id']);
 
         $order_id  = $args['order_id'];
 
