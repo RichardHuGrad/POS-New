@@ -186,7 +186,7 @@ class Order extends AppModel {
             $conditions =
             $Orders = $this->find("all", array(
                 'recursive' => -1,
-                'fields' =>  array('Order.order_no', 'Order.cashier_id', 'Order.table_no', 'Order.total', 'Order.paid', 'Order.cash_val', 'Order.card_val', 'Order.tax_amount', 'Order.discount_value', 'Order.percent_discount','Order.paid_by', 'Order.tip','Order.tip_paid_by', 'Order.change'),
+                'fields' =>  array('Order.order_no', 'Order.cashier_id', 'Order.table_no', 'Order.total', 'Order.paid', 'Order.cash_val', 'Order.card_val', 'Order.tax_amount', 'Order.default_tip_amount', 'Order.discount_value', 'Order.percent_discount','Order.paid_by', 'Order.tip','Order.tip_paid_by', 'Order.change'),
                 'conditions' => array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.order_type <>' => 'L', 'Order.created >=' => date('c', $timeline_arr[$i]), 'Order.created <' => date('c', $timeline_arr[$i + 1]))
 
                 ));
@@ -202,7 +202,9 @@ class Order extends AppModel {
                 'total_tip' => 0,
                 'cash_tip_total' => 0,
                 'card_tip_total' => 0,
-                'mix_tip_total' => 0,
+                'default_tip_mix' => 0,
+                'default_tip_card' => 0,
+                'default_tip_cash' => 0,
                 'tax' => 0,
                 'real_total' => 0,
                 'order_num' => sizeof($Orders),
@@ -217,22 +219,59 @@ class Order extends AppModel {
 
                 $totalArr['total'] += $order['total'];
 
-                if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
+				//目前的系统,没有现金小费,现金都是找零,小费是额外给服务员的,没有计入订单的.缺省小费和卡付小费计入订单.
+				// CARD, CASH, MIXED and NO TIP
+                if ($order['paid_by'] == 'CASH') { 
+                	
                     $totalArr['cash_total'] += $order['total'];
-                } else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP
+                    
+                    $totalArr['default_tip_cash'] += $order['default_tip_amount'];
+                    
+                } else if ($order['paid_by'] == 'CARD') { 
+                	
                     $totalArr['card_total'] += $order['total'];
-                } else {
-                    $totalArr['card_mix_total'] += $order['card_val'];
-                    $totalArr['cash_mix_total'] += ($order['total'] - $order['card_val']);
-                }
-                $totalArr['total_tip'] += $order['tip'];
-                if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-                    $totalArr['cash_tip_total'] += $order['tip'];
-                } else if ($order['tip_paid_by'] == 'CARD') {
+                    
                     $totalArr['card_tip_total'] += $order['tip'];
-                } else { // MIX
-                    $totalArr['mix_tip_total'] += $order['tip'];
+                    $totalArr['default_tip_card'] +=$order['default_tip_amount'];
+                    
+                } else {
+                	
+                	//Paid by MIXED
+                	//这种情况,现金多了都会找零,卡付时多余的是小费
+                	//对于缺省小费：有分单则根据子单来拆分
+                	//没有分单则缺省小费统一计入default_tip_mix
+                	
+                    $totalArr['card_mix_total'] += $order['card_val'];
+                    
+                    $totalArr['cash_mix_total'] += ($order['total'] - $order['card_val']);
+
+            		$o_splits = $this->query("SELECT default_tip_amount, paid_card,paid_cash,tip_card,tip_cash FROM order_splits WHERE order_no = '".$order['order_no']. "'");
+
+                    if(!empty($o_splits[0]['order_splits'])){
+                        foreach($o_splits as $os){
+                            $paid_card = $os['order_splits']['paid_card'];
+                            $paid_cash = $os['order_splits']['paid_cash'];
+                            
+                            if($paid_card>0 && $paid_cash>0){
+                            	//mixed for this suborder
+                            	$totalArr['default_tip_mix'] += $os['order_splits']['default_tip_amount'];
+                            }else if($paid_card>0){  //by card 	
+                    			$totalArr['card_tip_total'] += $order['tip'];
+                    			
+                            	$totalArr['default_tip_card'] += $os['order_splits']['default_tip_amount'];
+                            }else{    //by cash
+                            	$totalArr['default_tip_cash'] += $os['order_splits']['default_tip_amount'];
+                            }
+                        }
+                    }else{ //mixed for this order
+                    	$totalArr['card_tip_total'] += $order['tip'];
+                        
+                        $totalArr['default_tip_mix'] += $os['order_splits']['default_tip_amount'];
+                    }                    
                 }
+                                
+                $totalArr['total_tip'] += ($order['tip']+$order['default_tip_amount']);
+
                 $totalArr['tax'] += $order['tax_amount'];
             }
 
@@ -240,7 +279,8 @@ class Order extends AppModel {
 
             array_push($data, $totalArr);
         }
-
+		
+		//如果缺省小费不对,说明混合付款的时候,这个单同时用了现金和卡,请检查$totalArr['default_tip_mix']
         return $data;
     }
 

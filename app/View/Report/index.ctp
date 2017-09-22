@@ -64,6 +64,10 @@
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Cash'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{3}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{4}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Tips by Card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{7}</li>
+
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Default tips by card'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{8}</li>
+        <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Default tips by cash'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{9}</li>
+
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Tax'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{0}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{1}</li>
         <li class="col-md-6 col-sm-6 col-xs-6"><?php echo __('Received Total'); ?></li> <li class="col-md-6 col-sm-6 col-xs-6">{2}</li>
@@ -164,7 +168,7 @@ $('button[name="view-amount"]').on('click', function(e) {
             $('.report-content').append(
               objs.map( (obj) => {
                   var startTimeStr = new Date(obj.start_time)
-                  return $('#amount-info').html().format(obj.tax.toFixed(2), obj.total.toFixed(2), obj.real_total.toFixed(2), obj.paid_cash_total.toFixed(2), obj.paid_card_total.toFixed(2), getTimeStr(obj.start_time * 1000),getTimeStr(obj.end_time * 1000), obj.card_tip_total.toFixed(2));
+                  return $('#amount-info').html().format(obj.tax.toFixed(2), obj.total.toFixed(2), obj.real_total.toFixed(2), obj.paid_cash_total.toFixed(2), obj.paid_card_total.toFixed(2), getTimeStr(obj.start_time * 1000),getTimeStr(obj.end_time * 1000), obj.card_tip_total.toFixed(2),obj.default_tip_card.toFixed(2),obj.default_tip_cash.toFixed(2));
               })
             );
         }
