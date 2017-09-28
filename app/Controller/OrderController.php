@@ -17,6 +17,11 @@ class OrderController extends AppController {
         $this->loadModel('Category');
         $this->loadModel('Cousine');
 
+        
+        if (empty($this->Session->read('Front.id'))) {
+            return $this->redirect($this->Auth->logout());
+        }
+
         // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
