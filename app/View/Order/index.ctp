@@ -27,7 +27,7 @@
 
         <div class="logout"><a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'logout')) ?>"><?php echo __('Logout')?></a></div>
 
-        <ul class="nav nav-tabs text-center">
+        <ul class="nav nav-tabs text-center" style="margin-left:100px">
             <?php
             if (!empty($records)) {
                 foreach ($records as $key => $category) {
