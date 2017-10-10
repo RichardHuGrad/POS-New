@@ -21,11 +21,10 @@
 		<button type="button" class="btn attend" style="background-color:#FFBD9D" data-toggle="modal" data-target="#modal_checkin"><?php echo __('Checkin') ?></button>
 		
 	</div>
-
-	<?php echo $this->Form->end(); ?>
+	
 	<div class="text-center forget-txt">
 		<a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'homes','action' => 'forgot_password')); ?>"><?php echo __('Forgot your password?') ?></a></div>
-	</form>
+	<?php echo $this->Form->end(); ?>
     </div>
 </div>
 

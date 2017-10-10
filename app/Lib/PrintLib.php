@@ -868,23 +868,29 @@ class ReportCountDetailPage extends CountPage {
 
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-                /*
+                
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡付小费 : ') . sprintf('%0.2f', $spanAmount['card_tip_total']), 32, $print_y); $print_y+=32;
-                */
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
+                
+                
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '税    额 : ') . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
 
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
+               	printer_draw_text($handle, iconv("UTF-8", "gb2312", '缺省现金小费 : ') . sprintf('%0.2f', $spanAmount['default_tip_cash']), 32, $print_y); $print_y+=32;
+               	printer_draw_text($handle, iconv("UTF-8", "gb2312", '缺省卡付小费 : ') . sprintf('%0.2f', $spanAmount['default_tip_card']), 32, $print_y); $print_y+=32;
+
+                printer_draw_text($handle, iconv("UTF-8", "gb2312", '总    计 : ') . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;
 
             } else {
 
                 printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $spanAmount['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-                printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-                /*
+                printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $spanAmount['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;                
+                
                 printer_draw_text($handle, iconv("UTF-8", "gb2312", 'Tips by Card : ') . sprintf('%0.2f', $spanAmount['card_tip_total']), 32, $print_y); $print_y+=32;
-                */
-
+                
                 printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $spanAmount['tax']), 32, $print_y); $print_y+=32;
+
+               	printer_draw_text($handle, iconv("UTF-8", "gb2312", 'Default Tip Cash : ') . sprintf('%0.2f', $spanAmount['default_tip_cash']), 32, $print_y); $print_y+=32;
+               	printer_draw_text($handle, iconv("UTF-8", "gb2312", 'Default Tip Card : ') . sprintf('%0.2f', $spanAmount['default_tip_card']), 32, $print_y); $print_y+=32;
 
                 printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $spanAmount['total']) . " ( " . $spanAmount['order_num'] . " sales ) ", 32, $print_y); $print_y+=32;
                 printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $spanAmount['real_total']), 32, $print_y); $print_y+=32;

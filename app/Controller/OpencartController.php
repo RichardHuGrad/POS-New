@@ -182,7 +182,7 @@ class OpencartController extends AppController {
     list($ret, $response) = $this->makeCall("/order/getOcOrders", $data);
     if($ret == 0){
     	$this->Session->setFlash($response, 'error');
-      return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+    	return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     	//exit($response);
     } 
       
@@ -209,7 +209,7 @@ class OpencartController extends AppController {
         $insert_order_data = array(
             'order_no'     => "L".$order->order_id,
             'cashier_id'   => $restaurant_id, // cashier should be restaurant_id
-            'counter_id'   => 0,              // online订单，初始counter_id = 0;
+            'counter_id'   => 0,              // online订单,初始counter_id = 0;
             'table_no'     => $table_no,
             'table_status' => 'P',            // Paid and display green
             'tax' => $tax_rate,
@@ -236,8 +236,9 @@ class OpencartController extends AppController {
         $order_id = $this->Order->getLastInsertId();
         foreach($order->order_products as $order_item){
         
-          $CousineDetail = $this->Cousine->getCousineInfo($order_item->product_id);
-          $comb_id = $CousineDetail['Cousine']['comb_num'];
+        	$CousineDetail = $this->Cousine->getCousineInfo($order_item->product_id);
+        	
+        	$comb_id = $CousineDetail['Cousine']['comb_num'];
           
     	    $insert_orderitem_data[]['OrderItem'] = array(
               'order_id'    => $order_id,
@@ -251,6 +252,7 @@ class OpencartController extends AppController {
               'tax_amount'  => $order_item->tax,
               'qty'         => $order_item->quantity,
               'comb_id'     => $comb_id,
+              'is_takeout'  => $order_item->is_takeout,
               'created'     => date('Y-m-d H:i:s'),
             );
         }
