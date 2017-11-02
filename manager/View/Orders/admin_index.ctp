@@ -309,10 +309,9 @@ $registered_till = @$search['registered_till'];
                                     <div class="checkbox col-md-5" style="margin-left:0px; margin-top:0px">
                                         <label  id="unselect_all"> Unselect All</label>
                                     </div>          
-                                    <!-- <div class="checkbox col-md-4" style="margin-left:0px; margin-top:0px">
-                                        <label  id="delete_order"> Delete</label>
-                                    </div>    -->
-                                    <button type="button" class="btn btn-info" id="delete_order">Delete</button>                
+									<!--
+                                    <button type="button" class="btn btn-info" id="delete_order">Delete</button>
+                                    -->             
                                 </div>
                                 <input type="hidden" name="data[Reorder][ids]" value=<?php echo implode(",", $ids); ?> />
                                 <?php
