@@ -105,17 +105,31 @@ class OrdersController extends AppController {
             throw new NotFoundException(__('Invalid order'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            if ($this->Order->save($this->request->data)) {
+
+            if ($this->Order->update($id,$this->request->data)) {
+            	
                 $this->Session->setFlash(__('The order has been saved.'));
                 return $this->redirect(array('action' => 'index', 'admin' => true));
             } else {
                 $this->Session->setFlash(__('The order could not be saved. Please, try again.'));
             }
+                        
         } else {
-            $options = array('conditions' => array('Order.' . $this->Order->primaryKey => $id));
+            $options = array(
+                'recursive' => -1,
+                'conditions' => array('Order.' . $this->Order->primaryKey => $id)
+            );            
             $this->request->data = $this->Order->find('first', $options);
         }
-        $cashiers = $this->Order->Cashier->find('list');
+        
+        $cashiers = $this->Order->Cashier->find('list', array(
+            'fields' => array('Cashier.id', 'Cashier.email'),
+            'conditions' => array(
+               'Cashier.status' => 'A','Cashier.is_verified' => 'Y'
+            ),
+            'recursive' => 0
+    	));
+    
         $this->set(compact('cashiers'));
     }
 
@@ -178,7 +192,8 @@ class OrdersController extends AppController {
             if ($this->Order->validates()) {
 
                 $this->request->data['Order']['id'] = $id;
-                if ($this->Order->save($this->request->data, $validate = false)) {
+                //if ($this->Order->save($this->request->data, $validate = false)) {
+                if ($this->Order->update($id,$this->request->data)) {
                     $this->Session->setFlash('Order has been updated successfully', 'success');
                     $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
                 }
@@ -276,9 +291,6 @@ class OrdersController extends AppController {
             $this->Order->delete(array('Order.id' => $order_id), false);
         }
 
-        // $id = base64_decode($id);
-        // $this->Order->updateAll(array('Order.status' => "'D'"), array('Order.id' => $id));
-
         $this->Session->setFlash('Order has been deleted successfully', 'success');
         
         //cannot run in ajax call
@@ -311,7 +323,8 @@ class OrdersController extends AppController {
         return $this->redirect(array('action' => 'index'));
     }
 
-    public function admin_edit_log() {
+
+    public function admin_edit_log() { //未用
         $this->layout = false;
         $this->autoRender = NULL;
         
