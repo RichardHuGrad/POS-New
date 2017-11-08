@@ -27,18 +27,18 @@ $option_cooking  = array('COOKED'=>'COOKED','UNCOOKED'=>'UNCOOKED');
       					// echo $this->Form->input('reorder_no');
       					// echo $this->Form->input('hide_no');
       					//echo $this->Form->input('cashier_id', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('counter_id', array('label' => array('text'=>'Cashier','class' => 'col-sm-2 control-label'),'style'=>'width:200px;','options' => $cashiers, 'empty' => '...'));
+      					echo $this->Form->input('counter_id', array('disabled' => 'disabled','label' => array('text'=>'Cashier','class' => 'col-sm-2 control-label'),'style'=>'width:200px;','options' => $cashiers, 'empty' => '...'));
       					
       					echo $this->Form->input('table_no', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					
-      					echo $this->Form->input('table_status', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;','options' => $option_table_status, 'empty' => '...'));
+      					echo $this->Form->input('table_status', array('disabled' => 'disabled','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;','options' => $option_table_status, 'empty' => '...'));
       					
-      					echo $this->Form->input('subtotal', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('tax', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('tax_amount', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('default_tip_rate', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('default_tip_amount', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('total', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('subtotal', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('tax', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('tax_amount', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('default_tip_rate', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('default_tip_amount', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('total', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					echo $this->Form->input('card_val', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					echo $this->Form->input('cash_val', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					echo $this->Form->input('tip', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
@@ -46,25 +46,26 @@ $option_cooking  = array('COOKED'=>'COOKED','UNCOOKED'=>'UNCOOKED');
       					echo $this->Form->input('paid', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					echo $this->Form->input('paid_by', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_paid_by, 'empty' => '...'));
       					echo $this->Form->input('change', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('promocode', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('promocode', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					// echo $this->Form->input('message', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					// echo $this->Form->input('reason');
-      					echo $this->Form->input('order_type', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_order_type, 'empty' => '...'));
-      					echo $this->Form->input('is_kitchen', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_yes_no, 'empty' => '...'));  					      									
-      					echo $this->Form->input('cooking_status', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_cooking, 'empty' => '...'));
+      					echo $this->Form->input('order_type', array('disabled' => 'disabled','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_order_type, 'empty' => '...'));
+      					echo $this->Form->input('is_kitchen', array('disabled' => 'disabled','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_yes_no, 'empty' => '...'));  			
+      					echo $this->Form->input('cooking_status', array('disabled' => 'disabled','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_cooking, 'empty' => '...'));
       					// echo $this->Form->input('is_hide');
-      					echo $this->Form->input('is_completed', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_yes_no, 'empty' => '...'));
+      					echo $this->Form->input('is_completed', array('disabled' => 'disabled','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;' ,'options' => $option_yes_no, 'empty' => '...'));
 
-      					echo $this->Form->input('fix_discount', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('percent_discount', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
-      					echo $this->Form->input('discount_value', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('fix_discount', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('percent_discount', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('discount_value', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       					// echo $this->Form->input('merge_id');
-      					echo $this->Form->input('after_discount', array('label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
+      					echo $this->Form->input('after_discount', array('readonly' => 'readonly','label' => array('class' => 'col-sm-2 control-label'),'style'=>'width:200px;'));
       				?>
       				</fieldset>
-      				
-      				<!--      				
+      				      				     				
       				<?php echo $this->Form->end(__('Submit')); ?>
+      				
+      				<!--
       			    <div class="actions">
 	      			  	<h3><?php echo __('Actions'); ?></h3>
 	      			  	<ul>	              
@@ -72,7 +73,6 @@ $option_cooking  = array('COOKED'=>'COOKED','UNCOOKED'=>'UNCOOKED');
 	      			  	</ul>
 			        </div>
 			        -->
-			        
 			    </div>
 		    </div>
 		
