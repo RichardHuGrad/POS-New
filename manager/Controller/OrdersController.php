@@ -286,7 +286,7 @@ class OrdersController extends AppController {
                         ));
             $order_id = $order_detail['Order']['id'];
 
-            $this->OrderLog->insertLog($order_detail, 'delete');
+            $this->OrderLog->insertLog($order_detail, 'void;');
 
             $this->Order->delete(array('Order.id' => $order_id), false);
         }
@@ -317,7 +317,7 @@ class OrdersController extends AppController {
         // $this->request->onlyAllow('post', 'delete');
         $order_detail = $this->Order->find('first', array('recursive' => -1,'conditions' => array('Order.id'=> $id)));
         // print_r($order_detail);
-        $this->OrderLog->insertLog($order_detail, 'delete');
+        $this->OrderLog->insertLog($order_detail, 'void;');
         $this->Order->delete(array('Order.id' => $id), false);
 
         return $this->redirect(array('action' => 'index'));
