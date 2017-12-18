@@ -391,29 +391,11 @@ $directory = $_SERVER['DOCUMENT_ROOT'] . '/';
 $url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
 
 $project_directory = '/';
-if('192.168.1.253:81' == $_SERVER['HTTP_HOST']){
-	$project_directory = '/pos/';
-}
 
-$db_host = 'localhost';
-$db_username = 'root';
-$db_password = '';
-$db_database = 'pos';
-
-if('m.brsoftech.net' == $_SERVER['HTTP_HOST']){
-	Configure::write('debug',0);
-	$project_directory = '/pos/';
-
-	$db_host = 'localhost';
-	$db_username = 'BrdbUserm';
-	$db_password = 'BrDB!34*908m';
-	$db_database = 'pos';
-}
-
-define('DB_HOST', $db_host);
-define('DB_USERNAME', $db_username);
-define('DB_PASSWORD', $db_password);
-define('DB_DATABASE', $db_database);
+define('DB_HOST', 'localhost');
+define('DB_USERNAME', 'pos');
+define('DB_PASSWORD', 'pos1209');
+define('DB_DATABASE', 'pos');
 
 $directory = $_SERVER['DOCUMENT_ROOT'] . $project_directory;
 $url_directory = 'http://' . $_SERVER['HTTP_HOST'] . $project_directory;
