@@ -22,9 +22,11 @@ echo $this->Html->script(array('select2.min.js', 'jquery.dataTables.min.js', 'ta
     });
 </script>
 
-<?php $option_yes_no = array('Y' => 'Yes', 'N' => 'No');
-$option_status = array('A' => 'Active', 'I' => 'Inactive');
-$option_order = array(
+<?php 
+$option_position = array('K' => 'Kitchen', 'S' => 'Service');
+$option_yes_no   = array('Y' => 'Yes', 'N' => 'No');
+$option_status   = array('A' => 'Active', 'I' => 'Inactive');
+$option_order    = array(
     'Cashier.firstname ASC, Cashier.lastname ASC, Cashier.created DESC' => 'Cashier Name Ascending',
     'Cashier.firstname DESC, Cashier.lastname DESC, Cashier.created DESC' => 'Cashier Name Descending',
     'Cashier.email ASC, Cashier.created DESC' => 'Email Ascending',
@@ -60,7 +62,7 @@ if($this->Session->check('cashier_search')){
                 <section id="page-title">
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
-                            <h1 class="mainTitle pull-left">Cashiers List</h1>
+                            <h1 class="mainTitle pull-left">Employees List</h1>
                             <div class="row pull-right">
                                 <?php
                                     echo $this->Html->link('Add Cashier <i class="fa fa-plus"></i>',
@@ -149,9 +151,11 @@ if($this->Session->check('cashier_search')){
                                 <thead>
                                     <tr>
                                         <th>Restaurant Name</th>
-                                        <th>Cashier Name</th>
+                                        <th>UserID</th>
+                                        <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>Position</th>
                                         <!-- <th>Is Verified</th> -->
                                         <th>Status</th>
                                         <th>Registered On</th>
@@ -163,9 +167,11 @@ if($this->Session->check('cashier_search')){
                                         <?php foreach ($customer_list as $customer) { ?>
                                             <tr>
                                                 <td><?php echo ucfirst($customer['Admin']['restaurant_name']); ?></td>
+                                                <td><?php echo $customer['Cashier']['userid']; ?></td>
                                                 <td><?php echo ucfirst($customer['Cashier']['firstname']) . ' ' . ucfirst($customer['Cashier']['lastname']); ?></td>
                                                 <td><?php echo $customer['Cashier']['email']; ?></td>
                                                 <td><?php echo $customer['Cashier']['mobile_no']; ?></td>
+                                                <td><?php echo $option_position[$customer['Cashier']['position']]; ?></td>
                                                 <!-- <td> <?php
                                                     if ($customer['Cashier']['is_verified'] == 'Y') {
                                                         echo $this->Html->image('/img/test-pass-icon.png', array('border' => 0, 'alt' => 'Yes', 'title' => 'Yes'));

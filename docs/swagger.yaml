@@ -1,0 +1,1358 @@
+swagger: '2.0'
+info:
+  title: POS API
+  description: POS system API
+  version: "1.0.0"
+# the domain of the service
+host: pos.auroraeducationonline.info
+# array of all schemes that your API supports
+schemes:
+  - http
+  - https
+# will be prefixed to all paths
+basePath: /api
+produces:
+  - application/json
+paths:
+  /access/generateToken:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: generate access token for api
+      description: |
+        generate access token for api
+        all api should attach access token
+      parameters:
+        - name: email
+          in: formData
+          description: Cashier's email address
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: the password of cashier
+          required: true
+          type: string
+          format: password
+      tags:
+        - Access
+      responses:
+        200:
+          description: authentication success
+          schema:
+            properties:
+              access_token:
+                type: string
+                description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printPayReceipt:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: print payment receipt
+      description: |
+        print payment receipt
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Print
+        - Pay
+      responses:
+        200:
+          description: success print
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printPayBill:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: print payment bill
+      description: |
+        print payment receipt
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Print
+        - Pay
+      responses:
+        200:
+          description: access token
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printKitchenUrgeItem:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: is used to implement urge item in order page
+      description: |
+        print the urged item to kitchen with urge 加急 tag
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printTokitchen:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: print all items of order which do not print to kitchen printer
+      description: |
+        all items of order has a is_print tag, this function will print all items whose is_print tag is 'N'
+        the printer is found by restaurant_id
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printKitchenRemoveItem:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: print kitchen removed items
+      description: |
+        by default this function is called in /orderHandler/removeItem, when items are removed.
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printMergeBill:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: print bill of merged orders
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderIdList"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Merge
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printMergeReceipt:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: print receipt of merged orders
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/orderIdList"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Merge
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printTotalOrders:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: (To be modified) print the total amount of saled orders
+      description: |
+        summary of card, cash and the percent of card and cash in total amount
+        this function is used in report controller
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Report
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /print/printTotalItems:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: (To be modified) print all saled items
+      description: |
+        should add timestamp range
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Report
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/addItem:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: add item to order
+      description: |
+        add item to order.
+        only one item every time.
+        if the order do not exist, this function will create the order first, and then add item to the order.
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/itemId"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/cashierId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: return order_item_id
+          schema:
+            properties:
+              order_item_id:
+                type: integer
+                format: int32
+                description: the id of order_item which is added
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/removeItem:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: remove items from order and print cancelled item to kitchen
+      description: |
+        be able to remove multiple items by once.
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/cashierId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+        - Print
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/changePrice:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: change price of order_items
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/itemPrice"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/changeQuantity:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: change quantity of order_items
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/itemQuantity"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/takeout:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: set takeout flag of order_items
+      parameters:
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/batchAddExtras:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: add extras to multiple order_items
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/itemIdList"
+        - $ref: "#/parameters/extraIdList"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/itemSpecial"
+        - $ref: "#/parameters/cashierId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/addExtras:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: add or remove extras to single order_item
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/itemId"
+        - $ref: "#/parameters/extraIdList"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/itemSpecial"
+        - $ref: "#/parameters/cashierId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /orderHandler/moveOrder:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: move order (by order_no) to an empty table
+      description: |
+        move order (by order_no) to an empty table
+      parameters:
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Order
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Order:
+                $ref: "#/definitions/Order"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /discountHandler/addDiscount:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: add discount to order
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/accessToken"
+        - name: percent_discount
+          in: query
+          required: false
+          type: number
+          format: float
+        - name: promocode
+          in: query
+          required: false
+          type: string
+        - name: cashier_id
+          in: query
+          required: true
+          type: string
+      tags:
+        - Discount
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /discountHandler/removeDiscount:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: remove discount of order
+      description: |
+        Finally, the funtion will update the bill information, including subtotal, total, etc.
+      parameters:
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Discount
+      responses:
+        200:
+          description: success
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /payHandler/completeOrder:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: complete the order
+      description: |
+        set order as complete
+      parameters:
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/tableNo"
+        - name: paid_by
+          in: query
+          description: the type of paid
+          required: true
+          type: string
+        - name: pay
+          in: query
+          description: the total of payment
+          required: true
+          type: string
+        - name: change
+          in: query
+          description: the change of order找零
+          required: true
+          type: string
+        - name: card_val
+          in: query
+          description: the customer payment with card
+          required: true
+          type: string
+        - name: cash_val
+          in: query
+          description: the customer payment with cash
+          required: true
+          type: string
+        - name: tip_paid_by
+          in: query
+          description: the method of tip paid
+          required: true
+          type: string
+        - name: tip
+          in: query
+          description: the tip
+          required: true
+          type: string
+      tags:
+        - Pay
+      responses:
+        200:
+          description: success
+
+  /tables/getTableNos:
+     post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation about table
+      description: |
+        get infomation about table
+        - order information
+        - related order_item information
+      parameters:
+        - $ref: "#/parameters/restaurantId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: array
+            items:
+              properties:
+                dineIn:
+                  description: the number of dine in tables
+                  type: integer
+                  format: int32
+                takeout:
+                  description: the number of takeout tables
+                  type: integer
+                  format: int32
+                waiting:
+                  description: the number of waiting tables
+                  type: integer
+                  format: int32
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllTablesSummary:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get all tables' summary
+      parameters:
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Order:
+                type: array
+                items:
+                  $ref: "#/definitions/Order"
+
+  /tables/getTablesSummaryByType:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get tables' summary by table type
+      parameters:
+        - $ref: "#/parameters/accessToken"
+        - $ref: "#/parameters/tableType"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Order:
+                type: array
+                items:
+                  $ref: "#/definitions/Order"
+
+  /tables/getOrderInfoByTable:
+     post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation about table
+      description: |
+        get infomation about table
+        - order information
+        - related order_item information
+      parameters:
+        - $ref: "#/parameters/tableNo"
+        - $ref: "#/parameters/tableType"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Order:
+                $ref: "#/definitions/Order"
+              OrderItem:
+                type: array
+                items:
+                  $ref: "#/definitions/OrderItem"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getOrderInfoById:
+     post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order by order_id
+      description: |
+        get infomation of order by order_id
+        - order information
+        - related order_item information
+      parameters:
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getOrderInfoByOrderNo:
+     post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order by order_id
+      description: |
+        get infomation of order by order_id
+        - order information
+        - related order_item information
+      parameters:
+        - $ref: "#/parameters/orderNo"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          # schema:
+          #   properties:
+          #     access_token:
+          #       type: string
+          #       description: the access token of cashier
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getOrderItemInfoById:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order_item by order_item_id
+      description: |
+        get infomation of order_item by id
+        - order_item information
+      parameters:
+        - $ref: "#/parameters/itemId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              OrderItem:
+                $ref: "#/definitions/OrderItem"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllOrderItemsByOrderId:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order_item by order_item_id
+      description: |
+        get infomation of order_item by id
+        - order_item information
+      parameters:
+        - $ref: "#/parameters/orderId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              OrderItem:
+                type: array
+                items:
+                  $ref: "#/definitions/OrderItem"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllCousines:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order_item by order_item_id
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/cousineStatus"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            type: object
+            properties:
+              Cousine:
+                type: array
+                items:
+                  $ref: "#/definitions/Cousine"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllCousineCategories:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order_item by order_item_id
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/cousineCategoryStatus"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            properties:
+              Category:
+                type: array
+                items:
+                  $ref: "#/definitions/Category"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getCousinesByCategoryId:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of order_item by order_item_id
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/categoryId"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            properties:
+              Cousine:
+                type: array
+                items:
+                  $ref: "#/definitions/Cousine"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllExtras:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of extra
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/extraStatus"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            properties:
+              Extra:
+                type: array
+                items:
+                  $ref: "#/definitions/Extra"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  /tables/getAllExtraCategories:
+    post:
+      consumes:
+        - application/x-www-form-urlencoded
+      summary: get infomation of extra
+      description: |
+        get all cousines information
+      parameters:
+        - $ref: "#/parameters/extraStatus"
+        - $ref: "#/parameters/accessToken"
+      tags:
+        - Table
+      responses:
+        200:
+          description: success
+          schema:
+            properties:
+              ExtraCategory:
+                type: array
+                items:
+                  $ref: "#/definitions/ExtraCategory"
+        default:
+          $ref: "#/responses/MissingArgumentError"
+
+  # /tables/getAllTableStatus:
+  #   post:
+  #     consumes:
+  #       - application/x-www-form-urlencoded
+  #     summary: get infomation of extra
+  #     description: |
+  #       get all cousines information
+  #     parameters:
+  #       - $ref: "#/parameters/accessToken"
+  #     tags:
+  #       - Table
+  #     responses:
+  #       200:
+  #         description: D for dine in, T for takeout, W for waiting
+  #         # schema:
+  #         #   properties:
+  #         #     access_token:
+  #         #       type: string
+  #         #       description: the access token of cashier
+  #       default:
+  #         $ref: "#/responses/MissingArgumentError"
+
+  # /tables/getAllDineinTableStatus:
+  #   post:
+  #     consumes:
+  #       - application/x-www-form-urlencoded
+  #     summary: get infomation of extra
+  #     description: |
+  #       get all cousines information
+  #     parameters:
+  #       - $ref: "#/parameters/accessToken"
+  #     tags:
+  #       - Table
+  #     responses:
+  #       200:
+  #         description: success
+  #         # schema:
+  #         #   properties:
+  #         #     access_token:
+  #         #       type: string
+  #         #       description: the access token of cashier
+  #       default:
+  #         $ref: "#/responses/MissingArgumentError"
+
+  # /tables/getAllTakeoutTableStatus:
+  #   post:
+  #     consumes:
+  #       - application/x-www-form-urlencoded
+  #     summary: get infomation of extra
+  #     description: |
+  #       get all cousines information
+  #     parameters:
+  #       - $ref: "#/parameters/accessToken"
+  #     tags:
+  #       - Table
+  #     responses:
+  #       200:
+  #         description: success
+  #         # schema:
+  #         #   properties:
+  #         #     access_token:
+  #         #       type: string
+  #         #       description: the access token of cashier
+  #       default:
+  #         $ref: "#/responses/MissingArgumentError"
+
+  # /tables/getAllWaitingTableStatus:
+  #   post:
+  #     consumes:
+  #       - application/x-www-form-urlencoded
+  #     summary: get infomation of extra
+  #     description: |
+  #       get all cousines information
+  #     parameters:
+  #       - $ref: "#/parameters/accessToken"
+  #     tags:
+  #       - Table
+  #     responses:
+  #       200:
+  #         description: success
+  #         # schema:
+  #         #   properties:
+  #         #     access_token:
+  #         #       type: string
+  #         #       description: the access token of cashier
+  #       default:
+  #         $ref: "#/responses/MissingArgumentError"
+
+
+
+
+parameters:
+  restaurantId:
+    name: restaurant_id
+    in: formData
+    description: the id of restaurant
+    required: true
+    type: integer
+    format: int32
+
+  orderId:
+    name: order_id
+    in: formData
+    description: the id of order
+    required: true
+    type: string
+
+  orderNo:
+    name: order_no
+    in: formData
+    description: the number of order
+    required: true
+    type: string
+
+  accessToken:
+    name: access_token
+    in: formData
+    description: the access token of cashier
+    required: true
+    type: string
+
+  itemId:
+    name: item_id
+    in: formData
+    description: the id of order_item
+    required: true
+    type: integer
+    format: int32
+
+  cashierId:
+    name: cashier_id
+    in: formData
+    description: the id of cashier
+    required: true
+    type: integer
+    format: int32
+
+  tableNo:
+    name: table
+    in: formData
+    description: the number of table
+    required: true
+    type: integer
+    format: int32
+
+  tableType:
+    name: type
+    in: formData
+    description: |
+      the type of table
+      - D for dine in
+      - T for takeout
+      - W for waiting
+    required: true
+    type: string
+    enum:
+      - D
+      - T
+      - W
+
+  itemIdList:
+    name: item_id_list
+    in: formData
+    description: a list of item id
+    required: true
+    type: array
+    items:
+      type: integer
+      format: int32
+
+  extraIdList:
+    name: extra_id_list
+    in: formData
+    description: a list of extra id
+    required: true
+    type: array
+    items:
+      type: integer
+      format: int32
+
+  orderIdList:
+    name: order_ids
+    in: formData
+    description: a list of order id
+    required: true
+    type: array
+    items:
+      type: integer
+      format: int32
+
+  itemPrice:
+    name: price
+    in: formData
+    description: the price of item
+    required: true
+    type: number
+    format: float
+
+  itemQuantity:
+    name: quantity
+    in: formData
+    description: the quantity of item
+    required: true
+    type: integer
+    format: int
+
+  itemSpecial:
+    name: special
+    in: formData
+    description: the special message for item
+    required: true
+    type: string
+
+  categoryId:
+    name: category_id
+    in: formData
+    description: the category_id in cousine table
+    required: true
+    type: integer
+    format: int
+
+  cousineCategoryStatus:
+    name: status
+    in: formData
+    description: |
+      the status column in category table
+      - A for active
+      - I for inactive
+      means whether category should show
+    required: true
+    type: string
+    enum:
+      - A
+      - I
+
+  cousineStatus:
+    name: status
+    in: formData
+    description: |
+      the status column in cousine table
+      - A for active
+      - I for inactive
+      means whether category should show
+    required: true
+    type: string
+    enum:
+      - A
+      - I
+
+  extraStatus:
+    name: status
+    in: formData
+    description: |
+      the status column in extra table
+      - A for active
+      - I for inactive
+      means whether category should show
+    required: true
+    type: string
+    enum:
+      - A
+      - I
+
+
+definitions:
+  Error:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+
+  Order:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+        example: 653
+        description: order_id
+      order_no:
+        type: string
+        example: 60461641
+        description: order_no
+      subtotal:
+        type: number
+        format: float
+      tax:
+        type: integer
+        format: int10
+        example: 13
+        description: tax rate
+      tax_amount:
+        type: number
+        format: float
+      discount_value:
+        type: number
+        format: float
+        description: discount value 折扣价
+      after_discount:
+        type: number
+        format: float
+        description: after discount 折后价
+      is_completed:
+        type: string
+        enum:
+          - N
+          - Y
+        description: N for not complete, Y for complete
+      total:
+        type: number
+        format: float
+      tip:
+        type: number
+        format: float
+        description: 小费
+      change:
+        type: number
+        format: float
+        description: the change 找零
+      card_val:
+        type: number
+        format: float
+        description: received card money from customer
+      cash_val:
+        type: number
+        format: float
+        description: received cash money from customer
+      merge_id:
+        type: integer
+        format: int10
+        description: 对应order中的id，为'0'表示没有合单，否则为合单的主单id
+
+  OrderItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+        example: 653
+        description: order_id
+      order_id:
+        type: integer
+        format: int10
+        example: 60461641
+        description: the order belongs to which order, match with the id column of order table
+      item_id:
+        type: integer
+        format: int10
+        description: the id of the item
+      name_en:
+        type: string
+        description: english name
+      name_xh:
+        type: string
+        description: chinese name
+      category_id:
+        type: integer
+        format: int10
+        description: the item belongs to which category
+      price:
+        type: number
+        format: float
+        description: the price of the item, not including the extra's price
+      qty:
+        type: integer
+        format: int10
+        description: received card money from customer
+      tax:
+        type: number
+        format: float
+        example: 13
+        description: tax rate
+      tax_amount:
+        type: number
+        format: float
+        description: the amount of item tax
+      selected_extras:
+        type: string
+        description: the json string of the selected extras
+      extras_amount:
+        type: number
+        format: float
+        description: the total price of selected extra
+
+  Cousine:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+      restaurant_id:
+        type: integer
+        format: int10
+        description: in the database, the cousine is bind with restaurant, however when we use it, only one restaurant in the local system
+      casier_id:
+        type: integer
+        format: int10
+        description: this cousine is create by which cashier, this property should be ignored
+      price:
+        type: number
+        format: float
+      category_id:
+        type: integer
+        format: int10
+        description: this cousine belongs to which category
+      comb_num:
+        type: integer
+        format: int10
+        description: if comb_num is 0, it means this cousine is not a comb, otherwise, the number represent the number of combo extra it can have
+      status:
+        type: string
+        enum:
+          - A
+          - I
+        description: A for active, I for inactive
+      create:
+        type: string
+        format: timestamp
+        description: the time when this cousine is created
+      is_tax:
+        type: string
+        enum:
+          - Y
+          - N
+        description: whether this cousine should counter the tax. Y for yes, N for no
+
+      en:
+        type: string
+        description: english name
+      zh:
+        type: string
+        description: chinese name
+
+  Category:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+      status:
+        type: string
+        enum:
+          - I
+          - A
+        description: I for inactive, A for active
+      printer:
+        type: string
+        enum:
+          - K
+          - C
+        description: the printer this category will use when press send to kitchen button. K for kitchen, C for cashier. Normally, drinks should print to cashier directly
+      en:
+        type: string
+        description: english name
+      zh:
+        type: string
+        description: chinese name
+
+  Extra:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+      name:
+        type: string
+        description: english name
+      name_zh:
+        type: string
+        description: chinese name
+      price:
+        type: number
+        format: float
+      status:
+        type: string
+        enum:
+          - A
+          - I
+        description: A for active, I for inactive
+      category_id:
+        type: integer
+        format: int10
+        description: belongs to which extra category
+
+  ExtraCategory:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int10
+      name:
+        type: string
+        description: english name
+      name_zh:
+        type: string
+        description: chinese name
+      extras_num:
+        type: integer
+        format: int10
+        description: combo number of extra category, 0 means is not a combo
+      status:
+        type: string
+        enum:
+          - A
+          - I
+        description: A for active, I for inactive
+
+
+
+responses:
+  MissingArgumentError:
+    description: missing argument
+    schema:
+      $ref: "#/definitions/Error"

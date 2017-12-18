@@ -8,7 +8,6 @@ class Admin extends AppModel {
     public $name = 'Admin';
 
     public $validate = array(
-
         // 'firstname' => array(
         //     'notEmpty' => array(
         //         'rule' => array('notEmpty'),
@@ -37,7 +36,7 @@ class Admin extends AppModel {
             'isUnique' => array(
                 'rule' => array('isUnique'),
                 'message' => 'Email already exists, please use different one'
-            )   
+            )
         ),
         'old_password' => array(
             'notEmpty' => array(
@@ -148,14 +147,16 @@ class Admin extends AppModel {
     }
 
     public function allowNumberOnly($number) {
-        if (!is_numeric($number['mobile_no'])) {
+    	$no = str_replace("-","",$number['mobile_no']);
+        //if (!is_numeric($number['mobile_no'])) {
+        if (!is_numeric($no)) {
             return FALSE;
         } else {
             return true;
         }
-    }   
+    }
 	function ChangePassword() {
-		
+
 		$validate1 = array(
 				'password'=>array(
 								'mustNotEmpty'=>array(
@@ -175,11 +176,11 @@ class Admin extends AppModel {
 								)
 								)
 			);
-			
+
 		$this->validate=$validate1;
 		return $this->validates();
 	}
-	
+
 	public function matchuserspassword(){
 		  //return $this->data[$this->alias]['password'] === $this->data[$this->alias]['confirm_password'];
 		$password		=	$this->data['User']['password'];
@@ -188,6 +189,6 @@ class Admin extends AppModel {
 			return true;
 		else
 			return false;
-	
+
 	}
 }

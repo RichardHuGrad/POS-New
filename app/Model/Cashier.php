@@ -148,6 +148,38 @@ class Cashier extends AppModel {
 
     }
 
+
+    public function getKitchenPrinterName($id) {
+        $cashier_detail = $this->find("first", array(
+            'fields' => array('Admin.kitchen_printer_device'),
+            'conditions' => array('Cashier.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Admin']['kitchen_printer_device'];
+    }
+
+    public function getServicePrinterName($id) {
+        $cashier_detail = $this->find("first", array(
+            'fields' => array('Admin.service_printer_device'),
+            'conditions' => array('Cashier.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Admin']['service_printer_device'];
+    }
+
+    public function getRestaurantId($id) {
+        $cashier_detail = $this->find("first", array(
+            'recursive' => -1,
+            'fields' => array('Cashier.restaurant_id'),
+            'conditions' => array('Cashier.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Cashier']['restaurant_id'];
+    }
+
 }
 
 ?>

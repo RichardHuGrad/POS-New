@@ -67,7 +67,7 @@ if($this->Session->check('cousine_search')){
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="control-label">Category</label>                                
+                                <label class="control-label">Category</label>
                                 <?php echo $this->Form->input('category_id', array('type' => 'select', 'options' => $categories, 'class' =>'form-control reset-field', 'div' => false, 'value'=>$search_category, 'empty'=>'Select Category',  'label' => false, 'required' => false));
                                         ?>
                             </div>
@@ -115,7 +115,7 @@ if($this->Session->check('cousine_search')){
                                     <th><?php echo @$this->Paginator->sort('eng_name', 'Cuisines Name(EN)') ?></th>
                                     <th><?php echo @$this->Paginator->sort('zh_name', 'Cuisines Name(ZH)') ?></th>
                                     <th><?php echo @$this->Paginator->sort('Cousine.status', 'Status') ?></th>
-                                    <th><?php echo @$this->Paginator->sort('Cousine.modified', 'Updated On') ?></th>
+                                    <th><?php echo @$this->Paginator->sort('Cousine.price', 'Price') ?></th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -135,7 +135,8 @@ if($this->Session->check('cousine_search')){
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php echo date(DATETIME_FORMAT, $cat['Cousine']['modified']); ?>
+                                                <!-- <?php echo date(DATETIME_FORMAT, $cat['Cousine']['modified']); ?> -->
+                                                <?php echo $cat['Cousine']['price']; ?>
                                             </td>
                                             <td>
                                                 <div>
@@ -160,7 +161,7 @@ if($this->Session->check('cousine_search')){
 													End
 													*/
 
-                                                    if (!$cat['Cousine']['no_of_orders']) 
+                                                    if (!$cat['Cousine']['no_of_orders'])
                                                         echo $this->Html->link('<i class="fa fa-trash"></i>',
                                                             array('plugin' => false, 'controller' => 'cousines', 'action' => 'delete',  base64_encode($cat['Cousine']['id']), 'admin' => true),
                                                             array('class' => 'btn btn-transparent btn-xs', 'title' => 'Click here to delete cousine', "onclick"=>"return confirm('Are you sure you want to delete this cousine?')", 'escape' => false)

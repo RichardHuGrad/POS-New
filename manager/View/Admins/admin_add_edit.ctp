@@ -73,6 +73,14 @@ $(document).ready(function() {
                                     </div>
                                 </div>
 
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">HST Number</label>
+                                        <?php echo $this->Form->input('hst_number', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
                                 <div class="clearfix"></div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -91,8 +99,8 @@ $(document).ready(function() {
                                 <!-- location panel goes here -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Street</label>
-                                        <?php echo $this->Form->input('street', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                        <label class="control-label">Address</label>
+                                        <?php echo $this->Form->input('address', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -110,7 +118,7 @@ $(document).ready(function() {
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Zip code</label>
-                                        <?php echo $this->Form->input('zip_code', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
+                                        <?php echo $this->Form->input('zipcode', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
                                 <!-- location end here -->
@@ -205,6 +213,14 @@ $(document).ready(function() {
                                     <div class="form-group">
                                         <label class="control-label">Tax <span class="symbol required"></span></label>
                                         <?php echo $this->Form->input('tax', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Default Tip Rate</label>
+                                        <?php echo $this->Form->input('default_tip_rate', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
@@ -318,7 +334,23 @@ $(document).ready(function() {
                                     </div>
                                 </div>
 
+                                <div class="clearfix"></div>
+                                 <h4 style="margin-left: 13px; margin-top: 28px;">
+                                    Online Tables
+                                </h4>  
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">No Of Online Tables <span class="symbol required"></span></label>
+                                        <?php
+                                        $options = [];
+                                        for($i = 1; $i <= 50; $i++)
+                                            $options[$i] = $i;
+                                        echo $this->Form->input('no_of_online_tables', array('type' => 'text', 'maxlength' => '3', 'class' =>'form-control', 'alt'=>'no_of_online_tables', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                    </div>
+                                </div>
+
                             </div>
+                            
                             <div class="row">
                                 <div class="col-md-12">
                                     <div>

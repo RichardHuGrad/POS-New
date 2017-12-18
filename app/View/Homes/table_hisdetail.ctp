@@ -1,25 +1,14 @@
-<header class="product-header">
-	  <div class="home-logo">
-                    <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'dashboard')) ?>">
-                    <?php echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); ?>
-                    </a>
-
-					<div class="HomeText text-left">
-                        <a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'index')) ?>">Home 主页</a>
-                        <a href="javascript:void(0)" onclick="window.history.back()">Back 返回</a>
-					</div>
-
-            </div>
-      <div class="logout"><a href="<?php echo $this->Html->url(array('controller'=>'homes','action'=>'logout')) ?>">Logout 登出</a></div>
+<header >
+    <?php echo $this->element('navbar'); ?>
 </header>
 
 <div class="container">
 	<div class="clearfix cartwrap-wrap"></div>
-	
+
     <div class="order-wrap">
     <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 [[Dinein]] #<?php echo $table_no; ?>, @ <?php echo $today ?></h2>
+            <h2>Order 订单号 #<?php echo $Order_detail['Order']['order_no'] ?>, Table 桌 [[<?php echo $order_type=='D'?'Dinein':'Takeout'; ?>]]#<?php echo $table_no; ?>, @ <?php echo $today ?></h2>
 
             <div class="paid-box">
                 <div class="checkbox-btn">
@@ -125,12 +114,17 @@
                             <div class="col-md-3 col-sm-4 col-xs-4 sub-price tip_price" style='overflow: hidden; white-space: nowrap;'>$<input name='tip' id='tip' value='<?php echo number_format($Order_detail['Order']['tip'], 2) ?>'></div>
                         </div>
                     </li>
-                    
+
                     <li class="clearfix">
                         <div class="row">
-                            <div class="col-md-3 col-sm-3 col-xs-3 sub-txt">&nbsp;</div>
-                            <div class="col-md-6 col-sm-6 col-xs-6 sub-txt updatefee" style='margin: 0; text-align: center; color:#fff; font-size:24px; font-weight: bold; border-radius: 15px; background-color: #c30e23;'>Update 修改</div>
-                            <div class="col-md-3 col-sm-3 col-xs-3 sub-txt">&nbsp;</div>
+                            <div class="col-md-2 col-sm-2 col-xs-2 sub-txt">&nbsp;</div>
+                            <?php if($dinein_table_status!='N'){ ?>
+                              <div class="col-md-3 col-sm-3 col-xs-3 sub-txt restore" style='margin: 0; text-align: center; color:#fff; font-size:20px; font-weight: bold; border-radius: 15px; background-color: green;cursor:pointer;'>Restore 弹回</div>
+                              <div class="col-md-2 col-sm-2 col-xs-2 sub-txt">&nbsp;</div>
+                            <?php } ?>
+                            <div class="col-md-3 col-sm-3 col-xs-3 sub-txt updatefee" style='margin: 0; text-align: center; color:#fff; font-size:20px; font-weight: bold; border-radius: 15px; background-color: #c30e23;cursor:pointer;'>Update 修改</div>
+                            
+                            <div class="col-md-2 col-sm-2 col-xs-2 sub-txt">&nbsp;</div>
                         </div>
                     </li>
                 </ul>
@@ -140,7 +134,7 @@
     </div>
 </div>
 <?php
-echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js'));
+echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jQuery.print.js','md5.js'));
 echo $this->fetch('script');
 ?>
 
@@ -161,12 +155,29 @@ $(document).on('click', ".updatefee", function () {
             data: {table_no: "<?php echo $table_no ?>", order_id: "<?php echo $order_id ?>", subtotal: subtotal, discount_value: discount_value, total: total, paid: paid, cash_val: cash_val, card_val: card_val, change: change, tip: tip},
             dataType: "json",
             success: function (json) {
-            	if (json.status == 'OK') {
-            		window.location.href = json.url;
+            	if (json.ret == 1) {
+            		window.location.href = "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'tableHistory',  'table_no' => $table_no, 'order_type' => $order_type)); ?>";
             	} else {
             		alert(json.message);
             	}
             }
         })
-    })
+    });
+
+$(document).on('click', ".restore", function () {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'tableRestore')); ?>",
+            method: "post",
+            data: {order_id: "<?php echo $order_id ?>"},
+            dataType: "json",
+            success: function (json) {            	
+            	if (json.ret == 1) {
+            		window.location.href = json.url;
+            	} else {
+            		alert(json.message);
+            	} 
+            }
+        })
+    });
+
 </script>

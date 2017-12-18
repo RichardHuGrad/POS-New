@@ -1,0 +1,180 @@
+html,body {
+    position: relative;
+    min-height: 100%;
+    margin: 0;
+}
+
+.dropdown-menu{
+    position:fixed;
+}
+.show_extras {
+    display: block;
+    float: left;
+    margin-bottom: 15px;
+    margin-top: 14px;
+    width: 100%;
+}
+.extras_inner{
+    border: 1px solid #eee;
+    border-radius: 14px;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px;
+    padding: 8px;
+}
+.extras_inner > span {
+    margin-right: 10px;
+}
+.fa.fa-times.remove_extra {
+    color: rgb(195, 14, 35);
+    font-size: 19px;
+}.fa.fa-times.remove_extra:hover {
+    color: #23527c;
+    font-size: 19px;
+}
+
+.name-title {
+    /*margin-top:30px;*/
+    /*margin-bottom: 30px;*/
+    text-align: center;
+}
+
+.dish-price {
+    width:100%;
+    text-align: right;
+    /* -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-indent: 10px; */
+    padding-right:10px;
+}
+
+::-webkit-scrollbar {
+    width: 30px;
+    height: 30px;
+    overflow: visible;
+}
+
+::-webkit-scrollbar-track {
+    border: 15px solid transparent;
+    background-clip: content-box;   THIS IS IMPORTANT
+}
+::-webkit-scrollbar-thumb {
+    background: #D1D0D0;
+    width: 30px;
+    border-radius: 50px;
+    height: 10px;
+    border: 1px solid rgb(0,0,0);
+    -webkit-box-shadow: 0 1px 1px rgb(0,0,0);
+}​
+
+/* .order-summary-indent {
+    height: 350px;
+} */
+
+#button-group button {
+    /*border-radius: 8px;*/
+    font-weight: 1000;
+}
+
+/*#send-to-kitchen-btn {
+    background-color: #c30e23;
+    color: #fff;
+}
+
+#pay-btn {
+    background-color: #292929;
+    color: #fff;
+}*/
+
+#order-component, #order-component li {
+    padding: 0;
+}
+
+#order-component .selected{
+    background-color: #e03636;
+    color: #fff;
+}
+
+#single-extra-component-categories li{
+    display: block;
+    float: left;
+    background: #ccc;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.order-item {
+    /*height: 50px;*/
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-height: 30px;
+    /*border: 1px solid rgb(0,0,0);*/
+}
+
+.order-item.is-print {
+    color: #000;
+    background-color: #ECE7E7;
+}
+
+.selected-extra-item {
+    float:left;
+    width: 70px;
+    margin: 5px;
+    min-height: 40px;
+    padding: 10px;
+    background-color: #ECE7E7;
+}
+
+.selected-extra-item .close {
+    color: red;
+}
+
+.btn[disabled], .btn[disabled]:hover {
+  background-color: #9da2a3;
+  border-color: #9da2a3;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: 19px;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a {
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+.subtotalwrap {
+    font-weight: bold;
+    font-size: 20px;
+}

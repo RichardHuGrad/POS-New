@@ -63,7 +63,7 @@ class Cashier extends AppModel {
                 'allowEmpty' => false
             ),
             'between' => array(
-                'rule' => array('between', 5, 20),
+                'rule' => array('between', 3, 20),
                 'message' => 'Password must be between %d and %d characters',
             ),
             'rule1' => array(

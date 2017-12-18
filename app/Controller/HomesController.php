@@ -4,9 +4,13 @@
  * Class HomesController
  * Note*- here cashier id is related to the restaurant id
  */
-class HomesController extends AppController {
+App::uses('PrintLib', 'Lib');
+App::uses('OpencartController', 'Controller');
 
-    public $components = array('Paginator');
+class HomesController extends AppController {
+    public $fontStr1 = "simsun";
+
+    public $components = array('Paginator','OrderHandler','Access');
 
     /**
      * beforeFilter
@@ -16,6 +20,9 @@ class HomesController extends AppController {
 
         parent::beforeFilter();
         $this->Auth->allow('index', 'forgot_password');
+        
+        $this->Auth->allow('index', 'checkin');
+        
         $this->layout = "default";
     }
 
@@ -31,13 +38,14 @@ class HomesController extends AppController {
                 $username = $this->request->data['Cashier']['username'];
                 $password = Security::hash($this->data['Cashier']['password'], 'md5', false);
 
-                $cond = array(
-                    'Cashier.password' => $password,
-                    'OR' => array(
-                        'Cashier.email' => $username,
-                    // 'OR' => array('Cashier.mobile_no' => $username)
-                    )
+                $cond = array(                    
+                    "OR" => array(
+                        'Cashier.email'  => $username,
+                        'Cashier.userid' => $username,
+                    ),
+                    "Cashier.password" => $password,
                 );
+                
                 $user = $this->Cashier->find('first', array(
                     'conditions' => $cond,
                 ));
@@ -129,17 +137,27 @@ class HomesController extends AppController {
         // get all table details
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", array(
-            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device'),
+            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
-       
+
         //Modified by Yishou Liao @ Dec 12 2016
         $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
         //End @ Dec 12 2016
-        
+
         // get table availability
         $this->loadModel('Order');
+        $tables_status = $this->Order->find("list", array(
+            'fields' => array('Order.table_no', 'Order.table_status','Order.order_type'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N')
+                )
+        );
+        $dinein_tables_status  = @$tables_status['D'];
+        $takeway_tables_status = @$tables_status['T'];
+        $waiting_tables_status = @$tables_status['W'];
+        $online_tables_status  = @$tables_status['L'];
+/*
         $dinein_tables_status = $this->Order->find("list", array(
             'fields' => array('Order.table_no', 'Order.table_status'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N', 'Order.order_type' => 'D')
@@ -155,12 +173,46 @@ class HomesController extends AppController {
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N', 'Order.order_type' => 'W')
                 )
         );
+        $online_tables_status = $this->Order->find("list", array(
+            'fields' => array('Order.table_no', 'Order.table_status'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N', 'Order.order_type' => 'L')
+                )
+        );
+
+*/
 
         // get all order no.
         $orders_no = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
+                )
+        );
+
+        // get all order phone.
+        $orders_phone = $this->Order->find("list", array(
+            'fields' => array('Order.order_type', 'Order.phone', 'Order.table_no'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => -1
+                )
+        );
+
+/*
+        // if there is split-order on this table 
+        //$this->loadModel('OrderSplit');
+        $this->Order->virtualFields['isSplit']= "Select 'Y' from cookies where cookies.key like concat(Order.order_no,'%') limit 1";
+        $orders_split = $this->Order->find("list", array(
+            'fields' => array('Order.order_type', 'Order.isSplit', 'Order.table_no'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => -1
+                )
+        );
+*/
+
+        $orders_total = $this->Order->find("list", array(
+            'fields' => array('Order.order_no', 'Order.total'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => -1
                 )
         );
 
@@ -168,17 +220,21 @@ class HomesController extends AppController {
         $orders_time = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.created', 'Order.table_no'),
             'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
+            'recursive' => -1
                 )
         );
+        
         $colors = array(
-            'P' => 'greenwrap',
+            'P' => 'greenwrap',      //table_status='P' :Paid
             'N' => 'notpaidwrap',
             'A' => 'availablebwrap',
             'V' => 'notpaidwrap',
+            'R' => 'receiptwrap',
         );
 
-        $this->set(compact('tables', 'dinein_tables_status', 'takeway_tables_status', 'waiting_tables_status', 'colors', 'orders_no', 'orders_time','admin_passwd'));
+        // print_r($orders_total);
+
+        $this->set(compact('tables','dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd'));
     }
 
     public function allorders() {
@@ -334,7 +390,7 @@ class HomesController extends AppController {
         } else {
             $data['OrderItem']['is_done'] = 'Y';
         }
-        // save order to database        
+        // save order to database
         $data['OrderItem']['id'] = $item_id;
         $this->OrderItem->save($data, false);
 
@@ -370,7 +426,7 @@ class HomesController extends AppController {
         // get all params
         $item_ids = explode(",", $this->data['item_id']);
 
-        // save order to database    
+        // save order to database
         $this->loadModel('OrderItem');
         foreach ($item_ids as $key => $value) {
             # code...
@@ -405,9 +461,6 @@ class HomesController extends AppController {
             $this->Order->save($data_order, false);
         }
 
-
-
-
         echo true;
     }
 
@@ -418,7 +471,7 @@ class HomesController extends AppController {
         // get all params
         $item_ids = explode(",", $this->data['item_id']);
 
-        // save order to database    
+        // save order to database
         $this->loadModel('OrderItem');
         foreach ($item_ids as $key => $value) {
             # code...
@@ -440,134 +493,6 @@ class HomesController extends AppController {
         echo true;
     }
 
-    public function order() {
-        // get all recepie items according to category
-        $this->loadModel('Category');
-        $this->loadModel('Cousine');
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Cashier.restaurant_id', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id')),
-                )
-        );
-
-        $this->Category->bindModel(
-                array(
-                    'hasMany' => array(
-                        'Cousine' => array(
-                            'className' => 'Cousine',
-                            'foreignKey' => 'category_id',
-                            'conditions' => array('Cousine.status' => 'A', 'Cousine.restaurant_id' => $cashier_detail['Cashier']['restaurant_id']),
-                        )
-                    )
-                )
-        );
-        $this->Cousine->virtualFields['eng_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'en'";
-        $this->Cousine->virtualFields['zh_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'zh'";
-
-        $this->Category->virtualFields['eng_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'en'";
-        $this->Category->virtualFields['zh_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'zh'";
-
-        $records = $this->Category->find("all", array(
-            // 'fields'=>array('Admin.table_size', 'Admin.takeout_table_size', 'Admin.waiting_table_size'),
-            'conditions' => array('Category.status' => 'A')
-                )
-        );
-
-        // get popular dishes
-        $this->loadModel('Cousine');
-        $this->Cousine->virtualFields['eng_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'en'";
-        $this->Cousine->virtualFields['zh_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'zh'";
-        $populars = $this->Cousine->find("all", array(
-            'conditions' => array('Cousine.status' => 'A', 'Cousine.restaurant_id' => $cashier_detail['Cashier']['restaurant_id']),
-            'order' => 'Cousine.popular DESC',
-            'recursive' => false,
-            'limit' => 30
-                )
-        );
-
-        $type = $this->params['named']['type'];
-        $table = $this->params['named']['table'];
-
-        // get order detail
-        $this->loadModel('Order');
-        $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-            'Order.table_no' => $table,
-            'Order.is_completed' => 'N',
-            'Order.order_type' => $type
-        );
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.order_type'),
-            'conditions' => $conditions,
-            'recursive' => false
-                )
-        );
-
-        //Modified by Yishou Liao @ Dec 09 2016
-        //$order_id = $this->Order->find('all',array('fields' => 'Max(id) as max_id'));
-        //$order_no = str_pad(($order_id[0][0]['max_id']+1), 5, rand(98753, 87563), STR_PAD_LEFT);
-        //End @ Dec 09 2016
-        
-        $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail'));
-    }
-
-    public function pay() {
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        $order_no = @$this->params['url']['order_no'];
-
-        // get all params
-        $type = @$this->params['named']['type'];
-        $table = @$this->params['named']['table'];
-
-        if ($order_no) {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.order_no' => $order_no
-            );
-        } else {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            );
-        }
-
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => $conditions
-                )
-        );
-        if (empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-        $type = @$Order_detail['Order']['order_type'] ? @$Order_detail['Order']['order_type'] : $type;
-        $table = @$Order_detail['Order']['table_no'] ? @$Order_detail['Order']['table_no'] : $table;
-
-        // get all order no.
-        $orders_no = $this->Order->find("list", array(
-            'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
-                )
-        );
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no'));
-    }
 
     public function tableHisdetail() {
         // get cashier details
@@ -577,18 +502,28 @@ class HomesController extends AppController {
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
+        
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
 
         $table_no = $this->params['named']['table_no'];
         $order_id = $this->params['named']['order_id'];
-        
+        $order_type = empty($this->params['named']['order_type'])?'D':$this->params['named']['order_type'];
+
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
 
+        $dinein_table_status = $this->Order->query("SELECT table_status FROM orders WHERE cashier_id='{$cashier_detail['Admin']['id']}' and is_completed='N' and order_type='$order_type' and table_no='$table_no' ");
+        if($dinein_table_status){
+            $dinein_table_status = $dinein_table_status[0]['orders']['table_status'];
+        }else{
+            $dinein_table_status = "";
+        }
+        
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.id' => $order_id,
-        	'Order.table_no' => $table_no,
+        	  'Order.table_no' => $table_no,
             'Order.is_completed' => 'Y',
-            'Order.order_type' => 'D',
+            'Order.order_type' => $order_type,
             'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
         );
 
@@ -604,101 +539,30 @@ class HomesController extends AppController {
 
         $today = date('Y-m-d H:i', strtotime($Order_detail['Order']['created']));
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'order_id', 'today'));
+        $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no', 'order_id','order_type','today','dinein_table_status'));
     }
 
     public function tableHisupdate() {
         $this->layout = false;
         $this->autoRender = NULL;
+
+		    $res = $this->OrderHandler->tableHisupdate(array(
+		    	'order_id'  => $this->data['order_id'],
+		    	'subtotal'  => $this->data['subtotal'],
+		    	'discount_value'  => $this->data['discount_value'],
+		    	'total'     => $this->data['total'],
+		    	'paid'      => $this->data['paid'],
+		    	'cash_val'  => $this->data['cash_val'],
+		    	'card_val'  => $this->data['card_val'],
+		    	'change'    => $this->data['change'],
+		    	'tip'       => $this->data['tip'],
+		    	'cashier_id' => $this->Session->read('Front.id')   	
+		    ));
     	
-    	// get cashier details
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        $table_no = $this->data['table_no'];
-        $order_id = $this->data['order_id'];
-        
-        $this->loadModel('Order');
-        $this->loadModel('Log');
-
-        $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-            'Order.id' => $order_id,
-        	'Order.table_no' => $table_no,
-            'Order.is_completed' => 'Y',
-            'Order.order_type' => 'D',
-            'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
-        );
-
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount', 'Order.created'),
-            'conditions' => $conditions
-                )
-        );
-        if (empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, there is no table history for today.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-
-        $subtotal = $this->data['subtotal'];
-        $discount_value = $this->data['discount_value'];
-        $total = $this->data['total'];
-        $paid = $this->data['paid'];
-        $cash_val = $this->data['cash_val'];
-        $card_val = $this->data['card_val'];
-        $change = $this->data['change'];
-        $tip = $this->data['tip'];
-        
-        $logs = '';
-        $data = array();
-        if ($subtotal != number_format($Order_detail['Order']['subtotal'],2)) { 
-        	$logs .= 'subtotal[' . $subtotal . ' <= ' . $Order_detail['Order']['subtotal'] . "]"; 
-        	$data['subtotal'] = $subtotal; 
-        	$data['tax_amount'] = $subtotal *  $Order_detail['Order']['tax'] / 100; 
-        }
-        if ($discount_value != number_format($Order_detail['Order']['discount_value'],2)) { 
-        	$logs .= 'discount_value[' . $discount_value . ' <= ' . $Order_detail['Order']['discount_value'] . "]"; 
-        	$data['discount_value'] = $discount_value; 
-        }
-        if ($total != number_format($Order_detail['Order']['total'],2)) { 
-        	$logs .= 'total[' . $total . ' <= ' . $Order_detail['Order']['total'] . "]"; 
-        	$data['total'] = $total; 
-        }
-        if ($paid != number_format($Order_detail['Order']['paid'],2)) {
-        	$logs .= 'paid[' . $paid . ' <= ' . $Order_detail['Order']['paid'] . "]";
-        	$data['paid'] = $paid; 
-        }
-        if ($cash_val != number_format($Order_detail['Order']['cash_val'],2)) {
-        	$logs .= 'cash_val[' . $cash_val . ' <= ' . $Order_detail['Order']['cash_val'] . "]";
-        	$data['cash_val'] = $cash_val; 
-        }
-        if ($card_val != number_format($Order_detail['Order']['card_val'],2)) {
-        	$logs .= 'card_val[' . $card_val . ' <= ' . $Order_detail['Order']['card_val'] . "]";
-        	$data['card_val'] = $card_val; 
-        }
-        if ($change != number_format($Order_detail['Order']['change'],2)) {
-        	$logs .= 'change[' . $change . ' <= ' . $Order_detail['Order']['change'] . "]";
-        	$data['change'] = $change; 
-        }
-        if ($tip != number_format($Order_detail['Order']['tip'],2)) {
-        	$logs .= 'tip[' . $tip . ' <= ' . $Order_detail['Order']['tip'] . "]";
-        	$data['tip'] = $tip; 
-        }
-        
-        if ($logs != '') {
-        	$logArr = array('cashier_id' => $cashier_detail['Cashier']['id'], 'admin_id' => $cashier_detail['Admin']['id'], 'logs' => $logs);
-        	$this->Log->save($logArr);
-        	$data['id'] = $order_id;
-        	$this->Order->save($data);
-        }
-        
-        $r['status'] = 'OK';
-        $r['url'] = Router::url(array('controller' => 'homes', 'action' => 'tableHistory',  'table_no' => $table_no, 'order_id' => $order_id));
-        echo json_encode($r);
+        echo json_encode($res);
+        exit;
     }
+    
 
     public function tableHistory() {
         // get cashier details
@@ -709,7 +573,11 @@ class HomesController extends AppController {
                 )
         );
 
-        $table_no = $this->params['named']['table_no'];
+        $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
+
+
+        $table_no   = $this->params['named']['table_no'];
+        $order_type = empty($this->params['named']['order_type'])?'D':$this->params['named']['order_type'];
 
         $this->loadModel('Order');
         $this->loadModel('OrderItem');
@@ -717,8 +585,8 @@ class HomesController extends AppController {
         $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
             'Order.table_no' => $table_no,
             'Order.is_completed' => 'Y',
-            'Order.order_type' => 'D',
-            'Order.created >=' => date("Ymd")/* , strtotime("-2 weeks")) */
+            'Order.order_type' => $order_type,
+            'Order.created >=' => date("Ymd")/*, strtotime("-2 weeks")) */
         );
 
         $Order_detail = $this->Order->find("all", array(
@@ -726,6 +594,7 @@ class HomesController extends AppController {
             'conditions' => $conditions
                 )
         );
+        
         if (empty($Order_detail)) {
             $this->Session->setFlash('Sorry, there is no table history for today.', 'error');
             return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
@@ -741,63 +610,28 @@ class HomesController extends AppController {
         $Order_detail = $this->paginate('Order');
         $today = date('Y-m-d H:i', strtotime($Order_detail[0]['Order']['created']));
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'table_no', 'today'));
+        $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no','order_type', 'today'));
     }
 
-    public function donepayment() {
 
+    public function tableRestore() {
+
+        //$this->layout = 'ajax';
         $this->layout = false;
         $this->autoRender = NULL;
 
-        // pr($this->data); die;
-        // get all params
-        $order_id = $this->data['order_id'];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
-        $paid_by = strtoupper($this->data['paid_by']);
-
-        $pay = $this->data['pay'];
-        $change = $this->data['change'];
-
-        // save order to database        
-        $data['Order']['id'] = $order_id;
-        if ($this->data['card_val'] and $this->data['cash_val'])
-            $data['Order']['paid_by'] = "MIXED";
-
-        elseif ($this->data['card_val'])
-            $data['Order']['paid_by'] = "CARD";
-
-        elseif ($this->data['cash_val'])
-            $data['Order']['paid_by'] = "CASH";
-
-        $data['Order']['table_status'] = 'P';
-
-        $data['Order']['paid'] = $pay;
-        $data['Order']['change'] = $change;
-        $data['Order']['is_kitchen'] = 'Y';
-
-        $data['Order']['is_completed'] = 'Y';
-
-        $data['Order']['card_val'] = $this->data['card_val'];
-        $data['Order']['cash_val'] = $this->data['cash_val'];
-        $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
-        $data['Order']['tip'] = $this->data['tip_val'];
-
-        $this->loadModel('Order');
-        $this->Order->save($data, false);
-
-        // update popularity status
-        $this->loadModel('Cousine');
-        $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id')");
-
-        // save all 
-        $this->Session->setFlash('Order successfully completed.', 'success');
-
-        echo true;
-        exit; //Modified by Yishou Liao @ Nov 29 2016
+		    $res = $this->OrderHandler->tableRestore(array(
+		    	'order_id'   => $this->data['order_id'],
+		    	'cashier_id' => $this->Session->read('Front.id')
+		    ));
+    	
+        echo json_encode($res);
+        exit;
     }
 
-    public function makeavailable() {
+
+    public function closeOrder() {
+    	
         $this->layout = false;
         $this->autoRender = NULL;
 
@@ -805,12 +639,69 @@ class HomesController extends AppController {
         $order_no = $this->params['named']['order'];
 
         $this->loadModel('Order');
-        $this->Order->updateAll(array('is_completed' => "'Y'"), array('Order.order_no' => $order_no));
-
-        // save all 
-        $this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
+        
+        $order_id = $this->Order->getOrderIdByOrderNo($order_no);
+        $data['Order']['id'] = $order_id;
+        $data['Order']['table_status'] = 'P';
+        $data['Order']['is_kitchen'] = 'Y';
+        $data['Order']['is_completed']   = 'Y';
+        $data['Order']['cooking_status'] = 'COOKED';
+        
+        $this->Order->save($data, false);
+                               
+        $oc = new OpencartController();
+        $oc->setApi(); //beforeFilter not called in this case
+        $oc->closeOcOrders($order_no);
+        
+        $this->Session->setFlash('Close order successfully! 成功关闭订单.', 'success');
         return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     }
+
+
+    public function makeavailable() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+		    $res = $this->OrderHandler->makeavailable(array(
+		    	'order_no' => $this->params['named']['order'],
+		    	'cashier_id' => $this->Session->read('Front.id')
+		    ));
+
+/*
+        // get all params
+        $order_no = $this->params['named']['order'];
+
+        $this->loadModel('Order');
+        //$this->loadModel('OrderLog');
+        $this->loadModel('Log');
+
+        $order_detail = $this->Order->find('first', array(
+               'recursive' => -1,
+               'conditions' => array(
+                       'order_no' => $order_no
+                   )
+           ));
+        
+        $logArr = array('cashier_id' => $this->Session->read('Front.id'), 'admin_id' => $order_detail['Order']['cashier_id'],'operation'=>'Void(makeavailable)', 'logs' => json_encode($order_detail));
+        $this->Log->save($logArr);
+
+            
+        //$this->OrderLog->insertLog($order_detail, 'delete(makeavailable)');        
+        //delete order and order_item
+        //$this->Order->deleteAll(array('Order.order_no' => $order_no), false);        
+        
+        // update order
+        $this->Order->updateAll(array('table_status'=>"'V'",'is_completed' => "'Y'"), array('Order.order_no' => $order_no));
+*/      
+        if($res['ret'] == 1){
+        	$this->Session->setFlash('Table successfully marked as available 成功清空本桌.', 'success');
+        }else{
+        	$this->Session->setFlash($res['message'], 'error');
+        }
+        
+        return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+    }
+
 
     public function move_order() {
 
@@ -821,223 +712,75 @@ class HomesController extends AppController {
         $type = @$this->params['named']['type'];
         $table = @$this->params['named']['table'];
         $order_no = @$this->params['named']['order_no'];
+
+		    $data = $this->OrderHandler->moveOrder(
+		       array( 'type'  => $type, 'table' => $table, 'order_no' => $order_no
+		    ));
+        
+        /* 换桌时不修改订单号
+        //modify order_no with new table and type
+        //online orders 的编码规则和pos系统里面不一样
+        if(strpos($order_no ,"-") !== FALSE){
+            $order_no = $type.$table.substr($order_no,strpos($order_no,'-'));
+        }else{
+            $order_no = $type.$table.substr($order_no,-10);
+        }
+        */
+
+        //app\View\Pay\index.ctp 付款界面move_order时有该参数
         $ref = @$this->params['named']['ref'];
 
+		    
+        /*
+        $this->loadModel('Order'); 
+          
+        // get old order infomation       
+        $Order_detail = $this->Order->find("first", array(
+            'fields' => array('Order.cashier_id', 'Order.table_no', 'Order.order_type', 'Order.phone'),
+            'conditions' => array('Order.order_no' => $order_no),
+            'recursive' => -1
+                )
+        );        
+        $restaurant_id = $Order_detail['Order']['cashier_id'];
+        $old_type      = $Order_detail['Order']['order_type'];
+        $old_table     = $Order_detail['Order']['table_no'];
+        $phone         = $Order_detail['Order']['phone'];
+        //print kitchen notification when change table(not from online table)
+        if($old_type != 'L'){        	
+          $this->loadModel('Admin');    
+          $printerName = $this->Admin->getKitchenPrinterName($restaurant_id);
+          $print = new PrintLib();
+        //  $print->printKitchenChangeTable($order_no, $table, $type, $old_table,$old_type, $printerName,true,$phone);
+        }
+        
         // update order to database 
-        $this->loadModel('Order');
-        $this->Order->updateAll(array('table_no' => $table, 'order_type' => "'" . $type . "'"), array('Order.order_no' => $order_no));
+        // need to quoto the string value(only field new value,not condition)
+        $this->Order->updateAll( array('table_no' => $table, 'order_type' =>"'$type'") , array('Order.order_no' => $order_no));
+        */        
+
         $this->Session->setFlash('Order table successfully changed 成功换桌.', 'success');
         if ($ref)
-            return $this->redirect(array('controller' => 'homes', 'action' => 'pay', 'table' => $table, 'type' => $type));
+          return $this->redirect(array('controller' => 'pay', 'action' => 'index', 'table' => $table, 'type' => $type));
         else
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
+          return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
     }
+
 
     public function inquiry() {
-        
+
     }
 
-    public function additems() {
+    public function switchLang() {
         $this->layout = false;
-        // $this->autoRender = NULL;
-        // get tax details        
-        $this->loadModel('Cashier');
-        $tax_detail = $this->Cashier->find("first", array(
-            'fields' => array('Admin.tax', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-        
-        // get all params
-        $item_id = $this->data['item_id'];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
+        $this->autoRender = NULL;
 
-        // get item details        
-        $this->loadModel('Cousine');
-        $item_detail = $this->Cousine->find("first", array(
-            'fields' => array('Cousine.price', 'Category.id', 'Cousine.is_tax,Cousine.comb_num'),
-            'conditions' => array('Cousine.id' => $item_id)
-                )
-        );
-        
-        //Modified by Yishou Liao @ Dec 15 2016
-        $get_comb_flag = $this->Cousine->query("SELECT extras_num FROM extrascategories WHERE id = " . $item_detail['Cousine']['comb_num']);
-        $show_extras_flag = false;
-        if (count($get_comb_flag)>0){
-            if ($get_comb_flag[0]['extrascategories']['extras_num']>0){
-                $show_extras_flag = true;
-            }
-        };
-        //End @ Dec 15 2016
-        
-        // check the item already exists or not
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array(
-                'Order.cashier_id' => $tax_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
+        $lang = $this->data['lang'];
 
-        if (empty($Order_detail)) {
+        $this->Session->write('Config.language', $lang);
 
-            // to create a new order
-            $insert_data = array(
-                'cashier_id' => $tax_detail['Admin']['id'],
-                'counter_id' => $this->Session->read('Front.id'),
-                'table_no' => $table,
-                'is_completed' => 'N',
-                'order_type' => $type,
-                'tax' => $tax_detail['Admin']['tax'],
-                'created' => date('Y-m-d H:i:s')
-            );
-            $this->Order->save($insert_data, false);
-            $order_id = $this->Order->getLastInsertId();
-
-            // update order no            
-            $data['Order']['id'] = $order_id;
-            // Change to DateTime related $data['Order']['order_no'] = str_pad($order_id, 5, rand(98753, 87563), STR_PAD_LEFT);
-            $data['Order']['order_no'] = $table.sprintf("%07d",date('zHi'));
-            $this->Order->save($data, false);
-        } else {
-            $order_id = $Order_detail['Order']['id'];
-        }
-
-         //Modified by Yishou Liao @ Dec 13 2016
-        $this->loadModel('Cousine');
-        $query_str = "SELECT comb_num FROM cousines WHERE id = " . $item_id;
-        $comb_num = $this->Cousine->query($query_str);
-        $query_str = "SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A'";
-        $extras_categories = $this->Order->query($query_str);
-        if ($comb_num[0]['cousines']['comb_num'] == 0) {
-        $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND extrascategories.extras_num = 0 ";
-        }else{
-        $query_str = "SELECT extras.* FROM `extras` JOIN extrascategories ON extras.category_id = extrascategories.id WHERE extras.status = 'A' AND (extrascategories.extras_num = 0 " . " OR extrascategories.id = " . $comb_num[0]['cousines']['comb_num'] . ")";
-        };
-        $all_extras = $this->Order->query($query_str);
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }
-        //End
-        
-        // add items to order items db table
-        $insert_data = array(
-            'order_id' => $order_id,
-            'item_id' => $item_id,
-            'name_en' => $item_detail['CousineLocal'][0]['name'],
-            'name_xh' => $item_detail['CousineLocal'][1]['name'],
-            'price' => $item_detail['Cousine']['price'],
-            'category_id' => $item_detail['Category']['id'],
-            'created' => date('Y-m-d H:i:s'),
-            'all_extras' =>!empty($extras) ? json_encode($extras) : "", //!empty($item_detail['Extra']) ? json_encode($item_detail['Extra']) : "", //Modified by Yishou Liao @ Dec 13 2016
-            'tax' => $tax_detail['Admin']['tax'],
-            'tax_amount' => ($item_detail['Cousine']['is_tax'] == 'Y' ? ($tax_detail['Admin']['tax'] * $item_detail['Cousine']['price'] / 100) : 0),
-        );
-        $insert_data['qty'] = 1;
-        if (!empty($Order_detail)) {
-
-            // check the product already exists or not
-            $order_item_detail = $this->OrderItem->find("first", array(
-                'fields' => array('OrderItem.qty', 'OrderItem.id'),
-                'conditions' => array('OrderItem.item_id' => $item_id, 'OrderItem.order_id' => $order_id)
-                    )
-            );
-            // if(!empty($order_item_detail)) {
-            //     $insert_data['qty'] = $order_item_detail['OrderItem']['qty'] + 1;
-            //     $insert_data['id'] = $order_item_detail['OrderItem']['id'];
-            // }
-        }
-        $this->OrderItem->save($insert_data, false);
-        
-        // update order amount        
-        $data = array();
-        $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + @$Order_detail['Order']['discount_value'] + $item_detail['Cousine']['price']; //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['tax'] = $tax_detail['Admin']['tax'];
-        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
-
-        // calculate discount if exists
-        if (!empty($Order_detail)) {
-            $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
-            if ($Order_detail['Order']['percent_discount']) {
-                $data['Order']['discount_value'] = $data['Order']['subtotal'] * $Order_detail['Order']['percent_discount'] / 100;//Modified by Yishou Liao @ Dec 21 2016
-            } else if ($Order_detail['Order']['fix_discount']) {
-                if ($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
-                    $data['Order']['discount_value'] = $data['Order']['total'];
-                } else {
-                    $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
-                }
-            }
-            //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-            //Modified by Yishou Liao @ Dec 21 2016
-            $data['Order']['subtotal'] = $data['Order']['subtotal'] - $data['Order']['discount_value']; 
-            $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); 
-            $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
-            //End @ Dec 21 2016
-        } else {
-            //$data['Order']['total'] = $this->convertoround($data['Order']['subtotal'] + $data['Order']['tax_amount']); // Modified by Yishou Liao @ Nov 15 2016
-            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-        }
-
-
-
-        $this->Order->save($data, false);
-
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $tax_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $tax_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-        //End.
-        //Modified by Yishou Liao @ Nov 16 2016.
-        if (isset($_SESSION['DELEITEM_' . $table])) {
-            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $deleitem[$i] = explode("*", $deleitem[$i]);
-            };
-        };
-
-        if (isset($deleitem)) {
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
-                array_splice($deleitem[$i], -1);
-                //array_splice($deleitem[$i],-5);
-                $deleitem[$i][13] = 'C';
-
-                $arr_tmp['order_items'] = $deleitem[$i];
-
-                array_push($Order_detail_print, $arr_tmp);
-            };
-        };
-        //End.
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories','show_extras_flag')); //Modified by Yishou Liao @ Dec 13 2016.
-        $this->render('summarypanel');
+        echo $lang;
     }
+
 
     public function updateordermessage() {
 
@@ -1081,343 +824,6 @@ class HomesController extends AppController {
         echo true;
     }
 
-    public function removeitem() {
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        // get all params
-        $item_id = $this->data['item_id'];
-        $table = $this->data['table'];
-        $order_id = $this->data['order_id'];
-        $type = $this->data['type'];
-
-        $this->layout = false;
-        // $this->autoRender = NULL;
-        // get tax details
-        $this->loadModel('OrderItem');
-
-        //Modified by Yishou Liao @ Oct 29 2016.
-        $item_detail = $this->OrderItem->query("SELECT order_items.*,categories.printer FROM  `order_items` JOIN `categories` ON order_items.category_id=categories.id WHERE order_items.id = " . $item_id . " LIMIT 1");
-        //End.
-
-        if ($item_detail[0]['order_items']['qty'] > 1) {
-            // update item quantity
-            $update_qty['qty'] = $item_detai[0]['order_items']['qty'] - 1; //Modified by Yishou Liao @ Oct 29 2016.
-            $update_qty['id'] = $item_detail[0]['order_items']['id']; //Modified by Yishou Liao @ Oct 29 2016.
-            $this->OrderItem->save($update_qty, false);
-        } else {
-            // delete item details
-            $this->OrderItem->delete($item_id);
-        }
-
-        //Modified by Yishou Liao @ Oct 29 2016.
-        if (count($item_detail) > 0 && $item_detail[0]['order_items']['is_print'] == 'Y') {
-            if (isset($_SESSION['DELEITEM_' . $table])) {
-                $_SESSION['DELEITEM_' . $table] .= "#";
-                $_SESSION['DELEITEM_' . $table] .= implode("*", $item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
-            } else {
-                $_SESSION['DELEITEM_' . $table] = implode("*", $item_detail[0]['order_items']) . "*" . $item_detail[0]['categories']['printer'];
-            };
-        };
-        //End.
-        // check the item already exists or not
-        $this->loadModel('Order');
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount','discount_value'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-        // update order amount
-        $data = array();
-        $data['Order']['id'] = $order_id;
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] + @$Order_detail['Order']['discount_value'] - $item_detail[0]['order_items']['price']; //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['tax'] = $Order_detail['Order']['tax'];
-        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
-        
-        // calculate discount if exists
-        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
-        if ($Order_detail['Order']['percent_discount']) {
-            $data['Order']['discount_value'] = $data['Order']['subtotal'] * $Order_detail['Order']['percent_discount'] / 100;//Modified by Yishou Liao @ Dec 21 2016
-        } else if ($Order_detail['Order']['fix_discount']) {
-            if ($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
-                $data['Order']['discount_value'] = $data['Order']['total'];
-            } else {
-                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
-            }
-        }
-        //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-        //$data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; //Modified by Yishou Liao @ Nov 15 2016
-        //Modified by Yishou Liao @ Dec 21 2016
-        $data['Order']['subtotal'] = $data['Order']['subtotal'] - $data['Order']['discount_value']; 
-        $data['Order']['tax_amount'] = (@$data['Order']['subtotal'] * $data['Order']['tax']/100); 
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']);
-        //End @ Dec 21 2016
-
-
-        $this->Order->save($data, false);
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-        //End.
-        //Modified by Yishou Liao @ Oct 29 2016.
-        if (isset($_SESSION['DELEITEM_' . $table])) {
-            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $deleitem[$i] = explode("*", $deleitem[$i]);
-            };
-        };
-
-        if (isset($deleitem)) {//Modified by Yishou Liao @ Oct 31 2016
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
-                array_splice($deleitem[$i], -1);
-                //array_splice($deleitem[$i],-5);
-                $deleitem[$i][13] = 'C';
-
-                $arr_tmp['order_items'] = $deleitem[$i];
-
-                array_push($Order_detail_print, $arr_tmp);
-            };
-        }; //End - Oct 31 2016.
-        //End.
-
-        //Modified by Yishou Liao @ Dec 05 2016
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
-        //Modified by Yishou Liao @ Dec 13 2016
-        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }*/
-        //End
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
-        $this->render('summarypanel');
-    }
-
-    public function waimaiitem() {
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        // get all params
-        $item_id = $this->data['item_id'];
-        $table = $this->data['table'];
-        $order_id = $this->data['order_id'];
-        $type = $this->data['type'];
-
-        $this->layout = false;
-        // $this->autoRender = NULL;
-        // get tax details
-        $this->loadModel('OrderItem');
-
-        $update_para['is_waimai'] = 'Y';
-        $update_para['id'] = $item_id;
-        $this->OrderItem->save($update_para, false);
-        
-        // check the item already exists or not
-        $this->loadModel('Order');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        //Modified by Yishou Liao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-        //End.
-        //Modified by Yishou Liao @ Oct 29 2016.
-        if (isset($_SESSION['DELEITEM_' . $table])) {
-            $deleitem = explode("#", $_SESSION['DELEITEM_' . $table]);
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $deleitem[$i] = explode("*", $deleitem[$i]);
-            };
-        };
-
-        if (isset($deleitem)) {//Modified by Yishou Liao @ Oct 31 2016
-            for ($i = 0; $i < count($deleitem); $i++) {
-                $arr_tmp = array('order_items' => array(), 'categories' => array('printer' => $deleitem[$i][17]));
-                array_splice($deleitem[$i], -1);
-                //array_splice($deleitem[$i],-5);
-                $deleitem[$i][13] = 'C';
-
-                $arr_tmp['order_items'] = $deleitem[$i];
-
-                array_push($Order_detail_print, $arr_tmp);
-            };
-        }; //End - Oct 31 2016.
-        //End.
-
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
-        $this->render('summarypanel');
-    }
-    
-    public function add_extras() {
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        // get all params
-        $item_id = $this->data['item_id'];
-        $table = $this->data['table'];
-        $type = $this->data['type'];
-        $extras = $this->data['extras']; #comma separated
-        
-        if (substr($extras,strlen($extras)-1,1)==",")
-        {
-            $extras =substr($extras,0,strlen($extras)-1);
-        };
-        
-        $this->layout = false;
-        // $this->autoRender = NULL;
-        // get tax details        
-        $this->loadModel('OrderItem');
-        $item_detail = $this->OrderItem->find("first", array(
-            'fields' => array('OrderItem.price', 'OrderItem.extras_amount', 'OrderItem.qty', 'OrderItem.id', 'OrderItem.all_extras'),
-            'conditions' => array('OrderItem.id' => $item_id)
-                )
-        );
-
-        // get all selected extras prices
-        $extras_amount = 0;
-        $selected_extras = "";
-        if ($extras) {
-            $extras = explode(",", $extras);
-            $all_extras = ""; //json_decode($item_detail['OrderItem']['all_extras'], true); Modified by Yishou Liao @ Dec 13 2016
-            
-            
-            //Modified by Yishou Liao @ Dec 13 2016
-            $this->loadModel('Order');
-            $all_extras_tmp = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-            $all_extras = array();
-            foreach ($all_extras_tmp as $exts){
-                    array_push($all_extras,$exts['extras']);
-            }
-            //End @ Dec 13 2016
-
-            $new_all_extras = array();
-            foreach ($all_extras as $key => $value) {
-                $new_all_extras[$value['id']] = array('id' => $value['id'], 'price' => $value['price'], 'name' => $value['name_zh'],'category_id' => $value['category_id']); //Modified by Yishou Liao @ Dec 15 2016
-            }
-
-            foreach ($extras as $value) {
-                # code...
-                if (intval($value, 10) != 0 && $value != "0") {
-                    $extras_amount += $new_all_extras[$value]['price'];
-                    $selected_extras[] = $new_all_extras[$value];
-                } else {
-                    $selected_extras[] = array('id' => "", 'price' => '0', 'name' => $value, 'category_id'=> '0');
-                }
-            }
-        }
-
-        // save data to items table        
-        $update_orderitem['selected_extras'] = $selected_extras ? json_encode($selected_extras) : "";
-        $update_orderitem['extras_amount'] = $extras_amount;
-        $update_orderitem['id'] = $item_id;
-        $this->OrderItem->save($update_orderitem, false);
-
-        // update all order amount to order table
-        $this->loadModel('Order');
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        // update order amount        
-        $data = array();
-        $data['Order']['id'] = $Order_detail['Order']['id'];
-        $data['Order']['subtotal'] = @$Order_detail['Order']['subtotal'] - $item_detail['OrderItem']['extras_amount'] + $extras_amount;
-        $data['Order']['tax_amount'] = ($data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100);
-        $data['Order']['total'] = ($data['Order']['subtotal'] + $data['Order']['tax_amount']); //Modified by Yishou Liao @ Nov 28 2016
-        // calculate discount if exists
-        $data['Order']['discount_value'] = $Order_detail['Order']['discount_value'];
-        if ($Order_detail['Order']['percent_discount']) {
-            $data['Order']['discount_value'] = $data['Order']['total'] * $Order_detail['Order']['percent_discount'] / 100;
-        } else if ($Order_detail['Order']['fix_discount']) {
-            if ($Order_detail['Order']['fix_discount'] > $data['Order']['total']) {
-                $data['Order']['discount_value'] = $data['Order']['total'];
-            } else {
-                $data['Order']['discount_value'] = $Order_detail['Order']['fix_discount'];
-            }
-        }
-        //$data['Order']['total'] = $this->convertoround($data['Order']['total'] - $data['Order']['discount_value']);
-        $data['Order']['total'] = $data['Order']['total'] - $data['Order']['discount_value']; // Modified by Yishou Liao @ Nov 15 2016
-        $this->Order->save($data, false);
-
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        //Modified by Yishou LIao @ Oct 28 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-
-        //Modified by Yishou Liao @ Dec 05 2016
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
-        
-        //Modified by Yishou Liao @ Dec 13 2016
-        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }*/
-        //End
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories')); //Modified by Yishou Liao @ Dec 13 2016
-        $this->render('summarypanel');
-    }
 
     // check total value #As in Canada, the price is keeping using $9.89, but we don’t have $0.01 now, any amount smaller than 0.02 will be round to 0, more than 0.03 will be round to 0.05.
     function convertoround($amount) {
@@ -1435,1510 +841,60 @@ class HomesController extends AppController {
         return $amount;
     }
 
-    public function summarypanel($table, $type) {
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-
-        $this->layout = false;
-
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            )
-                )
-        );
-
-        //Modified by Yishou LIao @ Oct 26 2016.
-        $Order_detail_print = $this->Order->query("SELECT order_items.*,categories.printer FROM `orders` JOIN `order_items` ON orders.id =  order_items.order_id JOIN `categories` ON order_items.category_id=categories.id WHERE orders.cashier_id = " . $cashier_detail['Admin']['id'] . " AND  orders.table_no = " . $table . " AND order_items.is_print = 'N' AND orders.is_completed = 'N' AND orders.order_type = '" . $type . "' ");
-
-        //Modified by Yishou Liao @ Dec 04 2016
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
-        
-        //Modified by Yishou Liao @ Dec 09 & Dec 13 2016
-        /*$all_extras = $this->Order->query("SELECT extras.* FROM `extras` WHERE extras.status = 'A' ");
-        $extras = array();
-        foreach ($all_extras as $exts){
-                array_push($extras,$exts['extras']);
-        }*/
-        //End @ Dec 13 2016
-        
-        $this->set(compact('Order_detail', 'cashier_detail', 'Order_detail_print','extras_categories'));
-        //End @ Dec 09 2016
-    }
-
-    // add discount function
-    public function add_discount() {
-        $this->layout = false;
-        $this->autoRender = NULL;
-        //Modified by Yishou Liao @ Nov 19 2016
-        $discount_type = -1;
-        $discount_value = -1;
-        //End
-        // get all params
-        $order_id = $this->data['order_id'];
-        $mainorder_id = isset($this->data['mainorder_id']) ? $this->data['mainorder_id'] : $order_id;
-        $fix_discount = $this->data['fix_discount'];
-        $percent_discount = $this->data['discount_percent'];
-        $promocode = $this->data['promocode'];
-
-        //Modified by Yishou Liao @ Nov 18 2016
-        if (!empty($fix_discount)) {
-            $order_id_tmp = explode(",", $order_id);
-            $order_id_arr = array($mainorder_id);
-        } else {
-            $order_id_arr = explode(",", $order_id);
-        };
-
-        for ($i = 0; $i < count($order_id_arr); $i++) {
-            $order_id = $order_id_arr[$i];
-            //End
-            // get order details  
-            $this->loadModel('Order');
-            $Order_detail = $this->Order->find("first", array(
-                'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-                'conditions' => array(
-                    'Order.id' => $order_id,
-                )
-                    )
-            );
-
-            $data = array();
-            $data['Order']['id'] = $order_id;
-
-            // check discount is applicable or not
-            if ($fix_discount) {
-                if ($Order_detail['Order']['total'] < $fix_discount) {
-                    $response = array(
-                        'error' => true,
-                        'message' => 'Please add valid discount'
-                    );
-                } else {
-
-                    $data['Order']['discount_value'] = $fix_discount;
-                    $data['Order']['fix_discount'] = $fix_discount;
-                    $data['Order']['percent_discount'] = 0;
-                    $data['Order']['promocode'] = "";
-                    //Modified by Yishou Liao @ Nov 18 2016
-                    //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
-                    $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
-                    $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
-                    $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-                    //End
-
-                    $this->Order->save($data, false);
-                    $response = array(
-                        'error' => false,
-                        'message' => 'Discount successfully applied',
-                        'discount_type' => $discount_type,
-                        'discount_value' => $discount_value
-                    );
-                }
-            } else if ($percent_discount) {
-                if ($percent_discount > 100) {
-                    $response = array(
-                        'error' => true,
-                        'message' => 'Please add valid discount'
-                    );
-                } else {
-
-                    $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'] * $percent_discount / 100;
-                    $data['Order']['percent_discount'] = $percent_discount;
-                    $data['Order']['fix_discount'] = 0;
-                    $data['Order']['promocode'] = "";
-                    //Modified by Yishou Liao @ Nov 18 2016
-                    //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
-                    $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
-                    $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
-                    $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-                    //End
-
-                    $this->Order->save($data, false);
-                    $response = array(
-                        'error' => false,
-                        'message' => 'Discount successfully applied',
-                        'discount_type' => $discount_type,
-                        'discount_value' => $discount_value
-                    );
-                }
-            } else if ($promocode <> "") {
-                // check promocode valid or not here
-                $this->loadModel('Promocode');
-                $promo_detail = $this->Promocode->find("first", array(
-                    'conditions' => array(
-                        'Promocode.code' => $promocode,
-                    )
-                        )
-                );
-
-
-                if (empty($promo_detail)) {
-                    $response = array(
-                        'error' => true,
-                        'message' => 'Promocode does not exist.'
-                    );
-                } else {
-                    // check promocode dates
-                    if (!(time() >= strtotime($promo_detail['Promocode']['valid_from']) and time() <= strtotime($promo_detail['Promocode']['valid_to']))) {
-                        $response = array(
-                            'error' => true,
-                            'message' => 'Sorry, promo code is expired'
-                        );
-                    } else {
-                        //Modified by Yishou Liao @ Nov 19 2016
-                        $discount_type = $promo_detail['Promocode']['discount_type'];
-                        $discount_value = $promo_detail['Promocode']['discount_value'];
-                        //End
-                        // get promocode discount and validate here
-                        if ($promo_detail['Promocode']['discount_type'] == 1) {
-                            // calculate percentage here
-                            $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'] * $promo_detail['Promocode']['discount_value'] / 100;
-                            $data['Order']['percent_discount'] = $promo_detail['Promocode']['discount_value'];
-                            $data['Order']['fix_discount'] = 0;
-                            //Modified by Yishou Liao @ Nov 18 2016
-                            //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
-                            $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
-                            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
-                            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-                            //End
-                        } else {
-                            // calculate fix discount here
-                            //Modified by Yishou Liao @ Nov 18 2016 (The goal is only discount for main table.)
-                            if ($order_id == $mainorder_id) {
-                                $discount_val = $promo_detail['Promocode']['discount_value'];
-                                //if ($Order_detail['Order']['total'] < $discount_val) {
-                                if ($Order_detail['Order']['subtotal'] < $discount_val) {//Modified by Yishou Liao @ Nov 18 2016
-                                    //$data['Order']['discount_value'] = $Order_detail['Order']['total'];
-                                    //$data['Order']['fix_discount'] = $Order_detail['Order']['total'];
-                                    $data['Order']['discount_value'] = $Order_detail['Order']['subtotal'];
-                                    $data['Order']['fix_discount'] = $Order_detail['Order']['subtotal'];
-                                } else {
-                                    $data['Order']['discount_value'] = $discount_val;
-                                    $data['Order']['fix_discount'] = $discount_val;
-                                }
-                                $data['Order']['percent_discount'] = 0;
-                                //Modified by Yishou Liao @ Nov 18 2016
-                                //$data['Order']['total'] = $Order_detail['Order']['total'] - $data['Order']['discount_value'];
-                                $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] - $data['Order']['discount_value'];
-                                $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
-                                $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-                                //End
-                            }; //Modified by Yishou Liao @ Nov 18 2016 (if };)
-                        }
-                        $data['Order']['promocode'] = $promocode;
-
-                        $this->Order->save($data, false);
-                        $response = array(
-                            'error' => false,
-                            'message' => 'Discount successfully applied',
-                            'discount_type' => $discount_type,
-                            'discount_value' => $discount_value
-                        );
-                    }
-                }
-            }
-        }; //Modified by Yishou Liao @ Nov 18 2016 (for };)
-
-        echo json_encode($response);
-    }
-
-    // remove items discount
-    public function remove_discount() {
-
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-
-        // get all params
-        $order_id = $this->data['order_id'];
-
-        //Modified by Yishou Liao @ Nov 18 2016
-        $order_id_arr = explode(",", $order_id);
-        //End
-
-        for ($i = 0; $i < count($order_id_arr); $i++) {
-            $order_id = $order_id_arr[$i];
-            //End
-            $this->loadModel('Order');
-            $Order_detail = $this->Order->find("first", array(
-                'fields' => array('Order.total', 'Order.subtotal', 'Order.tax', 'Order.discount_value'),
-                'conditions' => array(
-                    'Order.id' => $order_id,
-                ),
-                'recursive' => -1
-                    )
-            );
-
-            $this->layout = false;
-
-            $this->loadModel('OrderItem');
-
-            //update order details        
-            $data['Order']['id'] = $order_id;
-            $data['Order']['discount_value'] = 0;
-            $data['Order']['promocode'] = "";
-            $data['Order']['fix_discount'] = 0;
-            $data['Order']['percent_discount'] = 0;
-            //Modified by Yishou Liao @ Nov 18 2016
-            //$data['Order']['total'] = $Order_detail['Order']['total'] + $Order_detail['Order']['discount_value'];
-            $data['Order']['subtotal'] = $Order_detail['Order']['subtotal'] + $Order_detail['Order']['discount_value'];
-            $data['Order']['tax_amount'] = $data['Order']['subtotal'] * $Order_detail['Order']['tax'] / 100;
-            $data['Order']['total'] = $data['Order']['subtotal'] + $data['Order']['tax_amount'];
-            //End
-            $this->Order->save($data, false);
-        }; //End (for }; )
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.tax', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => array(
-                'Order.id' => $order_id,
-            )
-                )
-        );
-
-        //Modified by Yishou Liao @ Dec 05 2016
-        $extras_categories = $this->Order->query("SELECT extrascategories.* FROM `extrascategories` WHERE extrascategories.status = 'A' ");
-        //End
-        
-        $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
-        $this->render('summarypanel');
-    }
-
-    //Modified by Yishou Liao @ Oct 13 2016.
-    public function merge() {
-        // get cashier details
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
-        
-        $order_no = @$this->params['url']['order_no'];
-
-        // get all params
-        $type = @$this->params['named']['type'];
-        $table = @$this->params['named']['table'];
-        $tablemerge = explode(",", ($table . "," . @$this->params['named']['tablemerge']));
-
-
-        if ($order_no) {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.order_no' => $order_no
-            );
-        } else {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $tablemerge,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            );
-        }
-
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("all", array(
-            'fields' => array('Order.table_no', 'Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => $conditions
-                )
-        );
-
-        if (empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-        $type = @$Order_detail['Order']['order_type'] ? @$Order_detail['Order']['order_type'] : $type;
-        $table = @$Order_detail['Order']['table_no'] ? @$Order_detail['Order']['table_no'] : $table;
-
-        // get all order no.
-        $orders_no = $this->Order->find("list", array(
-            'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
-                )
-        );
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'tablemerge', 'orders_no'));
-    }
-
-    //End.
-    //Modified by Yishou Liao @ Oct 16 2016.
-    public function donemergepayment() {
+    public function checkin() {
 
         $this->layout = false;
         $this->autoRender = NULL;
 
-        // pr($this->data); die;
-        // get all params
-        $order_id = explode(",", $this->data['order_id']);
-        $table = $this->data['table'];
-        $table_merge = explode(",", $this->data['table_merge']);
-        $main_order_id = $this->data['main_order_id'];
-        $type = $this->data['type'];
-        $paid_by = strtoupper($this->data['paid_by']);
+        // get params
+        $userid = $this->data['userid'];
 
-        $pay = $this->data['pay'];
-        $change = $this->data['change'];
+		    $data = $this->Access->checkin(array( 'userid'  => $userid));
 
-        // save order to database
-        //Modified by Yishou Liao @ Oct 16 2016.
-        $this->loadModel('Order');
-
-        for ($i = 0; $i < count($order_id); $i++) {
-            $data['Order']['id'] = $order_id[$i];
-            $table_detail = $this->Order->find("first", array('fields' => array('Order.table_no', 'total'), 'conditions' => array('Order.id' => $data['Order']['id']), 'recursive' => false));
-
-            if ($this->data['card_val'] and $this->data['cash_val']) {
-                $data['Order']['paid_by'] = "MIXED";
-            } elseif ($this->data['card_val']) {
-                $data['Order']['paid_by'] = "CARD";
-            } elseif ($this->data['cash_val']) {
-                $data['Order']['paid_by'] = "CASH";
-            };
-            $data['Order']['table_status'] = 'P';
-            $data['Order']['is_kitchen'] = 'Y';
-            $data['Order']['is_completed'] = 'Y';
-
-
-
-            if ($table_detail['Order']['table_no'] == $table) {
-                $data['Order']['paid'] = $table_detail['Order']['total'] + $change;
-                $data['Order']['change'] = $change;
-
-                $data['Order']['card_val'] = $this->data['card_val'];
-                $data['Order']['cash_val'] = $this->data['cash_val'];
-                $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
-                $data['Order']['tip'] = $this->data['tip_val'];
-            } else {
-                $data['Order']['paid'] = $table_detail['Order']['total'];
-                $data['Order']['change'] = 0;
-
-                $data['Order']['card_val'] = 0;
-                $data['Order']['cash_val'] = 0;
-                $data['Order']['tip_paid_by'] = $this->data['tip_paid_by'];
-                $data['Order']['tip'] = 0;
-				$data['Order']['merge_id'] = $main_order_id; //用负数代表此处为合单，去掉负号的那个数代表主桌的付款Order的Id号
-            };
-
-            $this->Order->save($data, false);
-
-            $this->loadModel('Cousine');
-            $this->Cousine->query("UPDATE cousines set `popular` = `popular`+1 where id in(SELECT (item_id) from order_items where order_id = '$order_id[$i]')");
-        };
-
-        // save all 
-        // update popularity status
-
-        $this->Session->setFlash('Order successfully completed.', 'success');
-        echo true;
+        echo $data['message'];
     }
 
-    //End.
-    //Modified by Yishou Liao @ Oct 17 2016.
-    function split() {
-        // get cashier details        
-        $this->loadModel('Cashier');
-        $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
-                )
-        );
+    public function checkout() {
 
-        $order_no = @$this->params['url']['order_no'];
+        $this->layout = false;
+        $this->autoRender = NULL;
 
-        // get all params
-        $type = $this->params['named']['type'];
-        $table = $this->params['named']['table'];
-        $split_method = @$this->params['named']['split_method'];
+        // get params
+        $userid = $this->data['userid'];
 
-        if ($order_no) {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.order_no' => $order_no
-            );
-        } else {
-            $conditions = array('Order.cashier_id' => $cashier_detail['Admin']['id'],
-                'Order.table_no' => $table,
-                'Order.is_completed' => 'N',
-                'Order.order_type' => $type
-            );
-        }
+		    $data = $this->Access->checkout(array( 'userid'  => $userid));
 
-        // get order details 
-        $this->loadModel('Order');
-        $this->loadModel('OrderItem');
-
-        $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
-        $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-            'conditions' => $conditions
-                )
-        );
-
-        if (empty($Order_detail)) {
-            $this->Session->setFlash('Sorry, order does not exist 抱歉，订单不存在。.', 'error');
-            return $this->redirect(array('controller' => 'homes', 'action' => 'dashboard'));
-        }
-        $type = @$Order_detail['Order']['order_type'] ? @$Order_detail['Order']['order_type'] : $type;
-        $table = @$Order_detail['Order']['table_no'] ? @$Order_detail['Order']['table_no'] : $table;
-
-        // get all order no.
-        $orders_no = $this->Order->find("list", array(
-            'fields' => array('Order.order_type', 'Order.order_no', 'Order.table_no'),
-            'conditions' => array('Order.cashier_id' => $cashier_detail['Admin']['id'], 'Order.is_completed' => 'N'),
-            'recursive' => false
-                )
-        );
-
-        // print_r ($Order_detail);
-
-        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
-    }
-
-    
-    //End.
-    //Modified by Jack @2017-01-05
-    public function printTodayOrders($print_zh = false) {
-        // $this->loadModel('Cashier');
-    	if (empty($this->data['Printer'])) {
-    		die("No Printer");
-    	}
-
-		date_default_timezone_set("America/Toronto");
-		$date_time = date("l M d Y h:i:s A");
-		$timeline = strtotime(date("Y-m-d 11:00:00"));
-		$nottm = time();
-		if ($timeline < $nowtm) {
-			// before 11 am
-			$timeline -= 86400;
-		}
-		$tm11 = $timeline;
-		$timeline += 3600 * 6;
-		$tm17 = $timeline;
-		$timeline += 3600 * 6;
-		$tm23 = $timeline;
-		$timeline += 3600 * 5;
-		$tm04 = $timeline;
-
-    	$Printer = $this->data['Printer'];
-    	$this->loadModel('Order');
-        $fields = array(
-        		'Order.order_no',
-        		'Order.cashier_id',
-        		'Order.table_no',
-        		'Order.total',
-        		'Order.paid',
-        		'Order.cash_val',
-        		'Order.card_val',
-        		'Order.tax_amount',
-        		'Order.discount_value',
-        		'Order.percent_discount',
-        		'Order.paid_by',
-        		'Order.tip',
-        		'Order.tip_paid_by'
-        );
-
-    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm11), 'Order.created <' => date('c', $tm17));
-        $Orders1 = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-
-    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm17), 'Order.created <' => date('c', $tm23));
-        $Orders2 = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-
-    	$conditions = array('Order.table_status' => 'P', 'Order.is_completed' => 'Y', 'Order.created >=' => date('c', $tm23), 'Order.created <' => date('c', $tm04));
-        $Orders3 = $this->Order->find("all", array('conditions' => $conditions , 'fields' => $fields ));
-        //print_r($Printer);
-
-		$printer_name = $Printer['C'];
-		$handle = '';
-		if ($printer_name) {
-			$handle = printer_open($printer_name);
-		} else {
-			die("Can't open printer");
-		}
-		if ($handle) {
-			printer_start_doc($handle, "All Orders");
-			printer_start_page($handle);
-			
-			if ($print_zh == true) {
-				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-				printer_select_font($handle, $font);
-				printer_draw_text($handle, iconv("UTF-8", "gb2312", "All Orders (总单)"), 108, 20);
-				$font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-			} else {
-				$font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-				printer_select_font($handle, $font);
-				printer_draw_text($handle, "All Orders", 138, 20);
-				$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-			};
-			
-			//Print order information
-			printer_select_font($handle, $font);
-			$c1 = 30;
+        echo $data['message'];
 /*
-			$c2 = 230;
-			$c3 = 350;
-			if ($print_zh == true) {
-				$orderNstr = iconv("UTF-8", "gb2312", "订单号");
-				$paybystr = iconv("UTF-8", "gb2312", "类型");
-				$toralStr = iconv("UTF-8", "gb2312", "总计");
-			} else {
-				$orderNstr = "Order #";
-				$paybystr = "Pay By";
-				$toralStr = "Total";
-			}
-			
-			printer_draw_text($handle, $orderNstr, $c1, 80);
-			printer_draw_text($handle, $paybystr, $c2, 80);
-			printer_draw_text($handle, $toralStr, $c3, 80);
-				
-*/
-			$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-			printer_select_pen($handle, $pen);
-			//printer_draw_line($handle, 21, 160, 600, 160);
-			//Print orders
-			//$cashierArr = array();
-			$print_y = 120;
-			$tmArr[0] = date("Y-m-d H:i", $tm11);
-			$tmArr[1] = date("Y-m-d H:i", $tm17);
-			$tmArr[2] = date("Y-m-d H:i", $tm23);
-			$tmArr[3] = date("Y-m-d H:i", $tm04);
-			$tmidx = 0;
-			foreach (array($Orders1, $Orders2, $Orders3) as $Orders) {
-				printer_draw_text($handle, $tmArr[$tmidx] . " - " . $tmArr[$tmidx + 1], $c1, $print_y);
-				$tmidx++;
-				$print_y+=32;
-				$totalArr = array(
-					'total' => 0,
-					'cash_total' => 0,
-					'card_total' => 0,
-					'cash_mix_total' => 0,
-					'card_mix_total' => 0,
-					'paid_cash_total' => 0,
-					'paid_card_total' => 0,
-					'total_tip' => 0,
-					'cash_tip_total' => 0,
-					'card_tip_total' => 0,
-					'mix_tip_total' => 0,
-					'tax' => 0);
-				foreach ($Orders as $o) {
-					$order = $o['Order'];
-					//printer_draw_text($handle, $order['order_no'], $c1, $print_y);
-					//printer_draw_text($handle, $order['paid_by'], $c2, $print_y);
-					//printer_draw_text($handle, number_format($order['total'], 2), $c3, $print_y);
-					//$print_y+=32;
-					if (!isset($cashierArr[$order['cashier_id']])) {
-						$cashierArr[$order['cashier_id']] = array('total' => 0, 'cash_total' => 0, 'card_total' => 0, 'cash_mix_total' => 0, 'card_mix_total' => 0, 'total_tip' => 0, 'cash_tip_total' => 0, 'card_tip_total' => 0, 'mix_tip_total' => 0);
-					}
-					$cashierArr[$order['cashier_id']]['total'] += $order['total'];
-					$totalArr['total'] += $order['total'];
-					$totalArr['paid_cash_total'] += $order['cash_val'];
-					$totalArr['paid_card_total'] += $order['card_val'];
-	
-					if ($order['paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-						$cashierArr[$order['cashier_id']]['cash_total'] += $order['total'];
-						$totalArr['cash_total'] += $order['total'];
-					} else if ($order['paid_by'] == 'CARD') { // CARD, CASH, MIXED and NO TIP
-						$cashierArr[$order['cashier_id']]['card_total'] += $order['total'];
-						$totalArr['card_total'] += $order['total'];
-					} else {
-						$cashierArr[$order['cashier_id']]['card_mix_total'] += $order['card_val'];
-						$totalArr['card_mix_total'] += $order['card_val'];
-						$cashierArr[$order['cashier_mix_id']]['cash_total'] += $order['total'] - $order['card_val'];
-						$totalArr['cash_mix_total'] += $order['total'] - $order['card_val'];
-					}
-					$cashierArr[$order['cashier_id']]['total_tip'] += $order['tip'];
-					$totalArr['total_tip'] += $order['tip'];
-					if ($order['tip_paid_by'] == 'CASH') { // CARD, CASH, MIXED and NO TIP
-						$cashierArr[$order['cashier_id']]['cash_tip_total'] += $order['tip'];
-						$totalArr['cash_tip_total'] += $order['tip'];
-					} else if ($order['tip_paid_by'] == 'CARD') {
-						$cashierArr[$order['cashier_id']]['card_tip_total'] += $order['tip'];
-						$totalArr['card_tip_total'] += $order['tip'];
-					} else { // MIX
-						$cashierArr[$order['cashier_id']]['mix_tip_total'] += $order['tip'];
-						$totalArr['mix_tip_total'] += $order['tip'];
-					}
-					$totalArr['tax'] += $order['tax_amount'];
-				}
-				$print_y+=16;
-				printer_draw_line($handle, 21, $print_y, 600, $print_y);
-				$print_y+=32;
-				
-				$real_total = $totalArr['paid_cash_total'] + $totalArr['paid_card_total'];
-				if ($real_total > 0) {
-					$paid_cash_percent = " " . number_format($totalArr['paid_cash_total'] * 100 / $real_total, 2) . '%';
-					$paid_card_percent = " " . number_format($totalArr['paid_card_total'] * 100 / $real_total, 2) . '%';
-				} else {
-					$paid_cash_percent = "-";
-					$paid_card_percent = "-";
-				}
-				if ($print_zh == true) {
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '税额 : ') . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金额 : ') . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类额 : ') . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和现金额 : ') . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和卡类额 : ') . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $totalArr['total']) . " ( " . sizeof($Orders) . iconv("UTF-8", "gb2312", " 单 ) "), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收总计 : ') . sprintf('%0.2f', $real_total), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收现金 : ') . sprintf('%0.2f', $totalArr['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, iconv("UTF-8", "gb2312", '实收卡类 : ') . sprintf('%0.2f', $totalArr['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-					//$print_y+=16;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金小费总计 : ') . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类小费总计 : ') . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和小费总计 : ') . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, iconv("UTF-8", "gb2312", '小费总计 : ') . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
-				/*		
-					$print_y+=16;
-					foreach ($cashierArr as $key => $cs) {
-						$print_y+=16;
-						printer_draw_line($handle, 21, $print_y, 600, $print_y);
-						$print_y+=16;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '收银台 ') . $key, 32, $print_y); $print_y+=32;
-						$print_y+=8;
-						printer_draw_line($handle, 21, $print_y, 600, $print_y);
-						$print_y+=8;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金额 : ') . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类额 : ') . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和现金额 : ') . sprintf('%0.2f', $cs['cash_mix_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和卡类额 : ') . sprintf('%0.2f', $cs['card_mix_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '总计 : ') . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
-						$print_y+=16;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '现金小费总计 : ') . sprintf('%0.2f', $cs['cash_tip_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '卡类小费总计 : ') . sprintf('%0.2f', $cs['card_tip_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '混和小费总计 : ') . sprintf('%0.2f', $cs['mix_tip_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, iconv("UTF-8", "gb2312", '小费总计 : ') . sprintf('%0.2f', $cs['total_tip']), 32, $print_y); $print_y+=32;
-					}
-				*/
-				} else {
-					printer_draw_text($handle, 'TAX Total : ' . sprintf('%0.2f', $totalArr['tax']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $totalArr['cash_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $totalArr['card_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $totalArr['cash_mix_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $totalArr['card_mix_total']), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $totalArr['total']) . " ( " . sizeof($Orders) . " sales ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Total : ' . sprintf('%0.2f', $real_total), 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Cash Total : ' . sprintf('%0.2f', $totalArr['paid_cash_total']) . " ( " . $paid_cash_percent . " ) ", 32, $print_y); $print_y+=32;
-					printer_draw_text($handle, 'Paid Card Total : ' . sprintf('%0.2f', $totalArr['paid_card_total']) . " ( " . $paid_card_percent . " ) ", 32, $print_y); $print_y+=32;
-					//$print_y+=16;
-					//printer_draw_text($handle, 'Cash Tip Total : ' . sprintf('%0.2f', $totalArr['cash_tip_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Card Tip Total : ' . sprintf('%0.2f', $totalArr['card_tip_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Mix Tip Total : ' . sprintf('%0.2f', $totalArr['mix_tip_total']), 32, $print_y); $print_y+=32;
-					//printer_draw_text($handle, 'Tip Total : ' . sprintf('%0.2f', $totalArr['total_tip']), 32, $print_y); $print_y+=32;
-						
-				/*		
-					$print_y+=16;
-					foreach ($cashierArr as $key => $cs) {
-						$print_y+=16;
-						printer_draw_line($handle, 21, $print_y, 600, $print_y);
-						$print_y+=16;
-						printer_draw_text($handle, 'Cashier ' . $key, 32, $print_y); $print_y+=32;
-						$print_y+=8;
-						printer_draw_line($handle, 21, $print_y, 600, $print_y);
-						$print_y+=8;
-						printer_draw_text($handle, 'Cash Total : ' . sprintf('%0.2f', $cs['cash_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, 'Card Total : ' . sprintf('%0.2f', $cs['card_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, 'Mix Cash Total : ' . sprintf('%0.2f', $cs['cash_mix_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, 'Mix Card Total : ' . sprintf('%0.2f', $cs['card_mix_total']), 32, $print_y); $print_y+=32;
-						printer_draw_text($handle, 'Total : ' . sprintf('%0.2f', $cs['total']), 32, $print_y); $print_y+=32;
-					}
-				*/
-				}
-				$print_y+=60;
-			}
-			printer_delete_font($font);
-			printer_end_page($handle);
-			printer_end_doc($handle);
-			printer_close($handle);
-		};
-		exit;
-	}
-    
-    
-    //End.
-    //Modified by Yishou Liao @ Nov 15 2016.
-    public function printTokitchen($print_zh = false, $splitItme = false) {
-        //Modified by Yishou Liao @ Nov 28 2016
-        if ($splitItme == false) {
-            $Print_Item = $this->data['Print_Item'];
-        } else {
-            $Print_Item_split = $this->data['Print_Item'];
-            $Print_Item = array();
-        };
-        //End
-
-        for ($x = 0; $x < (isset($Print_Item_split) ? count($Print_Item_split) : 1); $x++) {//Modified by Yishou Liao @ Nov 28 2016
-            if (isset($Print_Item_split)) {
-                $Print_Item[0] = $Print_Item_split[$x];
-            }; //Modified by Yishou Liao @ Nov 28 2016
-            $Printer = $this->data['Printer'];
-            $order_no = $this->data['order_no'];
-            $order_type = $this->data['order_type'];
-            $table_no = $this->data['table_no'];
-            $table = $this->data['table'];
-
-            foreach (array_keys($Printer) as $key) {
-                $printer_name = $Printer[$key];
-                $printer_loca = $key;
-
-                $check_print_flag = false;
-                for ($i = 0; $i < count($Print_Item); $i++) {
-                    if ($Print_Item[$i][count($Print_Item[$i]) - 1] == $printer_loca) {
-                        $check_print_flag = true;
-                    };
-                };
-
-                if ($check_print_flag) {
-
-                    date_default_timezone_set("America/Toronto");
-                    $date_time = date("l M d Y h:i:s A");
-
-                    $handle = printer_open($printer_name);
-                    printer_start_doc($handle, "my_Receipt");
-                    printer_start_page($handle);
-
-                    if ($print_zh == true) {
-                        $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 42, 18, PRINTER_FW_BOLD, false, false, false, 0);
-                        printer_select_font($handle, $font);
-                        printer_draw_text($handle, iconv("UTF-8", "gb2312", "后厨组（分单）"), 138, 20);
-                    } else {
-                        $font = printer_create_font("Arial", 42, 18, PRINTER_FW_MEDIUM, false, false, false, 0);
-                        printer_select_font($handle, $font);
-                        printer_draw_text($handle, "Kitchen", 138, 20);
-                    };
-
-
-                    //Print order information
-                    $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-                    printer_select_font($handle, $font);
-                    printer_draw_text($handle, "Order Number: #" . $order_no, 32, 80);
-                    printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, 120);
-                    //End
-
-                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-                    printer_select_pen($handle, $pen);
-                    printer_draw_line($handle, 21, 160, 600, 160);
-
-                    //Print order items
-                    $print_y = 180;
-                    for ($i = 0; $i < count($Print_Item); $i++) {
-                        if ($Print_Item[$i][(count($Print_Item[$i]) - 1)] == $printer_loca) {
-                            if ($print_zh == true) {
-                                $font = printer_create_font("Arial", 32, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
-                            } else {
-                                $font = printer_create_font("Arial", 34, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-                            };
-                            printer_select_font($handle, $font);
-
-                            printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
-
-                            $print_str = $Print_Item[$i][3];
-                            if ($Print_Item[$i][17] == 'Y') $print_str = '(Takeaway) ' .  $print_str;
-                            $print_str_save = $print_str;
-                            $len = 0;
-                            while (strlen($print_str) != 0) {
-                                $print_str = substr($print_str_save, $len, 16);
-                                printer_draw_text($handle, $print_str, 122, $print_y);
-                                $len+=16;
-                                if (strlen($print_str) != 0) {
-                                    $print_y+=32;
-                                };
-                            };
-                            $print_y-=32;
-
-                            if ($print_zh == true) {
-                                $print_y += 32;
-                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 38, 16, PRINTER_FW_BOLD, false, false, false, 0);
-                                printer_select_font($handle, $font);
-
-                                $print_str = $Print_Item[$i][4];
-	                            if ($Print_Item[$i][17] == 'Y') $print_str = '(外卖) ' .  $print_str;
-
-	                            printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
-
-
-                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(外带)"), 366, $print_y);
-                                };
-                                if ($Print_Item[$i][13] == "C") {
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", "(取消)"), 366, $print_y);
-                                };
-                                $print_y+=38;
-                            } else {
-                                if ($order_type == "T" || $Print_Item[$i][16] == "#T#") {
-                                    printer_draw_text($handle, "(Takeout)", 366, $print_y);
-                                };
-                                if ($Print_Item[$i][13] == "C") {
-                                    printer_draw_text($handle, "(Cancel)", 366, $print_y);
-                                };
-                                $print_y += 32;
-                            };
-                            if (strlen($Print_Item[$i][10]) > 0) {
-                                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 14, PRINTER_FW_BOLD, false, false, false, 0);
-                                printer_select_font($handle, $font);
-                                $print_str = $Print_Item[$i][10];
-                                $len = mb_strlen($print_str, 'UTF-8');
-                                $strb = 0;
-                                while ($len > $strb) {
-                                    $subStr = mb_substr($print_str, $strb, 16);
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $subStr), 120, $print_y);
-                                    $strb += 16;
-                                    $print_y+=32;
-                                }
-                                /*
-                                die("XXXX[".$len."]XXXXXXXX");
-                                $len = 0;
-                                $print_y+=32;
-                                while (strlen($print_str) != 0) {
-                                    $print_str = substr($Print_Item[$i][10], $len, 16);
-                                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $print_str), 120, $print_y);
-                                    $len+=16;
-                                    if (strlen($print_str) != 0) {
-                                        $print_y+=32;
-                                    };
-                                };
-                                */
-                                $print_y-=32;
-                            };
-                            $print_y += 46;
-                        };
-                    };
-                    //End.
-                    $print_y += 10;
-                    $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-                    printer_select_pen($handle, $pen);
-                    printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-                    $print_y += 10;
-                    $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                    printer_select_font($handle, $font);
-                    printer_draw_text($handle, $date_time, 80, $print_y);
-
-                    printer_delete_font($font);
-
-                    printer_end_page($handle);
-                    printer_end_doc($handle);
-                    printer_close($handle);
-                };
-            };
-
-            if (isset($_SESSION['DELEITEM_' . $table])) {
-                unset($_SESSION['DELEITEM_' . $table]);
-            };
-
-            echo $Print_Item;
-
-            echo true;
-        }; //End @ Nov 28 2016
-        exit;
-    }
-
-    public function printOriginalBill($printer_name) {
-        $this->layout = false;
-        $this->autoRender = NULL;   
-
-        $order = $this->data['order'];
-        $items = $order['items'];
-        
-        $subtotal = $order['subtotal'];
-        $discount_type = $order['discount_type'];
-        $discount_value = $order['discount_value'];
-        $discount_amount = $order['discount_amount'];
-        $tax_rate = $order['tax_rate'];
-        $tax_amount = $order['tax_amount'];
-        $total = $order['total'];
-
-        echo json_encode($order);
-
-        $handle = printer_open($printer_name);
-        printer_start_doc($handle, "my_Receipt");
-        printer_start_page($handle);
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
-        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
-        printer_draw_text($handle, "416-792-4476", 156, 206);
-
-
-        printer_draw_text($handle, $date_time, 80, $print_y);
-
-        printer_delete_font($font);
-
-        printer_end_page($handle);
-        printer_end_doc($handle);
-        printer_close($handle);
-
-        echo true;
-        exit;
-
-        
-    }
-
-
-    //Modified by Yishou Liao @ Nov 15 2016
-    public function printReceipt($order_no, $table_no, $printer_name, $print_zh = false) {
-        $Print_Item = $this->data['Print_Item'];
-        
-        $logo_name = $this->data['logo_name'];
-        $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
-        $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0.00;
-        //Modified by Yishou Liao @ Nov 29 2016
-        $discount = isset($this->data['discount']) ? $this->data['discount'] : 0.00;
-        $after_discount = isset($this->data['after_discount']) ? $this->data['after_discount'] : 0.00;
-        $tax_Amount = isset($this->data['tax_Amount']) ? $this->data['tax_Amount'] : 0.00;
-        $paid = isset($this->data['paid']) ? $this->data['paid'] : 0.00;
-        $change = isset($this->data['change']) ? $this->data['change'] : 0.00;
-        //End
-        $tax = isset($this->data['tax']) ? $this->data['tax'] : 0.00;
-        $total = isset($this->data['total']) ? $this->data['total'] : 0.00;
-        $split_no = isset($this->data['split_no']) ? "" . $this->data['split_no'] : "";
-
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-
-        $handle = printer_open($printer_name);
-        printer_start_doc($handle, "my_Receipt");
-        printer_start_page($handle);
-
-        //Print Logo image
-        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
-        //End.
-        //Print title
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        /*printer_draw_text($handle, "2038 Yonge St.", 156, 130);
-        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
-        printer_draw_text($handle, "416-792-4476", 156, 206);
-*/		printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
-        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
-        printer_draw_text($handle, "647-352-5333", 156, 206);
-
-        $print_y = 244;
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
-            $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
-            $print_y+=40;
-        };
-        //End
-        //Print order information
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        //Modified by Yishou Liao @ Nov 09 2016
-        if ($split_no != "") {
-            $split_no = " - " . $split_no;
-        };
-        //End
-        printer_draw_text($handle, "Order Number: #" . $order_no . $split_no, 32, $print_y);
-        $print_y+=40;
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no), 32, $print_y);
-        $print_y+=38;
-        //End
-
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-
-        
-        //Print order items
-        $print_y += 20;
-        for ($i = 0; $i < count($Print_Item); $i++) {
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            
-            printer_draw_text($handle, $Print_Item[$i][7], 32, $print_y);
-            printer_draw_text($handle, number_format($Print_Item[$i][6]+$Print_Item[$i][12], 2), 360, $print_y);
-            $print_str = $Print_Item[$i][3];
-            $len = 0;
-            while (strlen($print_str) != 0) {
-                $print_str = substr($Print_Item[$i][3], $len, 18);
-                printer_draw_text($handle, $print_str, 122, $print_y);
-                $len+=18;
-                if (strlen($print_str) != 0) {
-                    $print_y+=40;
-                };
-            };
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$i][4]), 136, $print_y);
-                $print_y += 40;
-            };
-        };
-        //End.
-
-        $print_y += 10;
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-        //Print Subtotal
-        $print_y += 10;
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal :"), 58, $print_y);
-        };
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($subtotal, 2)), 360, $print_y);
-        //End.
-        //Modified by Yishou Liao @ Nov 29 2016
-        if ($discount > 0) {
-            //Print Discount
-            $print_y += 40;
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            if ($print_zh == true) {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Discount"), 58, $print_y);
-            } else {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Discount :"), 58, $print_y);
-            };
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "折扣："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($discount, 2)), 360, $print_y);
-            //End.
-            //Print After_Discount
-            $print_y += 40;
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            if ($print_zh == true) {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "After Discount"), 58, $print_y);
-            } else {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "After Discount :"), 58, $print_y);
-            };
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "折后价："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($after_discount, 2)), 360, $print_y);
-            //End.
-        };
-        //Print Tax
-        $print_y += 40;
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%)"), 100, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(" . $tax . "%) :"), 100, $print_y);
-        };
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($tax_Amount, 2)), 360, $print_y);
-        //End.
-        //End @ Nov 29 2016
-        //Print Total
-        $print_y += 40;
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total :"), 58, $print_y);
-        };
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($total, 2)), 360, $print_y);
-        //End.
-
-        if ($memo != "") {
-            //Print average
-            $print_y += 40;
-            printer_draw_text($handle, "Average", 58, $print_y);
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "人均："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($memo, 2)), 360, $print_y);
-            //End.
-        };
-
-        //Modified by Yishou Liao @ Nov 29 2016
-        if ($paid > 0) {
-            $print_y += 50;
-            $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-            printer_select_pen($handle, $pen);
-            printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-            //Print paid
-            $print_y += 10;
-            if ($print_zh == true) {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Paid"), 58, $print_y);
-            } else {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Paid :"), 58, $print_y);
-            };
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "付款："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($paid, 2)), 360, $print_y);
-            //End.
-            //Print change
-            $print_y += 40;
-            if ($print_zh == true) {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Change"), 58, $print_y);
-            } else {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Change :"), 58, $print_y);
-            };
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "找零："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($change, 2)), 360, $print_y);
-            //End.
-        }
-        //End
-
-        $print_y += 40;
-        printer_draw_text($handle, $date_time, 80, $print_y);
-
-        printer_delete_font($font);
-
-        printer_end_page($handle);
-        printer_end_doc($handle);
-        printer_close($handle);
-
-        echo true;
-        exit;
-    }
-
-    //End.
-    //Modified by Yishou Liao @ Nov 15 2016
-    public function printMergeReceipt($table_no, $printer_name, $print_zh = false) {
-        $Print_Item = $this->data['Print_Item'];
-        $logo_name = $this->data['logo_name'];
-        $memo = isset($this->data['memo']) ? $this->data['memo'] : "";
-        $subtotal = isset($this->data['subtotal']) ? $this->data['subtotal'] : 0;
-        //Modified by Yishou Liao @ Nov 29 2016
-        $tax_amount = isset($this->data['tax_amount']) ? $this->data['tax_amount'] : 0;
-        $discount = isset($this->data['discount']) ? $this->data['discount'] : 0;
-        $after_discount = isset($this->data['after_discount']) ? $this->data['after_discount'] : 0;
-        $paid = isset($this->data['paid']) ? $this->data['paid'] : 0;
-        $change = isset($this->data['change']) ? $this->data['change'] : 0;
-        //End
-        $total = isset($this->data['total']) ? $this->data['total'] : 0;
-        $order_no = $this->data['order_no'];
-        $merge_str = $this->data['merge_str'];
-
-        date_default_timezone_set("America/Toronto");
-        $date_time = date("l M d Y h:i:s A");
-
-        $handle = printer_open($printer_name);
-        printer_start_doc($handle, "my_Receipt");
-        printer_start_page($handle);
-
-        //Print Logo image
-        printer_draw_bmp($handle, $logo_name, 100, 20, 263, 100);
-        //End.
-        //Print title
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, "2038 Yonge St.", 156, 130);
-        printer_draw_text($handle, "Toronto ON M4S 1Z9", 110, 168);
-        printer_draw_text($handle, "416-792-4476", 156, 206);
-		/*printer_draw_text($handle, "3700 Midland Ave. #108", 156, 130);
-        printer_draw_text($handle, "Scarborogh ON M1V 0B3", 110, 168);
-        printer_draw_text($handle, "647-352-5333", 156, 206);*/
-
-        $print_y = 244;
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "此单不包含小费，感谢您的光临"), 100, $print_y);
-            $print_y+=40;
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "谢谢"), 210, $print_y);
-            $print_y+=40;
-        };
-        //End
-        //Print order information
-        $font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, "Order Number: " . $order_no, 32, $print_y);
-        $print_y+=40;
-        printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_no . $merge_str), 32, $print_y);
-        $print_y+=38;
-        //End
-
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-        //Print order items
-        $print_y += 20;
-        foreach (array_keys($Print_Item) as $key) {
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-
-            printer_draw_text($handle, " # " . $Print_Item[$key][0][18], 32, $print_y);
-            $print_y += 40;
-
-            for ($i = 0; $i < count($Print_Item[$key]); $i++) {
-                $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-
-                printer_draw_text($handle, $Print_Item[$key][$i][7], 32, $print_y);
-                printer_draw_text($handle, number_format($Print_Item[$key][$i][6], 2), 360, $print_y);
-
-                $print_str = $Print_Item[$key][$i][3];
-                $len = 0;
-                while (strlen($print_str) != 0) {
-                    $print_str = substr($Print_Item[$key][$i][3], $len, 18);
-                    printer_draw_text($handle, $print_str, 122, $print_y);
-                    $len+=18;
-                    if (strlen($print_str) != 0) {
-                        $print_y+=40;
-                    };
-                };
-                if ($print_zh == true) {
-                    $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                    printer_select_font($handle, $font);
-
-                    printer_draw_text($handle, iconv("UTF-8", "gb2312", $Print_Item[$key][$i][4]), 136, $print_y);
-                    $print_y += 40;
-                };
-            };
-        };
-        //End.
-
-        $print_y += 10;
-        $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-        printer_select_pen($handle, $pen);
-        printer_draw_line($handle, 21, $print_y, 600, $print_y);
-        
-        //Print Subtotal
-        $print_y += 10;
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal"), 58, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Subtoal :"), 58, $print_y);
+        $this->loadModel('Cashier');
+        if(empty($this->Cashier->findByUserid($userid))){
+        	return "Userid is not valid!";
         }
 
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($subtotal, 2)), 360, $print_y);
-        //End.
+        $this->loadModel('Attendance');
         
-        //Modified by Yishou Liao @ Nov 29 2016
-        if ($discount > 0) {
-            //Print Discount
-        $print_y += 40;
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Discount"), 58, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Discount :"), 58, $print_y);
-        }
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($discount, 2)), 360, $print_y);
-        //End.
-        //Print After_Discount
-        $print_y += 40;
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "After Discount"), 58, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "After Discount :"), 58, $print_y);
-        }
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "小计："), 148, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($after_discount, 2)), 360, $print_y);
-        //End.
-        };
-        //End
+        $time    = date('Y-m-d H:i:s');
+        $day     = substr ($time , 0, 10);
+        $checkout = substr ($time , -8); 
+                
+        $data = array();
+        $data['Attendance']['userid']    = $userid;
+        $data['Attendance']['day']       = $day;
+        $data['Attendance']['checkout'] = $checkout;
         
-        //Print Tax
-        $print_y += 40;
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", "Hst"), 58, $print_y);
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "税："), 168, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(13%)"), 100, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "(13%) :"), 100, $print_y);
-        };
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format(($after_discount * 13 / 100), 2)), 360, $print_y);
-        //End.
-        //Print Total
-        $print_y += 40;
-        if ($print_zh == true) {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total"), 58, $print_y);
-        } else {
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "Total :"), 58, $print_y);
-        };
-
-        if ($print_zh == true) {
-            $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", "总计："), 148, $print_y);
-        };
-
-        $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-        printer_select_font($handle, $font);
-        printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($total, 2)), 360, $print_y);
-        //End.
-
-        //Modified by Yishou Liao @ Nov 29 2016
-        if ($paid > 0) {
-            $print_y += 50;
-            $pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
-            printer_select_pen($handle, $pen);
-            printer_draw_line($handle, 21, $print_y, 600, $print_y);
-
-            //Print paid
-            $print_y += 10;
-            if ($print_zh == true) {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Paid"), 58, $print_y);
-            } else {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Paid :"), 58, $print_y);
-            };
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "付款："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($paid, 2)), 360, $print_y);
-            //End.
-            //Print change
-            $print_y += 40;
-            if ($print_zh == true) {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Change"), 58, $print_y);
-            } else {
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "Change :"), 58, $print_y);
-            };
-
-            if ($print_zh == true) {
-                $font = printer_create_font(iconv("UTF-8", "gb2312", "宋体"), 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-                printer_select_font($handle, $font);
-                printer_draw_text($handle, iconv("UTF-8", "gb2312", "找零："), 148, $print_y);
-            };
-
-            $font = printer_create_font("Arial", 28, 10, PRINTER_FW_MEDIUM, false, false, false, 0);
-            printer_select_font($handle, $font);
-            printer_draw_text($handle, iconv("UTF-8", "gb2312", number_format($change, 2)), 360, $print_y);
-            //End.
+        $id = $this->Attendance->field('id', array('userid' => $userid,'day' => $day,'checkout' => ''));
+        if($id != ""){
+        	$data['Attendance']['id']  = $id;
+        }else{
+        	return "Please checkin first!";
         }
-        //End
         
-        $print_y += 40;
-        printer_draw_text($handle, $date_time, 80, $print_y);
+        $this->Attendance->save($data, false);
 
-        printer_delete_font($font);
+        //$this->Session->setFlash('Checkin successfully', 'success');
 
-        printer_end_page($handle);
-        printer_end_doc($handle);
-        printer_close($handle);
-
-        echo true;
-        exit;
+        echo "Sucess";
+*/        
     }
 
     //End

@@ -1,0 +1,21 @@
+
+
+.taste-item-component {
+	/*display: inline;*/
+	/*line-height: 70px;*/
+	float: left;
+	width: 70px;
+	height: 50px;
+	text-align: center;
+	/*border: 1px solid black;*/
+	padding: 5px;
+	background-color: #ECE7E7;
+	margin: 10px;
+	border-radius: 10px;
+}
+
+.taste-item-component:hover {
+	background-color: #C30E23;
+}
+
+/*.taste-component-items*/

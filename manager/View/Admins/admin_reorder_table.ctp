@@ -43,7 +43,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
   {
     background-color: #ccc;margin-bottom: 20px;margin-right: 2%;float:left;
     width:85px; 
-    height:85px; 
+    height:55px; 
     border:1px solid #ccc;  
     /*width: 11%;*/
     transition: background-color 300ms linear 0s;

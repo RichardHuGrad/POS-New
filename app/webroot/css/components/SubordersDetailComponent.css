@@ -1,3 +1,8 @@
+.suborder-detail {
+	/*font-weight: bold;*/
+	font-size: 15px;
+}
+
 .suborders-detail-tab {
 	display: inline;
 	margin: 0 10px;
@@ -27,6 +32,7 @@
 .suborder-detail li {
 	padding: 5px 0;
 	border-bottom: 1px solid #ccc;
+	line-height: 25px;
 }
 .suborder-detail li:nth-child(5){
 	border:none !important;
@@ -42,7 +48,7 @@ ul.suborder-detail{
     background-position: right bottom;
     background-repeat: no-repeat;
     background-size: 120px;
-    column-count: 2;
+    /*column-count: 2;
     -webkit-column-count: 2;
-    -moz-column-count: 2;
+    -moz-column-count: 2;*/
 }

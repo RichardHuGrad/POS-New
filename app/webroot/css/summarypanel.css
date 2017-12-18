@@ -18,3 +18,7 @@ input[name="ext_memo"] {
 .show_extras label{
 	font-size: 20px;
 }
+
+/*#order-component .selected div{
+    background-color: red;
+}*/

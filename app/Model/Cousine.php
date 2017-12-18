@@ -17,13 +17,77 @@ class Cousine extends AppModel {
             'className' => 'CousineLocal',
             'foreignKey' => 'parent_id'
         ),
-        'Extra' => array(
-            'className' => 'Extra',
-            'foreignKey' => false,
-            'conditions'=> array('status'=>'A'),
-            'order' => array('category_id') //Modified by Yishou Liao @ Nov 30 2016
-        )
+        // 'Extra' => array(
+        //     'className' => 'Extra',
+        //     'foreignKey' => false,
+        //     'conditions'=> array('status'=>'A'),
+        //     'order' => array('category_id') //Modified by Yishou Liao @ Nov 30 2016
+        // )
     );
+
+
+    public function getCousineInfo($id) {
+        $CousineDetail = $this->find("first", array(
+            "recursive" => -1,
+            "fields" => array('Cousine.price', 'Cousine.is_tax', 'Cousine.comb_num', 'Cousine.category_id'),
+            "conditions" => array('Cousine.id' => $id)
+            )
+        );
+        // $CousineLocalDetail = $this->CousineLocal->find("first", array(
+        //         "recursive" => -1,
+        //         "fields" => array("CousineLocal.name"),
+        //         'conditions' => array("CousineLocal.id" => $category_id, "CousineLocal.id"=> "en")
+        //     ))
+
+        $enName = $this->CousineLocal->getEnName($id);
+        $zhName = $this->CousineLocal->getZhName($id);
+        // combine the data
+        $CousineDetail['Cousine']['en'] = $enName;
+        $CousineDetail['Cousine']['zh'] = $zhName;
+
+        return $CousineDetail;
+    }
+
+
+    public function getAllCousines($status) {
+        $CousineDetails = $this->find("all", array(
+            "recursive" => -1,
+			"conditions" => $status
+            // "fields" => array('Cousine.price', 'Cousine.is_tax', 'Cousine.comb_num', 'Cousine.category_id')
+            )
+        );
+
+        foreach($CousineDetails as &$CousineDetail) {
+            $id = $CousineDetail['Cousine']['id'];
+            $enName = $this->CousineLocal->getEnName($id);
+            $zhName = $this->CousineLocal->getZhName($id);
+
+            $CousineDetail['Cousine']['en'] = $enName;
+            $CousineDetail['Cousine']['zh'] = $zhName;
+        }
+
+        return $CousineDetails;
+    }
+
+    public function getAllCousinesByCategoryId($category_id) {
+        $CousineDetails = $this->find("all", array(
+            "recursive" => -1,
+            // "fields" => array('Cousine.price', 'Cousine.is_tax', 'Cousine.comb_num', 'Cousine.category_id')
+            'conditions' => array('Cousine.category_id' => $category_id)
+            )
+        );
+
+        foreach($CousineDetails as &$CousineDetail) {
+            $id = $CousineDetail['Cousine']['id'];
+            $enName = $this->CousineLocal->getEnName($id);
+            $zhName = $this->CousineLocal->getZhName($id);
+
+            $CousineDetail['Cousine']['en'] = $enName;
+            $CousineDetail['Cousine']['zh'] = $zhName;
+        }
+
+        return $CousineDetails;
+    }
 
 }
 

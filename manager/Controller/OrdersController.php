@@ -32,7 +32,7 @@ class OrdersController extends AppController {
         $conditions = array();
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
         if('Y' <> $is_super_admin){
-            $conditions = array('is_hide'=>'N');
+          $conditions = array('is_hide'=>'N');
         }
 
         if (!empty($this->request->data)) {
@@ -94,6 +94,46 @@ class OrdersController extends AppController {
     }
 
     /**
+     * edit method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_edit($id = null) {
+        if (!$this->Order->exists($id)) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        if ($this->request->is(array('post', 'put'))) {
+
+            if ($this->Order->update($id,$this->request->data)) {
+            	
+                $this->Session->setFlash(__('The order has been saved.'));
+                return $this->redirect(array('action' => 'index', 'admin' => true));
+            } else {
+                $this->Session->setFlash(__('The order could not be saved. Please, try again.'));
+            }
+                        
+        } else {
+            $options = array(
+                'recursive' => -1,
+                'conditions' => array('Order.' . $this->Order->primaryKey => $id)
+            );            
+            $this->request->data = $this->Order->find('first', $options);
+        }
+        
+        $cashiers = $this->Order->Cashier->find('list', array(
+            'fields' => array('Cashier.id', 'Cashier.email'),
+            'conditions' => array(
+               'Cashier.status' => 'A','Cashier.is_verified' => 'Y'
+            ),
+            'recursive' => 0
+    	));
+    
+        $this->set(compact('cashiers'));
+    }
+
+    /**
      * To generate reorder
      * @param none
      * @return mixed
@@ -152,7 +192,8 @@ class OrdersController extends AppController {
             if ($this->Order->validates()) {
 
                 $this->request->data['Order']['id'] = $id;
-                if ($this->Order->save($this->request->data, $validate = false)) {
+                //if ($this->Order->save($this->request->data, $validate = false)) {
+                if ($this->Order->update($id,$this->request->data)) {
                     $this->Session->setFlash('Order has been updated successfully', 'success');
                     $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
                 }
@@ -225,16 +266,84 @@ class OrdersController extends AppController {
      * @param string $id
      * @return null
      */
-    public function admin_delete($id = '') {
+    public function admin_batch_delete(/*$id = ''*/) {
 
-        $this->checkAccess('Order', 'can_delete');
-        $id = base64_decode($id);
-        $this->Order->updateAll(array('Order.status' => "'D'"), array('Order.id' => $id));
+        $this->layout = false;
+        $this->autoRender = NULL;
+
+        $this->loadModel('Order');
+        $this->loadModel('OrderLog');
+        
+        // $this->checkAccess('Order', 'can_delete');
+        $order_nos = $this->data['order_nos'];
+
+        foreach($order_nos as $order_no) {
+            $order_detail = $this->Order->find('first', array(
+                            'recursive' => -1,
+                            'conditions' => array(
+                                    'order_no' => $order_no
+                                )
+                        ));
+            $order_id = $order_detail['Order']['id'];
+
+            $this->OrderLog->insertLog($order_detail, 'void;');
+
+            $this->Order->delete(array('Order.id' => $order_id), false);
+        }
 
         $this->Session->setFlash('Order has been deleted successfully', 'success');
-        $this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
+        
+        //cannot run in ajax call
+        //$this->redirect(array('plugin' => false, 'controller' => 'orders', 'action' => 'index', 'admin' => true));
 
     }
+    
+
+    /**
+     * delete method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
+    public function admin_delete($id = null) {
+        $this->loadModel('Order');
+        $this->loadModel('OrderLog');
+
+        $this->Order->id = $id;
+        if (!$this->Order->exists()) {
+            throw new NotFoundException(__('Invalid order'));
+        }
+        // $this->request->onlyAllow('post', 'delete');
+        $order_detail = $this->Order->find('first', array('recursive' => -1,'conditions' => array('Order.id'=> $id)));
+        // print_r($order_detail);
+        $this->OrderLog->insertLog($order_detail, 'void;');
+        $this->Order->delete(array('Order.id' => $id), false);
+
+        return $this->redirect(array('action' => 'index'));
+    }
+
+
+    public function admin_edit_log() { //未用
+        $this->layout = false;
+        $this->autoRender = NULL;
+        
+        $this->loadModel('OrderLog');
+        $this->loadModel('Order');
+
+        $order_no = $this->data['order_no'];
+
+        $order_detail = $this->Order->find('first', array(
+                            'recursive' => -1,
+                            'conditions' => array(
+                                    'Order.order_no' => $order_no
+                                )
+                        ));
+        print_r($order_detail);
+
+        $this->OrderLog->insertLog($order_detail, 'edit');
+    }
+
 
     /**
      * Listing of orders whom age proof document is pending for approval

@@ -1,0 +1,27 @@
+#take-out-component, #waiting-list-component, #dine-in-component {
+	border-left: 1px solid #c30e23;
+}
+
+#take-out-title, #waiting-list-title, #dine-in-title, #online-list-title {
+	background-color: #c30e23;
+	text-align: left;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	height: 40px;
+	line-height: 40px;
+}
+
+#online-list-title {
+	background-color: #c30e23;
+	text-align: center;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	height: 80px;
+	//line-height: 80px;
+}
+
+.order_total_box {
+	text-align: center;
+}

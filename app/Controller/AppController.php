@@ -36,6 +36,9 @@ class AppController extends Controller {
     public $components = array(
         'Session',
         'Cookie',
+        'Print',
+        'Time',
+        'ApiHelper',
         'Auth' => array(
             'loginAction' => array('controller' => 'homes', 'action' => 'index'),
             'loginRedirect' => array('controller' => 'homes', 'action' => 'dashboard'),
@@ -69,6 +72,10 @@ class AppController extends Controller {
         $this->Auth->allow('signin');
         //pr($this->Session->read('Auth')); die;
         //pr($this->params); die;
+
+        if (!$this->Session->read('Config.language')) {
+            $this->Session->write('Config.language', 'zho');
+        }
     }
 
     function resize($image_name, $size, $folder_name) {
@@ -125,7 +132,7 @@ class AppController extends Controller {
         // return the time formatted HH:MM:SS
         if($hours < 1)
             return $this->lz($minutes).":".$this->lz($seconds);
-        else            
+        else
             return $this->lz($hours).":".$this->lz($minutes).":".$this->lz($seconds);
     }
     function lz($num)

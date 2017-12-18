@@ -84,7 +84,7 @@ class CashiersController extends AppController {
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-                'Admin.restaurant_name', 'Cashier.id', 'Cashier.firstname', 'Cashier.lastname', 'Cashier.email', 'Cashier.mobile_no', 'Cashier.status', 'Cashier.is_verified', 'Cashier.created', 'no_of_orders'
+                'Admin.restaurant_name', 'Cashier.id', 'Cashier.userid', 'Cashier.firstname', 'Cashier.lastname', 'Cashier.email', 'Cashier.mobile_no', 'Cashier.status', 'Cashier.position','Cashier.is_verified', 'Cashier.created', 'no_of_orders'
             ),
             'order' => 'Cashier.created DESC'
         );

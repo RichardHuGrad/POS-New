@@ -103,7 +103,8 @@
                         </div>
                     </a>
                 </li>  
-
+               
+               <!--               
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'cooks') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'cooks','action' => 'index', 'admin' => 'true')); ?>">
                         <div class="item-content">
@@ -116,6 +117,7 @@
                         </div>
                     </a>
                 </li>   
+               -->
 
                 <li class="slide_class <?php echo (isset($tab_open) && in_array($tab_open, array('promocodes', 'specials'))) ? 'active open' : '' ?>">
                     <a href="javascript:void(0)">
@@ -159,6 +161,32 @@
                             </div>
                             <div class="item-inner">
                                 <span class="title">Sales Reports</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'attendances') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'attendances','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Attendance Reports</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="<?php echo (isset($tab_open) && $tab_open == 'Logs') ? 'active open' : '' ?>">
+                    <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'logs','action' => 'index', 'admin' => 'true')); ?>">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Logs</span>
                             </div>
                         </div>
                     </a>

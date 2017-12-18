@@ -26,11 +26,33 @@
  */
 	Router::connect('/', array('controller' => 'homes', 'action' => 'index'));
     Router::connect('/admin', array('controller' => 'admins', 'action' => 'login',  "manager"));
+
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	//Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-  
+
+// REST config
+	Router::mapResources('order');
+	Router::parseExtensions();
+
+// web service config
+	Router::connect('/api/:object/:command', array(
+	  'controller' => 'api',
+	  'action' => 'delegate'
+	), array(
+	  'pass' => array(
+	    'object',
+	    'command'
+	  )
+	));
+
+    // Router::connect('/:language/:controller/:action/*', array(), array(
+    //     'language' => '[a-zA-Z]{3}',
+    //     'persist' => array('language')
+    // ));
+
+
 
 
 /**

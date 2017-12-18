@@ -1,6 +1,16 @@
 
 
-
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
 
 function areOrdersSame(order1, order2) {
 	var same = false;
@@ -63,8 +73,10 @@ class Order {
 			"discount_value": this.discount.value,
 			"discount_amount": this.discountAmount,
 			"after_discount": this.afterDiscount,
-			"tax_rate": this.tax.tax_rate,
+			"tax_rate": tax_rate,
 			"tax_amount": this.tax.tax_amount,
+			'default_tip_rate'  : this.default_tip.rate,
+			'default_tip_amount': this.default_tip.amount,
 			"total": this.total
 		}
 	}
@@ -104,15 +116,22 @@ class Order {
 	}
 
 	get tax() {
-		var tax_rate = 0.13;
 		return {
 			"tax_rate": tax_rate,
-			"tax_amount": round2(tax_rate * this.afterDiscount),
+			"tax_amount": round2(tax_rate * this.afterDiscount/100),
+		}
+	}
+
+	get default_tip() {
+		return {
+			"rate": default_tip_rate,
+			"amount": round2((this.afterDiscount+this.tax.tax_amount)*default_tip_rate/100)
 		}
 	}
 
 	get total() {
-		return round2 (parseFloat(this.subtotal) - parseFloat(this.discountAmount) + parseFloat(this.tax.tax_amount));
+		//return round2 (parseFloat(this.subtotal) - parseFloat(this.discountAmount) + parseFloat(this.tax.tax_amount));
+		return round2 (this.afterDiscount+this.tax.tax_amount+this.default_tip.amount);
 	}
 
 
@@ -339,15 +358,23 @@ class Suborders {
 			card_val += tempSuborder.received.card;
 			cash_val += tempSuborder.received.cash;
 			tip += tempSuborder.tip.card + tempSuborder.tip.cash;
-			if (tempSuborder.tip.type != "no tip")
-				tip_paid_by_set.add(tempSuborder.tip.type);
-			if (tip_paid_by_set.size == 1) {
-				tip_paid_by = tempSuborder.tip.type
-			} else {
-				tip_paid_by = "mixed";
-			}
+			// to be changed 
+			// if (tempSuborder.tip.type != "no tip")
+			// 	tip_paid_by_set.add(tempSuborder.tip.type);
+			// if (tip_paid_by_set.size == 1) {
+			// 	tip_paid_by = tempSuborder.tip.type
+			// } else {
+			// 	tip_paid_by = "mixed";
+			// }
 			paid += tempSuborder.received.card + tempSuborder.received.cash;
 			change += tempSuborder.change;
+		}
+
+		// to be delete
+		if (tip > 0) {
+			tip_paid_by = 'CARD';
+		} else {
+			tip_paid_by = 'NO TIP';
 		}
 
 		if (order.discount.type == "fixed") {
@@ -359,16 +386,16 @@ class Suborders {
 		}
 
 		if (card_val > 0 && cash_val > 0) {
-			paid_by = "mixed";
+			paid_by = "MIXED";
 		} else if (card_val > 0 ) {
-			paid_by = "card";
-		} else if (cash_val > 0 ) {
-			paid_by = "cash";
+			paid_by = "CARD";
+		} else {
+			paid_by = "CASH";
 		}
 
 
 		return {
-			"tax": 13,
+			"tax": tax_rate,
 			"tax_amount": tax_amount,
 			"subtotal": subtotal,
 			"total": total,
@@ -397,7 +424,10 @@ class Suborder {
 		this.items = [];
 		this.suborder_no = suborder_no;
 		// this._state = "unpaid";
-		this._tax_rate = 0.13;
+		this._tax_rate = tax_rate;
+
+		this._default_tip_rate = default_tip_rate;
+		this._default_tip_amount = 0;
 
 		this._received = {
 			"cash": 0,
@@ -461,14 +491,17 @@ class Suborder {
 			'subtotal': this.subtotal,
 			'discount_type': this.discount.type,
 			'discount_value': this.discount.value,
-			'tax_rate': this.tax.tax,
+			'tax_rate': tax_rate,
 			'tax_amount': this.tax.amount,
+			'default_tip_rate'  : this.default_tip.rate,
+			'default_tip_amount': this.default_tip.amount,
 			'total': this.total,
 			'items': items
 		}
 	}
 
 	get receiptInfo() {
+
 		var items = [];
 		for (var i = 0; i < this.items.length; ++i) {
 			items.push(this.items[i].printInfo);
@@ -480,8 +513,10 @@ class Suborder {
 			'discount_value': this.discount.value,
 			'discount_amount': this.discountAmount,
 			'after_discount': this.afterDiscount,
-			'tax_rate': this.tax.tax * 100,
+			'tax_rate': tax_rate,
 			'tax_amount': this.tax.amount,
+			'default_tip_rate'  : this.default_tip.rate,
+			'default_tip_amount': this.default_tip.amount,
 			'total': this.total,
 			'received_card': this.received.card,
 			'received_cash': this.received.cash,
@@ -565,15 +600,23 @@ class Suborder {
 	// return float with 2 precision
 	get tax() {
 		return {
-			"tax": this._tax_rate,
-			"amount": round2(this.afterDiscount * this._tax_rate)
+			"tax": tax_rate,
+			"amount": round2(this.afterDiscount * tax_rate/100)
 		}
 	}
+
+	get default_tip() {
+		return {
+			"rate": this._default_tip_rate,
+			"amount": round2((this.afterDiscount + this.tax.amount)*this._default_tip_rate/100)
+		}
+	}
+
 
 	// todo
 	// notice the discount, which should be seperate by multiple people
 	get total() {
-		return round2(this.afterDiscount + this.tax.amount);
+		return round2(this.afterDiscount + this.tax.amount + this.default_tip.amount);
 	}
 
 	get received() {
@@ -585,13 +628,19 @@ class Suborder {
 	}
 
 	get tip() {
+		// var tip_card;
+		// if (round2(this._received.card) > round2(this.total)) {
+		// 	tip_card = round2(this._tip.card) + round2(this._received.card) - round2(this.total);
+		// } else {
+		// 	tip_card = round2(this._tip.card);
+		// }
 		var type;
 		if (this._tip.card > 0 && this._tip.cash) {
-			type = "mixed";
+			type = "MIXED";
 		} else if (this._tip.card > 0) {
-			type = "card";
+			type = "CARD";
 		} else if (this._tip.cash) {
-			type = "cash";
+			type = "CASH";
 		} else {
 			type = "no tip";
 		}
@@ -604,11 +653,20 @@ class Suborder {
 	}
 
 	get remain() {
-		return this.total > this.received.total ? round2(this.total - this.received.total) : 0;
+		if (this.received.card >= this.total) {
+			return 0;
+		} else {
+			return this.total > this.received.total ? round2(this.total - this.received.total) : 0;
+		}
 	}
 
 	get change() {
-		return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
+
+		if (this.received.card >= this.total) {
+			return round2(this.received.cash);
+		} else {
+			return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
+		}
 	}
 
 	// paid or unpaid
@@ -625,12 +683,10 @@ class Suborder {
 			return "ERROR";
 		}
 	} 
-
-
 }
 
 class Item {
-	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder) {
+	constructor(item_id, image, name_en, name_zh, selected_extras_name, price, extras_amount, quantity, order_item_id, state, shared_suborders, assigned_suborder, is_takeout, comb_id=0, selected_extras_json="", is_print='Y', special="") {
 		this.item_id = item_id;
 		this.image = image;
 		this._name_en = name_en;
@@ -643,6 +699,11 @@ class Item {
 		this._state = state ;
 		this.shared_suborders = shared_suborders || [];
 		this.assigned_suborder = assigned_suborder || 0;
+		this.is_takeout = is_takeout || 'N';
+		this.comb_id = comb_id;
+		this.selected_extras_json = selected_extras_json;
+		this.is_print = is_print;
+		this.special = special;
 	}
 
 	toJSON() {
@@ -671,7 +732,7 @@ class Item {
 	get printInfo() {
 		return {
 			"selected_extras_name": this.selected_extras_name,
-			// "extras_amount": this._extras_amount,
+			"extras_amount": this._extras_amount,
 			"name_zh": this.print_name_zh,
 			"name_en": this.print_name_en,
 			"price": this.price,
@@ -744,29 +805,38 @@ class Item {
 	}
 
 	get name_en() {
+		var tempStr = this._name_en;
+
+
 		if (this.state == "share" && this.shared_suborders.length > 1) {
-			var tempStr = this._name_en + ' shared by';
+			tempStr += ' shared by';
 			for (var i = 0; i < this.shared_suborders.length; ++i) {
 				tempStr += " " + String(this.shared_suborders[i]);
 			}
+		} 
 
-			return tempStr;
-		} else {
-			return this._name_en;
+		if(this.is_takeout == 'Y') {
+			tempStr = "(Take Out)" + tempStr;
 		}
+
+		return tempStr;
 	}
 
 	get name_zh() {
+		var tempStr = this._name_zh
+
 		if (this.state == "share" && this.shared_suborders.length > 1) {
-			var tempStr = this._name_zh + ' shared by';
+			tempStr += ' shared by';
 			for (var i = 0; i < this.shared_suborders.length; ++i) {
 				tempStr += " " + String(this.shared_suborders[i])
 			}
-
-			return tempStr;
-		} else {
-			return this._name_zh;
 		}
+
+		if(this.is_takeout == 'Y') {
+			tempStr = "(外卖)" + tempStr;
+		}
+
+		return tempStr;
 	}
 }
 
@@ -807,22 +877,32 @@ var OrderComponent = function(order, cfg) {
 
 var OrderItemComponent = function(item, cfg) {
 
+	var template = `
+		<li class="order-item" id="{0}">
+			<div class="col-md-9 col-sm-9 col-xs-8">
+				<div class="col-md-12 col-sm-12 col-xs-12">{1}</div>
+				<div class="col-md-12 col-sm-12 col-xs-12 os-extra">{2}</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-4 os-price">{3}</div>
+		</li>
+	`;
+
 	var cfg = cfg || {};
 	var item_id = item["item_id"];
 
-	var orderItemComponent = $('<li class="order-item" id="order-item-' + item_id + '">');
-	var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
-	var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
-	var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
+	var orderItemComponent = $(template.format('order-item-' + item_id, item["name_en"] + '\n' + item["name_zh"], item["selected_extras_name"], '$' + item["price"]))
+
+	// var orderItemComponent = $('<li class="order-item" id="order-item-' + item_id + '">');
+	// var nameDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">').text(item["name_en"] + '\n' + item["name_zh"]);
+	// var extraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8 os-extra">').text(item["selected_extras_name"]);
+	// var priceDiv = $('<div class="col-md-3 col-sm-3 col-xs-4 os-price">').text('$' + item["price"]);
 	
 	// TODO merge nameDiv and extraDiv
 	// var nameAndExtraDiv = $('<div class="col-md-9 col-sm-9 col-xs-8">');
 
-	if (item["selected_extras_name"] != "") {
-		orderItemComponent.append(nameDiv).append(priceDiv).append(extraDiv);
-	} else {
-		orderItemComponent.append(nameDiv).append(priceDiv);
-	}
+	if (item["selected_extras_name"] == "") {
+		orderItemComponent.find('.os-extra').hide();
+	} 
 
 	// orderItemComponent.append(nameDiv).append(extraDiv).append(priceDiv);
 
@@ -922,25 +1002,25 @@ var SuborderDetailComponent = function (suborder, cfg) {
 	var cfg = cfg || {};
 	var suborderId = suborder.suborder_no;
 
-	// var suborderTab = $('');
-	var suborderDetailComponent = $('<ul class="suborder-detail">').attr("id", "suborder-detail-" + suborderId);
-	// var suborderTabCompoenent = $('<a class="suborder-tab">');
-	var titleComponent = $('<li class="suborder-title">').text("Suborder #" + order_no + '-' + suborder.suborder_no);
+	var template = `
+		<ul class="suborder-detail" id="suborder-detail-{0}">
+		   <li class="suborder-title">Suborder # {1}</li>
+		   <li class="suborder-subtotal">Subtotal 小计: $ {2}</li>
+		   <li class="suborder-discount">{3}</li>
+		   <li class="suborder-after-discount">After Discount 打折后: $ {4}</li>
+		   <li class="suborder-tax">Tax 税 ({5}%): $ {6}</li>
+		   <li class="suborder-default-tip">Tip 缺省小费({16}%): $ {17}</li>
+		   <li class="suborder-total">Total 总: $ <span class="span-total">{7}</span></li>
+		   <li class="suborder-received">Received 收到: $ {8} Cash 现金: $ {9} Card 卡: $ {10}</li>
+		   <li class="suborder-remain">Remaining 其余: $ {11}</li>
+		   <li class="suborder-change">Change 找零: $ {12}</li>
+		   <li class="suborder-tip">Tip 小费: $ {13} Cash 现金: $ {14} Card 卡: $ {15}</li>
+		</ul>
+	`;
 
-	// var stateComponent = $('<li class="suborder-state">').text("State :" + suborder.state);
 
-	var subtotalComponent = $('<li class="suborder-subtotal">').text("Subtotal 小计:" + suborder.subtotal);
-
-	
 
 	var discountText = function(type, value) { 
-
-		String.prototype.format = function () {
-	        var args = [].slice.call(arguments);
-	        return this.replace(/(\{\d+\})/g, function (a){
-	            return args[+(a.substr(1,a.length-2))||0];
-	        });
-		};
 		var discountAmount;
 		if (type == "unknown") {
 			discountAmount = 0;
@@ -954,27 +1034,38 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		}
 		
 	}
-	var discountComponent = $('<li class="suborder-discount">').text(discountText(suborder.discount.type, suborder.discount.value));	
 
-	var afterDiscountComponent = $('<li class="suborder-after-discount">').text("After Discount 打折后: " + suborder.afterDiscount);
 
-	var taxComponent = $('<li class="suborder-tax">').text("Tax 税 (13%): " + suborder.tax.amount);
+	var suborderDetailComponent = $(template.format(
+		suborderId, 
+		order_no + '-' + suborder.suborder_no, 
+		suborder.subtotal, 
+		discountText(suborder.discount.type, suborder.discount.value),
+		suborder.afterDiscount,
+		suborder.tax.tax,
+		suborder.tax.amount,
+		suborder.total,
+		suborder.received.total,
+		suborder.received.cash,
+		suborder.received.card,
+		suborder.remain,
+		suborder.change,
+		suborder.tip.amount,
+		suborder.tip.cash,
+		suborder.tip.card,
+		suborder.default_tip.rate,
+		suborder.default_tip.amount
+	));
 
-	var totalComponent = $('<li class="suborder-total">').text("Total 总: " + suborder.total);
+	if (suborder.remain == 0) {
+		suborderDetailComponent.find(".suborder-remain").hide();
+	} else {
+		suborderDetailComponent.find(".suborder-change").hide();
+	}
 
-	var receivedComponent = $('<li class="suborder-received">').text("Received 收到: " + suborder.received.total + " Cash 现金: " + suborder.received.cash + " Card 卡: " + suborder.received.card);
-
-	var remainComponenet = $('<li class="suborder-remain">').text("Remaining 其余: " + suborder.remain);
-
-	var changeComponent = $('<li class="suborder-change">').text("Change 找零: " + suborder.change);
-
-	var tipComponenet = $('<li class="suborder-tip">').text("Tip 小费: " + suborder.tip.amount + " Cash 现金:" + suborder.tip.cash + " Card 卡: " + suborder.tip.card);
-
-	suborderDetailComponent.append(titleComponent).append(subtotalComponent).append(discountComponent).append(afterDiscountComponent).append(taxComponent).append(totalComponent).append(receivedComponent).append(remainComponenet).append(changeComponent).append(tipComponenet);
 
 	// set css accounding to the state
 	suborderDetailComponent.css("background-image", "url(" + imgPath + suborder.state + ")");
-
 	return suborderDetailComponent;
 }
 
@@ -1035,6 +1126,7 @@ var SubordersDetailComponent = function (suborders, cfg) {
 					});
 
 					$(this).addClass('active');
+										
 				});
 
 		tabComponent.append(tab);
@@ -1063,7 +1155,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	
 	var keyScreenWrapper = $('<div id="input-key-screen-wrapper">');
 
-	var screenComponent = $('<input type="text" id="input-screen" data-buffer="0" data-maxlength="13" value="00.00">');
+	var screenComponent = $('<input type="text" id="input-screen" data-buffer="" data-lastinput="" data-maxlength="13" value="00.00" readonly>');
 	// restrict the input type of screen by keyboard
 	screenComponent.keydown(function(e) {
 		// Allow: backspace, delete, tab, escape, enter and .
@@ -1109,13 +1201,11 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	var submitButton = $('<button class="btn btn-success btn-lg" id="input-submit">').text('Submit 提交');
 
-	
 	if (order.availableItems.length == 0) {
 		submitButton.on('click', function(){
 			// submit to the backend
 			if (suborders.isAllSuborderPaid()) {
 
-				
 				// iterator all suborder
 				for (var i = 0; i < suborders.suborders.length; ++i) {
 					var tempSuborder = suborders.suborders[i];
@@ -1123,6 +1213,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 					$.ajax({
 						url: store_suborder_url,
 						method: "post",
+						async: false,
 						data: {
 							"table_no": table_id,
 			                "order_no": order_no,
@@ -1130,8 +1221,10 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		                	"subtotal": tempSuborder.subtotal,
 		                	// "discount_type": tempSuborder.discount.type.toUpperCase(),
 			                "discount_value": tempSuborder.discount.value,
-		                	"tax": tempSuborder.tax.tax * 100,
+		                	"tax": tempSuborder.tax.tax,
 		                	"tax_amount": tempSuborder.tax.amount,
+		                	"default_tip_rate": tempSuborder.default_tip.rate,
+		                	"default_tip_amount": tempSuborder.default_tip.amount,
 			                "total": tempSuborder.total,
 			                "paid_card": tempSuborder.received.card,
 			                "paid_cash": tempSuborder.received.cash,
@@ -1140,10 +1233,11 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 			                "change": tempSuborder.change,
 			                "items": JSON.stringify(tempSuborder.items),
 						}
-					}).done(function() {
-						console.log("succuess");
-					}).fail(function() {
-						alert("fail");
+					}).done(function(data) {
+						//console.log("succuess");
+						//console.log(data);
+					}).fail(function(jqXHR, textStatus) {
+						alert("Fail :" + textStatus );
 					});
 				}
 
@@ -1171,11 +1265,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		    			// "percent_discount": sendData.percent_discount,
 		    			// "discount_value": sendData.discount_value
 					}
-				}).fail(function() {
-						alert("fail");
-				}).done(
-
-					function() {
+				}).fail(function(jqXHR, textStatus) {
+						alert("Fail: " + textStatus );
+				}).done(function(data) {
 						// delete cookie
 						printSplitReceipt(order, suborders);
 						deleteAllCookies();
@@ -1184,8 +1276,6 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 				);
 
 				
-
-
 
 			} else {
 				if (suborders.suborders.length == 0) {
@@ -1201,9 +1291,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	}
 	
 
-	
 
-	payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
+	// payOrTipGroup.append(paySelect).append(tipSelect).find("input").on("change", function () {
+	payOrTipGroup.append(paySelect).find("input").on("change", function () {
 		if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
 			// enable payment buttons
 			typeGroup.empty();
@@ -1213,7 +1303,9 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		} else if ($(this).is(':checked') && $(this).attr('id') == "tip-select") {
 			// enable tip buttons
 			typeGroup.empty();
-			typeGroup.append(tipCardButton).append(tipCashButton);
+			// typeGroup.append(tipCardButton).append(tipCashButton);
+			// typeGroup.append(tipCashButton);
+			// tipCashButton.trigger('click');
 			
 			console.log("tip is selected");
 		} else {
@@ -1229,47 +1321,87 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 	// buttonGroup.append(payCardButton).append(payCashButton).append(tipCardButton).append(tipCashButton).append(confirmButton).append(submitButton);
 
 	// construct keypad
-	var keyComponent = $('<ul id="input-key-list">');
+	var keyComponent = $('<ul id="input-key-list">');												
+	
 	for (var i = 1; i <= 9; ++i){
 		keyComponent.append('<li data-num=' + i + '>' + i + '</li>' );
 	}
 
+	keyComponent.append('<li data-num=' + 0 + '>' + 0 + '</li>' );
+	keyComponent.append('<li data-num=".">.</li>' );
+
+	var screenBack = $('<li id="input-back">').text("Back")
+			.on('click', function() {
+			
+			var current_val = $('#input-screen').val();
+			var new_val = current_val.substring(0,current_val.length-1);		
+      
+			$('#input-screen').val(new_val);
+      $('#input-screen').attr("data-buffer", new_val);		
+			if($('#input-screen').attr("data-buffer")=='00.00'){
+			   $('#input-screen').attr("data-buffer",'');
+			}
+               
+	});
+
+  keyComponent.append(screenBack);
+  keyComponent.append('<li data-num="Default">Default</li>' );
+  
 	var screenClear = $('<li id="input-clear">').text("Clear 清除")
 												.on('click', function() {
 													// var value = $('#input-screen').val().slice(0, -1);
-													$('#input-screen').attr("data-buffer", "0")
+													$('#input-screen').attr("data-buffer", "")
 													$('#input-screen').val("00.00");
 												});
+
+	keyComponent.append(screenClear);
+	
 
     // should be changed
     // should not change the suborder state directly
 	var screenEnter = $('<li id="input-enter">').text("Enter 输入")
 												.on('click', function() {
-
 													enterInput();
 													screenClear.trigger('click');
 												});
 
-
-	keyComponent.append(screenClear).append('<li data-num=0 >0</li>').append(screenEnter);
+	keyComponent.append(screenEnter);
+	
 
 	//  to be fixed
 	//  add restriction of num length
 	keyComponent.find('li').each(function() {
 		var attr = $(this).attr('data-num')
 		if (typeof attr !== typeof undefined && attr !== false) {
+			
 			$(this).on('click', function () {
+				
 				// var value = $('#input-screen').val() ? parseFloat($('#input-screen').val() : 0;
-				var buffer = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');
-				$('#input-screen').attr("data-buffer", buffer);
-				var value = buffer / 100;
-				value = value.toFixed(2);
 
-				$('#input-screen').val(value);
+				var new_value;
+				
+				if($(this).attr('data-num')== "Default"){  //default to suborder total
+           var idx = $("#suborders-detail-tab-component li.active").attr("data-index");
+           new_value= $("#suborder-detail-"+ idx + " .span-total").html();
+           
+           $('#input-screen').attr("data-buffer", new_value);	
+           $('#input-screen').val(new_value);
+           return true;
+								
+				}else{
+					new_value = $('#input-screen').attr("data-buffer") + $(this).attr('data-num');
+				}
+								
+				$('#input-screen').attr("data-buffer", new_value);				
+
+        $('#input-screen').attr("data-lastinput", $('#input-screen').val() );
+				
+				//var value = buffer / 100;
+				//value = value.toFixed(2);
+				$('#input-screen').val(new_value);
 			});
 		}
 	});
-
 
 
 	keyScreenWrapper.append(screenComponent).append(keyComponent);
@@ -1278,9 +1410,6 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	return keypadComponent;
 }
-
-
-
 
 
 function round2(number) {

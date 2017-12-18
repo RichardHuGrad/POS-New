@@ -74,6 +74,7 @@ class CooksController extends AppController {
             }
 
         }
+
         $is_super_admin = $this->Session->read('Admin.is_super_admin');
         if('Y' <> $is_super_admin){
             $conditions['Cook.restaurant_id'] = $this->Session->read('Admin.id');            
@@ -82,7 +83,7 @@ class CooksController extends AppController {
         $query = array(
             'conditions' => $conditions,
             'fields' => array(
-                'Admin.restaurant_name', 'Admin.lastname', 'Cook.id', 'Cook.firstname', 'Cook.lastname', 'Cook.email', 'Cook.mobile_no', 'Cook.status', 'Cook.is_verified', 'Cook.created'
+                'Admin.restaurant_name', 'Admin.lastname', 'Cook.id', 'Cook.userid', 'Cook.firstname', 'Cook.lastname', 'Cook.email', 'Cook.mobile_no', 'Cook.status', 'Cook.is_verified', 'Cook.created'
             ),
             'order' => $order
         );

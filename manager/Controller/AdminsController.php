@@ -137,8 +137,6 @@ class AdminsController extends AppController {
     }
 
 
-
-
     /**
      * Change order of table
      * @param string $id
@@ -271,6 +269,7 @@ class AdminsController extends AppController {
                 $this->request->data['Admin']['table_size'] = implode(",", $this->request->data['Admin']['table_size']);
                 $this->request->data['Admin']['takeout_table_size'] = implode(",", $this->request->data['Admin']['takeout_table_size']);
                 $this->request->data['Admin']['waiting_table_size'] = implode(",", $this->request->data['Admin']['waiting_table_size']);
+                
                 if ($this->Admin->save($this->request->data, $validate = false)) {
 
                     if($id == $this->Session->read('Admin.id')){
