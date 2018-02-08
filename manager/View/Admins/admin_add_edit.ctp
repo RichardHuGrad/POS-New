@@ -132,7 +132,7 @@ $(document).ready(function() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Phone Number</label>
+                                        <label class="control-label">Online StoreID and Phone (ID-number)</label>
                                         <?php echo $this->Form->input('mobile_no', array('type' => 'text', 'maxlength' => '20', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
