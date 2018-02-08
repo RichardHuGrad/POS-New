@@ -387,19 +387,20 @@ Cache::config('_cake_model_', array(
 	'duration' => $duration
 ));
 
-$directory = $_SERVER['DOCUMENT_ROOT'] . '/';
-$url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
-
 $project_directory = '/';
 
 define('DB_HOST', 'localhost');
-define('DB_USERNAME', 'pos');
-define('DB_PASSWORD', 'pos1209');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
 define('DB_DATABASE', 'pos');
 
-$directory = $_SERVER['DOCUMENT_ROOT'] . $project_directory;
-$url_directory = 'http://' . $_SERVER['HTTP_HOST'] . $project_directory;
-
+if (php_sapi_name() === 'cli') {
+	$directory = dirname(dirname(__FILE__)) . $project_directory;
+	$url_directory = 'http://localhost' . $project_directory;
+} else {
+	$directory = $_SERVER['DOCUMENT_ROOT'] . $project_directory;
+	$url_directory = 'http://' . $_SERVER['HTTP_HOST'] . $project_directory;
+}
 
 define('WEBSITE_URL', $url_directory."pos/");
 define('WEBSITE_FRONT_CSS', WEBSITE_URL."css/");

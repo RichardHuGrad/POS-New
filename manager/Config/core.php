@@ -393,8 +393,8 @@ $url_directory = 'http://' . $_SERVER['HTTP_HOST'] . '/';
 $project_directory = '/';
 
 define('DB_HOST', 'localhost');
-define('DB_USERNAME', 'pos');
-define('DB_PASSWORD', 'pos1209');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
 define('DB_DATABASE', 'pos');
 
 $directory = $_SERVER['DOCUMENT_ROOT'] . $project_directory;

@@ -27,7 +27,7 @@ App::uses('Shell', 'Console');
 class AppShell extends Shell {
 	const WECHATSERVER = "https://wx.eatopia.ca/";
 	// const WECHATSERVER="http://dev9.com/";
-	const WECHATTEST = 1;
+	const WECHATTEST = 0;
 	
     public $fontStr1 = "simsun";
     public $handle;
@@ -45,7 +45,7 @@ class AppShell extends Shell {
 		printer_delete_font($font);
 	}
 	
-	public function printZh($str, $x, $y, $font_bold = false) {
+	public function printZh($str, $x, $y, $font_bold = false, $newline=false) {
 		if ($font_bold == true) {
 			// $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, 1500, false, false, false, 0);
 			$font = printer_create_font("simsun", 32, 14, 1200, false, false, false, 0);
@@ -53,7 +53,16 @@ class AppShell extends Shell {
 			$font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, PRINTER_FW_MEDIUM, false, false, false, 0);
 		}
 		printer_select_font($this->handle, $font);
-		printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
+		if ($newline) {
+			$print_str = mb_substr($str, 0, 16);
+			printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $print_str), $x, $y);
+			$str = mb_substr($str, 16);
+			if (mb_strlen($str, 'UTF-8') > 0) {
+				printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y+48);
+			}
+		} else {
+			printer_draw_text($this->handle, iconv("UTF-8", "gb2312", $str), $x, $y);
+		}
 		printer_delete_font($font);
 	}
 	
@@ -84,6 +93,7 @@ class AppShell extends Shell {
 		if (self::WECHATTEST) {
 			$url .= "&test=1";
 		}
+
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -97,28 +107,34 @@ class AppShell extends Shell {
 			$offset = explode(',', $rest['Admin']['print_offset']);
 			$printer_name = $rest['Admin']['service_printer_device'];
 			
+			$print_x = 25;
 			foreach ($rts['orders'] as $order) {
 				$this->handle = printer_open($printer_name);
-				printer_start_doc($this->handle, "new_order");
+				printer_start_doc($this->handle, "order");
 				printer_start_page($this->handle);
 			
-				$print_y = 100;
-				$this->printZh("单号：" . $order['order_num'] . "; 时间：" . $order['time'], 100, $print_y);
+				$print_y = 30;
+				$this->printZh("Eatopia食客邦订单   " . (($order['type']==1) ? '外卖' : '堂食 桌号:'.$order['table_id']), $print_x, $print_y);
+				$print_y += 48;
+				$this->printZh("单号：" . $order['order_num'] . " (" . $order['time'] . ")", $print_x, $print_y);
+
 				$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
 				printer_select_pen($this->handle, $pen);
-				printer_draw_line($this->handle, 21, $print_y, 600, $print_y);
+				printer_draw_line($this->handle, 21, $print_y - 10, 600, $print_y - 10);
 				
 				foreach ($order['dishes'] as $dish) {
 					$print_y += 48;
-					$this->printZh($dish['order_num'] . " (" . $dish['money'] . ")", 100, $print_y);
-					$this->printZh(" x " . $dish['number'], 300, $print_y);
+					$this->printZh($dish['name'], $print_x, $print_y, false, true);
+					$this->printZh("$" . $dish['money'], $print_x + 360, $print_y);
+					$print_y += 48;
+					$this->printZh(" x " . $dish['number'], $print_x + 360, $print_y);
 				}
 				$print_y += 48;
-				$this->printZh("总计：", 148, $print_y, true);
-				$this->printZh($order['money'], 350, $print_y);
+				$this->printZh("总计：", $print_x + 100, $print_y, true);
+				$this->printZh($order['money'], $print_x + 300, $print_y);
 				if (!empty($order['note'])) {
 					$print_y += 48;
-					$this->printZh("留言：" . $order['note'], 100, $print_y);
+					$this->printZh("留言：" . $order['note'], $print_x + 100, $print_y);
 				}
 		        printer_end_page($this->handle);
 		        printer_end_doc($this->handle);
