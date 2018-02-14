@@ -79,6 +79,10 @@
                     <a id="checkout-link" href="#" data-toggle="modal" data-target="#modal_checkout"><?php echo __('Checkout'); ?></a>
                 </li>
 
+                <li>
+                    <a id="checkout-link" href="#" data-toggle="modal" data-target="#modal_member_search"><?php echo __('Member'); ?></a>
+                </li>
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -143,6 +147,138 @@
        </div>
    </div>
 
+   <div class="modal fade clearfix" id="modal_member_search" role="dialog">
+       <div class="modal-dialog modal-lg" style="width:400px">
+           <div class="modal-content clearfix">
+               <div class="modal-header">
+                   <button type="button" data-dismiss="modal" class="member_btn_close"><?php echo __('Close'); ?></button>
+                   <h4><?php echo __('Member'); ?></h4>
+                   <button type="button" data-dismiss="modal" id="member_btn_add"><?php echo __('Add'); ?></button>
+               </div>
+               <div class="modal-body clearfix">
+               		<div class='row'>
+               			<div class='col-sm-12'>
+		                    <input id="member_search_input" type="text" style="font-size:25px;height:38px" placeholder='Card Number/ID/Name/Phone Number' />
+               			</div>
+               		</div>
+               		<div class='row'>
+               			<div class='col-sm-4'><?php echo __('Card Number'); ?></div>
+               			<div class='col-sm-4'><?php echo __('ID'); ?></div>
+               			<div class='col-sm-4'><?php echo __('Amount'); ?></div>
+               		</div>
+               		<div class='row' id='mbm_sch_list'>
+               			<div class='col-sm-12'>
+               			</div>
+               		</div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div class="modal fade clearfix" id="modal_member" role="dialog">
+       <div class="modal-dialog modal-lg" style="width:800px">
+           <div class="modal-content clearfix">
+               <div class="modal-header">
+                   <button type="button" data-dismiss="modal" class="member_btn_close"><?php echo __('Close'); ?></button>
+                   <h4><?php echo __('Member Info'); ?></h4>
+               </div>
+               <div class="modal-body clearfix">
+					<input id="mbm_info_member_id" type="hidden" name='id' />
+					<div class='row'>
+						<div class='col-sm-6'>
+							<?php echo __('Card Number'); ?> : <span id='mbm_info_cardnumber'></span>
+						</div>
+						<div class='col-sm-6'>
+							<?php echo __('ID'); ?> : <span id='mbm_info_id'></span>
+						</div>
+						<div class='col-sm-6'>
+							<?php echo __('Name'); ?> : <span id='mbm_info_name'></span>
+						</div>
+						<div class='col-sm-6'>
+							<?php echo __('Phone'); ?> : <span id='mbm_info_phone'></span>
+						</div>
+						<div class='col-sm-12'>
+							<?php echo __('Notes'); ?> : <span id='mbm_info_notes'></span>
+						</div>
+						<div class='col-sm-4'>
+							<?php echo __('Total Paid'); ?> : <span id='mbm_info_total_paid'></span>
+						</div>
+						<div class='col-sm-4'>
+							<?php echo __('Total Charged'); ?> : <span id='mbm_info_total_charged'></span>
+						</div>
+						<div class='col-sm-4'>
+							<?php echo __('Current Amount'); ?> : <span id='mbm_info_total_amount'></span>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-sm-4'>
+							<?php echo __('Amount'); ?>
+							<input id="mbm_info_amount" type="text" name='amount'/>
+						</div>
+						<div class='col-sm-4'>
+							<button type="button" id="mbm_info_card"><?php echo __('Fill By Credit Card'); ?></button>
+						</div>
+						<div class='col-sm-4'>
+							<button type="button" id="mbm_info_cash"><?php echo __('Fill By Cash'); ?></button>
+						</div>
+					</div>
+					<div class='row' id='mbm_info_trans_div'>
+						<div class='col-sm-12'>
+						</div>
+					</div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div class="modal fade clearfix" id="modal_member_edit" role="dialog">
+       <div class="modal-dialog modal-lg" style="width:800px">
+           <div class="modal-content clearfix">
+               <div class="modal-header">
+                   <button type="button" data-dismiss="modal" class="member_btn_close"><?php echo __('Close'); ?></button>
+                   <h4><?php echo __('Member Edit'); ?></h4>
+               </div>
+               <div class="modal-body clearfix">
+					<input id="mbm_edt_member_id" type="hidden" name='id' />
+					<div class='row'>
+						<div class='col-sm-4'>
+							<?php echo __('Card Number'); ?>
+						</div>
+						<div class='col-sm-4'>
+							<input id="mbm_edt_cardnumber" type="text" name= 'cardnumber' style="font-size:25px;height:38px" />
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-sm-4'>
+							<?php echo __('Name'); ?>
+						</div>
+						<div class='col-sm-4'>
+							<input id="mbm_edt_name" type="text" name= 'name' style="font-size:25px;height:38px" />
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-sm-4'>
+							<?php echo __('Phone Number'); ?>
+						</div>
+						<div class='col-sm-4'>
+							<input id="mbm_edt_phone" type="text" name= 'phone' style="font-size:25px;height:38px" />
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-sm-4'>
+							<?php echo __('Notes'); ?>
+						</div>
+						<div class='col-sm-4'>
+							<input id="mbm_edt_notes" type="text" name= 'notes' style="font-size:25px;height:38px" />
+						</div>
+					</div>
+               </div>
+               <div class="modal-footer clearfix">                   
+                   <button type="button" id="mbm_add_btn" class="pull-right btn btn-lg btn-success" data-dismiss="modal">OK 确认</button>
+               </div>
+           </div>
+       </div>
+   </div>
 
 <?php echo $this->Html->script(array('jquery.min.js', 'bootstrap.min.js','md5.js', 'jquery.mCustomScrollbar.concat.min.js' )); ?>
 
@@ -207,6 +343,153 @@
             }
         })
     });
+
+	function get_member_info() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'member', 'action' => 'member')); ?>",
+            method: "post",
+            dataType: 'json',
+            data: {member_id: $("#mbm_info_member_id").val()},
+			dataType: 'json',
+			success: function(data){
+				if (data.status == "OK") {
+					$('#mbm_info_cardnumber').html(data.member.cardnumber);
+					$('#mbm_info_id').html(data.member.id);
+					$('#mbm_info_name').html(data.member.name);
+					$('#mbm_info_phone').html(data.member.phone);
+					$('#mbm_info_notes').html(data.member.notes);
+					$('#mbm_info_total_paid').html(parseFloat(data.member.paid).toFixed(2));
+					$('#mbm_info_total_charged').html(parseFloat(data.member.filled).toFixed(2));
+					$('#mbm_info_total_amount').html(parseFloat(data.member.amount).toFixed(2));
+					var html = '';
+					for (var i = 0; i < data.trans.length; i++) {
+						if (data.trans[i].opt == 'Pay') {
+							html += "<div class='col-sm-3'>Bill#:" + data.trans[i].order_number + "</div>";
+							html += "<div class='col-sm-3'>Date:" + data.trans[i].tm + "</div>";
+							html += "<div class='col-sm-2'>Bill:" + data.trans[i].bill_amount + "</div>";
+							html += "<div class='col-sm-2'>Paid:" + parseFloat(data.trans[i].amount).toFixed(2) + "</div>";
+							html += "<div class='col-sm-2'>Balance:" + parseFloat(data.trans[i].total).toFixed(2) + "</div>";
+						} else {
+							html += "<div class='col-sm-3'>Recharge with " + data.trans[i].opt + "</div>";
+							html += "<div class='col-sm-3'>Date:" + data.trans[i].tm + "</div>";
+							html += "<div class='col-sm-2'></div>";
+							html += "<div class='col-sm-2'>Amount:" + parseFloat(data.trans[i].amount).toFixed(2) + "</div>";
+							html += "<div class='col-sm-2'>Balance:" + parseFloat(data.trans[i].total).toFixed(2) + "</div>";
+						}
+					}
+					$('#mbm_info_trans_div').html(html);
+				} else {
+					alert(data.message);
+				}
+			}
+		})
+	}
+	$("#modal_member").on('show.bs.modal', function () {
+		get_member_info();
+	});
+
+	function add_fund(type) {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'member', 'action' => 'add_fund')); ?>",
+            method: "post",
+            dataType: 'json',
+            data: {
+				member_id: $("#mbm_info_member_id").val(), 
+				amount : $("#mbm_info_amount").val(),
+				opt : type,
+			},
+			dataType: 'json',
+			success: function(data){
+				if (data.status == "OK") {
+					get_member_info();
+				} else {
+					alert(data.message);
+				}
+			}
+		})
+	}
+	
+    $('#mbm_info_card').on('click', function() {
+    	add_fund('Credit Card');
+	});
+	
+    $('#mbm_info_cash').on('click', function() {
+    	add_fund('Cash');
+	});
+	
+    $('#mbm_add_btn').on('click', function() {
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'member', 'action' => 'edit')); ?>",
+            method: "post",
+            dataType: 'json',
+            data: {
+				member_id: $("#mbm_edt_member_id").val(), 
+				cardnumber : $("#mbm_edt_cardnumber").val(),
+				name : $("#mbm_edt_name").val(),
+				phone : $("#mbm_edt_phone").val(),
+				notes : $("#mbm_edt_notes").val()
+			},
+			dataType: 'json',
+			success: function(data){
+				if (data.status == "OK") {
+					alert(data.message);
+			        $('#mbm_info_member_id').val(data.member.id);
+			        $('#modal_member').modal('show');
+				} else {
+					alert(data.message);
+				}
+			}
+		})
+	});
+    
+    $('#member_btn_add').on('click', function() {
+        $('.modal').modal('hide');
+        $("#mbm_edt_member_id").val('');
+        $("#mbm_edt_cardnumber").val('');
+        $("#mbm_edt_name").val('');
+        $("#mbm_edt_phone").val('');
+        $("#mbm_edt_notes").val('');
+        $('#modal_member_edit').modal('show');
+    });
+    
+    $('.member_btn_close').on('click', function() {
+    	$('.modal').modal('hide');
+    });
+    
+	$('#member_search_input').on('input', function() {
+		var str = $('#member_search_input').val();
+		if (str.length > 2) {
+			$.ajax({
+				url: "<?php echo $this->Html->url(array('controller' => 'member', 'action' => 'search')); ?>",
+				method: "post",
+				data: { search: str },
+				dataType: 'json',
+				success: function(data) {
+					var html = '';
+					if (data.status == 'OK') {
+						for (var i = 0; i < data.members.length; i++) {
+							html += "<div class='col-sm-12 member_search_select' data_member_id='" + data.members[i].Member.id + "'>"
+							html += "<div class='col-sm-4'>" + data.members[i].Member.cardnumber + "</div>";
+							html += "<div class='col-sm-4'>" + data.members[i].Member.id + "</div>";
+							if (data.members[i].Member.amount) {
+								html += "<div class='col-sm-4'>" + parseFloat(data.members[i].Member.amount).toFixed(2) + "</div>";
+							} else {
+								html += "<div class='col-sm-4'>0.00</div>";
+							}
+							html += "</div>";
+						} 
+					}
+					$('#mbm_sch_list').html(html);
+				    $('.member_search_select').on('click', function() {
+				    	var member_id = $(this).attr('data_member_id');
+				        $('.modal').modal('hide');
+				        $('#mbm_info_member_id').val($(this).attr('data_member_id'));
+				        $('#modal_member').modal('show');
+				    });
+				}
+			})
+		}
+	});
 
         
 </script>
