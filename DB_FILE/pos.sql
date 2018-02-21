@@ -6736,6 +6736,38 @@ ALTER TABLE `order_items`
   ADD CONSTRAINT `FK_orders_items_orders` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
+REATE TABLE `members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cardnumber` varchar(32) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `phone` varchar(16) NOT NULL,
+  `tm` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `notes` text NOT NULL,
+  `created` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `card` (`cardnumber`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `member_trans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `opt` varchar(16) NOT NULL,
+  `amount` float NOT NULL,
+  `tm` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `order_number` varchar(64) NOT NULL,
+  `bill_amount` float NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+ALTER TABLE `orders` ADD `membercard_val` FLOAT NOT NULL AFTER `card_val`;
+ALTER TABLE `orders` ADD `membercard_id` FLOAT NOT NULL AFTER `card_val`;
+ALTER TABLE `orders` CHANGE `paid_by` `paid_by` ENUM('CARD','CASH','MIXED','MEMBERCARD') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `orders` CHANGE `tip_paid_by` `tip_paid_by` ENUM('CARD','CASH','MIXED','NO TIP','MEMBERCARD') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `order_splits` ADD `paid_membercard` FLOAT NOT NULL AFTER `paid_card`;
+ALTER TABLE `order_splits` ADD `membercard_id` FLOAT NOT NULL AFTER `paid_card`;
+ALTER TABLE `order_splits` ADD `tip_membercard` FLOAT NOT NULL AFTER `tip_card`;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
