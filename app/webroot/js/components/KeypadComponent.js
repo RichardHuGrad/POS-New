@@ -68,10 +68,12 @@ class KeypadComponent {
 
 
 		component.payCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="card">' + cfg.cardImg + 'Card 卡</label>');							
+		component.payMemberCardButton = $('<label><input type="radio" id="pay-card" name="pay" data-type="membercard">' + cfg.cardImg + 'Member Card 卡</label>');							
 		component.payCashButton = $('<label><input type="radio" id="pay-cash" name="pay" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
 		// payForm.append(payCardButton).append(payCashButton);
 
 		component.tipCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="card">' + cfg.cardImg + 'Card 卡</label>');
+		component.tipMemberCardButton = $('<label><input type="radio" id="tip-card" name="tip" data-type="membercard">' + cfg.cardImg + 'Member Card 卡</label>');
 		component.tipCashButton = $('<label><input type="radio" id="tip-cash" name="tip" data-type="cash">' + cfg.cashImg + 'Cash 现金</label>');
 
 		// confirm: write the input into the suborder detail
@@ -130,13 +132,13 @@ class KeypadComponent {
 			if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
 				// enable payment buttons
 				this.component.typeGroup.empty();
-				this.component.typeGroup.append(this.component.payCardButton).append(this.component.payCashButton);
+				this.component.typeGroup.append(this.component.payCardButton).append(this.component.payMemberCardButton).append(this.component.payCashButton);
 
 				console.log("payment is selected");
 			} else if ($(this).is(':checked') && $(this).attr('id') == "tip-select") {
 				// enable tip buttons
 				this.component.typeGroup.empty();
-				this.component.typeGroup.append(this.component.tipCardButton).append(this.component.tipCashButton);
+				this.component.typeGroup.append(this.component.tipCardButton).append(this.component.tipMemberCardButton).append(this.component.tipCashButton);
 				
 				console.log("tip is selected");
 			} else {
@@ -168,8 +170,10 @@ class KeypadComponent {
 	                	"tax": tempSuborder.tax.tax * 100,
 	                	"tax_amount": tempSuborder.tax.amount,
 		                "total": tempSuborder.total,
+		                "paid_membercard": tempSuborder.received.membercard,
 		                "paid_card": tempSuborder.received.card,
 		                "paid_cash": tempSuborder.received.cash,
+		                "tip_membercard": tempSuborder.tip.membercard,
 		                "tip_card": tempSuborder.tip.card,
 		                "tip_cash": tempSuborder.tip.cash,
 		                "change": tempSuborder.change,
@@ -195,6 +199,7 @@ class KeypadComponent {
 	    			// "tax_amount": sendData.tax_amount,
 	    			// "subtotal": sendData.subtotal,
 	    			// "total": sendData.total,
+	    			"membercard_val": sendData.membercard_val,
 	    			"card_val": sendData.card_val,
 	    			"cash_val": sendData.cash_val,
 	    			"tip": sendData.tip,

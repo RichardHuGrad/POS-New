@@ -195,7 +195,8 @@ class Order extends AppModel {
                 'total' => 0,
                 'cash_total' => 0,
                 'card_total' => 0,
-                'cash_mix_total' => 0,
+                'membercard_total' => 0,
+            	'cash_mix_total' => 0,
                 'card_mix_total' => 0,
                 'paid_cash_total' => 0,
                 'paid_card_total' => 0,
@@ -216,7 +217,8 @@ class Order extends AppModel {
                 $order = $o['Order'];
                 $totalArr['paid_cash_total'] += ($order['cash_val'] - $order['change']);
                 $totalArr['paid_card_total'] += $order['card_val'];
-
+                $totalArr['paid_membercard_total'] += $order['membercard_val'];
+                
                 $totalArr['total'] += $order['total'];
 
 				//目前的系统,没有现金小费,现金都是找零,小费是额外给服务员的,没有计入订单的.缺省小费和卡付小费计入订单.
@@ -234,6 +236,13 @@ class Order extends AppModel {
                     $totalArr['card_tip_total'] += $order['tip'];
                     $totalArr['default_tip_card'] +=$order['default_tip_amount'];
                     
+                } else if ($order['paid_by'] == 'MEMBERCARD') { 
+                	
+                    $totalArr['membercard_total'] += $order['total'];
+                    
+                    $totalArr['membercard_tip_total'] += $order['tip'];
+                    $totalArr['default_tip_card'] +=$order['default_tip_amount'];
+                    
                 } else {
                 	
                 	//Paid by MIXED
@@ -249,7 +258,8 @@ class Order extends AppModel {
 
                     if(!empty($o_splits[0]['order_splits'])){
                         foreach($o_splits as $os){
-                            $paid_card = $os['order_splits']['paid_card'];
+                            $paid_membercard = $os['order_splits']['paid_membercard'];
+                        	$paid_card = $os['order_splits']['paid_card'];
                             $paid_cash = $os['order_splits']['paid_cash'];
                             
                             if($paid_card>0 && $paid_cash>0){

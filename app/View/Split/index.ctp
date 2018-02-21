@@ -625,6 +625,7 @@ echo $this->fetch('script');
 		var currentSuborderId = $('.suborders-detail-tab.active').attr('data-index');
 
 		var inputNum = parseFloat($('#input-screen').val());
+		var member_id = $('#membercard_id').val();
 		console.log(payOrTip);
 		console.log(cardOrCash);
 		console.log(currentSuborderId);
@@ -655,8 +656,15 @@ echo $this->fetch('script');
 						} else {
 							currentSuborder._tip.card = 0;
 						}
-
-
+					} else if (cardOrCash == "membercard") {
+						// give notification when the number is input into suborder
+						currentSuborder._received.membercard = inputNum;
+						currentSuborder._received.memberid = member_id;
+						if (inputNum > currentSuborder.total) {
+							currentSuborder._tip.membercard = inputNum - currentSuborder.total;
+						} else {
+							currentSuborder._tip.membercard = 0;
+						}
 					} else if (cardOrCash == "cash") {
 						// give notification when the number is input into suborder
 						currentSuborder._received.cash = inputNum;
@@ -667,6 +675,8 @@ echo $this->fetch('script');
 					if (cardOrCash == "card") {
 						currentSuborder._tip.card = inputNum;
 
+					} else if (cardOrCash == "membercard") {
+						currentSuborder._tip.membercard = inputNum;
 					} else if (cardOrCash == "cash") {
 						//  give notification when the number is input into suborder
 						currentSuborder._tip.cash = inputNum;

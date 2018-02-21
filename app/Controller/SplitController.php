@@ -8,6 +8,9 @@ class SplitController extends AppController {
 
         parent::beforeFilter();
         $this->Auth->allow('index', 'forgot_password');
+        $this->Member = ClassRegistry::init('Member');
+        $this->MemberTran = ClassRegistry::init('MemberTran');
+        
         $this->layout = "default";
     }
 
@@ -45,7 +48,7 @@ class SplitController extends AppController {
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.change', 'Order.order_no', 'Order.tax',  'Order.default_tip_rate', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+            'fields' => array('Order.paid', 'Order.tip', 'Order.cash_val', 'Order.card_val', 'Order.membercard_val', 'Order.membercard_id', 'Order.change', 'Order.order_no', 'Order.tax',  'Order.default_tip_rate', 'Order.table_status', 'Order.tax_amount', 'Order.subtotal', 'Order.total', 'Order.message', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
             'conditions' => $conditions
                 )
         );
@@ -98,6 +101,17 @@ class SplitController extends AppController {
         // echo json_encode($originalOrder);
         $this->Order->save($data);
 
+        $o_splits = $this->Order->query("SELECT membercard_id, paid_membercard, order_no, total  FROM order_splits WHERE order_no = '".$data['Order']['order_no']. "'");
+        if(!empty($o_splits[0]['order_splits'])){
+        	foreach($o_splits as $os){
+        		$member = $this->Member->find("first", array('recursive' => 0, 'conditions' => array('Member.id' => $os['order_splits']['membercard_id'])));
+        		if ($member) {
+        			$trans = $this->MemberTran->save(array('member_id' => $os['order_splits']['membercard_id'], 'order_number' => $os['order_splits']['order_no'], 'bill_amount' => $os['order_splits']['total'], 'opt' => 'Pay', 'amount' => $os['order_splits']['paid_membercard'] * (-1)));
+        			$this->MemberTran->clear();
+        		}
+        	}
+        }
+        
         $order_id = $originalOrder['Order']['id'];
         $this->addPopular($order_id);
     }

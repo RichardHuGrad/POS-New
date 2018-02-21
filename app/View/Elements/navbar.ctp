@@ -159,6 +159,7 @@
                		<div class='row'>
                			<div class='col-sm-12'>
 		                    <input id="member_search_input" type="text" style="font-size:25px;height:38px" placeholder='Card Number/ID/Name/Phone Number' />
+		                    <input id="member_search_next" type="hidden" value="" />
                			</div>
                		</div>
                		<div class='row'>
@@ -224,6 +225,46 @@
 					</div>
 					<div class='row' id='mbm_info_trans_div'>
 						<div class='col-sm-12'>
+						</div>
+					</div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+  <div class="modal fade clearfix" id="modal_member_pay" role="dialog">
+       <div class="modal-dialog modal-lg" style="width:800px">
+           <div class="modal-content clearfix">
+               <div class="modal-header">
+                   <button type="button" data-dismiss="modal" class="member_btn_close"><?php echo __('Close'); ?></button>
+                   <h4><?php echo __('Select Tips'); ?></h4>
+               </div>
+               <div class="modal-body clearfix">
+					<div class='row'>
+						<input id="mbm_pay_order_total" type="hidden" name='mbm_pay_order_total'/>
+						<input id="mbm_pay_order_paid" type="hidden" name='mbm_pay_order_paid'/>
+						<input id="mbm_pay_balance" type="hidden" name='mbm_pay_balance'/>
+						<input id="mbm_pay_memberid" type="hidden" name='mbm_pay_memberid'/>
+						<div class='col-sm-6'>
+							<?php echo __('Card Number'); ?> : <span id='mbm_pay_cardnumber'></span>
+						</div>
+						<div class='col-sm-6'>
+							<?php echo __('Balance'); ?> : <span id='mbm_pay_card_balance'></span>
+						</div>
+						<div class='col-sm-12'>
+							<span id='mbm_pay_no_tips' class="mbm_pay_input"><?php echo __('No Tips'); ?></span>
+						</div>
+						<div class='col-sm-12'>
+							<span id='mbm_pay_tip10' class="mbm_pay_input">10 %</span>
+						</div>
+						<div class='col-sm-12'>
+							<span id='mbm_pay_tip15' class="mbm_pay_input">15 %</span>
+						</div>
+						<div class='col-sm-12'>
+							<span id='mbm_pay_tip20' class="mbm_pay_input">20 %</span>
+						</div>
+						<div class='col-sm-12'>
+							<span id='mbm_pay_tip_input' class="mbm_pay_input"><?php echo __('Input Amount'); ?></span>
 						</div>
 					</div>
                </div>
@@ -442,6 +483,48 @@
 		})
 	});
     
+    $('.mbm_pay_input').on('click', function() {
+        var type = $(this).attr("id");
+        var order_total = parseFloat($('#mbm_pay_order_total').val());
+        var card_amount = parseFloat($('#mbm_pay_balance').val());
+        var order_paid = 0;
+        if ($('#mbm_pay_order_paid').val()) {
+            order_paid = parseFloat($('#mbm_pay_order_paid').val());
+        }
+        $("#mbm_pay_percent").val('');
+        if (type == 'mbm_pay_tip10') {
+        	order_total *= 1.1;
+        } else if (type == 'mbm_pay_tip15') {
+        	order_total *= 1.15;
+        } else if (type == 'mbm_pay_tip20') {
+        	order_total *= 1.2;
+        } else if (type == 'mbm_pay_tip_input') {
+        	order_total = 0;
+        }
+        if (order_total > 0) {
+	        if ((order_total - order_paid) <= card_amount) {
+	        	card_amount = order_total - order_paid;
+	        }
+        } else {
+        	card_amount = 0;
+        }
+        if (card_amount < 0) card_amount = 0;
+        
+        card_amount = parseFloat(card_amount).toFixed(2)
+        $("#membercard_id").val($('#mbm_info_member_id').val());
+        $("#membercard_val").val(card_amount);
+        if (card_amount > 0) {
+	        if ($('#screen').length) {
+		        $("#screen").attr('buffer', card_amount);
+		        $("#screen").val(card_amount);
+	        } else {
+		        $("#input-screen").attr('data-buffer', card_amount);
+		        $("#input-screen").val(card_amount);
+	        }
+        }
+        $('.modal').modal('hide');
+	});
+    
     $('#member_btn_add').on('click', function() {
         $('.modal').modal('hide');
         $("#mbm_edt_member_id").val('');
@@ -468,23 +551,32 @@
 					var html = '';
 					if (data.status == 'OK') {
 						for (var i = 0; i < data.members.length; i++) {
-							html += "<div class='col-sm-12 member_search_select' data_member_id='" + data.members[i].Member.id + "'>"
+							var amt = 0;
+							if (data.members[i].Member.amount) {
+								amt = data.members[i].Member.amount;
+							}
+							html += "<div class='col-sm-12 member_search_select' data_member_id='" + data.members[i].Member.id + "' data_member_cardnumber='" + data.members[i].Member.cardnumber + "' data_member_balance='" + parseFloat(amt).toFixed(2) + "'>"
 							html += "<div class='col-sm-4'>" + data.members[i].Member.cardnumber + "</div>";
 							html += "<div class='col-sm-4'>" + data.members[i].Member.id + "</div>";
-							if (data.members[i].Member.amount) {
-								html += "<div class='col-sm-4'>" + parseFloat(data.members[i].Member.amount).toFixed(2) + "</div>";
-							} else {
-								html += "<div class='col-sm-4'>0.00</div>";
-							}
+							html += "<div class='col-sm-4'>" + parseFloat(amt).toFixed(2) + "</div>";
 							html += "</div>";
 						} 
 					}
 					$('#mbm_sch_list').html(html);
 				    $('.member_search_select').on('click', function() {
 				    	var member_id = $(this).attr('data_member_id');
+				    	var go_next = $("#member_search_next").val();
 				        $('.modal').modal('hide');
 				        $('#mbm_info_member_id').val($(this).attr('data_member_id'));
-				        $('#modal_member').modal('show');
+				        if (go_next == 'mbm_pay_select') {
+				        	$("#member_search_next").val('');
+				        	$("#mbm_pay_balance").val($(this).attr('data_member_balance'));
+				        	$("#mbm_pay_cardnumber").html($(this).attr('data_member_cardnumber'));
+				        	$("#mbm_pay_card_balance").html(parseFloat($(this).attr('data_member_balance')).toFixed(2));
+				        	$('#modal_member_pay').modal('show');
+				        } else {
+				        	$('#modal_member').modal('show');
+				        }
 				    });
 				}
 			})

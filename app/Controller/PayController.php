@@ -131,8 +131,10 @@ class PayController extends AppController {
             'paid_by' => strtoupper($this->data['paid_by']),
             'pay' => $this->data['pay'],
             'change' => $this->data['change'],
+            'membercard_id' => $this->data['membercard_id'],
+        	'membercard_val' => $this->data['membercard_val'],
             'card_val' => $this->data['card_val'],
-            'cash_val' => $this->data['cash_val'],
+        	'cash_val' => $this->data['cash_val'],
             'tip_paid_by' => $this->data['tip_paid_by'],
             'tip' => $this->data['tip_val'] ? $this->data['tip_val'] : 0
         ));

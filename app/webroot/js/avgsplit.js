@@ -338,6 +338,7 @@ class Suborders {
 		var tax_amount = 0;
 		var subtotal = 0;
 		var total = 0;
+		var membercard_val = 0;
 		var card_val = 0;
 		var cash_val = 0;
 		var tip = 0;
@@ -355,9 +356,10 @@ class Suborders {
 			tax_amount += tempSuborder.tax.amount;
 			subtotal += tempSuborder.subtotal;
 			total += tempSuborder.total;
+			membercard_val += tempSuborder.received.membercard;
 			card_val += tempSuborder.received.card;
 			cash_val += tempSuborder.received.cash;
-			tip += tempSuborder.tip.card + tempSuborder.tip.cash;
+			tip += tempSuborder.tip.card + tempSuborder.tip.membercard + tempSuborder.tip.cash;
 			// to be changed 
 			// if (tempSuborder.tip.type != "no tip")
 			// 	tip_paid_by_set.add(tempSuborder.tip.type);
@@ -366,7 +368,7 @@ class Suborders {
 			// } else {
 			// 	tip_paid_by = "mixed";
 			// }
-			paid += tempSuborder.received.card + tempSuborder.received.cash;
+			paid += tempSuborder.received.card + tempSuborder.received.membercard + tempSuborder.received.cash;
 			change += tempSuborder.change;
 		}
 
@@ -385,8 +387,10 @@ class Suborders {
 			discount_value = round2(parseFloat(subtotal) * parseFloat(order.discount.value));
 		}
 
-		if (card_val > 0 && cash_val > 0) {
+		if ((card_val > 0 && cash_val > 0) || (membercard_val > 0 && cash_val > 0) || (membercard_val > 0 && card_val > 0)) {
 			paid_by = "MIXED";
+		} else if (membercard_val > 0 ) {
+			paid_by = "MEMBERCARD";
 		} else if (card_val > 0 ) {
 			paid_by = "CARD";
 		} else {
@@ -399,6 +403,7 @@ class Suborders {
 			"tax_amount": tax_amount,
 			"subtotal": subtotal,
 			"total": total,
+			"membercard_val": membercard_val,
 			"card_val": card_val,
 			"cash_val": cash_val,
 			"tip": tip,
@@ -432,12 +437,15 @@ class Suborder {
 		this._received = {
 			"cash": 0,
 			"card": 0,
+			"membercard": 0,
+			"memberid": 0,
 			"total": 0
 		};
 		this._tip = {
 			// "type": "unknown", // card or cash
 			"cash": 0,
 			"card": 0,
+			"membercard": 0,
 			"amount": 0
 		};
 		// discount info should come from order
@@ -474,8 +482,11 @@ class Suborder {
 			if (temp_no == this.suborder_no) {
 				this._received.cash = obj.suborders[i].received.cash;
 				this._received.card = obj.suborders[i].received.card;
+				this._received.membercard = obj.suborders[i].received.membercard;
+				this._received.memberid = obj.suborders[i].received.memberid;
 				this._tip.cash = obj.suborders[i].tip.cash;
 				this._tip.card = obj.suborders[i].tip.card;
+				this._tip.membercard = obj.suborders[i].tip.membercard;
 			}
 		}
 	}
@@ -518,9 +529,12 @@ class Suborder {
 			'default_tip_rate'  : this.default_tip.rate,
 			'default_tip_amount': this.default_tip.amount,
 			'total': this.total,
+			'received_memberid': this.received.memberid,
+			'received_membercard': this.received.membercard,
 			'received_card': this.received.card,
 			'received_cash': this.received.cash,
 			'received_total': this.received.total,
+			'tip_membercard': this.tip.membercard,
 			'tip_card': this.tip.card,
 			'tip_cash': this.tip.cash,
 			'tip_amount': this.tip.amount,
@@ -621,9 +635,11 @@ class Suborder {
 
 	get received() {
 		return  {
+					"memberid": round2(this._received.memberid),
+					"membercard": round2(this._received.membercard),
 					"card": round2(this._received.card),
 					"cash": round2(this._received.cash),
-					"total": round2 (this._received.card + this._received.cash)
+					"total": round2 (this._received.card + this._received.cash + this._received.membercard)
 				}
 	}
 
@@ -635,19 +651,22 @@ class Suborder {
 		// 	tip_card = round2(this._tip.card);
 		// }
 		var type;
-		if (this._tip.card > 0 && this._tip.cash) {
+		if ((this._tip.card > 0 && this._tip.cash) || (this._tip.membercard > 0 && this._tip.cash)) {
 			type = "MIXED";
 		} else if (this._tip.card > 0) {
 			type = "CARD";
+		} else if (this._tip.membercard > 0) {
+			type = "MEMBERCARD";
 		} else if (this._tip.cash) {
 			type = "CASH";
 		} else {
 			type = "no tip";
 		}
 		return {
+					"membercard": round2(this._tip.membercard),
 					"card": round2(this._tip.card),
 					"cash": round2(this._tip.cash),
-					"amount": round2(this._tip.card + this._tip.cash),
+					"amount": round2(this._tip.card + this._tip.membercard + this._tip.cash),
 					"type": type 
 				};
 	}
@@ -662,7 +681,7 @@ class Suborder {
 
 	get change() {
 
-		if (this.received.card >= this.total) {
+		if ((this.received.card + this.received.mastercard) >= this.total) {
 			return round2(this.received.cash);
 		} else {
 			return this.received.total > this.total ? round2(this.received.total - this.total) : 0;
@@ -1011,10 +1030,10 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		   <li class="suborder-tax">Tax 税 ({5}%): $ {6}</li>
 		   <li class="suborder-default-tip">Tip 缺省小费({16}%): $ {17}</li>
 		   <li class="suborder-total">Total 总: $ <span class="span-total">{7}</span></li>
-		   <li class="suborder-received">Received 收到: $ {8} Cash 现金: $ {9} Card 卡: $ {10}</li>
+		   <li class="suborder-received">Received 收到: $ {8} Cash 现金: $ {9} Card 卡: $ {10} Member Card 卡: $ {18}</li>
 		   <li class="suborder-remain">Remaining 其余: $ {11}</li>
 		   <li class="suborder-change">Change 找零: $ {12}</li>
-		   <li class="suborder-tip">Tip 小费: $ {13} Cash 现金: $ {14} Card 卡: $ {15}</li>
+		   <li class="suborder-tip">Tip 小费: $ {13} Cash 现金: $ {14} Card 卡: $ {15} Member Card 卡: $ {19}</li>
 		</ul>
 	`;
 
@@ -1054,7 +1073,10 @@ var SuborderDetailComponent = function (suborder, cfg) {
 		suborder.tip.cash,
 		suborder.tip.card,
 		suborder.default_tip.rate,
-		suborder.default_tip.amount
+		suborder.default_tip.amount,
+		suborder.received.membercard,
+		suborder.tip.membercard,
+		suborder.received.memberid
 	));
 
 	if (suborder.remain == 0) {
@@ -1190,10 +1212,21 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 
 	// var payGroup = $()
 	var payCardButton = $('<input type="radio" id="pay-card" name="pay" data-type="card"><label for="pay-card" class="pp-card">' + cfg.cardImg + 'Card 卡</label>');							
+	var payMemberCardButton = $('<input type="radio" id="pay-membercard" name="pay" data-type="membercard"><label for="pay-membercard" class="pp-card">' + cfg.cardImg + 'Member Card 卡</label>').on('click', function() {
+        $("#member_search_next").val('mbm_pay_select');
+        $('#modal_member_search').modal('show');
+
+        var currentSuborderId = $('.suborders-detail-tab.active').attr('data-index');
+        var currentSuborder = suborders.getSuborder(currentSuborderId);
+        $('#mbm_pay_order_paid').val(currentSuborder.received.total);
+        $('#mbm_pay_order_total').val(currentSuborder.total);
+	});							
 	var payCashButton = $('<input type="radio" id="pay-cash" name="pay" data-type="cash"><label for="pay-cash" class="pp-cash">' + cfg.cashImg + 'Cash 现金</label>');
+	var payMemberHidden = $('<input type="hidden" id="membercard_id" name="membercard_id" /><input type="hidden" id="membercard_val" name="membercard_val" />');							
 	// payForm.append(payCardButton).append(payCashButton);
 
 	var tipCardButton = $('<input type="radio" id="tip-card" name="tip" data-type="card"><label for="tip-card" class="pp-card">' + cfg.cardImg + 'Card 卡</label>');
+	var tipMemberCardButton = $('<input type="radio" id="tip-membercard" name="tip" data-type="membercard"><label for="tip-membercard" class="pp-card">' + cfg.cardImg + 'Member Card 卡</label>');
 	var tipCashButton = $('<input type="radio" id="tip-cash" name="tip" data-type="cash"><label for="tip-cash" class="pp-cash">' + cfg.cashImg + 'Cash 现金</label>');
 
 	// confirm: write the input into the suborder detail
@@ -1226,6 +1259,8 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		                	"default_tip_rate": tempSuborder.default_tip.rate,
 		                	"default_tip_amount": tempSuborder.default_tip.amount,
 			                "total": tempSuborder.total,
+			                "membercard_id": tempSuborder.received.memberid,
+			                "paid_membercard": tempSuborder.received.membercard,
 			                "paid_card": tempSuborder.received.card,
 			                "paid_cash": tempSuborder.received.cash,
 			                "tip_card": tempSuborder.tip.card,
@@ -1254,6 +1289,8 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		    			// "tax_amount": sendData.tax_amount,
 		    			// "subtotal": sendData.subtotal,
 		    			// "total": sendData.total,
+		    			"membercard_id": 0,
+		    			"membercard_val": sendData.membercard_val,
 		    			"card_val": sendData.card_val,
 		    			"cash_val": sendData.cash_val,
 		    			"tip": sendData.tip,
@@ -1297,7 +1334,7 @@ var KeypadComponent = function (cfg, drawFunction, persistentFunction) {
 		if ($(this).is(':checked') && $(this).attr('id') == "pay-select") {
 			// enable payment buttons
 			typeGroup.empty();
-			typeGroup.append(payCardButton).append(payCashButton);
+			typeGroup.append(payMemberCardButton).append(payCardButton).append(payCashButton).append(payMemberHidden);
 
 			console.log("payment is selected");
 		} else if ($(this).is(':checked') && $(this).attr('id') == "tip-select") {

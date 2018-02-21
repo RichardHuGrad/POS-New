@@ -268,11 +268,12 @@ echo round($tax_amount, 2);
                         ?>
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Received'); ?></div>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$<?php echo $Order_detail['Order']['paid']; ?></div>
+                                <div class="col-md-3 col-sm-3 col-xs-3 sub-txt"><?php echo __('Received'); ?></div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 sub-price received_price">$<?php echo $Order_detail['Order']['paid']; ?></div>
 
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price"><?php echo __('Cash'); ?>: $<?php echo $Order_detail['Order']['cash_val']; ?></div>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price"><?php echo __('Card'); ?>: $<?php echo $Order_detail['Order']['card_val']; ?></div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 sub-price cash_price"><?php echo __('Cash'); ?>: $<?php echo $Order_detail['Order']['cash_val']; ?></div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 sub-price card_price"><?php echo __('Card'); ?>: $<?php echo $Order_detail['Order']['card_val']; ?></div>
+                                <div class="col-md-3 col-sm-3 col-xs-3 sub-price membercard_price"><?php echo __('Member'); ?>: $<?php echo $Order_detail['Order']['membercard_val']; ?></div>
                             </div>
                         </li>
 
@@ -296,11 +297,12 @@ echo round($tax_amount, 2);
                         ?>
                         <li class="clearfix">
                             <div class="row">
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-txt"><?php echo __('Received'); ?></div>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price received_price">$00.00</div>
+                                <div class="col-md-3 col-sm-3 col-xs-3 sub-txt"><?php echo __('Received'); ?></div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 sub-price received_price">$00.00</div>
 
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price cash_price"><?php echo __('Cash'); ?>: $00.00</div>
-                                <div class="col-md-3 col-sm-4 col-xs-4 sub-price card_price"><?php echo __('Card'); ?>: $00.00</div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 sub-price cash_price"><?php echo __('Cash'); ?>: $00.00</div>
+                                <div class="col-md-2 col-sm-2 col-xs-2 sub-price card_price"><?php echo __('Card'); ?>: $00.00</div>
+                                <div class="col-md-3 col-sm-3 col-xs-3 sub-price membercard_price"><?php echo __('Member'); ?>: $00.00</div>
                             </div>
                         </li>
                         <li class="clearfix">
@@ -323,6 +325,7 @@ echo round($tax_amount, 2);
 
 
                 <div class="card-bot clearfix text-center">
+                    <button type="button" class="btn btn-danger select_card" id="membercard"> <?php echo $this->Html->image("card.png", array('alt' => "member card")); ?> <?php echo __('Member'); ?></button>
                     <button type="button" class="btn btn-danger select_card" id="card"> <?php echo $this->Html->image("card.png", array('alt' => "card")); ?> <?php echo __('Card'); ?></button>
                     <button type="button" class="btn btn-danger select_card"  id="cash"><?php echo $this->Html->image("cash.png", array('alt' => "cash")); ?> <?php echo __('Cash'); ?></button>
 
@@ -331,6 +334,8 @@ echo round($tax_amount, 2);
 
                     <button type="button" class="btn btn-success card-ok"  id="submit"><?php echo $this->Html->image("right.png", array('alt' => "right")); ?> <?php echo __('Confirm'); ?></button>
                     <input type="hidden" id="selected_card" value="" />
+                    <input type="hidden" id="membercard_id" name="membercard_id" value="" />
+                    <input type="hidden" id="membercard_val" name="membercard_val" value="" />
                     <input type="hidden" id="card_val" name="card_val" value="" />
                     <input type="hidden" id="cash_val" name="cash_val" value="" />
                     <input type="hidden" id="tip_val"name="tip" value="" />
@@ -456,26 +461,34 @@ echo $this->fetch('script');
 
             $(document).ready(function () {
                 $(".select_card").click(function () {
-                $(".select_card").removeClass("active")
-                        $(this).addClass("active")
-                        var type = $(this).attr("id");
-                        if (type == 'card') {
-                $("#cash").removeClass("active");
-                        var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
-                        $("#screen").attr('buffer', card_val);
-                        $("#screen").val($("#card_val").val());
-                } else if (type == 'cash') {
-                var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
-                        $("#screen").attr('buffer', cash_val);
-                        $("#screen").val($("#cash_val").val());
-                } else {
-                var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
-                        $("#screen").attr('buffer', tip_val);
-                        $("#screen").val($("#tip_val").val());
-                }
-         
-                $("#selected_card").val(type);
-                  })
+                	$(".select_card").removeClass("active")
+                	$(this).addClass("active")
+                	var type = $(this).attr("id");
+					if (type == 'card') {
+						var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) * 100 : 0;
+						$("#screen").attr('buffer', card_val);
+						$("#screen").val($("#card_val").val());
+					} else if (type == 'membercard') {
+						var card_val = $("#membercard_val").val() ? parseFloat($("#membercard_val").val()) * 100 : 0;
+						$("#screen").attr('buffer', card_val);
+						$("#screen").val($("#membercard_val").val());
+		                $("#member_search_next").val('mbm_pay_select');
+		                $('#modal_member_search').modal('show');
+
+		                $('#mbm_pay_order_paid').val($(".received_price").attr("amount"));
+		                $('#mbm_pay_order_total').val($(".total_price").attr("alt"));
+					} else if (type == 'cash') {
+						var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) * 100 : 0;
+						$("#screen").attr('buffer', cash_val);
+						$("#screen").val($("#cash_val").val());
+					} else {
+						var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) * 100 : 0;
+						$("#screen").attr('buffer', tip_val);
+						$("#screen").val($("#tip_val").val());
+					}
+					
+					$("#selected_card").val(type);
+				})
             
                 $(".select_tip").click(function () {
                     $(".select_card").removeClass("active");
@@ -517,6 +530,8 @@ echo $this->fetch('script');
                                                 $order_id = substr($order_id, 0, (strlen($order_id) - 1));
                                                 echo $order_id;
                                                 ?>",
+                                    membercard_id: $("#membercard_id").val(),
+                                    membercard_val: $("#membercard_val").val(),
                                     card_val: $("#card_val").val(),
                                     cash_val: $("#cash_val").val(),
                                     tip_val: $("#tip_val").val(),
@@ -602,23 +617,20 @@ echo $this->fetch('script');
                 })
 
 
-            function recalculateAmount(cash_val, card_val, tip, total_price) {
-
+            function recalculateAmount(cash_val, card_val, tip, total_price, membercard_val) {
                 $("#tip_val").val(tip);
 
                 var card_extra_tip = 0;
 
-                console.log(cash_val);
-
-                var amount = cash_val + card_val;
+                var amount = cash_val + card_val + membercard_val;
+                var card_amount = card_val + membercard_val;
 
                 $(".received_price").html("$" + amount.toFixed(2));
                 $(".received_price").attr('amount', amount.toFixed(2));
 
 
-                if (card_val >= total_price) {
-
-                    card_extra_tip = card_val - total_price;
+                if (card_amount >= total_price) {
+                    card_extra_tip = card_amount - total_price;
                     tip += card_extra_tip;
 
                     $(".change_price_txt").html("Change 找零");
@@ -630,7 +642,6 @@ echo $this->fetch('script');
                     if (card_extra_tip > 0) {
                         $("#tip_paid_by").val("CARD");
                     }
-
                 } else { // card_val < total_price
 
                     $(".change_price").html("$" + Math.abs(amount - total_price).toFixed(2));
@@ -644,9 +655,6 @@ echo $this->fetch('script');
 
                     $(".tip_price").html("$" + (0).toFixed(2));
                     $("#tip_val").val((0).toFixed(2));
-                    if (card_extra_tip > 0) {
-                        $("#tip_paid_by").val("NO TIP");
-                    }
                 }
             }
 
@@ -670,6 +678,10 @@ echo $this->fetch('script');
                     $("#card_val").val(amount.toFixed(2));
                     $(".card_price").html("Card 卡: $" + amount.toFixed(2));
                 }
+                if ($("#selected_card").val() == 'membercard') {
+                    $("#membercard_val").val(amount.toFixed(2));
+                    $(".membercard_price").html("Member会员: $" + amount.toFixed(2));
+                }
                 if ($("#selected_card").val() == 'tip') {
                     $("#tip_val").val(amount.toFixed(2));
                     // $(".tip_price").html("$" + amount.toFixed(2));
@@ -677,10 +689,11 @@ echo $this->fetch('script');
 
                 var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
                 var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+                var membercard_val = $("#membercard_val").val() ? parseFloat($("#membercard_val").val()) : 0;
                 var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
 
 
-                recalculateAmount(cash_val, card_val, tip_val, total_price);
+                recalculateAmount(cash_val, card_val, tip_val, total_price, membercard_val);
             })
             $("#rc1").click(function (E) {
                 E.preventDefault();
@@ -700,15 +713,21 @@ echo $this->fetch('script');
                     $(".card_price").html("Card 卡: $" + (0).toFixed(2));
 
                 }
+                if (selected_card == 'membercard') {
+                    $("#membercard_val").val(0);
+                    $(".membercard_price").html("Member会员: $" + (0).toFixed(2));
+
+                }
                 if (selected_card == 'tip') {
                     $("#tip_val").val(0);
                 }
 
                 var cash_val = $("#cash_val").val() ? parseFloat($("#cash_val").val()) : 0;
                 var card_val = $("#card_val").val() ? parseFloat($("#card_val").val()) : 0;
+                var membercard_val = $("#membercard_val").val() ? parseFloat($("#membercard_val").val()) : 0;
                 var tip_val = $("#tip_val").val() ? parseFloat($("#tip_val").val()) : 0;
 
-                recalculateAmount(cash_val, card_val, tip_val, total_price);
+                recalculateAmount(cash_val, card_val, tip_val, total_price, membercard_val);
 
                 $("#screen").attr('buffer', '');
                 $("#screen").val("");
