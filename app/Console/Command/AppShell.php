@@ -114,7 +114,7 @@ class AppShell extends Shell {
 				printer_start_page($this->handle);
 			
 				$print_y = 30;
-				$this->printZh("Eatopia食客邦订单   " . (($order['type']==1) ? '外卖' : '堂食 桌号:'.$order['table_id']), $print_x, $print_y);
+				$this->printZh("Eatopia食客邦订单   " . (($order['type']==1) ? '外卖' : '堂食 桌号:'.$order['tablename']), $print_x, $print_y);
 				$print_y += 48;
 				$this->printZh("单号：" . $order['order_num'] . " (" . $order['time'] . ")", $print_x, $print_y);
 
