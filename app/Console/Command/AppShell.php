@@ -126,6 +126,29 @@ class AppShell extends Shell {
 					$print_y += 48;
 					$this->printZh($dish['name'], $print_x, $print_y, false, true);
 					$this->printZh("$" . $dish['money'], $print_x + 360, $print_y);
+					if (!$dish['options'] && ($opts = json_decode($dish['options'], TRUE))) {
+						if ($opts) {
+							if (empty($opts['type'])) {
+								$print_y += 48;
+								$this->printZh($opts['name'] . " : " . $opts['value'], $print_x + 60, $print_y);
+								$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+							} else if (empty($opts['type'] == 1)) {
+								foreach ($opts['value'] as $v) {
+									$print_y += 48;
+									$this->printZh($dish['name'] . " : " . $v, $print_x + 60, $print_y);
+									$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+								}
+							} else if (empty($opts['type'] == 2)) {
+								foreach ($opts['value'] as $v) {
+									$print_y += 48;
+									$this->printZh($dish['name'] . " : " . $v, $print_x + 60, $print_y);
+									$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+									$print_y += 48;
+									$this->printZh(" x " . $opts['number'], $print_x + 360, $print_y);
+								}
+							}
+						}
+					}
 					$print_y += 48;
 					$this->printZh(" x " . $dish['number'], $print_x + 360, $print_y);
 				}
