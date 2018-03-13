@@ -153,7 +153,51 @@
                     </a>
                 </li>
 
-                <li class="<?php echo (isset($tab_open) && $tab_open == 'reports') ? 'active open' : '' ?>">
+                <li class="slide_class <?php echo (isset($tab_open) && in_array($tab_open, array('rreports', 'rcousines', 'rcategories', 'rcustomers', 'rusers'))) ? 'active open' : '' ?>">
+                    <a href="javascript:void(0)">
+                        <div class="item-content">
+                            <div class="item-media">
+                                <i class="fa fa-ticket"></i>
+                            </div>
+                            <div class="item-inner">
+                                <span class="title">Reports</span><i class="icon-arrow"></i>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="sub-menu" style="<?php echo (isset($tab_open) && in_array($tab_open, array('reports', 'rcousines', 'rcategories', 'rcustomers', 'rusers'))) ? '' : 'display: none;' ?>">
+                        <li class="<?php echo (isset($tab_open) && $tab_open == 'rreports') ? 'active' : '' ?>">
+                            <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'index', 'admin' => true)); ?>">
+                                <span class="title">Sales Reports</span>
+                            </a>
+                        </li>
+
+                        <li class="<?php echo (isset($tab_open) && $tab_open == 'rcousines') ? 'active' : '' ?>">
+                            <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'cousines', 'admin' => true)); ?>">
+                                <span class="title">Cousines Reports</span>
+                            </a>
+                        </li>
+
+                        <li class="<?php echo (isset($tab_open) && $tab_open == 'rcategories') ? 'active' : '' ?>">
+                            <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'categories', 'admin' => true)); ?>">
+                                <span class="title">Categories Reports</span>
+                            </a>
+                        </li>
+
+                        <li class="<?php echo (isset($tab_open) && $tab_open == 'rcustomers') ? 'active' : '' ?>">
+                            <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'customers', 'admin' => true)); ?>">
+                                <span class="title">Customers Reports</span>
+                            </a>
+                        </li>
+
+                        <li class="<?php echo (isset($tab_open) && $tab_open == 'rusers') ? 'active' : '' ?>">
+                            <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'users', 'admin' => true)); ?>">
+                                <span class="title">Users Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- li class="<?php echo (isset($tab_open) && $tab_open == 'reports') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'reports','action' => 'index', 'admin' => 'true')); ?>">
                         <div class="item-content">
                             <div class="item-media">
@@ -164,7 +208,7 @@
                             </div>
                         </div>
                     </a>
-                </li>
+                </li -->
 
                 <li class="<?php echo (isset($tab_open) && $tab_open == 'attendances') ? 'active open' : '' ?>">
                     <a href="<?php echo $this->Html->url(array('plugin' => false,'controller' => 'attendances','action' => 'index', 'admin' => 'true')); ?>">

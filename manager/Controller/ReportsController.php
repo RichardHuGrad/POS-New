@@ -14,7 +14,18 @@ class ReportsController extends AppController {
      */
     public function beforeFilter() {
         parent::beforeFilter();
-         $this->set('tab_open', 'reports');
+         $act = $this->request->params['action'];
+         if ($act == 'admin_cousines') {
+         	$this->set('tab_open', 'rcousines');
+         } else if ($act == 'admin_categories') {
+         	$this->set('tab_open', 'rcategories');
+         } else if ($act == 'admin_customers') {
+         	$this->set('tab_open', 'rcustomers');
+         } else if ($act == 'admin_users') {
+         	$this->set('tab_open', 'rusers');
+         } else {
+         	$this->set('tab_open', 'reports');
+         }
     }
 
     /**
@@ -122,6 +133,136 @@ class ReportsController extends AppController {
         $cashiers = $this->Cashier->find('list',
             array('fields' => array('Cashier.id', 'Cashier.firstname'), 'conditions' => $conditions, 'order' => array('Cashier.firstname' => 'ASC')));
         $this->set(compact('records', 'limit', 'order', 'is_super_admin', 'months', 'year', 'date', 'cashier', 'hours', 'hour', 'cashiers'));
+    }
+
+    /**
+     * admin_index For listing of reports
+     * @return mixed
+     */
+	public function admin_cousines() {
+		$this->checkAccess('Report', 'can_view');
+		$this->loadModel("OrderItem");
+		$this->layout = 'admin';
+		$limit = DEFAULT_PAGE_SIZE;
+
+		$dtfrom = @$this->params->query['dtfrom'] ? @$this->params->query['dtfrom'] : date("Y-m-d");
+		$dtto = @$this->params->query['dtto'] ? @$this->params->query['dtto'] : date("Y-m-d");
+		
+		$conditions = array('OrderItem.created >=' => $dtfrom . " 00:00:00", 'OrderItem.created <=' => $dtto . " 23:59:59");
+		
+		$query = array(
+				'conditions' => $conditions,
+				'fields' => array(
+						'sum(OrderItem.qty) as total', 'OrderItem.item_id', 'OrderItem.name_en', 'OrderItem.name_xh'
+				),
+				'group'=>'OrderItem.item_id',
+				'order'=>'total DESC',
+				'recursive'=>FALSE
+		);
+		$records = $this->OrderItem->find('all', $query);
+		//echo "<pre>"; print_r($records); die("XX");
+
+		// $this->set(compact('records', 'datetype', 'curdt', 'curdtstr'));
+		$this->set(compact('records', 'dtfrom', 'dtto', 'curdt', 'curdtstr'));
+    }
+
+    /**
+     * admin_index For listing of reports
+     * @return mixed
+     */
+    public function admin_categories() {
+		$this->checkAccess('Report', 'can_view');
+		$this->loadModel("OrderItem");
+		$this->loadModel("CategoryLocales");
+		$this->layout = 'admin';
+		$limit = DEFAULT_PAGE_SIZE;
+
+		$dtfrom = @$this->params->query['dtfrom'] ? @$this->params->query['dtfrom'] : date("Y-m-d");
+		$dtto = @$this->params->query['dtto'] ? @$this->params->query['dtto'] : date("Y-m-d");
+		
+		$conditions = array('OrderItem.created >=' => $dtfrom . " 00:00:00", 'OrderItem.created <=' => $dtto . " 23:59:59");
+		
+		$query = array(
+				'conditions' => $conditions,
+				'fields' => array(
+						'sum(OrderItem.qty) as total', 'OrderItem.category_id'
+				),
+				'group'=>'OrderItem.category_id',
+				'order'=>'total DESC',
+				'recursive'=>FALSE
+		);
+		$records = $this->OrderItem->find('all', $query);
+		foreach ($records as $key => $rc) {
+			$query = array(
+				'conditions' => array('CategoryLocales.category_id' => $rc['OrderItem']['category_id']),
+				'recursive'=>FALSE
+			);
+			$langs = $this->CategoryLocales->find('all', $query);
+			foreach ($langs as $lang) {
+				if ($lang['CategoryLocales']['lang_code'] == 'en') {
+					$records[$key]['name_en'] = $lang['CategoryLocales']['name'];
+				} else if ($lang['CategoryLocales']['lang_code'] == 'zh') {
+					$records[$key]['name_zh'] = $lang['CategoryLocales']['name'];
+				}
+			}
+		}
+
+		$this->set(compact('records', 'dtfrom', 'dtto', 'curdt', 'curdtstr'));
+    }
+
+    /**
+     * admin_index For listing of reports
+     * @return mixed
+     */
+    public function admin_customers() {
+		$this->checkAccess('Report', 'can_view');
+		$this->loadModel("Members");
+		$this->layout = 'admin';
+		$limit = DEFAULT_PAGE_SIZE;
+
+		$dtfrom = @$this->params->query['dtfrom'] ? @$this->params->query['dtfrom'] : date("Y-m-d");
+		$dtto = @$this->params->query['dtto'] ? @$this->params->query['dtto'] : date("Y-m-d");
+		
+		$query = "SELECT 
+				m.*,
+				COUNT(IF( t.amount > 0, t.amount, NULL)) AS charged_cnt, 
+				SUM(IF( t.amount > 0, t.amount, 0)) AS charged_amt,  
+				COUNT(IF( t.amount < 0, t.amount, NULL)) AS paid_cnt, 
+				SUM(IF( t.amount < 0, t.amount, 0)) AS paid_amt  
+				FROM member_trans t
+				RIGHT JOIN members m ON (t.member_id=m.id)
+				WHERE t.tm>=" .  $this->Members->getDataSource()->value($dtfrom, 'string') .
+				" AND t.tm<=" .  $this->Members->getDataSource()->value($dtto, 'string') .
+				" GROUP BY t.member_id";
+		$records = $this->Members->query($query);
+		// echo "<pre>"; print_r($records); die("XX");
+
+		$this->set(compact('records', 'dtfrom', 'dtto', 'curdt', 'curdtstr'));
+    }
+
+    /**
+     * admin_index For listing of reports
+     * @return mixed
+     */
+    public function admin_users() {
+		$this->checkAccess('Report', 'can_view');
+		$this->loadModel("Orders");
+		$this->layout = 'admin';
+		$limit = DEFAULT_PAGE_SIZE;
+
+		$dtfrom = @$this->params->query['dtfrom'] ? @$this->params->query['dtfrom'] : date("Y-m-d");
+		$dtto = @$this->params->query['dtto'] ? @$this->params->query['dtto'] : date("Y-m-d");
+		
+		$dtfrom = "2010-01-01";
+		$dtto = "2018-04-01";
+		$query = "SELECT c.*, COUNT(o.total) AS cnt, SUM(o.total) AS total, SUM(o.card_val + o.membercard_val + o.cash_val) AS paid, SUM(o.tip) AS tip FROM orders o 
+				JOIN cashiers c ON (o.counter_id=c.id)
+				WHERE o.is_completed='Y' AND o.created>=" .  $this->Orders->getDataSource()->value($dtfrom, 'string') . " AND o.created<=" .  $this->Orders->getDataSource()->value($dtto, 'string') .
+				" GROUP BY o.counter_id";
+		$records = $this->Orders->query($query);
+		// echo "<pre>"; print_r($records); die("XX");
+
+		$this->set(compact('records', 'dtfrom', 'dtto', 'curdt', 'curdtstr'));
     }
 
 }
