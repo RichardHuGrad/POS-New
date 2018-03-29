@@ -26,7 +26,7 @@ App::uses('Shell', 'Console');
  */
 class AppShell extends Shell {
 	const WECHATSERVER = "https://wx.eatopia.ca/";
-	// const WECHATSERVER="http://dev9.com/";
+	//const WECHATSERVER="http://dev9.com/";
 	const WECHATTEST = 0;
 	
     public $fontStr1 = "simsun";
@@ -126,27 +126,28 @@ class AppShell extends Shell {
 					$print_y += 48;
 					$this->printZh($dish['name'], $print_x, $print_y, false, true);
 					$this->printZh("$" . $dish['money'], $print_x + 360, $print_y);
-					if (!$dish['options'] && ($opts = json_decode($dish['options'], TRUE))) {
-						if ($opts) {
-							if (empty($opts['type'])) {
+					if (!empty($dish['options']) && ($opts = json_decode($dish['options'], TRUE))) {
+						if (empty($opts['type']) || ($opts['type'] == 1)) {
+							foreach ($opts['values'] as $v) {
 								$print_y += 48;
-								$this->printZh($opts['name'] . " : " . $opts['value'], $print_x + 60, $print_y);
+								$this->printZh($dish['name'], $print_x + 60, $print_y);
 								$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
-							} else if (empty($opts['type'] == 1)) {
-								foreach ($opts['value'] as $v) {
-									$print_y += 48;
-									$this->printZh($dish['name'] . " : " . $v, $print_x + 60, $print_y);
-									$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
-								}
-							} else if (empty($opts['type'] == 2)) {
-								foreach ($opts['value'] as $v) {
-									$print_y += 48;
-									$this->printZh($dish['name'] . " : " . $v, $print_x + 60, $print_y);
-									$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+								if ($v['quatity'] > 1) {
 									$print_y += 48;
 									$this->printZh(" x " . $opts['number'], $print_x + 360, $print_y);
 								}
 							}
+						} else if ($opts['type'] == 2) {
+							foreach ($opts['values'] as $v) {
+								$print_y += 48;
+								$this->printZh($v['name'], $print_x + 60, $print_y);
+								$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+								if ($v['quatity'] > 1) {
+									$this->printZh(" x " . $opts['number'], $print_x + 360, $print_y);
+								}
+							}
+							$print_y += 48;
+							$this->printZh("$" . number_format($opts['total'], 2), $print_x + 340, $print_y);
 						}
 					}
 					$print_y += 48;
