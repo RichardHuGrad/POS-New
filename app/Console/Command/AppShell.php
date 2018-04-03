@@ -132,19 +132,19 @@ class AppShell extends Shell {
 								foreach ($opts['values'] as $v) {
 									$print_y += 48;
 									$this->printZh($dish['name'], $print_x + 60, $print_y);
-									$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+									$this->printZh("$" . number_format($v['price'], 2), $print_x + 340, $print_y);
 									if ($v['quatity'] > 1) {
 										$print_y += 48;
-										$this->printZh(" x " . $opts['number'], $print_x + 360, $print_y);
+										$this->printZh(" x " . $v['number'], $print_x + 360, $print_y);
 									}
 								}
 							} else if ($opts['type'] == 2) {
 								foreach ($opts['values'] as $v) {
 									$print_y += 48;
 									$this->printZh($v['name'], $print_x + 60, $print_y);
-									$this->printZh("$" . number_format($opts['price'], 2), $print_x + 340, $print_y);
+									$this->printZh("$" . number_format($v['price'], 2), $print_x + 340, $print_y);
 									if ($v['quatity'] > 1) {
-										$this->printZh(" x " . $opts['number'], $print_x + 360, $print_y);
+										$this->printZh(" x " . $v['number'], $print_x + 360, $print_y);
 									}
 								}
 								$print_y += 48;
