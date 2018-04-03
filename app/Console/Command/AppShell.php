@@ -126,6 +126,8 @@ class AppShell extends Shell {
 					$print_y += 48;
 					$this->printZh($dish['name'], $print_x, $print_y, false, true);
 					$this->printZh("$" . $dish['money'], $print_x + 360, $print_y);
+					$print_y += 48;
+					$this->printZh(" x " . $dish['number'], $print_x + 360, $print_y);
 					if (!empty($dish['options']) && ($allopts = json_decode($dish['options'], TRUE))) {
 						foreach ($allopts as $opts) {
 							if (empty($opts['type']) || ($opts['type'] == 1)) {
@@ -152,8 +154,6 @@ class AppShell extends Shell {
 							}
 						}
 					}
-					$print_y += 48;
-					$this->printZh(" x " . $dish['number'], $print_x + 360, $print_y);
 				}
 				$print_y += 48;
 				$this->printZh("总计：", $print_x + 100, $print_y, true);
