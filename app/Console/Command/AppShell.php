@@ -131,7 +131,7 @@ class AppShell extends Shell {
 							if (empty($opts['type']) || ($opts['type'] == 1)) {
 								foreach ($opts['values'] as $v) {
 									$print_y += 48;
-									$this->printZh($dish['name'], $print_x + 60, $print_y);
+									$this->printZh($v['name'], $print_x + 60, $print_y);
 									$this->printZh("$" . number_format($v['price'], 2), $print_x + 340, $print_y);
 									if ($v['quantity'] > 1) {
 										$print_y += 48;
