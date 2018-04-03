@@ -133,7 +133,7 @@ class AppShell extends Shell {
 									$print_y += 48;
 									$this->printZh($dish['name'], $print_x + 60, $print_y);
 									$this->printZh("$" . number_format($v['price'], 2), $print_x + 340, $print_y);
-									if ($v['quatity'] > 1) {
+									if ($v['quantity'] > 1) {
 										$print_y += 48;
 										$this->printZh(" x " . $v['number'], $print_x + 360, $print_y);
 									}
@@ -143,7 +143,7 @@ class AppShell extends Shell {
 									$print_y += 48;
 									$this->printZh($v['name'], $print_x + 60, $print_y);
 									$this->printZh("$" . number_format($v['price'], 2), $print_x + 340, $print_y);
-									if ($v['quatity'] > 1) {
+									if ($v['quantity'] > 1) {
 										$this->printZh(" x " . $v['number'], $print_x + 360, $print_y);
 									}
 								}
