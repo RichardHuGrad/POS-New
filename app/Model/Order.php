@@ -24,12 +24,28 @@ class Order extends AppModel {
     //     )
     // );
 
+    public function next_order_no($pre) {
+        $data = $this->find("first", array(
+                'fields' => array('Order.order_no'),
+                'order' => array('Order.id DESC')));
+        $order_no = substr($data['Order']['order_no'], -10);
+        $today = date('ymd');
+        if ($today != substr($order_no, 0, 6)) {
+            $idx = 0;
+        } else {
+            $idx = (int)substr($order_no, 6);
+        }
+	$idx++;
+	return $pre.$today.str_pad($idx, 4, "0", STR_PAD_LEFT);
+    }
+
     // insert a new order in orders
     // return Order.id
     public function insertOrder($cashier_id, $counter_id, $table_no, $order_type, $tax, $default_tip_rate=0) {
     	  sleep(1);
         $insert_data = array(
-            'order_no'   => $order_type.$table_no.date('ymdHi'),
+            'order_no'   => $this->next_order_no($order_type.$table_no),
+            //'order_no'   => $order_type.$table_no.date('ymdHi'),
             'cashier_id' => $cashier_id, // cashier should be restaurant_id
             'counter_id' => $counter_id,
             'table_no' => $table_no,
