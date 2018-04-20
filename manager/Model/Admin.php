@@ -191,4 +191,30 @@ class Admin extends AppModel {
 			return false;
 
 	}
+	
+	public function has_web() {
+		$rest = $this->find("first", array(
+				'fields' => array(
+						'Admin.id',
+						'Admin.print_offset',
+						'Admin.is_super_admin',
+						'Admin.mobile_no',
+						'Admin.status',
+						'Admin.kitchen_printer_device',
+						'Admin.service_printer_device'
+				),
+				'conditions' => array(
+						'Admin.is_super_admin' => 'N',
+						'Admin.status' => 'A'
+				)
+		));
+		
+		$mobile_no = $rest['Admin']['mobile_no'];
+		$dt = preg_split("/-/", $mobile_no);
+		if (!is_array($dt) || (sizeof($dt) != 2)) {
+			return FALSE;
+		} else {
+			return $dt;
+		}
+	}
 }

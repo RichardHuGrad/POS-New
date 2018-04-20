@@ -53,13 +53,25 @@ foreach ($Extrascategory_data as $categories){
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Extra Name (ZH)<span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('name_zh', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <?php 
+                                        if ($remote_id) {
+                                        	echo $this->Form->input('name_zh', array('type' => 'text', 'readonly' => 'readonly', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true));
+                                        } else {
+                                        	echo $this->Form->input('name_zh', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true));
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Price <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('price', array('type' => 'text', 'maxlength' => '5', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <?php 
+                                        if ($remote_id) {
+                                        	echo $this->Form->input('price', array('type' => 'text', 'maxlength' => '5', 'readonly' => 'readonly', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); 
+                                        } else {
+                                        	echo $this->Form->input('price', array('type' => 'text', 'maxlength' => '5', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true));
+                                        }
+                                        ?>
                                     </div>
                                 </div>
 
@@ -67,7 +79,13 @@ foreach ($Extrascategory_data as $categories){
 								<div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Extras Category</label>
-                                        <?php echo $this->Form->input('category_id', array('options' => $option_extrascate, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <?php 
+                                        if ($remote_id) {
+                                        	echo $this->Form->input('category_id', array('type' => 'text', 'readonly' => 'readonly', 'class' => 'form-control', 'div' => false, 'label' => false, 'required' => false));
+                                        } else {
+                                        	echo $this->Form->input('category_id', array('options' => $option_extrascate, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false));
+                                        }
+                                        ?>
                                     </div>
                                 </div>
 <!-- End -->
@@ -75,6 +93,15 @@ foreach ($Extrascategory_data as $categories){
                                     <div class="form-group">
                                         <label class="control-label">Status</label>
                                         <?php echo $this->Form->input('status', array('options' => $option_status, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Server ID</label>
+                                        <?php
+                                        echo $this->Form->input('remote_id', array('type' => 'text', 'default' => 0, 'maxlength' => '200', 'class' =>'form-control', 'empty' => false, 'div' => false, 'label' => false, 'required' => false));
+                                        ?>
                                     </div>
                                 </div>
                             </div>

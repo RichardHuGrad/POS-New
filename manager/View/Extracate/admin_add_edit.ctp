@@ -33,6 +33,7 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                             
 
                                 <?php foreach ($languages as $key => $language){ ?>
+                                <?php $readonly = ''; if (($key  == "zh") && ($remote_id)) $readonly = 1; ?>
 								<div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -42,7 +43,11 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 											if ($key=='en'){
 											echo $this->Form->input('Extrascategory.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
 											}else{
-											echo $this->Form->input('Extrascategory.name' . '_'.$key, array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+												if ($readonly) {
+													echo $this->Form->input('Extrascategory.name' . '_'.$key, array('type' => 'text', 'readonly' => 'readonly', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+												} else {
+													echo $this->Form->input('Extrascategory.name' . '_'.$key, array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+												}
 											}
 											echo $this->Form->input('Extrascategory.id', array('type' => 'hidden', 'required' => false));
                                             ?>
@@ -51,13 +56,27 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 								</div>
                                 <?php } ?>
                                 
+                                <div class="row">  
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Server ID</label>
+                                            <?php
+                                            echo $this->Form->input('Extrascategory.remote_id', array('type' => 'text', 'default' =>0, 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            ?>
+                                        </div>
+                                    </div>
+                            	</div>
                                 <!-- Modified by Yishou Liao @ Dec 12 2016 -->
                                 <div class="row">  
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Extra Number</label>
                                             <?php
+                                            if ($readonly) {
+                                            echo $this->Form->input('Extrascategory.extras_num', array('type' => 'text', 'default' =>0, 'readonly' => 'readonly', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            } else {
                                             echo $this->Form->input('Extrascategory.extras_num', array('type' => 'text', 'default' =>0, 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            }
                                             ?>
                                         </div>
                                     </div>

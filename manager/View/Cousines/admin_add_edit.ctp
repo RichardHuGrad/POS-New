@@ -70,10 +70,16 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                 }?>
                                 
                                 <?php foreach ($languages as $key => $language){ ?>
+                                <?php $readonly = ''; if (($key  == "zh") && ($remote_id)) $readonly = 1; ?>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Cousine Name (<?php echo $language; ?>)<span class="symbol required"></span></label>
-                                            <?php echo $this->Form->input('CousineLocal.' . $key . '.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            <?php 
+                                            if ($readonly) {
+                                            	echo $this->Form->input('CousineLocal.' . $key . '.name', array('type' => 'text', 'readonly' => 'readonly', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            } else {
+                                            	echo $this->Form->input('CousineLocal.' . $key . '.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            }
                                             echo $this->Form->input('CousineLocal.' . $key . '.id', array('type' => 'hidden', 'required' => false));
                                             ?>
                                         </div>
@@ -83,7 +89,12 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Price <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('price', array('type' => 'text', 'maxlength' => '5', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                        <?php 
+                                        if ($remote_id) {
+                                        	echo $this->Form->input('price', array('type' => 'text', 'maxlength' => '5', 'class' =>'form-control validate[required]', 'readonly' => 'readonly', 'div' => false, 'label' => false, 'required' => false));
+                                        } else {
+                                        	echo $this->Form->input('price', array('type' => 'text', 'maxlength' => '5', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                        }
                                         ?>
                                     </div>
                                 </div>
@@ -91,7 +102,12 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Category <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('category_id', array('type' => 'select', 'options' => $categories, 'class' =>'form-control validate[required]', 'div' => false, 'empty'=>'Select Category',  'label' => false, 'required' => false));
+                                        <?php 
+                                        if ($remote_id) {
+                                        	echo $this->Form->input('category_id', array('type' => 'select', 'options' => $categories, 'class' =>'form-control validate[required]', 'readonly' => 'readonly', 'div' => false, 'empty'=>'Select Category',  'label' => false, 'required' => false));
+                                        } else {
+                                        	echo $this->Form->input('category_id', array('type' => 'select', 'options' => $categories, 'class' =>'form-control validate[required]', 'div' => false, 'empty'=>'Select Category',  'label' => false, 'required' => false));
+                                        }
                                         ?>
                                     </div>
                                 </div>
@@ -103,14 +119,12 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                     </div>
                                 </div>
                                 
-                                <!-- Modified by Yishou Liao @ Dec 13 2016-->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Comb Num <span class="symbol required"></span></label>
-                                        <?php echo $this->Form->input('comb_num', array('options' => $option_comb, 'class' =>'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <label class="control-label">Server ID</label>
+                                        <?php echo $this->Form->input('remote_id', array('type' =>'text', 'class' => 'form-control', 'label' => false, 'div' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
-                                <!-- End -->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -122,10 +136,17 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">&nbsp;</label>
-                                        &nbsp;                                        
-                                    </div>                                                                              
-                                </div>   
+                                        <label class="control-label">Comb Num <span class="symbol required"></span></label>
+                                        <?php 
+                                        if ($remote_id) {
+                                        	echo $this->Form->input('comb_num', array('options' => $option_comb, 'multiple' => true, 'class' =>'form-control', 'readonly' => 'readonly', 'empty' => false, 'label' => false, 'div' => false));
+                                        } else {
+                                        	echo $this->Form->input('comb_num', array('options' => $option_comb, 'multiple' => true, 'class' =>'form-control', 'empty' => false, 'label' => false, 'div' => false));
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+
                                 <?php
                                 if($id) {
                                  ?>

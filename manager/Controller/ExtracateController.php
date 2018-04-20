@@ -30,7 +30,15 @@ class ExtracateController extends AppController {
         $conditions = array();
 
         if (!empty($this->request->data)) {
-
+        	if (isset($this->request->data['get_web'])) {
+        		$this->loadModel('Api');
+        		if (($extrascategories = $this->Api->get_extrascategories()) && ($extrascategories['status'] == 'OK')) {
+        			if ( ! $this->Extrascategory->sync_extrascategories($extrascategories['data'])) {
+        				$this->Session->setFlash('Extra Categories Synchronized ', 'success');
+        			}
+        		}
+        	}
+        	 
             if (isset($this->request->data['Extracategory']) && !empty($this->request->data['Extracategory'])) {
                 $search_data = $this->request->data['Extracategory'];
                 $this->Session->write('Extracategory_search', $search_data);
@@ -73,7 +81,10 @@ class ExtracateController extends AppController {
             $extrascategory = $this->paginate('Extrascategory');
         };
 
-        $this->set(compact('extrascategory', 'limit', 'order', 'languages'));
+        $this->loadModel('Admin');
+    	$has_web = $this->Admin->has_web();
+
+    	$this->set(compact('extrascategory', 'limit', 'order', 'languages', 'has_web'));
     }
 
     /**
@@ -129,6 +140,7 @@ class ExtracateController extends AppController {
             }
         }
 
+        $remote_id = 0;
         if ('' != $id) {
 
             $result_data = $this->Extrascategory->find('first', array('conditions' => array('Extrascategory.id' => $id)));
@@ -136,12 +148,13 @@ class ExtracateController extends AppController {
                 $this->Session->setFlash('Invalid Request !', 'error');
                 $this->redirect(array('plugin' => false, 'controller' => 'extracate', 'action' => 'index', 'admin' => true));
             }
+            $remote_id = $result_data['Extrascategory']['remote_id'];
 
             if (empty($this->request->data)) {
                 $this->request->data = $result_data;
             }
         }
-        $this->set(compact('id', 'languages'));
+        $this->set(compact('id', 'remote_id', 'languages'));
     }
 
     /**

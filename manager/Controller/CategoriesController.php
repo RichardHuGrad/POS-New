@@ -29,7 +29,17 @@ class CategoriesController extends AppController {
         $conditions = array();
 
         if (!empty($this->request->data)) {
-
+			if (isset($this->request->data['get_web'])) {
+				$this->loadModel('Api');
+				if (($categories = $this->Api->get_categories()) && ($categories['status'] == 'OK')) {
+					if ($err = $this->Category->sync_categories($categories['data'])) {
+						$this->Session->setFlash($error, 'error');
+        			} else {
+        				$this->Session->setFlash("Categories Synchronized", 'success');
+					}
+				}
+			}
+        	 
             if(isset($this->request->data['Category']) && !empty($this->request->data['Category'])) {
                 $search_data = $this->request->data['Category'];
                 $this->Session->write('category_search', $search_data);
@@ -77,7 +87,12 @@ class CategoriesController extends AppController {
         }
 
         $languages = $this->Language->find('list', array('fields' => array('lang_code', 'language')));
-        $this->set(compact('categories', 'limit', 'order', 'languages'));
+        
+        $this->loadModel('Admin');
+        
+    	$has_web = $this->Admin->has_web();
+
+        $this->set(compact('categories', 'limit', 'order', 'languages', 'has_web'));
     }
 
     /**
@@ -137,6 +152,7 @@ class CategoriesController extends AppController {
             }
         }
 
+        $remote_id = 0;
         if('' != $id){
 
             $result_data = $this->Category->find('first', array('conditions' => array('Category.id' => $id)));
@@ -144,6 +160,7 @@ class CategoriesController extends AppController {
                 $this->Session->setFlash('Invalid Request !', 'error');
                 $this->redirect(array('plugin' => false, 'controller' => 'categories', 'action' => 'index', 'admin' => true));
             }
+            $remote_id = $result_data['Category']['remote_id'];
 
             if (empty($this->request->data)) {
                 $tmp = array();
@@ -158,7 +175,7 @@ class CategoriesController extends AppController {
             }
 
         }
-        $this->set(compact('id', 'languages'));
+        $this->set(compact('id', 'remote_id', 'languages'));
     }
 
     /**

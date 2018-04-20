@@ -29,7 +29,17 @@ class CousinesController extends AppController {
         $conditions = array();
 
         if (!empty($this->request->data)) {
-
+        	if (isset($this->request->data['get_web'])) {
+        		$this->loadModel('Api');
+        		if (($cousines = $this->Api->get_cousines()) && ($cousines['status'] == 'OK')) {
+        			if ($error = $this->Cousine->sync_cousines($cousines['data'])) {
+        				$this->Session->setFlash($error, 'error');
+        			} else {
+        				$this->Session->setFlash("Cousine Synchronized", 'success');
+        			}
+        		}
+        	}
+        	 
             if(isset($this->request->data['Cousine']) && !empty($this->request->data['Cousine'])) {
                 $search_data = $this->request->data['Cousine'];
                 $this->Session->write('cousine_search', $search_data);
@@ -94,7 +104,11 @@ class CousinesController extends AppController {
                 'order' => array('CategoryLocale.name' => 'ASC')
             )
         );
-        $this->set(compact('cousines', 'limit', 'order', 'languages', 'categories'));
+        
+        $this->loadModel('Admin');
+        $has_web = $this->Admin->has_web();
+        
+        $this->set(compact('cousines', 'limit', 'order', 'languages', 'categories', 'has_web'));
     }
 
     /**
@@ -151,6 +165,7 @@ class CousinesController extends AppController {
 
         }
         
+        $remote_id = @$result_data['Cousine']['remote_id'];
         if (!empty($this->request->data)) {
 
             $this->Cousine->set($this->request->data);
@@ -221,6 +236,8 @@ class CousinesController extends AppController {
                     $this->redirect(array('plugin' => false, 'controller' => 'cousines', 'action' => 'index', 'admin' => true));
                 }
             }
+            $new_data = $this->Cousine->find('first', array('conditions' => array('Cousine.id' => $id)));
+            $remote_id = $new_data['Cousine']['remote_id'];
         }
 
         if('' != $id){
@@ -238,7 +255,7 @@ class CousinesController extends AppController {
             }
 
         }
-        $this->set(compact('id', 'languages', 'categories', 'restaurants', 'cashiers','option_comb'));
+        $this->set(compact('id', 'languages', 'categories', 'restaurants', 'cashiers','option_comb','remote_id'));
     }
 
     /**

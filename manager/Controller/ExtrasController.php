@@ -4,7 +4,7 @@
  * Class ExtrasController
  */
 class ExtrasController extends AppController {
-    public $uses = array('Extra','Extrascategory');
+    public $uses = array('Extra','Extrascategory','CousineExtrascategories');
     public $components = array('Session', 'Paginator');
 
     /**
@@ -30,6 +30,17 @@ class ExtrasController extends AppController {
         );
 
         if (!empty($this->request->data)) {
+        	if (isset($this->request->data['get_web'])) {
+        		$this->loadModel('Api');
+        		if (($extras = $this->Api->get_extras()) && ($extras['status'] == 'OK')) {
+        			$sync = $this->CousineExtrascategories->sync_extras($extras['data']);
+        			if ( ! $sync) {
+        				$this->Session->setFlash('Extras Synchronized ', 'success');
+        			} else {
+        				$this->Session->setFlash('Extras Synchronize Error: ' . $sync, 'error');
+        			}
+        		}
+        	}
 
             if (isset($this->request->data['Extras']) && !empty($this->request->data['Extras'])) {
                 $search_data = $this->request->data['Extras'];
@@ -80,8 +91,10 @@ class ExtrasController extends AppController {
         
         $extrascategories = $this->Extrascategory->find('all',array('fields' => array('Extrascategory.id','Extrascategory.name','Extrascategory.name_zh')));
 
+        $this->loadModel('Admin');
+        $has_web = $this->Admin->has_web();
         //$this->set(compact('extras', 'limit', 'order', 'id', 'CousineLocal_data'));
-        $this->set(compact('extras', 'extrascategories', 'limit', 'order', 'CousineLocal_data'));
+        $this->set(compact('extras', 'extrascategories', 'limit', 'order', 'CousineLocal_data', 'has_web'));
         //End
     }
 
@@ -117,6 +130,7 @@ class ExtrasController extends AppController {
             }
         }
 
+        $remote_id = 0;
         if ('' != $id) {
             //$id = base64_decode($id); //Modified by Yishou Liao @ Dec 04 2016
             $Color_data = $this->Extra->find('first', array('conditions' => array('Extra.id' => $id)));
@@ -125,6 +139,9 @@ class ExtrasController extends AppController {
                 $this->redirect(array('plugin' => false, 'controller' => 'extras', 'action' => 'index', '?' => array('id' => $cousine_id), 'admin' => true));
             }
 
+            if ($cate = $this->Extrascategory->find('first', array('conditions' => array('Extrascategory.id' => $Color_data['Extra']['category_id']), 'recursive' => FALSE))) {
+            	$remote_id = $cate['Extrascategory']['remote_id'];
+            }
             if (empty($this->request->data)) {
                 $this->request->data = $Color_data;
             }
@@ -136,7 +153,7 @@ class ExtrasController extends AppController {
         $Extrascategory_data = $this->Extrascategory->find('all', array('fields' => array('Extrascategory.id,Extrascategory.name,Extrascategory.name_zh'), 'conditions' => array('status' => 'A')));
         //End @ Dec 04 2016
         
-        $this->set(compact('id', 'restaurants', 'cousine_id','Extrascategory_data'));
+        $this->set(compact('id', 'restaurants', 'cousine_id','Extrascategory_data','remote_id'));
     }
 
     /**

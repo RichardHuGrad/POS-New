@@ -33,11 +33,16 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                             <div class="row">
 
                                 <?php foreach ($languages as $key => $language){ ?>
-
+								<?php $readonly = ''; if (($key  == "zh") && ($remote_id)) $readonly = 1; ?>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Category (<?php echo $language; ?>)<span class="symbol required"></span></label>
-                                            <?php echo $this->Form->input('CategoryLocale.' . $key . '.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            <?php
+                                            if ($readonly) {
+                                            	echo $this->Form->input('CategoryLocale.' . $key . '.name', array('type' => 'text', 'readonly' => 'readonly', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            } else {
+                                            	echo $this->Form->input('CategoryLocale.' . $key . '.name', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control validate[required]', 'div' => false, 'label' => false, 'required' => false));
+                                            }
                                             echo $this->Form->input('CategoryLocale.' . $key . '.id', array('type' => 'hidden', 'required' => false));
                                             ?>
                                         </div>
@@ -67,6 +72,13 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                     </div>
                                 </div>
 
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Server ID</label>
+                                        <?php echo $this->Form->input('remote_id', array('type' =>'text', 'class' => 'form-control', 'label' => false, 'div' => false, 'required' => false)); ?>
+                                    </div>
+                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
