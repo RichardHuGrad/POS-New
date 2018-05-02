@@ -4,13 +4,14 @@ class Extra extends AppModel {
 
     public $name = 'Extra';
 
-
     public $belongsTo = array(
-        'Cousine' => array(
+		/* remove extra cousine_id column
+    		'Cousine' => array(
             'className' => 'Cousine',
             'foreignKey' => 'cousine_id'
         ),
-         'Extrascategory' => array(
+    	*/
+    		'Extrascategory' => array(
             'className' => 'Extrascategory',
              'type' => 'inner',
             'foreignKey' => 'category_id'

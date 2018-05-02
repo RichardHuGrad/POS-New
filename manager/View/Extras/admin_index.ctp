@@ -107,7 +107,6 @@ if($this->Session->check('Extras_search')){
 
                         <div class="col-md-12">
                             <?php
-                            if ($has_web) echo $this->Form->button('Sync From Web <i class="fa fa-download-circle-right"></i>',array('class' => 'btn btn-primary btn-wide margin-left-10','type' => 'submit', 'name'=>'get_web', 'vaule'=>'get_web','id' => 'get_web'));
                             echo $this->Form->button('Reset <i class="fa fa-times-circle"></i>',array('class' => 'btn btn-primary btn-wide pull-right','type' => 'button','id' => 'reset_button'));
                             echo $this->Form->button('Search <i class="fa fa-arrow-circle-right"></i>',array('class' => 'btn btn-primary btn-wide pull-right margin-right-10','type' => 'submit','id' => 'submit_button')) ?>
                         </div>

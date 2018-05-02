@@ -30,18 +30,6 @@ class ExtrasController extends AppController {
         );
 
         if (!empty($this->request->data)) {
-        	if (isset($this->request->data['get_web'])) {
-        		$this->loadModel('Api');
-        		if (($extras = $this->Api->get_extras()) && ($extras['status'] == 'OK')) {
-        			$sync = $this->CousineExtrascategories->sync_extras($extras['data']);
-        			if ( ! $sync) {
-        				$this->Session->setFlash('Extras Synchronized ', 'success');
-        			} else {
-        				$this->Session->setFlash('Extras Synchronize Error: ' . $sync, 'error');
-        			}
-        		}
-        	}
-
             if (isset($this->request->data['Extras']) && !empty($this->request->data['Extras'])) {
                 $search_data = $this->request->data['Extras'];
                 $this->Session->write('Extras_search', $search_data);

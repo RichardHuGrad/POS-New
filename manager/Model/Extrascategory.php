@@ -13,6 +13,8 @@ class Extrascategory extends AppModel {
 
 	public function sync_extrascategories($datas) {
 		$nowtm = time();
+		// $extra = ClassRegistry::init('Extra');
+		
 		foreach ($datas as $rc) {
 			if ($cur = $this->find("first", array('conditions' => array('remote_id' => $rc['id'])))) {
 				$extras = json_decode($rc['options'], TRUE);

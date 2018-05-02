@@ -32,7 +32,7 @@ class ExtracateController extends AppController {
         if (!empty($this->request->data)) {
         	if (isset($this->request->data['get_web'])) {
         		$this->loadModel('Api');
-        		if (($extrascategories = $this->Api->get_extrascategories()) && ($extrascategories['status'] == 'OK')) {
+        		if (($extrascategories = $this->Api->get_extrascategories()) && ($extrascategories['status'] == 'OK')) { // extrascategory
         			if ( ! $this->Extrascategory->sync_extrascategories($extrascategories['data'])) {
         				$this->Session->setFlash('Extra Categories Synchronized ', 'success');
         			}
