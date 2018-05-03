@@ -50,8 +50,6 @@ class OrderHandlerComponent extends Component {
         // print_r($restaurant_id);
 
         $CousineDetail = $this->Cousine->getCousineInfo($item_id);
-        // print_r($CousineDetail);
-
 
         $Order_detail = $this->Order->find("first", array(
             'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
@@ -96,6 +94,12 @@ class OrderHandlerComponent extends Component {
 
         $this->Order->updateBillInfo($order_id);
 
+        $json['extra_categories'] = array();
+        if (isset($CousineDetail['Cousine']['ExtraCategories']) && $CousineDetail['Cousine']['ExtraCategories']) {
+        	foreach ($CousineDetail['Cousine']['ExtraCategories'] as $cate_id) {
+        		$json['extra_categories'][] = $cate_id;
+         	}
+        }
         $json['order_item_id'] = $order_item_id;
         $json['comb_id']  = $comb_id;
         $json['comb_num'] = $comb_num[0]['cousines']['comb_num'];

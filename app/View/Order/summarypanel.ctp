@@ -157,7 +157,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
 
 
 <script id="item-component" type="text/template">
-    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{4}' data-special='{5}'>
+    <li class="col-md-12 col-sm-12 col-xs-12 order-item" id="{0}" data-order-item-id="{1}" data-comb-id="{2}" data-selected-extras='{3}' data-is-print='{4}' data-special='{5}' data-cousine-id='{11}'>
         <div class="col-md-1 col-sm-1 col-xs-1 item-quantity">{6}</div>
         <div class="col-md-9 col-sm-9 col-xs-8">
             <div class="col-md-12 col-sm-12 col-xs-12 item-name-en">{7}</div>
@@ -238,7 +238,8 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                                 comb_id = '<?php echo $value["comb_id"] ?>',
                                 selected_extras_json = '<?php echo $value['selected_extras'] ?>',
                                 is_print = '<?php echo $value['is_print']?>',
-                                special = '<?php echo  $value["special_instruction"]?>');
+                                special = '<?php echo  $value["special_instruction"]?>',
+                                cousine_id = '<?php echo $value['item_id']?>');
 
                         tempOrder.addItem(temp_item);
                 <?php
@@ -256,7 +257,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
         var ItemComponent = (function() {
 
             var createDom = function(item) {
-                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.special, item.quantity, item.name_en,item.name_zh, item.selected_extras_name, item.price));
+                var itemComponent = $($("#item-component").html().format('order-item-' + item.item_id, item.order_item_id, item.comb_id, item.selected_extras_json, item.is_print, item.special, item.quantity, item.name_en,item.name_zh, item.selected_extras_name, item.price, item.cousine_id));
 
                 // console.log(item);
                 if (item.is_print == 'Y') {

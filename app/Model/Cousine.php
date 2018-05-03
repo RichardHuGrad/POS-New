@@ -17,7 +17,11 @@ class Cousine extends AppModel {
             'className' => 'CousineLocal',
             'foreignKey' => 'parent_id'
         ),
-        // 'Extra' => array(
+        'CousineExtrascategories' => array(
+            'className' => 'CousineExtrascategories',
+            'foreignKey' => 'cousine_id'
+        )
+    	// 'Extra' => array(
         //     'className' => 'Extra',
         //     'foreignKey' => false,
         //     'conditions'=> array('status'=>'A'),
@@ -45,6 +49,10 @@ class Cousine extends AppModel {
         $CousineDetail['Cousine']['en'] = $enName;
         $CousineDetail['Cousine']['zh'] = $zhName;
 
+        // Extra Categories
+        $categories = $this->CousineExtrascategories->find("list", array("conditions" => array("cousine_id" => $id), "fields" => array("CousineExtrascategories.extrascategorie_id")));
+        $CousineDetail['Cousine']['ExtraCategories'] = $categories;
+        
         return $CousineDetail;
     }
 

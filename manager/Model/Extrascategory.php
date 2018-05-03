@@ -42,7 +42,7 @@ class Extrascategory extends AppModel {
 						$this->Extra->save($cex);
 						$this->Extra->clear();
 					}
-				} else if ($rc['type'] == 3) {
+				} else if ($rc['type'] == 2) {
 					$price = ((int)$extras['limit']) ? ($extras['total'] / (int)$extras['limit']) : $extras['total'];
 					foreach ($extras['values'] as $ex) {
 						if ($cex1 = $this->Extra->find("first", array('recursive' => FALSE, 'conditions' => array('Extra.category_id' => $cur['Extrascategory']['id'], 'Extra.name_zh' => $ex['name'])))) {
@@ -81,7 +81,7 @@ class Extrascategory extends AppModel {
 						$this->Extra->save($cex);
 						$this->Extra->clear();
 					}
-				} else if ($rc['type'] == 3) {
+				} else if ($rc['type'] == 2) {
 					$price = ((int)$extras['limit']) ? ($extras['total'] / (int)$extras['limit']) : $extras['total'];
 					foreach ($extras['values'] as $ex) {
 						if ($cex1 = $this->Extra->find("first", array('recursive' => FALSE, 'conditions' => array('Extra.category_id' => $cur['Extrascategory']['id'], 'Extra.name_zh' => $ex['name'])))) {
@@ -113,7 +113,7 @@ class Extrascategory extends AppModel {
 					foreach ($extras['values'] as $ex) {
 						$newcate['Extra'][] = array('id' => 0, 'name' => $ex['name'], 'name_zh' => $ex['name'], 'price' => $ex['price'], 'status' => 'A', 'created' => date("Y-m-d H:i:s"));
 					}
-				} else if ($rc['type'] == 3) {
+				} else if ($rc['type'] == 2) {
 					$newcate['Extrascategory']['extras_num'] = (int)$extras['limit'];
 					$price = ((int)$extras['limit']) ? ($extras['total'] / (int)$extras['limit']) : $extras['total'];
 					foreach ($extras['values'] as $ex) {

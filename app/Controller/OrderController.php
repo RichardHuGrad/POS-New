@@ -16,7 +16,8 @@ class OrderController extends AppController {
         // get all recepie items according to category
         $this->loadModel('Category');
         $this->loadModel('Cousine');
-
+        $this->loadModel('CousineExtrascategories');
+        
         
         if (empty($this->Session->read('Front.id'))) {
             return $this->redirect($this->Auth->logout());
@@ -43,16 +44,22 @@ class OrderController extends AppController {
         );
         $this->Cousine->virtualFields['eng_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'en'";
         $this->Cousine->virtualFields['zh_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'zh'";
-
+        
         $this->Category->virtualFields['eng_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'en'";
         $this->Category->virtualFields['zh_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'zh'";
 
         $records = $this->Category->find("all", array(
             'conditions' => array('Category.status' => 'A')
         ));
+        foreach ($records as $key1 => $rc1) {
+        	foreach ($rc1['Cousine'] as $key2 => $rc2) {
+        		$rc3 = $this->CousineExtrascategories->find('list', array('fields' => array('extrascategorie_id'), 'conditions' => array('cousine_id' => $rc2['id'])));
+        		$records[$key1]['Cousine'][$key2]['extrascategories'] = array_values($rc3);
+        		sort($records[$key1]['Cousine'][$key2]['extrascategories']);
+        	}
+        }
 
         // get popular dishes
-        $this->loadModel('Cousine');
         $this->Cousine->virtualFields['eng_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'en'";
         $this->Cousine->virtualFields['zh_name'] = "Select name from cousine_locals where cousine_locals.parent_id = Cousine.id and lang_code = 'zh'";
         $populars = $this->Cousine->find("all", array(

@@ -339,7 +339,7 @@ echo $this->fetch('script');
                 $(".products-panel").removeClass('load1 csspinner');
 
                 var obj = JSON.parse(json);
-
+				//  {"extra_categories":["15","16"],"order_item_id":"4143","comb_id":"0","comb_num":"0"}
                 renderOrder(function() {
                     if (obj.comb_id != 0) {
                         $("#order-component li[data-order-item-id=" + obj.order_item_id + "]").trigger("click");
@@ -393,6 +393,7 @@ echo $this->fetch('script');
                 "special": $(this).attr('data-special'),
                 "selected-extras": $(this).attr('data-selected-extras'),
                 "combo_id": $(this).attr('data-comb-id'),
+                "cousine_id": $(this).attr('data-cousine-id'),
             }
             // console.log($(this).attr('data-order-item-id'));
 
@@ -678,7 +679,7 @@ echo $this->fetch('script');
 
     var SingleExtraComponent = (function() {
 
-        var createDom = function (tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special) {
+        var createDom = function (tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special, cousineExtraCategory) {
 
             var singleExtraComponent = $($('#single-extra-component').html());
 
@@ -689,7 +690,13 @@ echo $this->fetch('script');
                 var category = categories[i];
 
                 // category_id 1 means the tastes id
+                /*
                 if (category.category_id == combo_id || category.category_id == "1") {
+                    var categoryComponent = $('<li data-extra-category-id="{0}" data-extra-combo-num="{1}">{2}({3})</li>'.format(category.category_id, category.combo_num,category.name_en, category.name_zh));
+                    titleUl.append(categoryComponent);
+                }
+                */
+                if (cousineExtraCategory.indexOf(category.category_id) >= 0 || category.category_id == "1") {
                     var categoryComponent = $('<li data-extra-category-id="{0}" data-extra-combo-num="{1}">{2}({3})</li>'.format(category.category_id, category.combo_num,category.name_en, category.name_zh));
                     titleUl.append(categoryComponent);
                 }
@@ -702,7 +709,19 @@ echo $this->fetch('script');
                 var taste = tastes[i];
                 // category_id 1 means the tastes id
                 // other category
+                /*
                 if (taste.category_id == combo_id || taste.category_id == "1") {
+                    // build item with jquery
+                    var itemComponent = $('<li class="taste-item-component" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
+
+                    if (parseFloat(taste.price) == 0) {
+                        itemComponent.find('.taste-item-price').hide();
+                    }
+
+                    itemsUl.append(itemComponent);
+                }
+                */
+                if (cousineExtraCategory.indexOf(taste.category_id) >= 0 || taste.category_id == "1") {
                     // build item with jquery
                     var itemComponent = $('<li class="taste-item-component" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
 
@@ -796,8 +815,8 @@ echo $this->fetch('script');
             return singleExtraComponent;
         }
 
-        var init = function(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special) {
-            var singleExtraComponent = createDom(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special);
+        var init = function(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special, cousineExtraCategory) {
+            var singleExtraComponent = createDom(tastes, categories, combo_id, selected_extras, SelectedExtraItemComponent, special, cousineExtraCategory);
             singleExtraComponent = bindEvent(singleExtraComponent, categories, combo_id, SelectedExtraItemComponent);
 
             return singleExtraComponent;
@@ -877,7 +896,12 @@ echo $this->fetch('script');
         }
     })()
 
-
+	class CousineExtraCategory {
+    	constructor(cousine_id, category_ids) {
+            this.cousine_id = cousine_id;
+            this.category_ids = category_ids;
+        }
+    }
 
     class Extra {
         constructor(id, cousine_id, name_en, name_zh, price, category_id) {
@@ -955,8 +979,38 @@ echo $this->fetch('script');
         return categories;
     }
 
+    var loadCousineExtraCategories = function() {
+        var cousine_categories = [];
+		var cousine_id;
+        var category = [];
+
+        <?php
+            if (!empty($records)) {
+                foreach ($records as $rc1) {
+					foreach ($rc1['Cousine'] as $rc2) {
+         ?>
+         			cousine_id = '<?php echo $rc2['id']; ?>';
+                    category = [];
+                    <?php if ($rc2['extrascategories']) { 
+						foreach ($rc2['extrascategories'] as $cid) { ?>
+							category.push('<?php echo $cid; ?>');
+					<?php	}
+						}
+					 ?>
+                     cousine_categories[cousine_id] = category;
+         <?php
+                }
+            }
+			}
+          ?>
+
+        return cousine_categories;
+    }
+
+
     var extras = loadExtras();
     var extraCategories = loadExtraCategories();
+    var cousineExtraCategories = loadCousineExtraCategories();
 
     var tastesComponent = TastesComponent.init(extras, SelectedExtraItemComponent);
 
@@ -1010,6 +1064,8 @@ echo $this->fetch('script');
             
             //default select the first item
             $("#order-component li:first").click();
+            
+            selected_item_id_list = getSelectedItem();
 
         } else if (selected_item_id_list.length > 1) {
             // alert("Please select only one item");
@@ -1025,19 +1081,20 @@ echo $this->fetch('script');
             selected_extras = JSON.parse(getSelectedItemDetails()[0]['selected-extras']);
         }
 
-        // console.log(selected_extras);
-
-
         // combo_id = 0 mean no combo
         // other combo_id means the different extra.category_id
         var combo_id = getSelectedItemDetails()[0]['combo_id'];
-
+        var cousine_id = getSelectedItemDetails()[0]['cousine_id'];
         var special = getSelectedItemDetails()[0]['special'];
-        console.log(special);
-
+        
+        var cousineExtraCategory = [];
+        if (typeof cousineExtraCategories[cousine_id] !== 'undefined') {
+        	cousineExtraCategory = cousineExtraCategories[cousine_id];
+        }
+        
         // remove existing modal
         $('#single-extra-component-modal').modal('hide').remove();
-        var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special);
+        var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special, cousineExtraCategory);
         $('body').append(singleExtraComponent);
 
     });
