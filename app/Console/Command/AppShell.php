@@ -25,9 +25,9 @@ App::uses('Shell', 'Console');
  * @package app.Console.Command
  */
 class AppShell extends Shell {
-	const WECHATSERVER = "https://wx.eatopia.ca/";
-	//const WECHATSERVER="http://dev9.com/";
-	//const WECHATTEST = 1;
+	//const WECHATSERVER = "https://wx.eatopia.ca/";
+	const WECHATSERVER="https://pos.auroratech.top/";
+	const WECHATTEST = 0;
 	
     public $fontStr1 = "simsun";
     public $handle;
@@ -45,7 +45,7 @@ class AppShell extends Shell {
 		printer_delete_font($font);
 	}
 	
-	public function printZh($str, $x, $y, $font_bold = false, $newline=false) {
+	public function printZh($str, $x, $y, $font_bold = true, $newline=false) {
 		if ($font_bold == true) {
 			// $font = printer_create_font($this->fontStr1, $this->fontH, $this->fontW, 1500, false, false, false, 0);
 			$font = printer_create_font("simsun", 32, 14, 1200, false, false, false, 0);
@@ -285,15 +285,17 @@ class AppShell extends Shell {
 				$print_y = 30;
 				$this->printZh("Eatopia食客邦订单   " . (($order['type']==1) ? '外卖' : '堂食 桌号:'.$order['tablename']), $print_x, $print_y);
 				$print_y += 48;
-				$this->printZh("单号：" . $order['order_num'] . " (" . $order['time'] . ")", $print_x, $print_y);
-
+				$this->printZh("单号：" . $order['order_num'], $print_x, $print_y);
+				$print_y += 48;
+				$this->printZh("日期 / 时间： " . $order['time'], $print_x, $print_y);
+				
 				$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
 				printer_select_pen($this->handle, $pen);
 				printer_draw_line($this->handle, 21, $print_y - 10, 600, $print_y - 10);
 				
 				foreach ($order['dishes'] as $dish) {
 					$print_y += 48;
-					$this->printZh($dish['name'], $print_x, $print_y, false, true);
+					$this->printZh($dish['name'], $print_x, $print_y, true, true);
 					$this->printZh("$" . $dish['money'], $print_x + 360, $print_y);
 					$print_y += 48;
 					$this->printZh(" x " . $dish['number'], $print_x + 360, $print_y);
