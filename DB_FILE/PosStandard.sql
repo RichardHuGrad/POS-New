@@ -183,7 +183,8 @@ CREATE TABLE `categories` (
   `created` int(11) NOT NULL,
   `modified` int(11) NOT NULL,
   `printer` enum('C','K') DEFAULT 'K' COMMENT 'C-Cashier, K-kitchen',
-  `group_id` smallint(5) UNSIGNED DEFAULT '1'
+  `group_id` smallint(5) UNSIGNED DEFAULT '1',
+  `remote_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -272,8 +273,24 @@ CREATE TABLE `cousines` (
   `created` int(11) NOT NULL,
   `popular` bigint(20) NOT NULL DEFAULT '0',
   `is_tax` enum('Y','N') DEFAULT 'Y',
-  `modified` int(11) NOT NULL
+  `modified` int(11) NOT NULL,
+  `remote_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cousine_extrascategories`
+--
+
+DROP TABLE IF EXISTS `cousine_extrascategories`;
+CREATE TABLE `cousine_extrascategories` (
+  `id` int(11) NOT NULL,
+  `cousine_id` int(11) NOT NULL,
+  `extrascategorie_id` int(11) NOT NULL,
+  `remote_id` int(11) NOT NULL,
+  `tm` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -321,7 +338,9 @@ CREATE TABLE `extrascategories` (
   `name` varchar(50) DEFAULT NULL,
   `name_zh` varchar(50) DEFAULT NULL,
   `extras_num` int(11) NOT NULL DEFAULT '0',
-  `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive'
+  `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
+  `remote_id` int(11) NOT NULL,
+  `modified` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -666,6 +685,12 @@ ALTER TABLE `cousines`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `cousine_extrascategories`
+--
+ALTER TABLE `cousine_extrascategories`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `cousine_locals`
 --
 ALTER TABLE `cousine_locals`
@@ -822,6 +847,12 @@ ALTER TABLE `cooks`
 --
 ALTER TABLE `cousines`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+
+--
+-- AUTO_INCREMENT for table `cousine_extrascategories`
+--
+ALTER TABLE `cousine_extrascategories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `cousine_locals`
