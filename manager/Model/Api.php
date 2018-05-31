@@ -1,7 +1,7 @@
 <?php
 class Api {
 	//const WECHATSERVER = "https://wx.eatopia.ca/";
-	const WECHATSERVER="http://dev9.com/";
+	const WECHATSERVER="https://pos.auroratech.top/";
 	const WECHATTEST = 0;
 	
 	public $name = 'Api';

@@ -17,7 +17,7 @@ class Cousine extends AppModel {
 
 	public function sync_cousines($datas) {
 		$nowtm = time();
-
+		
 		$categories = ClassRegistry::init('Categories');
 		$cousine_extrascategories = ClassRegistry::init('CousineExtrascategories');
 		$extrascategory = ClassRegistry::init('Extrascategory');
@@ -107,8 +107,10 @@ class Cousine extends AppModel {
 				$cur['Cousine']['price'] = $rc['money'];
 				$cur['Cousine']['category_id'] = $category_id;
 				$cur['Cousine']['modified'] = $nowtm;
-				$cur['CousineLocal'][1]['name'] = $rc['name'];
-				$cur['CousineLocal'][1]['modified'] = $nowtm;
+				if (isset($cur['CousineLocal'][1]) && ($cur['CousineLocal'][1]['lang_code'] == 'zh')) {
+					$cur['CousineLocal'][1]['name'] = $rc['name'];
+					$cur['CousineLocal'][1]['modified'] = $nowtm;
+				}
 				$this->saveAssociated($cur);
 				
 				$cousine_id = $cur['Cousine']['id'];
@@ -149,12 +151,13 @@ class Cousine extends AppModel {
 						'Cousine' => array(
 								'restaurant_id' => 5,
 								'casier_id' => 3,
+								'category_id' => $category_id,
 								'price' => $rc['money'],
 								'created' => $nowtm,
 								'modified' => $nowtm,
 								'remote_id' => $rc['id']
 						),
-						'CategoryLocale' => array(
+						'CousineLocal' => array(
 								array(
 										'name' => $rc['name'],
 										'lang_code' => 'en',
