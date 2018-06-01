@@ -1,5 +1,4 @@
-      <?php
-
+<?php
 class Order extends AppModel {
 
     public $name = 'Order';
@@ -28,15 +27,19 @@ class Order extends AppModel {
         $data = $this->find("first", array(
                 'fields' => array('Order.order_no'),
                 'order' => array('Order.id DESC')));
-        $order_no = substr($data['Order']['order_no'], -10);
+        if (empty($data['Order']['order_no'])) {
+        	$order_no = "unknown number";
+        } else {
+        	$order_no = substr($data['Order']['order_no'], -10);
+        }
         $today = date('ymd');
         if ($today != substr($order_no, 0, 6)) {
             $idx = 0;
         } else {
             $idx = (int)substr($order_no, 6);
         }
-	$idx++;
-	return $pre.$today.str_pad($idx, 4, "0", STR_PAD_LEFT);
+		$idx++;
+		return $pre.$today.str_pad($idx, 4, "0", STR_PAD_LEFT);
     }
 
     // insert a new order in orders
