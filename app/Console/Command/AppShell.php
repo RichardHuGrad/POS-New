@@ -15,6 +15,9 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 App::uses('Shell', 'Console');
+App::uses('ComponentCollection', 'Controller');
+App::uses('OrderHandlerComponent', 'Controller/Component');
+App::uses('ApiHelperComponent', 'Controller/Component');
 
 /**
  * Application Shell
@@ -27,7 +30,9 @@ App::uses('Shell', 'Console');
 class AppShell extends Shell {
 	//const WECHATSERVER = "https://wx.eatopia.ca/";
 	const WECHATSERVER="https://pos.auroratech.top/";
-	const WECHATTEST = 0;
+	const WECHATTEST = 1;
+	
+	public $components = array('Paginator','OrderHandler','Access');
 	
     public $fontStr1 = "simsun";
     public $handle;
@@ -36,6 +41,12 @@ class AppShell extends Shell {
 	public $uses = array(
 			'Admin' 
 	);
+	
+	public function startup() {
+		$collection = new ComponentCollection();
+		$this->OrderHandler = $collection->load('OrderHandler');
+		$this->ApiHelper = $collection->load('ApiHelper');
+	}
 	
 	public function printBigEn($str, $x, $y) {
 		$font = printer_create_font("Arial", 32, 14, PRINTER_FW_MEDIUM, false, false, false, 0);
@@ -69,7 +80,6 @@ class AppShell extends Shell {
 	public function insert_orders($orders) {
         $this->loadModel('Cashier');
         $this->loadModel('OrderItem');
-        $this->loadModel('OrderHandler');
         $this->loadModel('Cousine');
         $this->loadModel('Order');
         $this->loadModel('Admin');
@@ -87,12 +97,13 @@ class AppShell extends Shell {
 
         $admin = $this->Cashier->find("first",
         		array(
-        				'fields' => array('Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.tax'),
+        				'fields' => array('Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.tax', 'Admin.default_tip_rate'),
         				'conditions' => array('Cashier.id' => $cashier['Cashier']['id'])
         		)
    		);
         
 		foreach ($orders as $order) {
+			//Debug print_r($order);
 			/*
 			 * [id] => 58
 			 * [user_id] => 29
@@ -149,17 +160,19 @@ class AppShell extends Shell {
 			$this->Log->save(array('operation' => "weborder get", 'logs' => json_encode($order)));
 			$memotxt = array('error' => array(), 'message' => array());
 			
+			$order_id = 0;
+			$reason = "Net order# " . $order['order_num'] . "; ";
 			if (($order['type'] == 2) || ($order['type'] == 1)) {
 				// In store (2 => D) or Take out (1 => T) order, Just create or add items to order
-				$order_id = 0;
 				foreach ($order['dishes'] as $dishes) {
-					$CousineDetail = $this->Cousine->find('first', array('conditions' => array('Cousine.remote_id' => $dishes['id']), 'recursive' => -1));
+					$CousineDetail = $this->Cousine->find('first', array('conditions' => array('Cousine.remote_id' => $dishes['dishes_id'])));
 					if ( ! $CousineDetail) {
 						$memotxt['error'][] = "Can't find Cousine. Remote ID: " . $dishes['id'] . "; ";
 						continue;
 					}
-					$item_id = $cousine['Cousine']['id'];
-					$table = $order['table_id'];
+					//Debug echo "Local: CousineDetail\n"; print_r($CousineDetail); print_r($dishes);
+					$item_id = $CousineDetail['Cousine']['id'];
+					$table = (int)$order['tablename'];
 					$type = ($order['type'] == 2) ? 'D' : 'T';
 					$cashier_id = $cashier['Cashier']['id'];
 					$tax_rate = $admin['Admin']['tax'];
@@ -168,18 +181,21 @@ class AppShell extends Shell {
 					if (empty($order_id)) {
 						$Order_detail = $this->Order->find("first",
 								array(
-										'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
-										'conditions' => array('Order.cashier_id' => $cashier_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
+										'fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.reason', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+										'conditions' => array('Order.counter_id' => $cashier_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
 								)
 						);
+						//Debug echo "Order_detail\n"; print_r($Order_detail);
 						if ( ! empty($Order_detail)) {
 							$order_id = $Order_detail['Order']['id'];
+							$reason .= $Order_detail['Order']['reason'];
 						}
 					}
 
 					if (empty($order_id)) {
 						// to create a new order
 						$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
+						echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
 					}
 
 				    if ($CousineDetail['Cousine']['is_tax'] == 'Y') {
@@ -188,25 +204,30 @@ class AppShell extends Shell {
 				    	$tax_amount = 0;
 				    }
 				    
-				    $order_item_id = $this->OrderItem->insertOrderItem($order_id, $item_id, $CousineDetail['Cousine']['en'], $CousineDetail['Cousine']['zh'], $CousineDetail['Cousine']['price'], $CousineDetail['Cousine']['category_id'], /*!empty($extras) ? json_encode($extras) : "",*/ $tax_rate, $tax_amount, $dishes['number'], $CousineDetail['Cousine']['comb_num']);
+				    $order_item_id = $this->OrderItem->insertOrderItem($order_id, $item_id, $CousineDetail['CousineLocal'][0]['name'], $CousineDetail['CousineLocal'][1]['name'], $CousineDetail['Cousine']['price'], $CousineDetail['Cousine']['category_id'], /*!empty($extras) ? json_encode($extras) : "",*/ $tax_rate, $tax_amount, $dishes['number'], $CousineDetail['Cousine']['comb_num']);
 				    $extra_id_array = array();
 				    if (!empty($dishes['options']) && ($options = json_decode($dishes['options'], TRUE))) {
+						//Debug echo "options:\n"; print_r($options);
 				    	foreach ($options as $opt) {
-							if ($extracategory = $this->Extrascategory->find('first', array('conditions' => array('Extrascategory.remote_id' => $opt['id']), 'recursive' => -1))) {
-								foreach ($opt['value'] as $extra) {
-									if ($ext = $this->Extra->find('first', array('conditions' => array('Extra.name_zh' => $extra['name'], 'Extra.category_id' => $extracategory['id']), 'recursive' => -1))) {
-										$quantity = isset($ext['quantity']) ? (int)$ext['quantity'] : 1;
+							if ($extracategory = $this->Extrascategory->find('first', array('conditions' => array('Extrascategory.remote_id' => $opt['options_id']), 'recursive' => -1))) {
+								//Debug echo "extracategory:\n"; print_r($extracategory);
+								foreach ($opt['values'] as $extra) {
+									if ($ext = $this->Extra->find('first', array('conditions' => array('Extra.name_zh' => $extra['name'], 'Extra.category_id' => $extracategory['Extrascategory']['id']), 'recursive' => -1))) {
+										//Debug echo "ext:\n"; print_r($ext);
+										$quantity = isset($extra['quantity']) ? (int)$extra['quantity'] : 1;
 										if (empty($quantity)) $quantity = 1;
 										for ($i = 0; $i < $quantity; $i++) {
-											$extra_id_array = $ext['id'];
+											$extra_id_array[] = $ext['Extra']['id'];
 										}
 									} else {
-										$memotxt['error'][] = "Can't find Extrascategory's Extra. Remote ID: " . $opt['id'] . "; name: " . $extra['name'] . "; local ID: " . $extracategory['id'];
+										$memotxt['error'][] = "Can't find Extrascategory's Extra. Remote ID: " . $opt['options_id'] . "; name: " . $extra['name'] . "; local ID: " . $extracategory['id'];
 									}
 								}
 							} else {
 								$memotxt['error'][] = "Can't find Extrascategory. Remote ID: " . $opt['id'] . "; ";
 							}
+							//Debug echo "error:\n"; print_r($memotxt['error']);
+							//Debug echo "extra_id_array:\n"; print_r($extra_id_array);
 				    	}
 				    }
 				    if (!empty($extra_id_array)) {
@@ -220,13 +241,17 @@ class AppShell extends Shell {
 					    );
 				    }
 				    $this->Order->updateBillInfo($order_id);
+					$this->OrderItem->clear();
 				}
-				// Start order already Add item
-					$memotxt[] = "Current table (" . $table_id . "), the Orody isn't complete ";
 			} else {
 				// Unknown Order, Do't process
 				continue;
 			}
+
+			if ($order_id) {
+				$this->Order->update_reason($order_id, $reason);
+			}
+			$this->Order->clear();
 		}
 	}
 	
@@ -269,10 +294,12 @@ class AppShell extends Shell {
 		
 		$rts = json_decode($response, TRUE);
 
+		//print_r($rts);
 		if (is_array($rts) && ($rts['status'] == 'OK') && (sizeof($rts['orders']) > 0)) {
 			if ($rest['Admin']['no_of_online_tables']) {
 				return $this->insert_orders($rts['orders']);
 			}
+			
 			$offset = explode(',', $rest['Admin']['print_offset']);
 			$printer_name = $rest['Admin']['service_printer_device'];
 			

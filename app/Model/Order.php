@@ -92,7 +92,16 @@ class Order extends AppModel {
            return $data['Order']['phone'];
     }
 
-
+	public function update_reason($order_id, $reason) {
+		$Order_detail = $this->find('first', array(
+				'recursive' => -1,
+				'conditions' => array('Order.id' => $order_id)
+		));
+		if ($Order_detail) {
+			$Order_detail['Order']['reason'] = $reason;
+			$this->save($Order_detail, false);
+		}
+	}
     // recalculate order's bill info by count the OrderItem
     // include: subtotal, tax_amount, total, discount
 
