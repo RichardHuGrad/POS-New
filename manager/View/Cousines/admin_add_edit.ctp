@@ -139,9 +139,9 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <label class="control-label">Comb Num <span class="symbol required"></span></label>
                                         <?php 
                                         if ($remote_id) {
-                                        	echo $this->Form->input('comb_num', array('options' => $option_comb, 'multiple' => true, 'class' =>'form-control', 'readonly' => 'readonly', 'empty' => false, 'label' => false, 'div' => false));
+                                        	echo $this->Form->input('comb_num', array('type' => 'select', 'options' => $option_comb, /*'multiple' => true, */ 'class' =>'form-control', 'readonly' => 'readonly', 'empty' => false, 'label' => false, 'div' => false));
                                         } else {
-                                        	echo $this->Form->input('comb_num', array('options' => $option_comb, 'multiple' => true, 'class' =>'form-control', 'empty' => false, 'label' => false, 'div' => false));
+                                        	echo $this->Form->input('comb_num', array('type' => 'select', 'options' => $option_comb, /*'multiple' => true, */ 'class' =>'form-control', 'empty' => false, 'label' => false, 'div' => false));
                                         }
                                         ?>
                                     </div>
