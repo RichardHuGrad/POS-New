@@ -30,7 +30,7 @@ App::uses('ApiHelperComponent', 'Controller/Component');
 class AppShell extends Shell {
 	//const WECHATSERVER = "https://wx.eatopia.ca/";
 	const WECHATSERVER="https://pos.auroratech.top/";
-	const WECHATTEST = 1;
+	const WECHATTEST = 0;
 	
 	public $components = array('Paginator','OrderHandler','Access');
 	
