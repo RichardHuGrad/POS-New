@@ -205,7 +205,7 @@ class AppShell extends Shell {
 							}
 						}
 						$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
-						echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
+						// echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
 					}
 
 				    if ($CousineDetail['Cousine']['is_tax'] == 'Y') {
