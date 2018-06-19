@@ -274,8 +274,7 @@ class AppShell extends Shell {
 		}
 	}
 	
-	public function print_reserve($orders) {
-		$printer_name = $rest['Admin']['service_printer_device'];
+	public function print_reserve($orders, $printer_name) {
 		$print_x = 25;
 		foreach($orders as $order) {
 			$this->handle = printer_open($printer_name);
@@ -345,7 +344,7 @@ class AppShell extends Shell {
 					$this->insert_orders($rts['orders']);
 				}
 				if (sizeof($rts['yyorders']) > 0) {
-					$this->print_reserve($rts['yyorders']);
+					$this->print_reserve($rts['yyorders'], $rest['Admin']['service_printer_device']);
 				}
 				return ;
 			}
