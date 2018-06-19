@@ -44,7 +44,7 @@
         <div class="col-md-9 col-sm-8 col-xs-12 home-link">
             <div class="cart-txt" id="order_no_display">
             <!-- Modified by Yishou Liao @ Dec 09 2016 -->
-                <?php echo __('Order No.')?><?php echo @$Order_detail['Order']['order_no']; ?>, <?php echo __('Table No.')?><?php echo $table; ?><?php echo @$Order_detail['Order']['phone']!=''?(', Tel: '.$Order_detail['Order']['phone']):''; ?>
+                <?php echo __('Order No.')?><?php echo @$Order_detail['Order']['order_no']; ?>, <?php echo __('Table No.')?><?php echo $table; ?><?php echo @$Order_detail['Order']['phone']!=''?(', Tel: '.$Order_detail['Order']['phone']):''; ?><?php echo @$Order_detail['Order']['message']!=''?(', '.$Order_detail['Order']['message']):''; ?><?php echo @$Order_detail['Order']['reason']!=''?(', '.$Order_detail['Order']['reason']):''; ?>
             <!-- End -->
             </div>
         </div>

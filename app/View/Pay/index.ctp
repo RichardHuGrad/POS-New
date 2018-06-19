@@ -56,7 +56,7 @@
     <div class="order-wrap">
         <?php echo $this->Session->flash(); ?>
         <div class="col-md-4 col-sm-4 col-xs-12 order-left">
-            <h2><?php echo __('Order No.'); ?><?php echo $Order_detail['Order']['order_no'] ?><br><?php echo __('Table'); ?> <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?></h2>
+            <h2><?php echo __('Order No.'); ?><?php echo $Order_detail['Order']['order_no'] ?><br><?php echo __('Table'); ?> <?php echo (($type == 'D') ? '[[堂食]]' : (($type == 'T') ? '[[外卖]]' : (($type == 'W') ? '[[等候]]' : ''))); ?>#<?php echo $table; ?><?php echo @$Order_detail['Order']['reason']!=''?('<br />'.$Order_detail['Order']['reason']):''; ?></h2>
 
             <div class="paid-box">
                 <div class="checkbox-btn">

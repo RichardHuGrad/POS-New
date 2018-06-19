@@ -197,6 +197,13 @@ class HomesController extends AppController {
                 )
         );
 
+        $orders_message = $this->Order->find("list", array(
+            'fields' => array('Order.order_type', 'Order.message', 'Order.table_no'),
+            'conditions' => array('Order.cashier_id' => $tables['Admin']['id'], 'Order.is_completed' => 'N'),
+            'recursive' => -1
+                )
+        );
+
 /*
         // if there is split-order on this table 
         //$this->loadModel('OrderSplit');
@@ -234,7 +241,7 @@ class HomesController extends AppController {
 
         // print_r($orders_total);
 
-        $this->set(compact('tables','dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd'));
+        $this->set(compact('tables','dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd', 'orders_message'));
     }
 
     public function allorders() {

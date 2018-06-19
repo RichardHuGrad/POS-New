@@ -30,9 +30,10 @@ App::uses('ApiHelperComponent', 'Controller/Component');
 class AppShell extends Shell {
 	//const WECHATSERVER = "https://wx.eatopia.ca/";
 	const WECHATSERVER="https://pos.auroratech.top/";
-	const WECHATTEST = 0;
+	const WECHATTEST = 1;
 	
 	public $components = array('Paginator','OrderHandler','Access');
+	public $no_of_online_tables = 0;
 	
     public $fontStr1 = "simsun";
     public $handle;
@@ -159,7 +160,7 @@ class AppShell extends Shell {
 			 */
 			$this->Log->save(array('operation' => "weborder get", 'logs' => json_encode($order)));
 			$memotxt = array('error' => array(), 'message' => array());
-			
+
 			$order_id = 0;
 			$reason = "Net order# " . $order['order_num'] . "; ";
 			if (($order['type'] == 2) || ($order['type'] == 1)) {
@@ -173,7 +174,7 @@ class AppShell extends Shell {
 					//Debug echo "Local: CousineDetail\n"; print_r($CousineDetail); print_r($dishes);
 					$item_id = $CousineDetail['Cousine']['id'];
 					$table = (int)$order['tablename'];
-					$type = ($order['type'] == 2) ? 'D' : 'T';
+					$type = ($order['type'] == 2) ? 'D' : 'L';
 					$cashier_id = $cashier['Cashier']['id'];
 					$tax_rate = $admin['Admin']['tax'];
 					$default_tip_rate = $admin['Admin']['default_tip_rate'];
@@ -188,12 +189,21 @@ class AppShell extends Shell {
 						//Debug echo "Order_detail\n"; print_r($Order_detail);
 						if ( ! empty($Order_detail)) {
 							$order_id = $Order_detail['Order']['id'];
-							$reason .= $Order_detail['Order']['reason'];
+							$reason = $Order_detail['Order']['reason'] . "; Add other Order: " . $order['order_num'] . "; ";
 						}
 					}
 
 					if (empty($order_id)) {
 						// to create a new order
+						if ($type == 'L') {
+							for ($table = 1; $table <= $this->no_of_online_tables; $table++) {
+								$t = $this->Order->find("first",array('conditions' => array('Order.table_no' => $table, 'Order.order_type' => 'L')));
+								if (empty($t) || $t['Order']['table_status'] == 'A') {
+									// New table or Available table
+									break;
+								}
+							}
+						}
 						$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
 						echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
 					}
@@ -249,9 +259,43 @@ class AppShell extends Shell {
 			}
 
 			if ($order_id) {
-				$this->Order->update_reason($order_id, $reason);
+				$message = '';
+				if ($order['type'] == 1) {
+					$reason .= $order['name'] . " - " . $order['tel'] . " - " . $order['address'];
+					if ($order['is_take'] == 1) {
+						$message = __('TAKE OUT'); //"Takeout";
+					} else if ($order['is_take'] == 2) {
+						$message = __('Delivery'); //"Delivery";
+					}
+				}
+				$this->Order->update_reason($order_id, $reason, $message);
 			}
 			$this->Order->clear();
+		}
+	}
+	
+	public function print_reserve($orders) {
+		$printer_name = $rest['Admin']['service_printer_device'];
+		$print_x = 25;
+		foreach($orders as $order) {
+			$this->handle = printer_open($printer_name);
+			printer_start_doc($this->handle, "order");
+			printer_start_page($this->handle);
+			
+			$print_y = 30;
+			$this->printZh("预定餐桌：" . $order['order_num'], $print_x, $print_y);
+			$print_y += 48;
+			$this->printZh("预计到店时间：" . $order['xz_date'] . " " . $order['yjdd_date'], $print_x, $print_y);
+			$print_y += 48;
+			$this->printZh("联系人：" . $order['link_name'], $print_x, $print_y);
+			$print_y += 48;
+			$this->printZh("联系电话：" . $order['link_tel'], $print_x, $print_y);
+			$print_y += 48;
+			$this->printZh("人数：" . $order['jc_num'], $print_x, $print_y);
+			
+			printer_end_page($this->handle);
+			printer_end_doc($this->handle);
+			printer_close($this->handle);
 		}
 	}
 	
@@ -274,7 +318,7 @@ class AppShell extends Shell {
 		));
 
 		$mobile_no = $rest['Admin']['mobile_no'];
-		$no_of_online_tables = $rest['Admin']['no_of_online_tables'];
+		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
 		$dt = preg_split("/-/", $mobile_no);
 		if (!is_array($dt) || (sizeof($dt) != 2)) {
 			die("Unknow Store ID and Phone");
@@ -295,11 +339,16 @@ class AppShell extends Shell {
 		$rts = json_decode($response, TRUE);
 
 		//print_r($rts);
-		if (is_array($rts) && ($rts['status'] == 'OK') && (sizeof($rts['orders']) > 0)) {
+		if (is_array($rts) && ($rts['status'] == 'OK') && ((sizeof($rts['orders']) > 0) || (sizeof($rts['yyorders']) > 0))) {
 			if ($rest['Admin']['no_of_online_tables']) {
-				return $this->insert_orders($rts['orders']);
+				if (sizeof($rts['orders']) > 0) {
+					$this->insert_orders($rts['orders']);
+				}
+				if (sizeof($rts['yyorders']) > 0) {
+					$this->print_reserve($rts['yyorders']);
+				}
+				return ;
 			}
-			
 			$offset = explode(',', $rest['Admin']['print_offset']);
 			$printer_name = $rest['Admin']['service_printer_device'];
 			

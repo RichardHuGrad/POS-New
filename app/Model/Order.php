@@ -92,13 +92,16 @@ class Order extends AppModel {
            return $data['Order']['phone'];
     }
 
-	public function update_reason($order_id, $reason) {
+	public function update_reason($order_id, $reason, $message='') {
 		$Order_detail = $this->find('first', array(
 				'recursive' => -1,
 				'conditions' => array('Order.id' => $order_id)
 		));
 		if ($Order_detail) {
 			$Order_detail['Order']['reason'] = $reason;
+			if (!empty($message)) {
+				$Order_detail['Order']['message'] = $message;
+			}
 			$this->save($Order_detail, false);
 		}
 	}

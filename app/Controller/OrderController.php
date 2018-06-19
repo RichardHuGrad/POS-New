@@ -82,7 +82,7 @@ class OrderController extends AppController {
         );
         
         $Order_detail = $this->Order->find("first", array(
-            'fields' => array('Order.order_no', 'Order.order_type', 'Order.table_status', 'Order.id','Order.phone'),
+            'fields' => array('Order.order_no', 'Order.order_type', 'Order.table_status', 'Order.id', 'Order.phone', 'Order.message', 'Order.reason'),
             'conditions' => $conditions,
             'recursive' => -1
                 )

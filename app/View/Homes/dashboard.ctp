@@ -480,7 +480,7 @@
                                 <div class="txt12 text-center <?php if(isset($online_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                     <?php if(@$online_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['L']?date("H:i", strtotime(@$orders_time[$i]['L'])):""; } ?>
                                 </div>
-                                <div class="txt12 text-center <?php if(isset($online_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_phone[$i]['L']; ?></div>
+                                <div class="txt12 text-center <?php if(isset($online_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>"><?php echo @$orders_phone[$i]['L'] . @$orders_message[$i]['L']; ?></div>
                             </div>
                         </li>
                             <?php } ?>
