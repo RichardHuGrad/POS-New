@@ -182,6 +182,7 @@ CREATE TABLE `categories` (
   `status` char(1) NOT NULL DEFAULT 'A' COMMENT 'A=Active, I=Inactive',
   `created` int(11) NOT NULL,
   `modified` int(11) NOT NULL,
+  `orderby` int(11) NOT NULL,
   `printer` enum('C','K') DEFAULT 'K' COMMENT 'C-Cashier, K-kitchen',
   `group_id` smallint(5) UNSIGNED DEFAULT '1',
   `remote_id` int(11) NOT NULL

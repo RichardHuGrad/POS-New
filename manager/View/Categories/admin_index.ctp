@@ -115,6 +115,7 @@ if($this->Session->check('category_search')){
                                     <th><?php echo @$this->Paginator->sort('zh_name', 'Category Name(ZH)') ?></th>
                                     <th><?php echo @$this->Paginator->sort('Category.status', 'Status') ?></th>
                                     <th><?php echo @$this->Paginator->sort('Category.modified', 'Updated On') ?></th>
+                                    <th>Order Number</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -134,6 +135,9 @@ if($this->Session->check('category_search')){
                                             </td>
                                             <td>
                                                 <?php echo date(DATETIME_FORMAT, $cat['Category']['modified']); ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $cat['Category']['orderby']; ?>
                                             </td>
                                             <td>
                                                 <div>
@@ -162,7 +166,7 @@ if($this->Session->check('category_search')){
                                     }
                                     if('all' != $limit){ ?>
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="6">
                                                 <?php echo $this->element('pagination'); ?>
                                             </td>
                                         </tr>
@@ -170,7 +174,7 @@ if($this->Session->check('category_search')){
                                 } else {
                                     ?>
                                     <tr>
-                                        <td colspan="5" class="text-center">Category Not Available !</td>
+                                        <td colspan="6" class="text-center">Category Not Available !</td>
                                     </tr>
                                 <?php } ?>
                                 </tbody>

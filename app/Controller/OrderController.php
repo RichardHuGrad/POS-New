@@ -49,7 +49,8 @@ class OrderController extends AppController {
         $this->Category->virtualFields['zh_name'] = "Select name from category_locales where category_locales.category_id = Category.id and lang_code = 'zh'";
 
         $records = $this->Category->find("all", array(
-            'conditions' => array('Category.status' => 'A')
+            'conditions' => array('Category.status' => 'A'),
+        	'order' => array('Category.orderby'),
         ));
         foreach ($records as $key1 => $rc1) {
         	foreach ($rc1['Cousine'] as $key2 => $rc2) {
