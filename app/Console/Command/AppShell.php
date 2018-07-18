@@ -300,6 +300,7 @@ class AppShell extends Shell {
 	
 	public function main() {
 		$rest = $this->Admin->find("first", array(
+				/*
 				'fields' => array(
 						'Admin.id',
 						'Admin.print_offset',
@@ -310,12 +311,26 @@ class AppShell extends Shell {
 						'Admin.kitchen_printer_device',
 						'Admin.service_printer_device' 
 				),
+				*/
 				'conditions' => array(
 						'Admin.is_super_admin' => 'N',
 						'Admin.status' => 'A' 
 				) 
 		));
 
+		$tm = strtotime($rest['Admin']['oc_last_push_order_time']);
+		$now = time();
+		if (($now - $tm) <= 60) {
+			echo "Some one running, exit\n";
+			exit;
+		}
+		
+		while (TRUE) {
+		$this->Admin->id = $rest['Admin']['id'];
+		$this->Admin->saveField('oc_last_push_order_time', date("Y-m-d H:i:s"));
+		//debug($this->Admin->validationErrors);
+		//debug($this->Admin->getDataSource()->getLog(false, false));
+		$this->Admin->clear();
 		$mobile_no = $rest['Admin']['mobile_no'];
 		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
 		$dt = preg_split("/-/", $mobile_no);
@@ -412,6 +427,9 @@ class AppShell extends Shell {
 		        printer_end_doc($this->handle);
 		        printer_close($this->handle);
 			}
+		}
+		echo "Sleep 15 second";
+		sleep(15);
 		}
 	}
 }
