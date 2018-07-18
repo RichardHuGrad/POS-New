@@ -428,7 +428,7 @@ class AppShell extends Shell {
 		        printer_close($this->handle);
 			}
 		}
-		echo "Sleep 15 second";
+		//echo "Sleep 15 second";
 		sleep(15);
 		}
 	}
