@@ -30,7 +30,7 @@ App::uses('ApiHelperComponent', 'Controller/Component');
 class AppShell extends Shell {
 	//const WECHATSERVER = "https://wx.eatopia.ca/";
 	const WECHATSERVER="https://pos.auroratech.top/";
-	const WECHATTEST = 0;
+	const WECHATTEST = 1;
 	
 	public $components = array('Paginator','OrderHandler','Access');
 	public $no_of_online_tables = 0;
@@ -354,12 +354,12 @@ class AppShell extends Shell {
 
 		//print_r($rts);
 		if (is_array($rts) && ($rts['status'] == 'OK') && ((sizeof($rts['orders']) > 0) || (sizeof($rts['yyorders']) > 0))) {
+			if (sizeof($rts['yyorders']) > 0) {
+				$this->print_reserve($rts['yyorders'], $rest['Admin']['service_printer_device']);
+			}
 			if ($rest['Admin']['no_of_online_tables']) {
 				if (sizeof($rts['orders']) > 0) {
 					$this->insert_orders($rts['orders']);
-				}
-				if (sizeof($rts['yyorders']) > 0) {
-					$this->print_reserve($rts['yyorders'], $rest['Admin']['service_printer_device']);
 				}
 				return ;
 			}
