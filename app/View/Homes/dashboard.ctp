@@ -150,7 +150,7 @@
                                                                          
                         	  </ul>
                             </div>
-                            <div class="<?php if (in_array(@$orders_no[$i]['D'], $orders_cooked)) { echo "notcookedwrap"; } else { if(@isset($dinein_tables_status[$i])) echo @$colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                            <div class="<?php if (in_array(@$orders_no[$i]['D'], $orders_cooked) && ($dinein_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(@isset($dinein_tables_status[$i])) echo @$colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
                                 <div class="number-txt for-dine"><?php echo __('Dine'); ?> <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
 
                                 <!-- <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
@@ -261,7 +261,7 @@
 
     		                           </ul>
                                 </div>
-    	                          <div class="<?php if (in_array(@$orders_no[$i]['T'], $orders_cooked)) { echo "notcookedwrap"; } else { if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
+    	                          <div class="<?php if (in_array(@$orders_no[$i]['T'], $orders_cooked) && ($takeway_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
                                     <div class="number-txt for-dine">Out <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                 <?php
                                 if(@$takeway_tables_status[$i]) {
@@ -369,7 +369,7 @@
                                         
                                 </ul>
                               </div>
-                              <div class="<?php if (in_array(@$orders_no[$i]['W'], $orders_cooked)) { echo "notcookedwrap"; } else { if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                              <div class="<?php if (in_array(@$orders_no[$i]['W'], $orders_cooked) && ($waiting_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
                                   <div class="number-txt for-dine">Deliv<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                   <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                       <?php
