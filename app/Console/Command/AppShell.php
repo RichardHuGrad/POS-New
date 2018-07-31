@@ -103,6 +103,7 @@ class AppShell extends Shell {
         		)
    		);
         
+        $order_id_list = array();
 		foreach ($orders as $order) {
 			//Debug print_r($order);
 			/*
@@ -196,11 +197,23 @@ class AppShell extends Shell {
 					if (empty($order_id)) {
 						// to create a new order
 						if ($type == 'L') {
-							for ($table = 1; $table <= $this->no_of_online_tables; $table++) {
-								$t = $this->Order->find("first",array('conditions' => array('Order.table_no' => $table, 'Order.order_type' => 'L')));
-								if (empty($t) || $t['Order']['table_status'] == 'A') {
-									// New table or Available table
-									break;
+							if ($order['type'] == 1) {
+								$reason .= $order['name'] . " - " . $order['tel'] . " - " . $order['address'];
+								if ($order['is_take'] == 1) {
+									$type = 'T';
+								} else if ($order['is_take'] == 2) {
+									$type = 'W';
+								} else {
+									$type = '';
+								}
+							}
+							if ($type) {
+								for ($table = 1; $table <= $this->no_of_online_tables; $table++) {
+									$t = $this->Order->find("first",array('conditions' => array('Order.table_no' => $table, 'Order.order_type' => $type)));
+									if (empty($t) || $t['Order']['table_status'] == 'A') {
+										// New table or Available table
+										break;
+									}
 								}
 							}
 						}
@@ -269,9 +282,11 @@ class AppShell extends Shell {
 					}
 				}
 				$this->Order->update_reason($order_id, $reason, $message);
+				$order_id_list[] = $order_id;
 			}
 			$this->Order->clear();
 		}
+		return  implode(',', $order_id_list);
 	}
 	
 	public function print_reserve($orders, $printer_name) {
@@ -359,7 +374,11 @@ class AppShell extends Shell {
 			}
 			if ($rest['Admin']['no_of_online_tables']) {
 				if (sizeof($rts['orders']) > 0) {
-					$this->insert_orders($rts['orders']);
+					if ($ods = $this->insert_orders($rts['orders'])) {
+						$this->Admin->id = $rest['Admin']['id'];
+						$this->Admin->saveField('oc_api_key', $ods);
+						$this->Admin->clear();
+					}
 				}
 				return ;
 			}

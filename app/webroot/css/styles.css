@@ -179,6 +179,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 #take-out-component li.clearfix {width: 100px; }
 #waiting-list-component li.clearfix {width: 100px; }
 /*.dine-wrap li:nth-child(9n) { margin-right: 0; } */
+.dine-wrap li .notcookedwrap { height: 65px; width: 100%; background: #2e635e; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .notpaidwrap { height: 65px; width: 100%; background: #ff8400; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .availablebwrap { height: 65px; width: 100%; background: #e3e3e4; padding: 10px; cursor: pointer; border-radius: 10px;}
 .dine-wrap li .greenwrap { height: 65px; width: 100%; background: #57ad12; padding: 10px; cursor: pointer; border-radius: 10px;}
@@ -245,6 +246,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 .paidb { width: 20px; height: 20px; margin-right: 10px; background: #57ad12; }
 .printedb { width: 20px; height: 20px; margin-right: 10px; background: #B15BFF; }
 .notpaid { width: 20px; height: 20px; margin-right: 10px; background: #ff8400; }
+.notcooked { width: 20px; height: 20px; margin-right: 10px; background: #2e635e; }
 .availableb { width: 20px; height: 20px; margin-right: 10px; background: #e3e3e4; border: 1px solid #eee; }
 .paid-txt { font-size: 18px; font-weight: 600; color: #fff; }
 .table-colors { padding-top: 5px; }

@@ -325,6 +325,9 @@ class Order extends AppModel {
         return $data;
     }
 
+    public function hasNoneCookedItem($order_no) {
+    	return $this->query("SELECT i.* FROM orders o JOIN order_items i ON (o.id = i.order_id AND i.is_print='N') WHERE o.order_no='" . $order_no . "'");
+    }
 }
 
 ?>

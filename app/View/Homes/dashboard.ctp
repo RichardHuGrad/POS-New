@@ -150,7 +150,7 @@
                                                                          
                         	  </ul>
                             </div>
-                            <div class="<?php if(@isset($dinein_tables_status[$i])) echo @$colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                            <div class="<?php if (in_array(@$orders_no[$i]['D'], $orders_cooked)) { echo "notcookedwrap"; } else { if(@isset($dinein_tables_status[$i])) echo @$colors[$dinein_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
                                 <div class="number-txt for-dine"><?php echo __('Dine'); ?> <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
 
                                 <!-- <div class="order_no_box <?php if(isset($dinein_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
@@ -261,7 +261,7 @@
 
     		                           </ul>
                                 </div>
-    	                          <div class="<?php if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
+    	                          <div class="<?php if (in_array(@$orders_no[$i]['T'], $orders_cooked)) { echo "notcookedwrap"; } else { if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
                                     <div class="number-txt for-dine">Out <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                 <?php
                                 if(@$takeway_tables_status[$i]) {
@@ -369,7 +369,7 @@
                                         
                                 </ul>
                               </div>
-                              <div class="<?php if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                              <div class="<?php if (in_array(@$orders_no[$i]['W'], $orders_cooked)) { echo "notcookedwrap"; } else { if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
                                   <div class="number-txt for-dine">Deliv<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
                                   <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                       <?php
@@ -490,6 +490,10 @@
 
         <div class="col-md-2 dine-wrap">
             <div class="clearfix marginB15 col-md-6">
+                <div class="pull-left notcooked"></div>
+                <div class="pull-left "><?php echo __('Uncooked'); ?></div>
+            </div>
+            <div class="clearfix marginB15 col-md-6">
                 <div class="pull-left notpaid"></div>
                 <div class="pull-left "><?php echo __('On-going'); ?></div>
             </div>
@@ -505,6 +509,7 @@
                 <div class="pull-left printedb"></div>
                 <div class="pull-left"><?php echo __('Printed'); ?></div>
             </div>
+            
         </div>
         
         <div>
@@ -624,8 +629,30 @@ echo $this->fetch('script');
             e.stopPropagation();
         });
 
-
+        setInterval(checkNewOrder, 15000);
 	});
+	
+	function checkNewOrder(){
+		if ($('.open').length > 0) {
+			return;
+		}
+		if ($('.in').length > 0) {
+			return;
+		}
+		
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'checknew')); ?>",
+            type: 'get',
+            datatype: 'json',
+            success: function(json){ 
+            	//console.log(json);
+            	if (json.reload) {
+                	//console.log('checkNewOrder reload ===============================');
+            		location.reload();
+            	}
+            }
+        });
+    }
 
     $(window).load(function () {
         if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
@@ -675,5 +702,6 @@ echo $this->fetch('script');
 		$('#dialog').hide();
 	}
 	//End.
+	
 </script>
 <!-- End. -->

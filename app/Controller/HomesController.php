@@ -189,6 +189,15 @@ class HomesController extends AppController {
                 )
         );
 
+        $orders_cooked = array();
+        foreach ($orders_no as $lvl1) {
+        	foreach ($lvl1 as $odn) {
+        		if ($s = $this->Order->hasNoneCookedItem($odn)) {
+        			$orders_cooked[] = $odn;
+        		}
+        	}
+        }
+        
         // get all order phone.
         $orders_phone = $this->Order->find("list", array(
             'fields' => array('Order.order_type', 'Order.phone', 'Order.table_no'),
@@ -241,9 +250,28 @@ class HomesController extends AppController {
 
         // print_r($orders_total);
 
-        $this->set(compact('tables','dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd', 'orders_message'));
+        $this->set(compact('tables','orders_cooked', 'dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd', 'orders_message'));
     }
-
+    
+    public function checknew() {
+        $this->layout = NULL;
+        $this->autoRender = false;
+    	
+        $this->loadModel('Admin');
+    	$rest = $this->Admin->find("first", array('conditions' => array('Admin.is_super_admin' => 'N', 'Admin.status' => 'A')));
+    	if ($rest && $rest['Admin']['oc_api_key']) {
+			$this->Admin->id = $rest['Admin']['id'];
+			$this->Admin->saveField('oc_api_key', '');
+			$this->Admin->clear();
+        	$json = array('reload' => 1);
+    	} else {
+    		$json = array('reload' => 0);
+    	}
+    	
+    	$this->response->type('application/json');
+    	echo json_encode($json);
+    }
+    
     public function allorders() {
 
         // get all table details

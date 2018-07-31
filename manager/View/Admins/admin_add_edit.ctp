@@ -210,7 +210,6 @@ $(document).ready(function() {
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
-                                <!--End @-->
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -227,96 +226,6 @@ $(document).ready(function() {
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
-
-
-                                <!--Writing by Mr.Sao @ May 17 2018-->
-
-                                <div class="clearfix"></div>
-                                 <h4 style="margin-left: 13px; margin-top: 28px;">
-                                    Printer Setting
-                                </h4>
-                                <div class="printerBpx">
-                                    <label id="addPrinter" class="control-label">Add Printer</label>
-                                    
-                                    <?php 
-                                    $printer_count = count($this->request->data['Printer']);
-                                    if($printer_count < 2){
-                                        $printer_count = 2;
-                                    }
-                                    for($i=0;$i<=$printer_count-1;$i++){
-                                        if($i < 1){
-                                            ?>
-                                    
-                                    <div class="col-md-12">
-                                        <input name="printer[id][]" multiple="multiple" value="<?php echo $this->request->data['Printer'][$i]['Printer']['id']; ?>" maxlength="2" class="form-control" required="required" type="hidden" readonly="readonly">
-                                        <div class="form-group">
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="AdminTableSize">#</label><input name="printer[num][]" multiple="multiple" value="<?php echo $type = $this->request->data['Printer'][$i]['Printer']['num'] ? $this->request->data['Printer'][$i]['Printer']['num'] : 1; ?>" maxlength="2" class="form-control" required="required" type="text" readonly="readonly">                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="AdminTableSize">Printer Name</label><input name="printer[name][]" multiple="multiple" value="<?php echo $this->request->data['Printer'][$i]['Printer']['name']; ?>" maxlength=" " class="form-control" required="required" type="text" >                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="AdminTableSize">Printer ID</label><input name="printer[printer_ID][]" multiple="multiple" value="<?php echo $this->request->data['Printer'][$i]['Printer']['printer_ID']; ?>" maxlength=" " class="form-control" required="required" type="text">                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="AdminTableSize">Printer Type</label><input name="printer[type][]" multiple="multiple" value="<?php echo $type = $this->request->data['Printer'][$i]['Printer']['type'] ? $this->request->data['Printer'][$i]['Printer']['type'] : '账单'; ?>" maxlength=" " class="form-control" required="required" type="text" readonly="readonly" >                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php }else{ ?>
-
-                                   
-                                    <div class="col-md-12 parentline">
-                                         <input name="printer[id][]" class="printer_id" multiple="multiple" value="<?php echo $this->request->data['Printer'][$i]['Printer']['id']; ?>" maxlength="2" class="form-control" required="required" type="hidden" readonly="readonly">
-                                        <div class="form-group">
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <input name="printer[num][]" multiple="multiple" value="<?php echo $type = $this->request->data['Printer'][$i]['Printer']['num'] ? $this->request->data['Printer'][$i]['Printer']['num'] : 2; ?>" maxlength="2" class="form-control" required="required" type="text" readonly="readonly">                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <input name="printer[name][]" multiple="multiple" value="<?php echo $this->request->data['Printer'][$i]['Printer']['name']; ?>" maxlength=" " class="form-control" required="required" type="text">                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <input name="printer[printer_ID][]" multiple="multiple" value="<?php echo $this->request->data['Printer'][$i]['Printer']['printer_ID']; ?>" maxlength=" " class="form-control" required="required" type="text">                                                    
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <input name="printer[type][]" multiple="multiple" value="<?php echo $type = $this->request->data['Printer'][$i]['Printer']['type'] ? $this->request->data['Printer'][$i]['Printer']['type'] : '厨打单'; ?>" maxlength=" " class="form-control" required="required" type="text" readonly="readonly" >                                                    
-                                                </div>
-                                            </div>
-                                            <?php if($i>1){ ?>
-                                                    
-            
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <input name=""  value="删除" class="form-control complete" required="required" type="button">
-                                                </div>
-                                            </div>
-                                            <?php }?>
-                                            
-                                        </div>
-                                    </div>
-                                    <?php }
-                                    } ?>
-                                    
-                                </div>
-                                <!--End @-->
-
-
 
                                 <div class="clearfix"></div>
                                  <h4 style="margin-left: 13px; margin-top: 28px;">
@@ -483,65 +392,3 @@ $(document).ready(function() {
    <?php echo $this->element('footer'); ?>
     <!-- end: FOOTER -->
 </div>
-<script type="text/javascript">
-    var html = '';
-    var beforeHtml = '';
-        beforeHtml += '<div class="col-md-12 parentline">';
-        beforeHtml += '<div class="form-group">';
-        beforeHtml += '<div class="col-md-2">';
-        beforeHtml += '<div class="form-group">';
-        beforeHtml += '<input name="printer[num][]" multiple="multiple" value="'
-     var afterHtml = '';
-        afterHtml += '" maxlength="2" class="form-control" required="required" type="text" readonly="readonly">'; 
-        afterHtml += '</div>';
-        afterHtml += '</div>';
-        afterHtml += '<div class="col-md-2">';
-        afterHtml += '<div class="form-group">';
-        afterHtml += '<input name="printer[name][]"" multiple="multiple" value="" maxlength=" " class="form-control" required="required" type="text">';                                                    
-        afterHtml += '</div>';
-        afterHtml += '</div>';
-        afterHtml += '<div class="col-md-2">';
-        afterHtml += '<div class="form-group">';
-        afterHtml += '<input name="printer[printer_ID][]" multiple="multiple" value="" maxlength=" " class="form-control" required="required" type="text">';                                                    
-        afterHtml += '</div>';
-        afterHtml += '</div>';
-            afterHtml += '<div class="col-md-2">';
-                afterHtml += '<div class="form-group">';
-                afterHtml += '<input name="printer[type][]" multiple="multiple" value="" maxlength=" " class="form-control" required="required" type="text">';                                                    
-                afterHtml += '</div>';
-            afterHtml += '</div>';
-            
-            afterHtml += '<div class="col-md-2">';
-                afterHtml += '<div class="form-group">';
-                afterHtml += '<input name=""  value="删除" class="form-control complete" required="required" type="button" >';                                                    
-                afterHtml += '</div>';
-            afterHtml += '</div>';
-        afterHtml += '</div>';
-
-        
-    $("#addPrinter").click(function(){
-        var num = $(".printerBpx").find(".col-md-12").length;
-        num+=1;
-        html=beforeHtml+num+afterHtml;
-        $(".printerBpx").append(html);
-        
-    })
-    $(".complete").click(function(){
-        var printer_id =  $(this).parents(".parentline").find(".printer_id").val();
-
-        $.ajax({
-            
-            data: {userId: '1'},
-            dataType: 'json',
-        })
-        $(this).parents(".parentline").remove();
-    })
-    
-
-
-
-</script>
-<style type="text/css">
-#addPrinter{border: 1px solid #e0e0e0;padding: 5px;border-radius: 2px; cursor: pointer;margin-left: 10px;}
-.complete{width: auto;}
-</style>
