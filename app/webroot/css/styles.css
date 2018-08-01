@@ -175,7 +175,7 @@ a:active, a:focus, a:hover, input[type="image"], select:focus, input, input[type
 }
 .dine-box .dinebtn img { display:none;vertical-align: -7px; margin-right: 10px; }
 .dine-wrap{margin-top: 20px;}
-.dine-wrap li { float: left; margin-bottom: 20px; margin-right: 3%; position: relative;}
+.dine-wrap li { float: left; margin-bottom: 10%; margin-right: 3%; position: relative;}
 #take-out-component li.clearfix {width: 100px; }
 #waiting-list-component li.clearfix {width: 100px; }
 /*.dine-wrap li:nth-child(9n) { margin-right: 0; } */
@@ -614,7 +614,7 @@ header{ background:#c30e23; height:100px;}
 .dine-box .dinebtn img{ vertical-align:-7px; margin-right:10px;}
 .dine-wrap li {
   float: left;
-  margin-bottom: 20px;
+  margin-bottom: 10%;
   margin-right: 2%;
   position: relative;
   width: 15%;

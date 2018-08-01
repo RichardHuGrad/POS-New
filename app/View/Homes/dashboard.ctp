@@ -261,8 +261,8 @@
 
     		                           </ul>
                                 </div>
-    	                          <div class="<?php if (in_array(@$orders_no[$i]['T'], $orders_cooked) && ($takeway_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
-                                    <div class="number-txt for-dine">Out <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+    	                          <div style="height: 48px;padding-top: 5px;" class="<?php if (in_array(@$orders_no[$i]['T'], $orders_cooked) && ($takeway_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(isset($takeway_tables_status[$i])) echo $colors[$takeway_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown" style="height:80px">
+                                    <!-- div class="number-txt for-dine">Out <?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div -->
                                 <?php
                                 if(@$takeway_tables_status[$i]) {
                                 ?>
@@ -369,8 +369,8 @@
                                         
                                 </ul>
                               </div>
-                              <div class="<?php if (in_array(@$orders_no[$i]['W'], $orders_cooked) && ($waiting_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
-                                  <div class="number-txt for-dine">Deliv<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div>
+                              <div style="height: 48px;padding-top: 5px;" class="<?php if (in_array(@$orders_no[$i]['W'], $orders_cooked) && ($waiting_tables_status[$i] != 'R')) { echo "notcookedwrap"; } else { if(isset($waiting_tables_status[$i])) echo $colors[$waiting_tables_status[$i]]; else echo 'availablebwrap'; } ?> clearfix  dropdown-toggle" data-toggle="dropdown">
+                                  <!-- div class="number-txt for-dine">Deliv<?php echo str_pad($i, 2, 0, STR_PAD_LEFT); ?></div -->
                                   <div class="order_no_box <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
                                       <?php
                                       if(!@$waiting_tables_status[$i])
@@ -391,7 +391,7 @@
 
         </div>
 
-        <div class="col-md-10 col-sm-10 col-xs-10" id="online-list-component">
+        <div class="col-md-10 col-sm-10 col-xs-10" id="online-list-component" style="display : none;">
 
             <div class="col-md-1 col-sm-1 col-xs-1 dine-wrap" id="online-list-title">
                <?php echo __('Online'); ?><br>              
@@ -488,24 +488,24 @@
             </div>
         </div>
 
-        <div class="col-md-2 dine-wrap">
-            <div class="clearfix marginB15 col-md-6">
+        <div class="col-md-12 dine-wrap">
+            <div class="clearfix marginB15 col-md-2">
                 <div class="pull-left notcooked"></div>
                 <div class="pull-left "><?php echo __('Uncooked'); ?></div>
             </div>
-            <div class="clearfix marginB15 col-md-6">
+            <div class="clearfix marginB15 col-md-2">
                 <div class="pull-left notpaid"></div>
                 <div class="pull-left "><?php echo __('On-going'); ?></div>
             </div>
-            <div class="clearfix marginB15 col-md-6">
+            <div class="clearfix marginB15 col-md-2">
                 <div class="pull-left availableb"></div>
                 <div class="pull-left"><?php echo __('Available'); ?></div>
             </div>
-            <div class="clearfix marginB15 col-md-6">
+            <div class="clearfix marginB15 col-md-2">
                 <div class="pull-left paidb"></div>
                 <div class="pull-left"><?php echo __('Paid'); ?></div>
             </div>
-            <div class="clearfix marginB15 col-md-6">
+            <div class="clearfix marginB15 col-md-2">
                 <div class="pull-left printedb"></div>
                 <div class="pull-left"><?php echo __('Printed'); ?></div>
             </div>
