@@ -201,7 +201,6 @@ class AppShell extends Shell {
 						$table_limit = 0;
 						if ($type == 'L') {
 							if ($order['type'] == 1) {
-								$reason .= $order['name'] . " - " . $order['tel'] . " - " . $order['address'];
 								if ($order['is_take'] == 1) {
 									$type = 'T';
 									$table_limit = $this->no_of_takeout_tables;
