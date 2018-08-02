@@ -33,6 +33,8 @@ class AppShell extends Shell {
 	const WECHATTEST = 0;
 	
 	public $components = array('Paginator','OrderHandler','Access');
+	public $no_of_takeout_tables = 0;
+	public $no_of_waiting_tables = 0;
 	public $no_of_online_tables = 0;
 	
     public $fontStr1 = "simsun";
@@ -196,24 +198,32 @@ class AppShell extends Shell {
 
 					if (empty($order_id)) {
 						// to create a new order
+						$table_limit = 0;
 						if ($type == 'L') {
 							if ($order['type'] == 1) {
 								$reason .= $order['name'] . " - " . $order['tel'] . " - " . $order['address'];
 								if ($order['is_take'] == 1) {
 									$type = 'T';
+									$table_limit = $this->no_of_takeout_tables;
 								} else if ($order['is_take'] == 2) {
 									$type = 'W';
+									$table_limit = $this->no_of_waiting_tables;
 								} else {
 									$type = '';
 								}
 							}
 							if ($type) {
-								for ($table = 1; $table <= $this->no_of_online_tables; $table++) {
-									$t = $this->Order->find("first",array('conditions' => array('Order.table_no' => $table, 'Order.order_type' => $type)));
-									if (empty($t) || $t['Order']['table_status'] == 'A') {
+								for ($table = 1; $table <= $table_limit; $table++) {
+									$t = $this->Order->find("first",array('conditions' => array('Order.table_no' => $table, 'Order.order_type' => $type), 'order' => array('Order.created DESC')));
+									if (empty($t) || ($t['Order']['table_status'] == 'A') || ($t['Order']['table_status'] == 'V')) {
 										// New table or Available table
 										break;
 									}
+								}
+								if ($table == $table_limit) {
+									// reach maximum drop order !!!!! need fix in future
+									echo "reach maximum table limit !!!!! Order dropped !!! ".$order['order_num']." \n"; //XXXXXXXXXXXXX
+									break;
 								}
 							}
 						}
@@ -347,6 +357,8 @@ class AppShell extends Shell {
 		//debug($this->Admin->getDataSource()->getLog(false, false));
 		$this->Admin->clear();
 		$mobile_no = $rest['Admin']['mobile_no'];
+		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
+		$this->no_of_waiting_tables = $rest['Admin']['no_of_waiting_tables'];
 		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
 		$dt = preg_split("/-/", $mobile_no);
 		if (!is_array($dt) || (sizeof($dt) != 2)) {
