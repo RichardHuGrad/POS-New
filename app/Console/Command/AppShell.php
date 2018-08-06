@@ -219,7 +219,7 @@ class AppShell extends Shell {
 										break;
 									}
 								}
-								if ($table == $table_limit) {
+								if ($table > $table_limit) {
 									// reach maximum drop order !!!!! need fix in future
 									echo "reach maximum table limit !!!!! Order dropped !!! ".$order['order_num']." \n"; //XXXXXXXXXXXXX
 									break;
