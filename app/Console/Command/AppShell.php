@@ -358,7 +358,7 @@ class AppShell extends Shell {
 		$mobile_no = $rest['Admin']['mobile_no'];
 		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
 		$this->no_of_waiting_tables = $rest['Admin']['no_of_waiting_tables'];
-		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
+		$this->no_of_takeout_tables = $rest['Admin']['no_of_takeout_tables'];
 		$dt = preg_split("/-/", $mobile_no);
 		if (!is_array($dt) || (sizeof($dt) != 2)) {
 			die("Unknow Store ID and Phone");
