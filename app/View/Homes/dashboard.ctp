@@ -380,7 +380,8 @@
                                       ?>
                                   </div>
                                   <div class="txt12 text-center <?php if(isset($waiting_tables_status[$i])) echo "whitecolor"; else echo "lightcolor"; ?>">
-                                      <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i", strtotime(@$orders_time[$i]['W'])):""; } ?>
+                                      <?php /* if(@$waiting_tables_status[$i]) {  ?> <?php echo @$orders_time[$i]['W']?date("H:i", strtotime(@$orders_time[$i]['W'])):""; } */ ?>
+                                      <?php if(@$waiting_tables_status[$i]) {  ?> <?php echo '$' . @round($orders_total[$orders_no[$i]['T']], 2); } ?>
                                   </div>
                               </div>
                             </li>
