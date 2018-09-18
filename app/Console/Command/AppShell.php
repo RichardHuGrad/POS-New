@@ -222,10 +222,15 @@ class AppShell extends Shell {
 								if ($table > $table_limit) {
 									// reach maximum drop order !!!!! need fix in future
 									echo "reach maximum table limit !!!!! Order dropped !!! ".$order['order_num']." \n"; //XXXXXXXXXXXXX
-									break;
+									return;
 								}
 							}
 						}
+
+						if ( ! $this->save_order('orders', $order)) {
+							continue;
+						}
+						
 						$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
 						// echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
 					}
@@ -299,12 +304,17 @@ class AppShell extends Shell {
 	}
 	
 	public function save_order($ordertype, $order) {
-		$order = $this->RemoteOrderSync->find('first', array('conditions' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'synced' => 0)));
-		if (empty($order)) {
+		$od = $this->RemoteOrderSync->find('first', array('conditions' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'synced' => 0)));
+		if (empty($od)) {
 			$savedata = array(
-					'RemoteOrderSync' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'record' => json_encode($order))
+					'RemoteOrderSync' => array(
+							'order_type' => $ordertype, 
+							'order_id' => $order['id'], 
+							'record' => json_encode($order)
+					)
 			);
 			$this->RemoteOrderSync->save($savedata);
+			$this->RemoteOrderSync->clear();
 			return TRUE;
 		}
 		return FALSE;
@@ -331,7 +341,6 @@ class AppShell extends Shell {
 			printer_end_page($this->handle);
 			printer_end_doc($this->handle);
 			printer_close($this->handle);
-			
 			$this->save_order('yyorders', $order);
 		}
 	}
@@ -391,7 +400,7 @@ class AppShell extends Shell {
 		curl_close($curl);
 		
 		$rts = json_decode($response, TRUE);
-
+		
 		$this->loadModel('RemoteOrderSync');
 		
 		//print_r($rts);
@@ -407,8 +416,7 @@ class AppShell extends Shell {
 						$this->Admin->clear();
 					}
 				}
-				return ;
-			}
+			} else {
 			$offset = explode(',', $rest['Admin']['print_offset']);
 			$printer_name = $rest['Admin']['service_printer_device'];
 			
@@ -477,29 +485,30 @@ class AppShell extends Shell {
 		        printer_end_doc($this->handle);
 		        printer_close($this->handle);
 			}
+			}
 		}
 		
 		$st_tm = time();
 		$sync_orders = $this->RemoteOrderSync->find('all', array('conditions' => array('synced' => 0)));
 		foreach ($sync_orders as $sync) {
 			if ($sync['RemoteOrderSync']['order_type'] == 'yyorders') {
-				$syncurl = $url . "&ydorderid=" . $sync['id'];
+				$syncurl = $url . "&ydorderid=" . $sync['RemoteOrderSync']['order_id'];
 			} else {
 				// $sync['RemoteOrderSync']['order_type'] == 'orders'
-				$syncurl = $url . "&orderid=" . $sync['id'];
+				$syncurl = $url . "&orderid=" . $sync['RemoteOrderSync']['order_id'];
 			}
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_URL, $syncurl);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 			$response = curl_exec($curl);
 			curl_close($curl);
 
 			$sync_rt = json_decode($response, TRUE);
-			if (is_array($sync_rt) && ($sync_rt['status'] == 'OK') && ($sync_rt['id'] == $sync['id'])) {
-				$sync['synced'] = 1;
+			if (is_array($sync_rt) && ($sync_rt['status'] == 'OK') && ($sync_rt['id'] == $sync['RemoteOrderSync']['order_id'])) {
+				$sync['RemoteOrderSync']['synced'] = 1;
 			}
-			$this->RemoteOrderSync->save($savedata);
+			$this->RemoteOrderSync->save($sync);
 		}
 
 		$end_tm = time();
@@ -507,7 +516,7 @@ class AppShell extends Shell {
 		$sleep_tm = 15 - ($end_tm - $st_tm);
 		//echo "Sleep 15 second";
 		if ($sleep_tm > 0) {
-			sleep(15);
+			sleep($sleep_tm);
 		}
 		}
 	}
