@@ -256,7 +256,7 @@ class AppShell extends Shell {
 									}
 								}
 							} else {
-								$memotxt['error'][] = "Can't find Extrascategory. Remote ID: " . $opt['id'] . "; ";
+								$memotxt['error'][] = "Can't find Extrascategory. Remote ID: " . $opt['options_id'] . "; ";
 							}
 							//Debug echo "error:\n"; print_r($memotxt['error']);
 							//Debug echo "extra_id_array:\n"; print_r($extra_id_array);
@@ -305,7 +305,9 @@ class AppShell extends Shell {
 					'RemoteOrderSync' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'record' => json_encode($order))
 			);
 			$this->RemoteOrderSync->save($savedata);
+			return TRUE;
 		}
+		return FALSE;
 	}
 	
 	public function print_reserve($orders, $printer_name) {
@@ -376,7 +378,7 @@ class AppShell extends Shell {
 			die("Unknow Store ID and Phone");
 		}
 		
-		$url = self::WECHATSERVER . "web/index.php?c=site&a=entry&do=storeorder&m=zh_dianc&version_id=1&sid=" . $dt[0] . "&skey=" . md5($dt[1]);
+		$url = self::WECHATSERVER . "web/index.php?c=site&a=entry&do=storeorder&m=zh_dianc&version_id=1&sid=" . $dt[0] . "&skey=" . md5($dt[1]) . "&sync=2";
 		if (self::WECHATTEST) {
 			$url .= "&test=1";
 		}
@@ -412,7 +414,11 @@ class AppShell extends Shell {
 			
 			$print_x = 25;
 			foreach ($rts['orders'] as $order) {
-				$this->handle = printer_open($printer_name);
+		        if ( ! $this->save_order('orders', $order)) {
+		        	continue;
+		        }
+				
+		        $this->handle = printer_open($printer_name);
 				printer_start_doc($this->handle, "order");
 				printer_start_page($this->handle);
 			
@@ -470,8 +476,6 @@ class AppShell extends Shell {
 		        printer_end_page($this->handle);
 		        printer_end_doc($this->handle);
 		        printer_close($this->handle);
-		        
-		        $this->save_order('orders', $order);
 			}
 		}
 		
