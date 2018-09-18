@@ -298,6 +298,16 @@ class AppShell extends Shell {
 		return  implode(',', $order_id_list);
 	}
 	
+	public function save_order($ordertype, $order) {
+		$order = $this->RemoteOrderSync->find('first', array('conditions' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'synced' => 0)));
+		if (empty($order)) {
+			$savedata = array(
+					'RemoteOrderSync' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'record' => json_encode($order))
+			);
+			$this->RemoteOrderSync->save($savedata);
+		}
+	}
+	
 	public function print_reserve($orders, $printer_name) {
 		$print_x = 25;
 		foreach($orders as $order) {
@@ -319,6 +329,8 @@ class AppShell extends Shell {
 			printer_end_page($this->handle);
 			printer_end_doc($this->handle);
 			printer_close($this->handle);
+			
+			$this->save_order('yyorders', $order);
 		}
 	}
 	
@@ -378,6 +390,8 @@ class AppShell extends Shell {
 		
 		$rts = json_decode($response, TRUE);
 
+		$this->loadModel('RemoteOrderSync');
+		
 		//print_r($rts);
 		if (is_array($rts) && ($rts['status'] == 'OK') && ((sizeof($rts['orders']) > 0) || (sizeof($rts['yyorders']) > 0))) {
 			if (sizeof($rts['yyorders']) > 0) {
@@ -456,10 +470,41 @@ class AppShell extends Shell {
 		        printer_end_page($this->handle);
 		        printer_end_doc($this->handle);
 		        printer_close($this->handle);
+		        
+		        $this->save_order('orders', $order);
 			}
 		}
+		
+		$st_tm = time();
+		$sync_orders = $this->RemoteOrderSync->find('all', array('conditions' => array('synced' => 0)));
+		foreach ($sync_orders as $sync) {
+			if ($sync['RemoteOrderSync']['order_type'] == 'yyorders') {
+				$syncurl = $url . "&ydorderid=" . $sync['id'];
+			} else {
+				// $sync['RemoteOrderSync']['order_type'] == 'orders'
+				$syncurl = $url . "&orderid=" . $sync['id'];
+			}
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			$response = curl_exec($curl);
+			curl_close($curl);
+
+			$sync_rt = json_decode($response, TRUE);
+			if (is_array($sync_rt) && ($sync_rt['status'] == 'OK') && ($sync_rt['id'] == $sync['id'])) {
+				$sync['synced'] = 1;
+			}
+			$this->RemoteOrderSync->save($savedata);
+		}
+
+		$end_tm = time();
+		
+		$sleep_tm = 15 - ($end_tm - $st_tm);
 		//echo "Sleep 15 second";
-		sleep(15);
+		if ($sleep_tm > 0) {
+			sleep(15);
+		}
 		}
 	}
 }
