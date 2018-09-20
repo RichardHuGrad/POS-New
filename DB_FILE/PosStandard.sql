@@ -619,7 +619,7 @@ CREATE TABLE `remote_order_syncs` (
  `synced` TINYINT(1) NOT NULL,
  `last_tm` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `record` TEXT NOT NULL,
- PRIMARY KEY (`remote_order_sync_id`)
+ PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
