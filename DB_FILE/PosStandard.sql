@@ -185,7 +185,8 @@ CREATE TABLE `categories` (
   `orderby` int(11) NOT NULL,
   `printer` enum('C','K') DEFAULT 'K' COMMENT 'C-Cashier, K-kitchen',
   `group_id` smallint(5) UNSIGNED DEFAULT '1',
-  `remote_id` int(11) NOT NULL
+  `remote_id` int(11) NOT NULL,
+  `singlecut` TINYINT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
