@@ -509,6 +509,7 @@ class AppShell extends Shell {
 				$sync['RemoteOrderSync']['synced'] = 1;
 			}
 			$this->RemoteOrderSync->save($sync);
+			$this->RemoteOrderSync->clear();
 		}
 
 		$end_tm = time();
