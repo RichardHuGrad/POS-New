@@ -320,7 +320,6 @@ class KitchenHeaderPage extends HeaderPage {
         $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
         $table_type_str = $type_map[$this->table_type];
 
-        if (empty($this->itemcut)) {
         //$y = 10;
         $y = 120;
 
@@ -335,7 +334,6 @@ class KitchenHeaderPage extends HeaderPage {
         }
 
         printer_end_page($handle);
-		}
 
 
         printer_start_page($handle);
