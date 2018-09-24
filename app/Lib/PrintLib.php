@@ -320,9 +320,9 @@ class KitchenHeaderPage extends HeaderPage {
         $type_map = array('D' => '[[堂食]]', 'T' => '[[外卖]]', 'W' => '[[送餐]]');
         $table_type_str = $type_map[$this->table_type];
 
+        if (empty($this->itemcut)) {
         //$y = 10;
         $y = 120;
-
 
         if ($this->print_zh == true) {
             $font = printer_create_font('simsun', 42, 20, PRINTER_FW_BOLD, false, false, false, 0);
@@ -335,6 +335,7 @@ class KitchenHeaderPage extends HeaderPage {
         }
 
         printer_end_page($handle);
+		}
 
 
         printer_start_page($handle);
@@ -344,11 +345,11 @@ class KitchenHeaderPage extends HeaderPage {
         $font = printer_create_font("simsun", 42, 20, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
         if ($this->itemcut) {
-        	printer_draw_text($handle, $this->order_no . " : " . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
-        	$y += 42;
         	date_default_timezone_set("America/Toronto");
-        	$date_time = date("M d Y h:i:s A");
+        	$date_time = date("M d h:i:s A");
         	printer_draw_text($handle, $this->order_no . " : " . $date_time, 32, $y);
+        	$y += 42;
+        	printer_draw_text($handle, iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
         } else {
         printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
                  
