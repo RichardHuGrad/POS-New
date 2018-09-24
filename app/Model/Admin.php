@@ -210,6 +210,16 @@ class Admin extends AppModel {
         return $cashier_detail['Admin']['kitchen_printer_device'];
     }
 
+    public function getKitchenPrinterCut($id) {
+        $cashier_detail = $this->find("first", array(
+            'fields' => array('Admin.singlecut'),
+            'conditions' => array('Admin.id' => $id)
+                )
+        );
+
+        return $cashier_detail['Admin']['singlecut'];
+    }
+
     public function getServicePrinterName($id) {
         $cashier_detail = $this->find("first", array(
             'fields' => array('Admin.service_printer_device'),

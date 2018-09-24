@@ -61,7 +61,7 @@ class PrintLib {
     }
 
 
-    public function printKitchenItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false,$phone='') {
+    public function printKitchenItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false, $phone='', $cut=0) {
 
         $debug_str = json_encode($item_detail);
 
@@ -69,6 +69,15 @@ class PrintLib {
            return "function printer_open() not exists in server!";
         }
 
+        if ($cut) {
+        	$headerPage = new KitchenHeaderPage($order_no, $table_no, $table_type,true,false,$phone, $cut);
+        	foreach ($item_detail as $item) {
+        		$itemsPage = new KitchenItemsPage(array($item), $table_type);
+        	
+        		$doc = new BasicDoc($printer_name, array($headerPage, $itemsPage));
+        		$doc->printDoc();
+        	}
+        } else {
 
         $headerPage = new KitchenHeaderPage($order_no, $table_no, $table_type,true,false,$phone);
         $itemsPage = new KitchenItemsPage($item_detail, $table_type);
@@ -76,7 +85,7 @@ class PrintLib {
 
         $doc = new BasicDoc($printer_name, array($headerPage, $itemsPage, $footerPage));
         $doc->printDoc();
-
+        }
         return $debug_str;
 
     }
@@ -293,8 +302,8 @@ abstract class HeaderPage {
 // with logo, address information
 class KitchenHeaderPage extends HeaderPage {
 	
-    private $order_no, $table_no, $table_type, $print_zh, $print_en;
-    public function __construct($order_no, $table_no, $table_type, $print_zh=true, $print_en = false,$phone='') {
+    private $order_no, $table_no, $table_type, $print_zh, $print_en, $phone, $itemcut;
+    public function __construct($order_no, $table_no, $table_type, $print_zh=true, $print_en = false, $phone='', $itemcut=0) {
     	
         $this->order_no = $order_no;
         $this->table_no = $table_no;
@@ -302,6 +311,7 @@ class KitchenHeaderPage extends HeaderPage {
         $this->print_zh = $print_zh;
         $this->print_en = $print_en;
         $this->phone = $phone;
+        $this->itemcut = $itemcut;
     }
 
     public function printPage($handle) {
@@ -333,11 +343,18 @@ class KitchenHeaderPage extends HeaderPage {
         //Print order information
         $font = printer_create_font("simsun", 42, 20, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
+        if ($this->itemcut) {
+        	printer_draw_text($handle, $this->order_no . " : " . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
+        	$y += 42;
+        	date_default_timezone_set("America/Toronto");
+        	$date_time = date("M d Y h:i:s A");
+        	printer_draw_text($handle, $this->order_no . " : " . $date_time, 32, $y);
+        } else {
         printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
                  
         $y += 42;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
-        
+        }
         if($this->phone!=''){
           $y += 42;
           printer_draw_text($handle, "Phone:" . $this->phone, 32, $y);

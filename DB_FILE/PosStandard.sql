@@ -68,7 +68,8 @@ CREATE TABLE `admins` (
   `oc_store_id` int(11) DEFAULT NULL,
   `oc_api_url` varchar(255) DEFAULT NULL,
   `oc_api_key` varchar(1000) DEFAULT NULL,
-  `oc_last_push_order_time` datetime DEFAULT NULL
+  `oc_last_push_order_time` datetime DEFAULT NULL,
+  `singlecut` TINYINT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -185,8 +186,7 @@ CREATE TABLE `categories` (
   `orderby` int(11) NOT NULL,
   `printer` enum('C','K') DEFAULT 'K' COMMENT 'C-Cashier, K-kitchen',
   `group_id` smallint(5) UNSIGNED DEFAULT '1',
-  `remote_id` int(11) NOT NULL,
-  `singlecut` TINYINT NOT NULL
+  `remote_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

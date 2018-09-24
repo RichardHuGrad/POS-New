@@ -85,19 +85,6 @@ $option_status = array('A' => 'Active', 'I' => 'Inactive');
                                         <?php echo $this->Form->input('orderby', array('type' =>'text', 'class' => 'form-control', 'label' => false, 'div' => false, 'required' => false)); ?>
                                     </div>
                                 </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Is cut every cousine</label>
-                                        <?php 
-
-                                        $printerCut = array(
-                                            '0'=>'No',
-                                            '1'=>'Cut every cousine'
-                                            );
-                                        echo $this->Form->input('singlecut', array('options' => $printerCut, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">

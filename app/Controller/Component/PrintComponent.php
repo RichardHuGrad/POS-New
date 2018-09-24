@@ -154,10 +154,11 @@ class PrintComponent extends Component {
         if (!empty($printItems['K'])) {
 
             $printerName = $this->Admin->getKitchenPrinterName($args['restaurant_id']);
+            $printerCut = $this->Admin->getKitchenPrinterCut($args['restaurant_id']);
             $print = new PrintLib();
             //$print->printKitchenItemDoc($order_no, $table, $type, $printerName, $printItems['K'],true, false,$phone);
             foreach($printItems['K'] as $item){
-                $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $item,true, false,$phone);
+                $print->printKitchenItemDoc($order_no, $table, $type, $printerName, $item,true, false, $phone, $printerCut);
             }
         }
 

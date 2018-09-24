@@ -8,4 +8,4 @@ CREATE TABLE `remote_order_syncs` (
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-ALTER TABLE `categories` ADD `singlecut` TINYINT NOT NULL;
+ALTER TABLE `admins` ADD `singlecut` TINYINT NOT NULL;
