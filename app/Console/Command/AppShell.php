@@ -161,7 +161,11 @@ class AppShell extends Shell {
 			 * [tablename] => 1号桌
 			 * )
 			 */
-			$this->Log->save(array('operation' => "weborder get", 'logs' => json_encode($order)));
+			if ( ! $this->save_order('orders', $order)) {
+		       	continue;
+		    }
+			
+		    $this->Log->save(array('operation' => "weborder get", 'logs' => json_encode($order)));
 			$memotxt = array('error' => array(), 'message' => array());
 
 			$order_id = 0;
@@ -227,10 +231,6 @@ class AppShell extends Shell {
 							}
 						}
 
-						if ( ! $this->save_order('orders', $order)) {
-							continue;
-						}
-						
 						$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
 						// echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
 					}
