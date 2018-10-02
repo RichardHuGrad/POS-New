@@ -8,10 +8,22 @@ App::uses('PrintLib', 'Lib');
 App::uses('OpencartController', 'Controller');
 
 class HomesController extends AppController {
-    public $fontStr1 = "simsun";
-
-    public $components = array('Paginator','OrderHandler','Access');
-
+	const WECHATSERVER="https://pos.auroratech.top/";
+	const WECHATTEST = 0;
+	
+	public $fontStr1 = "simsun";
+	public $components = array('Paginator','OrderHandler','Access');
+	public $no_of_takeout_tables = 0;
+	public $no_of_waiting_tables = 0;
+	public $no_of_online_tables = 0;
+	
+	public $handle;
+	public $fontH = 28; // font height
+	public $fontW = 10; // font width
+	public $uses = array(
+			'Admin'
+	);
+	
     /**
      * beforeFilter
      * @return null
@@ -249,7 +261,16 @@ class HomesController extends AppController {
         );
 
         // print_r($orders_total);
-
+        
+        // Clear dashboard page reload flag
+        $this->Admin->clear();
+        $rest = $this->Admin->find("first", array('conditions' => array('Admin.is_super_admin' => 'N','Admin.status' => 'A')));
+        if ($rest && $rest['Admin']['net_new_order']) {
+	        $this->Admin->id = $rest['Admin']['id'];
+	        $this->Admin->saveField('net_new_order', 0);
+	        $this->Admin->clear();
+        }
+        
         $this->set(compact('tables','orders_cooked', 'dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd', 'orders_message'));
     }
     
@@ -257,11 +278,13 @@ class HomesController extends AppController {
         $this->layout = NULL;
         $this->autoRender = false;
     	
+        $this->get_net_order();		// Get net order now is loaded by browser
+        
         $this->loadModel('Admin');
     	$rest = $this->Admin->find("first", array('conditions' => array('Admin.is_super_admin' => 'N', 'Admin.status' => 'A')));
-    	if ($rest && $rest['Admin']['oc_api_key']) {
+    	if ($rest && $rest['Admin']['net_new_order']) {
 			$this->Admin->id = $rest['Admin']['id'];
-			$this->Admin->saveField('oc_api_key', '');
+			$this->Admin->saveField('net_new_order', '');
 			$this->Admin->clear();
         	$json = array('reload' => 1);
     	} else {
@@ -270,6 +293,352 @@ class HomesController extends AppController {
     	
     	$this->response->type('application/json');
     	echo json_encode($json);
+    }
+    
+	private function save_net_order($ordertype, $order) {
+		$od = $this->RemoteOrderSync->find('first', array('conditions' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'synced' => 0)));
+		if (empty($od)) {
+			$savedata = array(
+					'RemoteOrderSync' => array(
+							'order_type' => $ordertype,
+							'order_id' => $order['id'],
+							'record' => json_encode($order)
+					)
+			);
+			$this->RemoteOrderSync->save($savedata);
+			$id = $this->Model->id;
+			return $id;
+		}
+		return FALSE;
+	}
+	
+	private function print_reserve($orders, $restaurant_id) {
+		$printerName = $this->Admin->getKitchenPrinterName($restaurant_id);
+		$printerCut = $this->Admin->getKitchenPrinterCut($restaurant_id);
+		$print = new PrintLib();
+		
+		foreach($orders as $order) {
+			$print->printReserveOrder($order, $printerName);
+			$this->save_net_order('yyorders', $order);
+			$this->RemoteOrderSync->clear();
+		}
+	}
+
+	private function insert_net_orders($orders, $restaurant_id, $print_now, $send_to_kitchen) {
+		$this->loadModel('Cashier');
+		$this->loadModel('OrderItem');
+		$this->loadModel('Cousine');
+		$this->loadModel('Order');
+		$this->loadModel('Log');
+		$this->loadModel('Extra');
+		$this->loadModel('Extrascategory');
+		
+		$printerKitchen = $this->Admin->getKitchenPrinterName($restaurant_id);
+		$printerDesk = $this->Admin->getServicePrinterName($restaurant_id);
+		$printerCut = $this->Admin->getKitchenPrinterCut($restaurant_id);
+		
+		$print = new PrintLib();
+		$cashier = $this->Cashier->find("first",
+				array(
+						'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+						'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+				)
+		);
+		
+		$admin = $this->Cashier->find("first",
+				array(
+						'fields' => array('Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.tax', 'Admin.default_tip_rate'),
+						'conditions' => array('Cashier.id' => $cashier['Cashier']['id'])
+				)
+		);
+    
+    	$has_net_order = 0;
+		// $print->printReserveOrder($order, $printerDesk);
+    	foreach ($orders as $order) {
+			$net_order_id = $this->save_net_order('orders', $order);
+    		if ( ! $net_order_id ) {
+    			continue;
+			}
+			if ($print_now) {
+				$print->printNetOrder($order, $printerDesk);
+			} else {
+				/*
+				 * [id] => 58
+				 * [user_id] => 29
+				 * [order_num] => 201803291637331394
+				 * [state] => 4
+				 * [time] => 2018-03-29 16:37:33
+				 * [pay_time] => 0
+				 * [money] => 39.54
+				 * [preferential] => 0
+				 * [tel] =>
+				 * [name] =>
+				 * [address] =>
+				 * [delivery_time] =>
+				 * [time2] => 1522359453
+				 * [cancel_time] => 0
+				 * [uniacid] => 4
+				 * [type] => 2							type=2: In store Order;  type=1: Take Out Order
+				 * [dn_state] => 2
+				 * [table_id] => 27
+				 * [freight] => 0.00
+				 * [box_fee] => 0.00
+				 * [coupons_id] => 0
+				 * [voucher_id] => 0
+				 * [seller_id] => 27
+				 * [note] =>
+				 * [area] =>
+				 * [lat] =>
+				 * [lng] =>
+				 * [del] => 2
+				 * [sh_ordernum] =>
+				 * [pay_type] => 0
+				 * [del2] => 0
+				 * [is_take] => 0
+				 * [is_yue] => 0
+				 * [completion_time] => 0
+				 * [form_id] =>
+				 * [dishes] => Array(
+				 * 		[0] => Array(
+				 * 		[id] => 152
+				 * 		[img] => images/4/2018/03/qqEz6PEq9pAP6tuGMPKEq969CMpGt9.jpg
+				 * 		[number] => 1
+				 * 		[order_id] => 58
+				 * 		[name] => 双拼双拼
+				 * 		[money] => 3.99
+				 * 		[uniacid] => 4
+				 * 		[dishes_id] => 409
+				 * 		[spec] =>
+				 * 		[options] => [{"type":"1","name":"\u53e3\u5473","values":[{"name":"\u4e0d\u8fa3","price":0,"quantity":1},{"name":"\u4e0d\u9ebb","price":0,"quantity":2}]},{"type":"0","name":"\u66f4\u6362\u4e3b\u98df","values":[{"name":"\u5c0f\u9762\u6362\u9178\u8fa3\u7c89","price":1,"quantity":1}]},{"type":"2","name":"\u53cc\u62fc","values":[{"name":"\u85d5\u7247","price":0,"quantity":1},{"name":"\u571f\u8c46","price":0,"quantity":1}],"limit":"2","total":"30"}]
+				 * 	)
+				 * )
+				 * [tablename] => 1号桌
+				 * )
+				 */
+				$this->Log->save(array('operation' => "weborder get", 'logs' => json_encode($order)));
+				$memotxt = array('error' => array(), 'message' => array());
+				
+				$order_id = 0;
+				$reason = "Net order# " . $order['order_num'] . "; ";
+				if (($order['type'] == 2) || ($order['type'] == 1)) {
+					// In store (2 => D) or Take out (1 => T) order, Just create or add items to order
+					foreach ($order['dishes'] as $dishes) {
+						$CousineDetail = $this->Cousine->find('first', array('conditions' => array('Cousine.remote_id' => $dishes['dishes_id'])));
+						if ( ! $CousineDetail) {
+							$memotxt['error'][] = "Can't find Cousine. Remote ID: " . $dishes['id'] . "; ";
+							continue;
+						}
+						//Debug echo "Local: CousineDetail\n"; print_r($CousineDetail); print_r($dishes);
+						$item_id = $CousineDetail['Cousine']['id'];
+						$table = (int)$order['tablename'];
+						$type = ($order['type'] == 2) ? 'D' : 'L';
+						$cashier_id = $cashier['Cashier']['id'];
+						$tax_rate = $admin['Admin']['tax'];
+						$default_tip_rate = $admin['Admin']['default_tip_rate'];
+						$restaurant_id = $admin['Admin']['id'];
+						if (empty($order_id)) {
+							$Order_detail = $this->Order->find("first",
+								array('fields' => array('Order.id', 'Order.subtotal', 'Order.total', 'Order.reason', 'Order.tax_amount', 'Order.discount_value', 'Order.promocode', 'Order.fix_discount', 'Order.percent_discount'),
+									'conditions' => array('Order.counter_id' => $cashier_id, 'Order.table_no' => $table, 'Order.is_completed' => 'N', 'Order.order_type' => $type )
+								)
+							);
+							//Debug echo "Order_detail\n"; print_r($Order_detail);
+							if ( ! empty($Order_detail)) {
+								$order_id = $Order_detail['Order']['id'];
+								$reason = $Order_detail['Order']['reason'] . "; Add other Order: " . $order['order_num'] . "; ";
+							}
+						}
+						
+						if (empty($order_id)) {
+							// to create a new order
+							$table_limit = 0;
+							if ($type == 'L') {
+								if ($order['type'] == 1) {
+									if ($order['is_take'] == 1) {
+										$type = 'T';
+										$table_limit = $this->no_of_takeout_tables;
+									} else if ($order['is_take'] == 2) {
+										$type = 'W';
+										$table_limit = $this->no_of_waiting_tables;
+									} else {
+										$type = '';
+									}
+								}
+								if ($type) {
+									for ($table = 1; $table <= $table_limit; $table++) {
+										$t = $this->Order->find("first",array('conditions' => array('Order.table_no' => $table, 'Order.order_type' => $type), 'order' => array('Order.created DESC')));
+										if (empty($t) || ($t['Order']['table_status'] == 'A') || ($t['Order']['table_status'] == 'V')) {
+											// New table or Available table
+											break;
+										}
+									}
+									if ($table > $table_limit) {
+										$this->RemoteOrderSync->delete($net_order_id, FALSE);
+										// reach maximum drop order !!!!! need fix in future
+										// echo "reach maximum table limit !!!!! Order dropped !!! ".$order['order_num']." \n"; //XXXXXXXXXXXXX
+    									return;
+									}
+								}
+							}
+							$order_id = $this->Order->insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate);
+							// echo "order_id : ".$order_id."\n"; echo "insertOrder($restaurant_id, $cashier_id, $table, $type, $tax_rate, $default_tip_rate)\n";
+						}
+						if ($CousineDetail['Cousine']['is_tax'] == 'Y') {
+							$tax_amount = $tax_rate * $CousineDetail['Cousine']['price'] / 100;
+						} else {
+							$tax_amount = 0;
+						}
+						
+						$order_item_id = $this->OrderItem->insertOrderItem($order_id, $item_id, $CousineDetail['CousineLocal'][0]['name'], $CousineDetail['CousineLocal'][1]['name'], $CousineDetail['Cousine']['price'], $CousineDetail['Cousine']['category_id'], /*!empty($extras) ? json_encode($extras) : "",*/ $tax_rate, $tax_amount, $dishes['number'], $CousineDetail['Cousine']['comb_num']);
+						$extra_id_array = array();
+						if (!empty($dishes['options']) && ($options = json_decode($dishes['options'], TRUE))) {
+							//Debug echo "options:\n"; print_r($options);
+							foreach ($options as $opt) {
+								if ($extracategory = $this->Extrascategory->find('first', array('conditions' => array('Extrascategory.remote_id' => $opt['options_id']), 'recursive' => -1))) {
+									//Debug echo "extracategory:\n"; print_r($extracategory);
+									foreach ($opt['values'] as $extra) {
+										if ($ext = $this->Extra->find('first', array('conditions' => array('Extra.name_zh' => $extra['name'], 'Extra.category_id' => $extracategory['Extrascategory']['id']), 'recursive' => -1))) {
+											//Debug echo "ext:\n"; print_r($ext);
+											$quantity = isset($extra['quantity']) ? (int)$extra['quantity'] : 1;
+											if (empty($quantity)) $quantity = 1;
+											for ($i = 0; $i < $quantity; $i++) {
+												$extra_id_array[] = $ext['Extra']['id'];
+											}
+										} else {
+											$memotxt['error'][] = "Can't find Extrascategory's Extra. Remote ID: " . $opt['options_id'] . "; name: " . $extra['name'] . "; local ID: " . $extracategory['id'];
+										}
+									}
+								} else {
+									$memotxt['error'][] = "Can't find Extrascategory. Remote ID: " . $opt['options_id'] . "; ";
+								}
+								//Debug echo "error:\n"; print_r($memotxt['error']);
+								//Debug echo "extra_id_array:\n"; print_r($extra_id_array);
+							}
+						}
+						if (!empty($extra_id_array)) {
+							$this->OrderHandler->addExtras(array(
+									'item_id' => $order_item_id,
+									'extra_id_list' => $extra_id_array,
+									'table' => $table,
+									'type' => $type,
+									'special' => '',
+									'cashier_id' => $cashier_id)
+									);
+						}
+						$this->Order->updateBillInfo($order_id);
+						$this->OrderItem->clear();
+					}
+				} else {
+					// Unknown Order, Do't process
+					continue;
+				}
+				
+				if ($order_id) {
+					$message = '';
+					if ($order['type'] == 1) {
+						$reason .= $order['name'] . " - " . $order['tel'] . " - " . $order['address'];
+						if ($order['is_take'] == 1) {
+							$message = __('TAKE OUT'); //"Takeout";
+						} else if ($order['is_take'] == 2) {
+							$message = __('Delivery'); //"Delivery";
+						}
+					}
+					$this->Order->update_reason($order_id, $reason, $message);
+					$has_net_order = 1;
+				}
+				$this->RemoteOrderSync->clear();
+    			$this->Order->clear();
+    			
+    			if ($send_to_kitchen && $order_id) {
+    				$this->Print->printTokitchen(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+    			}
+			}
+    	}
+    	return  $has_net_order;
+    }
+    
+	private function get_net_order() {
+		$rest = $this->Admin->find("first", array('conditions' => array('Admin.is_super_admin' => 'N', 'Admin.status' => 'A')));
+		
+		$tm = strtotime($rest['Admin']['net_last_sync_tm']);
+		$now = time();
+		if (($now - $tm) < 15) {
+			// mutliple callers, skip to fast call
+			return FALSE;
+		}
+		
+		// Setup last sync access time
+		$this->Admin->id = $rest['Admin']['id'];
+		$this->Admin->saveField('net_last_sync_tm', date("Y-m-d H:i:s"));
+		$this->Admin->clear();
+		
+		$mobile_no = $rest['Admin']['mobile_no'];
+		$this->no_of_online_tables = $rest['Admin']['no_of_online_tables'];
+		$this->no_of_waiting_tables = $rest['Admin']['no_of_waiting_tables'];
+		$this->no_of_takeout_tables = $rest['Admin']['no_of_takeout_tables'];
+		$dt = preg_split("/-/", $mobile_no);
+		if (!is_array($dt) || (sizeof($dt) != 2)) {
+			// Wrong format about store and phone 
+			return FALSE;
+		}
+		
+		$url = self::WECHATSERVER . "web/index.php?c=site&a=entry&do=storeorder&m=zh_dianc&version_id=1&sid=" . $dt[0] . "&skey=" . md5($dt[1]) . "&sync=2";
+		if (self::WECHATTEST) {
+			$url .= "&test=1";
+		}
+		
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		$response = curl_exec($curl);
+		curl_close($curl);
+		
+		$rts = json_decode($response, TRUE);
+		
+		$this->loadModel('RemoteOrderSync');
+		if (is_array($rts) && ($rts['status'] == 'OK') && ((sizeof($rts['orders']) > 0) || (sizeof($rts['yyorders']) > 0))) {
+			// Have some order to sync
+			if (sizeof($rts['yyorders']) > 0) {
+				// have reserve order
+				$this->print_reserve($rts['yyorders'], $rest['Admin']['id']);
+			}
+			
+			if ($rest['Admin']['no_of_online_tables']) {
+				// have some order for
+				if (sizeof($rts['orders']) > 0) {
+					if ($this->insert_net_orders($rts['orders'], $rest['Admin']['id'], $rest['Admin']['no_of_online_tables'], $rest['Admin']['net_order_kitchen'])) {
+						$this->Admin->id = $rest['Admin']['id'];
+						$this->Admin->saveField('net_new_order', 1);
+						$this->Admin->clear();
+					}
+				}
+			}
+		}
+		
+		// Send back ack to cloud server
+		$sync_orders = $this->RemoteOrderSync->find('all', array('conditions' => array('synced' => 0)));
+		foreach ($sync_orders as $sync) {
+			if ($sync['RemoteOrderSync']['order_type'] == 'yyorders') {
+				$syncurl = $url . "&ydorderid=" . $sync['RemoteOrderSync']['order_id'];
+			} else { 
+				// $sync['RemoteOrderSync']['order_type'] == 'orders'
+				$syncurl = $url . "&orderid=" . $sync['RemoteOrderSync']['order_id'];
+			}
+			
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, $syncurl);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			$response = curl_exec($curl);
+			curl_close($curl);
+			$sync_rt = json_decode($response, TRUE);
+			if (is_array($sync_rt) && ($sync_rt['status'] == 'OK') && ($sync_rt['id'] == $sync['RemoteOrderSync']['order_id'])) {
+				$sync['RemoteOrderSync']['synced'] = 1;
+			}
+			$this->RemoteOrderSync->save($sync);
+			$this->RemoteOrderSync->clear();
+		}
     }
     
     public function allorders() {

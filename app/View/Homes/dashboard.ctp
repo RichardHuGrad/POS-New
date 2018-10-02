@@ -634,20 +634,15 @@ echo $this->fetch('script');
 	});
 	
 	function checkNewOrder(){
-		if ($('.open').length > 0) {
-			return;
-		}
-		if ($('.in').length > 0) {
-			return;
-		}
-		
         $.ajax({
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'checknew')); ?>",
             type: 'get',
             datatype: 'json',
             success: function(json){ 
             	//console.log(json);
-            	if (json.reload) {
+				if (($('.open').length > 0) || ($('.in').length > 0)) {
+					// Some thing is doing on screen
+				} else if (json.reload) {
                 	//console.log('checkNewOrder reload ===============================');
             		location.reload();
             	}

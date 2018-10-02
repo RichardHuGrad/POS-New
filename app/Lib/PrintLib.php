@@ -61,6 +61,49 @@ class PrintLib {
     }
 
 
+    // print net reserve order
+    public function printReserveOrder($order, $printer_name) {
+        // do not check $item_id_list
+
+        $debug_str = json_encode($item_detail);
+
+        if (!function_exists('printer_open')) {
+          return "function printer_open() not exists in server!";
+        }
+
+        $reservePage = new ReservePage($order);
+        $footerPage = new TimeFooterPage();
+        
+        $doc = new BasicDoc($printer_name, array($reservePage, $footerPage));
+        $doc->printDoc();
+
+        // send feedback to server
+        return $debug_str;
+    }
+
+
+    // print net raw order
+    public function printNetOrder($order, $printer_name) {
+    	// do not check $item_id_list
+    
+    	$debug_str = json_encode($item_detail);
+    
+    	if (!function_exists('printer_open')) {
+    		return "function printer_open() not exists in server!";
+    	}
+    
+    	$netOrderPage = new NetOrderPage($order);
+    	$footerPage = new TimeFooterPage();
+    
+    	$doc = new BasicDoc($printer_name, array($reservePage, $footerPage));
+    	$doc->printDoc();
+    
+    	// send feedback to server
+    	return $debug_str;
+    }
+    
+    
+    
     public function printKitchenItemDoc($order_no, $table_no, $table_type, $printer_name, $item_detail, $print_zh=true, $print_en=false, $phone='', $cut=0) {
 
         $debug_str = json_encode($item_detail);
@@ -553,6 +596,120 @@ class KitchenItemsPage extends ItemsPage {
             printer_end_page($handle);
         }
     }
+}
+
+
+class ReservePage extends ItemsPage {
+	private $order;
+
+	public function __construct($order) {
+		$this->order = $order;
+	}
+
+	public function printPage($handle) {
+		$print_x = 25;
+		printer_start_page($this->handle);
+		
+		//$font1H = 30;
+		//$font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+		//$font2H = 38;
+		//$font2 = printer_create_font('simsun', $font2H, 18, PRINTER_FW_BOLD, false, false, false, 0);
+		$fontH = 32;
+		$lineH = 40;
+		$font = printer_create_font('simsun', $fontH, 15, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
+		
+		printer_select_font($handle, $font);
+		$print_y = $lineH;
+		printer_draw_text($handle, "预定餐桌：" . $this->order['order_num'], $print_x, $print_y);
+		$print_y += $lineH;
+		printer_draw_text($handle, "预计到店时间：" . $this->order['xz_date'] . " " . $this->order['yjdd_date'], $print_x, $print_y);
+		$print_y += $lineH;
+		printer_draw_text($handle, "联系人：" . $this->order['link_name'], $print_x, $print_y);
+		$print_y += $lineH;
+		printer_draw_text($handle, "联系电话：" . $this->order['link_tel'], $print_x, $print_y);
+		$print_y += $lineH;
+		printer_draw_text($handle, "人数：" . $this->order['jc_num'], $print_x, $print_y);
+
+		printer_delete_font($font);
+		printer_end_page($this->handle);
+	}
+}
+
+
+class NetOrderPage extends ItemsPage {
+	private $order;
+
+	public function __construct($order) {
+		$this->order = $order;
+	}
+
+	public function printPage($handle) {
+		$print_x = 25;
+		printer_start_page($this->handle);
+		
+		//$font1H = 30;
+		//$font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+		//$font2H = 38;
+		//$font2 = printer_create_font('simsun', $font2H, 18, PRINTER_FW_BOLD, false, false, false, 0);
+		$fontH = 32;
+		$lineH = 40;
+		$font = printer_create_font('simsun', $fontH, 15, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
+		
+		printer_select_font($handle, $font);
+		$this->printZh("Eatopia食客邦订单   " . (($this->order['type']==1) ? '外卖' : '堂食 桌号:'.$this->order['tablename']), $print_x, $print_y);
+		$print_y += $lineH;
+		$this->printZh("单号：" . $this->order['order_num'], $print_x, $print_y);
+		$print_y += $lineH;
+		$this->printZh("日期 / 时间： " . $this->order['time'], $print_x, $print_y);
+		
+		$pen = printer_create_pen(PRINTER_PEN_SOLID, 2, "000000");
+		printer_select_pen($this->handle, $pen);
+		printer_draw_line($this->handle, 21, $print_y - 10, 600, $print_y - 10);
+		
+		foreach ($this->order['dishes'] as $dish) {
+			$print_y += $lineH;
+			printer_draw_text($handle, $dish['name'], $print_x, $print_y);
+			printer_draw_text($handle, "$" . $dish['money'], $print_x + 360, $print_y);
+			$print_y += $lineH;
+			printer_draw_text($handle, " x " . $dish['number'], $print_x + 360, $print_y);
+			if (!empty($dish['options']) && ($allopts = json_decode($dish['options'], TRUE))) {
+				foreach ($allopts as $opts) {
+					if (empty($opts['type']) || ($opts['type'] == 1)) {
+						foreach ($opts['values'] as $v) {
+							$print_y += $lineH;
+							printer_draw_text($handle, $v['name'], $print_x + 60, $print_y);
+							printer_draw_text($handle, "$" . number_format($v['price'], 2), $print_x + 340, $print_y);
+							if ($v['quantity'] > 1) {
+								$print_y += $lineH;
+								printer_draw_text($handle, " x " . $v['number'], $print_x + 360, $print_y);
+							}
+						}
+					} else if ($opts['type'] == 2) {
+						foreach ($opts['values'] as $v) {
+							$print_y += $lineH;
+							printer_draw_text($handle, $v['name'], $print_x + 60, $print_y);
+							printer_draw_text($handle, "$" . number_format($v['price'], 2), $print_x + 340, $print_y);
+							if ($v['quantity'] > 1) {
+								printer_draw_text($handle, " x " . $v['number'], $print_x + 360, $print_y);
+							}
+						}
+						$print_y += $lineH;
+						printer_draw_text($handle, "$" . number_format($opts['total'], 2), $print_x + 340, $print_y);
+					}
+				}
+			}
+		}
+		$print_y += $lineH;
+		printer_draw_text($handle, "总计：", $print_x + 100, $print_y);
+		printer_draw_text($handle, $this->order['money'], $print_x + 300, $print_y);
+		if (!empty($this->order['note'])) {
+			$print_y += $lineH;
+			printer_draw_text($handle, "留言：" . $this->order['note'], $print_x + 100, $print_y);
+		}
+		
+		printer_delete_font($font);
+		printer_end_page($this->handle);
+	}
 }
 
 
