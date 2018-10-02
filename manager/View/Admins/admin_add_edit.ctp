@@ -137,6 +137,59 @@ $(document).ready(function() {
                                     </div>
                                 </div>
 
+                                <h4 style="margin-left: 13px;">
+                                    Customization
+                                </h4>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Wechat Dinein Order Goes to Kitchen Direcctly</label> 
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'No',
+                                            '1'=>'Goes to Kitchen Direcctly'
+                                            );
+                                        echo $this->Form->input('net_order_kitchen', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Wechat Takout Order Goes to Kitchen Direcctly</label> 
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'No',
+                                            '1'=>'Goes to Kitchen Direcctly'
+                                            );
+                                        echo $this->Form->input('net_takeout_kitchen', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Wechat New Order Voice Prompt</label> 
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'No',
+                                            '1'=>'Yes'
+                                            );
+                                        echo $this->Form->input('net_order_voice', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Touch Sound on Touch Screen</label> 
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'Off',
+                                            '1'=>'On'
+                                            );
+                                        echo $this->Form->input('touch_screen_sound', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+
                                 <?php if($id != $this->Session->read('Admin.id')){ ?>
                                     <!--div class="col-md-6">
                                         <div class="form-group">
@@ -236,6 +289,32 @@ $(document).ready(function() {
                                     <div class="form-group">
                                         <label class="control-label">Default Tip Rate</label>
                                         <?php echo $this->Form->input('default_tip_rate', array('type' => 'text', 'maxlength' => '200', 'class' =>'form-control', 'div' => false, 'label' => false, 'required' => true)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Tip Rate After Tax</label>
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'No',
+                                            '1'=>'Yes'
+                                            );
+                                        echo $this->Form->input('default_tip_after_tax', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Price Display On Main Page</label>
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'No',
+                                            '1'=>'Yes'
+                                        	);
+                                        echo $this->Form->input('main_page_show_price', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
                                         <span id="place-error" class="help-block"></span>
                                     </div>
                                 </div>
