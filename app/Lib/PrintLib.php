@@ -384,7 +384,8 @@ class KitchenHeaderPage extends HeaderPage {
         $y = 0;
         //Print order information
         if ($this->itemcut) {
-			$font = printer_create_font("simsun", 32, 16, PRINTER_FW_MEDIUM, false, false, false, 0);
+			// Changed as required;  $font = printer_create_font("simsun", 32, 16, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font = printer_create_font('simsun', 42, 20, PRINTER_FW_BOLD, false, false, false, 0);
 			printer_select_font($handle, $font);
 
         	date_default_timezone_set("America/Toronto");
@@ -398,9 +399,9 @@ class KitchenHeaderPage extends HeaderPage {
         } else {
         $font = printer_create_font("simsun", 42, 20, PRINTER_FW_MEDIUM, false, false, false, 0);
         printer_select_font($handle, $font);
-        printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
+        // Changed as required;  printer_draw_text($handle, "Order#: " . $this->order_no, 32, $y);
                  
-        $y += 42;
+        // Changed as required;  $y += 42;
         printer_draw_text($handle, "Table:" . iconv("UTF-8", "gb2312", $table_type_str . '# ' . $this->table_no), 32, $y);
         }
         if($this->phone!=''){
@@ -537,11 +538,12 @@ class KitchenItemsPage extends ItemsPage {
         foreach ($this->item_detail as $item) {
             printer_start_page($handle);
 
-            $font1H = 30;
+            $font1H = 32; // $font1H = 30;
             $font2H = 38;
             $font3H = 32;
             
-            $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+            // $font1 = printer_create_font("Arial", $font1H, 12, PRINTER_FW_MEDIUM, false, false, false, 0);
+            $font1 = printer_create_font('simsun', $font3H, 15, PRINTER_FW_BOLD, false, false, false, 0); //maximum 12 per line
             
             $font2 = printer_create_font('simsun', $font2H, 18, PRINTER_FW_BOLD, false, false, false, 0);
 
@@ -564,8 +566,8 @@ class KitchenItemsPage extends ItemsPage {
 
             printer_select_font($handle, $font1);
             printer_draw_text($handle, $qty, 10, $y);
-            printer_draw_text($handle, $name_en, 80, $y);
-            $y += $font1H + 3;
+            // printer_draw_text($handle, $name_en, 80, $y);
+            // $y += $font1H + 3;
 
             printer_select_font($handle, $font2);
             printer_draw_text($handle,iconv("UTF-8", "gb2312", $name_zh), 80, $y);

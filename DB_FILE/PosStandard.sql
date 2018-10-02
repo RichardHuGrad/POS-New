@@ -69,7 +69,15 @@ CREATE TABLE `admins` (
   `oc_api_url` varchar(255) DEFAULT NULL,
   `oc_api_key` varchar(1000) DEFAULT NULL,
   `oc_last_push_order_time` datetime DEFAULT NULL,
-  `singlecut` TINYINT NOT NULL
+  `singlecut` TINYINT NOT NULL COMMENT 'Back printer cut to single cousine flag',
+ `net_last_sync_tm` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Time for access cloud server',
+ `net_new_order` tinyint(4) NOT NULL COMMENT 'flag for has new order from cloud server',
+ `net_order_kitchen` TINYINT NOT NULL COMMENT 'Net Dine in Order Sent to Kitchen or not. 0 not, 1 yes',
+ `net_takeout_kitchen` TINYINT NOT NULL COMMENT 'Net Takeout Order Sent to Kitchen or not. 0 not, 1 yes',
+ `net_order_voice` TINYINT NOT NULL COMMENT 'Net Order Play Sound. 0 not, 1 yes',
+ `touch_screen_sound` TINYINT NOT NULL,
+ `default_tip_after_tax` TINYINT NOT NULL,
+ `main_page_show_price` TINYINT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

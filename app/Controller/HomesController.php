@@ -324,7 +324,7 @@ class HomesController extends AppController {
 		}
 	}
 
-	private function insert_net_orders($orders, $restaurant_id, $print_now, $send_to_kitchen) {
+	private function insert_net_orders($orders, $restaurant_id, $print_now) {
 		$this->loadModel('Cashier');
 		$this->loadModel('OrderItem');
 		$this->loadModel('Cousine');
@@ -347,7 +347,21 @@ class HomesController extends AppController {
 		
 		$admin = $this->Cashier->find("first",
 				array(
-						'fields' => array('Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.tax', 'Admin.default_tip_rate'),
+						'fields' => array(
+								'Admin.no_of_tables', 
+								'Admin.no_of_waiting_tables', 
+								'Admin.no_of_takeout_tables', 
+								'Admin.no_of_online_tables', 
+								'Admin.id', 
+								'Admin.tax', 
+								'Admin.default_tip_rate',
+								'Admin.net_order_kitchen',
+								'Admin.net_takeout_kitchen',
+								'Admin.net_order_voice',
+								'Admin.touch_screen_sound',
+								'Admin.default_tip_after_tax',
+								'Admin.main_page_show_price'
+						),
 						'conditions' => array('Cashier.id' => $cashier['Cashier']['id'])
 				)
 		);
@@ -431,7 +445,7 @@ class HomesController extends AppController {
 						//Debug echo "Local: CousineDetail\n"; print_r($CousineDetail); print_r($dishes);
 						$item_id = $CousineDetail['Cousine']['id'];
 						$table = (int)$order['tablename'];
-						$type = ($order['type'] == 2) ? 'D' : 'L';
+						$type = ($order['type'] == 2) ? 'D' : 'L';	// D: Dine in; L: internet
 						$cashier_id = $cashier['Cashier']['id'];
 						$tax_rate = $admin['Admin']['tax'];
 						$default_tip_rate = $admin['Admin']['default_tip_rate'];
@@ -455,10 +469,10 @@ class HomesController extends AppController {
 							if ($type == 'L') {
 								if ($order['type'] == 1) {
 									if ($order['is_take'] == 1) {
-										$type = 'T';
+										$type = 'T';	// Take away
 										$table_limit = $this->no_of_takeout_tables;
 									} else if ($order['is_take'] == 2) {
-										$type = 'W';
+										$type = 'W';	// Waiting
 										$table_limit = $this->no_of_waiting_tables;
 									} else {
 										$type = '';
@@ -549,8 +563,12 @@ class HomesController extends AppController {
 				$this->RemoteOrderSync->clear();
     			$this->Order->clear();
     			
-    			if ($send_to_kitchen && $order_id) {
-    				$this->Print->printTokitchen(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+    			if ($order_id) {
+    				if (($type == 'T') && ($admin['Admin']['net_takeout_kitchen'])) { // take away
+    					$this->Print->printTokitchen(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+    				} else if (($type = 'D') && ($admin['Admin']['net_order_kitchen'])) { // Dine in
+    					$this->Print->printTokitchen(array('restaurant_id'=> $restaurant_id, 'order_id'=>$order_id));
+    				}
     			}
 			}
     	}
@@ -607,7 +625,7 @@ class HomesController extends AppController {
 			if ($rest['Admin']['no_of_online_tables']) {
 				// have some order for
 				if (sizeof($rts['orders']) > 0) {
-					if ($this->insert_net_orders($rts['orders'], $rest['Admin']['id'], $rest['Admin']['no_of_online_tables'], $rest['Admin']['net_order_kitchen'])) {
+					if ($this->insert_net_orders($rts['orders'], $rest['Admin']['id'], $rest['Admin']['no_of_online_tables'])) {
 						$this->Admin->id = $rest['Admin']['id'];
 						$this->Admin->saveField('net_new_order', 1);
 						$this->Admin->clear();
