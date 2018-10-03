@@ -277,16 +277,16 @@ class HomesController extends AppController {
     public function checknew() {
         $this->layout = NULL;
         $this->autoRender = false;
-    	
+
         $this->get_net_order();		// Get net order now is loaded by browser
-        
+
         $this->loadModel('Admin');
     	$rest = $this->Admin->find("first", array('conditions' => array('Admin.is_super_admin' => 'N', 'Admin.status' => 'A')));
     	if ($rest && $rest['Admin']['net_new_order']) {
 			$this->Admin->id = $rest['Admin']['id'];
 			$this->Admin->saveField('net_new_order', '');
 			$this->Admin->clear();
-        	$json = array('reload' => 1);
+    		$json = array('reload' => 1);
     	} else {
     		$json = array('reload' => 0);
     	}
@@ -296,7 +296,7 @@ class HomesController extends AppController {
     }
     
 	private function save_net_order($ordertype, $order) {
-		$od = $this->RemoteOrderSync->find('first', array('conditions' => array('order_type' => $ordertype, 'order_id' => $order['id'], 'synced' => 0)));
+		$od = $this->RemoteOrderSync->find('first', array('conditions' => array('order_type' => $ordertype, 'order_id' => $order['id'])));
 		if (empty($od)) {
 			$savedata = array(
 					'RemoteOrderSync' => array(
@@ -306,7 +306,7 @@ class HomesController extends AppController {
 					)
 			);
 			$this->RemoteOrderSync->save($savedata);
-			$id = $this->Model->id;
+			$id = $this->RemoteOrderSync->id;
 			return $id;
 		}
 		return FALSE;
@@ -365,7 +365,7 @@ class HomesController extends AppController {
 						'conditions' => array('Cashier.id' => $cashier['Cashier']['id'])
 				)
 		);
-    
+
     	$has_net_order = 0;
 		// $print->printReserveOrder($order, $printerDesk);
     	foreach ($orders as $order) {
@@ -373,7 +373,7 @@ class HomesController extends AppController {
     		if ( ! $net_order_id ) {
     			continue;
 			}
-			if ($print_now) {
+			if ((int)$print_now <= 0) {
 				$print->printNetOrder($order, $printerDesk);
 			} else {
 				/*
@@ -613,7 +613,7 @@ class HomesController extends AppController {
 		curl_close($curl);
 		
 		$rts = json_decode($response, TRUE);
-		
+
 		$this->loadModel('RemoteOrderSync');
 		if (is_array($rts) && ($rts['status'] == 'OK') && ((sizeof($rts['orders']) > 0) || (sizeof($rts['yyorders']) > 0))) {
 			// Have some order to sync
@@ -622,18 +622,16 @@ class HomesController extends AppController {
 				$this->print_reserve($rts['yyorders'], $rest['Admin']['id']);
 			}
 			
-			if ($rest['Admin']['no_of_online_tables']) {
-				// have some order for
-				if (sizeof($rts['orders']) > 0) {
-					if ($this->insert_net_orders($rts['orders'], $rest['Admin']['id'], $rest['Admin']['no_of_online_tables'])) {
-						$this->Admin->id = $rest['Admin']['id'];
-						$this->Admin->saveField('net_new_order', 1);
-						$this->Admin->clear();
-					}
+			// have some order for
+			if (sizeof($rts['orders']) > 0) {
+				if ($this->insert_net_orders($rts['orders'], $rest['Admin']['id'], $rest['Admin']['no_of_online_tables'])) {
+					$this->Admin->id = $rest['Admin']['id'];
+					$this->Admin->saveField('net_new_order', 1);
+					$this->Admin->clear();
 				}
 			}
 		}
-		
+
 		// Send back ack to cloud server
 		$sync_orders = $this->RemoteOrderSync->find('all', array('conditions' => array('synced' => 0)));
 		foreach ($sync_orders as $sync) {
