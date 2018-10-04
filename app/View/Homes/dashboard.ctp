@@ -536,6 +536,17 @@
 
     </div>
 </div>
+
+<div id="new_order" style="display:none" class="popPassword">
+    <!-- <span>Please Enter Your Password</span> -->
+    <h4 style="color: white">您有一份新的微信订单</h4>
+    <div class="form-group">
+        <div class="col-sm-12 controls">
+            <input id="confirm" class="btn btn-secondary btn-lg cancel" type="button" value="确认" />
+        </div>
+
+    </div>
+</div>
 <?php //echo $this->element('footer'); 
 ?>
 
@@ -638,13 +649,17 @@ echo $this->fetch('script');
             url: "<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'checknew')); ?>",
             type: 'get',
             datatype: 'json',
-            success: function(json){ 
+            success: function(json){
             	//console.log(json);
 				if (($('.open').length > 0) || ($('.in').length > 0)) {
 					// Some thing is doing on screen
 				} else if (json.reload) {
                 	//console.log('checkNewOrder reload ===============================');
-            		location.reload();
+					$('#new_order').show();
+					$('#confirm').on('click', function(e) {        
+						 location.reload();
+					});
+            		//location.reload();
             	}
             }
         });
