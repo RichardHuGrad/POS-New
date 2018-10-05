@@ -319,6 +319,19 @@ $(document).ready(function() {
                                     </div>
                                 </div>
 
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Show 2nd Language</label>
+                                        <?php 
+                                        $tmpArr = array(
+                                            '0'=>'No',
+                                            '1'=>'Yes'
+                                        	);
+                                        echo $this->Form->input('show2nd', array('options' => $tmpArr, 'class' => 'form-control', 'empty' => false, 'label' => false, 'div' => false)); ?>
+                                        <span id="place-error" class="help-block"></span>
+                                    </div>
+                                </div>
+
                                 <div class="clearfix"></div>
                                  <h4 style="margin-left: 13px; margin-top: 28px;">
                                     Dinein Tables

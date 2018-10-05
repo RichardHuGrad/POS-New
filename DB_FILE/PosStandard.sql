@@ -77,7 +77,8 @@ CREATE TABLE `admins` (
  `net_order_voice` TINYINT NOT NULL COMMENT 'Net Order Play Sound. 0 not, 1 yes',
  `touch_screen_sound` TINYINT NOT NULL,
  `default_tip_after_tax` TINYINT NOT NULL,
- `main_page_show_price` TINYINT NOT NULL
+ `main_page_show_price` TINYINT NOT NULL,
+ `show2nd` TINYINT NOT NULL COMMENT 'Show send language or not. 0 not, 1 yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
