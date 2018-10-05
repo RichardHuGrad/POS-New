@@ -100,8 +100,7 @@
                                                     <div class="item-wrapper">
                                                         <div class="clearfixrow">
                                                             <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
-                                                            <div class="dish-title"><div class="name-title"><strong>
-                                                            <?php if($show2nd == true){ echo $items['zh_name'] . "<br/>" . $items['eng_name'];}else{ echo $items['zh_name'];} ?></strong></div></div>
+                                                            <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -322,7 +321,7 @@ echo $this->fetch('script');
       };
     }
 
-
+    var selected_extras_id = [];
 
     $(".add_items").on("click", function () {
         var item_id = $(this).attr("alt");
@@ -439,6 +438,24 @@ echo $this->fetch('script');
             }
         });
     });
+
+    function getTasteExtra(e){
+        if($(e).hasClass("select")){
+            $(e).removeClass("select");
+            var found = selected_extras_id.find(function(element, index) {
+               if(element == $(e).attr("data-extra-id")){
+                   return index;
+               }
+               
+            });
+        }else{
+            $(e).addClass("select");
+            $('#single-selected-extra-title').append("<a>" + $(e)[0].innerText.replace(/\d+/g,'') + "</a>")
+            selected_extras_id.push($(e).attr("data-extra-id"));
+        }
+
+        return selected_extras_id;
+    }
 
     $(document).ready(function () {
     	
@@ -724,7 +741,7 @@ echo $this->fetch('script');
                 */
                 if (cousineExtraCategory.indexOf(taste.category_id) >= 0 || taste.category_id == "1") {
                     // build item with jquery
-                    var itemComponent = $('<li class="taste-item-component" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
+                    var itemComponent = $('<li class="taste-item-component" onclick="getTasteExtra(this)" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
 
                     if (parseFloat(taste.price) == 0) {
                         itemComponent.find('.taste-item-price').hide();
@@ -1094,7 +1111,7 @@ echo $this->fetch('script');
         }
         
         // remove existing modal
-        $('#single-extra-component-modal').modal('hide').remove();
+        $('#single-extra-component-modal').modal('hide').hide();
         var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special, cousineExtraCategory);
         $('body').append(singleExtraComponent);
 
@@ -1104,7 +1121,8 @@ echo $this->fetch('script');
     $('body').on('click', '#single-extra-component-save', function() {
 
         var selected_item_id = getSelectedItem()[0];
-        var selected_extras_id = [];
+        
+
         $('#single-selected-extra li').each(function() {
             selected_extras_id.push($(this).attr('data-extra-id'));
         });
