@@ -26,7 +26,7 @@ class OrderController extends AppController {
         // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Cashier.restaurant_id', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Cashier.restaurant_id', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device','Admin.show2nd'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id')),
                 )
         );
@@ -110,6 +110,7 @@ class OrderController extends AppController {
         }
 
 
+        $show2nd = $cashier_detail['Admin']['show2nd'];
         //if(!empty($Order_detail['Order']['id'])) {
         //  $this->Order->updateBillInfo($Order_detail['Order']['id']);
         //}
@@ -117,7 +118,7 @@ class OrderController extends AppController {
         // print_r ($Order_detail);
         // print_r($all_extras);
         
-        $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories'));
+        $this->set(compact('records', 'cashier_detail', 'table', 'type', 'populars', 'Order_detail', 'extras', 'extra_categories', 'show2nd'));
 
         // print_r($tastes);
     }
