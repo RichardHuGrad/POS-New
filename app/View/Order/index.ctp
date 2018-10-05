@@ -100,7 +100,7 @@
                                                     <div class="item-wrapper">
                                                         <div class="clearfixrow">
                                                             <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
-                                                            <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
+                                                            <div class="dish-title"><div class="name-title"><strong><?php if($show2nd == true){ echo $items['eng_name'] . "<br/>" . $items['zh_name'];}else{ echo $items['zh_name'];}?></strong></div></div>
                                                         </div>
                                                     </div>
                                                 </li>
