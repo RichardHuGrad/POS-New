@@ -251,10 +251,12 @@ class OrderController extends AppController {
         $this->loadModel('Order');
 
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
-            'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.show2nd'),
+            'conditions' => array('Cashier.id' => $this->Session->read('Front.id')),
                 )
         );
+
+        $show2nd = $cashier_detail['Admin']['show2nd'];
 
         $this->OrderItem->virtualFields['image'] = "Select image from cousines where cousines.id = OrderItem.item_id";
         $Order_detail = $this->Order->find("first", array(
@@ -276,7 +278,7 @@ class OrderController extends AppController {
         // print_r($cashier_detail);
         // print_r($extras_categories);
 
-        $this->set(compact('Order_detail', 'cashier_detail','extras_categories'));
+        $this->set(compact('Order_detail', 'cashier_detail','extras_categories','show2nd'));
     }
 
 

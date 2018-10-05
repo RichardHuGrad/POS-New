@@ -18,12 +18,14 @@ class SplitController extends AppController {
         // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device','Admin.show2nd'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
 
         $order_no = @$this->params['url']['order_no'];
+
+        $show2nd = $cashier_detail['Admin']['show2nd'];
 
         // get all params
         $type = $this->params['named']['type'];
@@ -68,7 +70,7 @@ class SplitController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'type', 'table', 'orders_no', 'split_method','show2nd'));
     }
 
     public function addPopular($order_id) {

@@ -918,12 +918,14 @@ class HomesController extends AppController {
         // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.show2nd'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
         
         $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
+
+        $show2nd = $cashier_detail['Admin']['show2nd'];
 
         $table_no = $this->params['named']['table_no'];
         $order_id = $this->params['named']['order_id'];
@@ -959,7 +961,7 @@ class HomesController extends AppController {
 
         $today = date('Y-m-d H:i', strtotime($Order_detail['Order']['created']));
 
-        $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no', 'order_id','order_type','today','dinein_table_status'));
+        $this->set(compact('Order_detail', 'cashier_detail','admin_passwd','table_no', 'order_id','order_type','today','dinein_table_status', 'show2nd'));
     }
 
     public function tableHisupdate() {

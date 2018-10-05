@@ -224,7 +224,7 @@ if(empty($Order_detail) or empty(@$Order_detail['OrderItem'])) echo 'disabled'
                         var temp_item = new Item(
                                 item_id = '<?php echo $i ?>',
                                 image= '<?php if ($value['image']) { echo $value['image']; } else { echo 'no_image.jpg';};?>',
-                                name_en = '<?php echo $value['name_en']; ?>',
+                                name_en = '<?php if($show2nd == true){ echo $value['name_en'];}else{echo '';} ?>',
                                 name_zh = '<?php echo $value['name_xh']; ?>',
                                 selected_extras_name = '<?php echo implode(",", $selected_extras_name); ?>', // can be extend to json object
                                 price = '<?php echo $value['price'] ?>',

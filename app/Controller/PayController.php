@@ -16,7 +16,7 @@ class PayController extends AppController {
         // get cashier details
         $this->loadModel('Cashier');
         $cashier_detail = $this->Cashier->find("first", array(
-            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device'),
+            'fields' => array('Cashier.firstname', 'Cashier.lastname', 'Cashier.id', 'Cashier.image', 'Admin.id','Admin.kitchen_printer_device','Admin.service_printer_device','Admin.show2nd'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
@@ -24,6 +24,8 @@ class PayController extends AppController {
         $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
 
         $order_no = @$this->params['url']['order_no'];
+
+        $show2nd = $cashier_detail['Admin']['show2nd'];
 
         // get all params
         $type = @$this->params['named']['type'];
@@ -76,7 +78,7 @@ class PayController extends AppController {
                 )
         );
 
-        $this->set(compact('Order_detail', 'cashier_detail', 'admin_passwd', 'type', 'table', 'orders_no'));
+        $this->set(compact('Order_detail', 'cashier_detail', 'admin_passwd', 'type', 'table', 'orders_no','show2nd'));
     }
 
     public function printReceipt() {

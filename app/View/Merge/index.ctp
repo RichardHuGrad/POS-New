@@ -76,7 +76,7 @@ for ($x = 0; $x < count($Order_detail); $x++) {//MOdified by Yishou Liao @ Oct 1
                                             <div class="col-md-9 col-sm-8 col-xs-8">
                                                 <div class="pull-left titlebox1">
                                                     <!-- to show name of item -->
-                                                    <div class="less-title"><?php echo $value['name_en'] . "<br/>" . $value['name_xh']; ?></div>
+                                                    <div class="less-title"><?php if($show2nd == true){ echo $value['name_en'] . "<br/>" . $value['name_xh'];}else{ echo $value['name_xh'];}?></div>
 
                                                     <!-- to show the extras item name -->
                                                     <div class="less-txt"><?php echo implode(",", $selected_extras_name); ?></div>

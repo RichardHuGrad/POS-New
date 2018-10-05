@@ -32,7 +32,7 @@
             if (!empty($records)) {
                 foreach ($records as $key => $category) {
                     ?>
-                    <li <?php if ($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name'] . "<br/>" . $category['Category']['zh_name']; ?></a></li>
+                    <li <?php if ($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php if($show2nd == true){ echo $category['Category']['eng_name'] . "<br/>" . $category['Category']['zh_name'];}else{ echo $category['Category']['zh_name'];} ?></a></li>
                     <?php
                 }
             }
@@ -100,7 +100,8 @@
                                                     <div class="item-wrapper">
                                                         <div class="clearfixrow">
                                                             <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
-                                                            <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
+                                                            <div class="dish-title"><div class="name-title"><strong>
+                                                            <?php if($show2nd == true){ echo $items['zh_name'] . "<br/>" . $items['eng_name'];}else{ echo $items['zh_name'];} ?></strong></div></div>
                                                         </div>
                                                     </div>
                                                 </li>
