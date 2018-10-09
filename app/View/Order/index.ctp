@@ -439,7 +439,15 @@ echo $this->fetch('script');
         });
     });
 
+    var tempItem = 0;
     function getTasteExtra(e){
+        
+
+        console.log($('#order-component > li.selected').attr('data-order-item-id'));
+
+
+        
+
         if($(e).hasClass("select")){
             $(e).removeClass("select");
             var found = selected_extras_id.find(function(element, index) {
@@ -453,6 +461,8 @@ echo $this->fetch('script');
             $('#single-selected-extra-title').append('<input id="deleteExtra" type="button" data-extra-id="' + $(e).attr("data-extra-id") + '" class="listelement" value="X ' + $(e)[0].innerText.replace(/\d+/g,'') + '" /> ');
             selected_extras_id.push($(e).attr("data-extra-id"));
         }
+
+
 
         return selected_extras_id;
     }
@@ -1075,6 +1085,14 @@ echo $this->fetch('script');
 
 
     $('body').on('click', '#add-taste-btn' ,function() {
+
+        if($('#order-component > li.selected').attr('data-order-item-id') != tempItem){
+            $('#single-selected-extra-title > input').remove();
+            selected_extras_id = [];
+        }else{
+            
+        }
+        tempItem = $('#order-component > li.selected').attr('data-order-item-id');
     	
         var selected_item_id_list = getSelectedItem();
         
