@@ -450,7 +450,7 @@ echo $this->fetch('script');
             });
         }else{
             $(e).addClass("select");
-            $('#single-selected-extra-title').append("<a>" + $(e)[0].innerText.replace(/\d+/g,'') + "</a>")
+            $('#single-selected-extra-title').append('<input id="deleteExtra" type="button" data-extra-id="' + $(e).attr("data-extra-id") + '" class="listelement" value="X ' + $(e)[0].innerText.replace(/\d+/g,'') + '" /> ');
             selected_extras_id.push($(e).attr("data-extra-id"));
         }
 
@@ -560,11 +560,13 @@ echo $this->fetch('script');
             }
         })
     })
+
     $(document).on('click', ".add-discount", function () {
         if (!$(this).hasClass('disabled')) {
             $(".discount_view").toggle();
         }
     });
+
     $(document).on("click", '.dropdown-toggle', function () {
         if ($(this).attr("aria-expanded") == 'true') {
             $(".clearfix.cart-wrap").addClass("csspinner");
@@ -1117,6 +1119,36 @@ echo $this->fetch('script');
 
     });
 
+    
+    $('body').on('click', '#deleteExtra', function() {
+
+        $(this).remove();
+
+        var selected_item_id = getSelectedItem()[0];
+        console.log(selected_item_id);
+        
+
+        $('#single-selected-extra li').each(function() {
+            selected_extras_id.push($(this).attr('data-extra-id'));
+        });
+
+        $('#single-selected-combo li').each(function() {
+            selected_extras_id.push($(this).attr('data-extra-id'));
+        });
+
+        if(selected_extras_id.length == 0) selected_extras_id="";
+        
+        $.ajax({
+            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'deleteExtras')); ?>",
+            method: "post",
+            data: {selected_item_id: selected_item_id, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", special: $("#single-extra-component-special").val()},
+            success: function(html) {
+                //renderOrder();
+                //$('.modal-header .close').trigger('click');
+            }
+        })
+    });
+
 
     $('body').on('click', '#single-extra-component-save', function() {
 
@@ -1142,10 +1174,10 @@ echo $this->fetch('script');
                 }
             }
             //  must match the combo_num then can save the page
-            if ( $("#single-selected-combo li").length != combo_num ) {
-                $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
-                return false;
-            }
+            // if ( $("#single-selected-combo li").length != combo_num ) {
+            //     $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
+            //     return false;
+            // }
 
         }
 
@@ -1158,6 +1190,7 @@ echo $this->fetch('script');
             success: function(html) {
                 renderOrder();
                 $('.modal-header .close').trigger('click');
+                selected_extras_id = [];
             }
         })
     });

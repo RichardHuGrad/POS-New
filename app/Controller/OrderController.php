@@ -241,6 +241,19 @@ class OrderController extends AppController {
         ));
     }
 
+    public function deleteExtras() {
+        $this->layout = false;
+        $this->autoRender = NULL;
+                
+        $this->OrderHandler->deleteExtras(array(
+            'item_id' => $this->data['selected_item_id'],
+            'extra_id_list' => $this->data['selected_extras_id'],
+            'table' => $this->data['table'],
+            'type' => $this->data['type'],
+            'special' => $this->data['special'],
+            'cashier_id' => $this->Session->read('Front.id')
+        ));
+    }
 
     public function summarypanel($table, $type) {
 
