@@ -11,10 +11,10 @@
         <div class="home-logo">
             <a href="<?php echo $this->Html->url(array('controller' => 'homes', 'action' => 'dashboard')) ?>">
                 <?php                      
-                	if(substr($_SERVER['REQUEST_URI'],0,5)=='/skip')
-                  		echo $this->Html->image("logo-skip.jpg", array('alt' => "SKIP"));               
-                	else
-                  		echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); 
+                    if(substr($_SERVER['REQUEST_URI'],0,5)=='/skip')
+                        echo $this->Html->image("logo-skip.jpg", array('alt' => "SKIP"));               
+                    else
+                        echo $this->Html->image("logo-home.jpg", array('alt' => "POS")); 
                 ?>
             </a>
 
@@ -32,7 +32,7 @@
             if (!empty($records)) {
                 foreach ($records as $key => $category) {
                     ?>
-                    <li <?php if ($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php if($show2nd == true){ echo $category['Category']['eng_name'] . "<br/>" . $category['Category']['zh_name'];}else{ echo $category['Category']['zh_name'];} ?></a></li>
+                    <li <?php if ($key == 0) echo "class='active'" ?>><a data-toggle="tab" href="#tab<?php echo $category['Category']['id']; ?>"><?php echo $category['Category']['eng_name'] . "<br/>" . $category['Category']['zh_name']; ?></a></li>
                     <?php
                 }
             }
@@ -79,7 +79,7 @@
 
 
         <div class="col-md-8 col-sm-7 col-xs-12 products-panel">
-        	
+            
             <div class="tab-content <?php if(@$Order_detail['Order']['table_status']=='P') echo 'hide'; ?>">
 
                 <?php
@@ -100,7 +100,7 @@
                                                     <div class="item-wrapper">
                                                         <div class="clearfixrow">
                                                             <div class="dish-price">$<?php echo number_format($items['price'], 2); ?></div>
-                                                            <div class="dish-title"><div class="name-title"><strong><?php if($show2nd == true){ echo $items['eng_name'] . "<br/>" . $items['zh_name'];}else{ echo $items['zh_name'];}?></strong></div></div>
+                                                            <div class="dish-title"><div class="name-title"><strong><?php echo $items['zh_name'] . "<br/>" . $items['eng_name']; ?></strong></div></div>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -125,7 +125,7 @@
     </div>
     
     <div class="col-md-12 col-sm-12 col-xs-12 " id="button-group">
-    	<div class="col-md-8">
+        <div class="col-md-8">
         <button id="batch-add-taste-btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#taste-component-modal"><strong><?php echo __('Batch Add Taste');?></strong></button>
         <button id="delete-btn" class="btn btn-lg btn-danger"><strong><?php echo __('Delete');?></strong></button>
         <button id="quantity-btn" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#change-quantity-component-modal"><strong><?php echo __('Change Quantity');?></strong></button>
@@ -321,7 +321,7 @@ echo $this->fetch('script');
       };
     }
 
-    var selected_extras_id = [];
+
 
     $(".add_items").on("click", function () {
         var item_id = $(this).attr("alt");
@@ -339,7 +339,7 @@ echo $this->fetch('script');
                 $(".products-panel").removeClass('load1 csspinner');
 
                 var obj = JSON.parse(json);
-				//  {"extra_categories":["15","16"],"order_item_id":"4143","comb_id":"0","comb_num":"0"}
+                //  {"extra_categories":["15","16"],"order_item_id":"4143","comb_id":"0","comb_num":"0"}
                 renderOrder(function() {
                     if (obj.comb_id != 0) {
                         $("#order-component li[data-order-item-id=" + obj.order_item_id + "]").trigger("click");
@@ -439,36 +439,8 @@ echo $this->fetch('script');
         });
     });
 
-    var tempItem = 0;
-    function getTasteExtra(e){
-        
-
-        console.log($('#order-component > li.selected').attr('data-order-item-id'));
-
-
-        
-
-        if($(e).hasClass("select")){
-            $(e).removeClass("select");
-            var found = selected_extras_id.find(function(element, index) {
-               if(element == $(e).attr("data-extra-id")){
-                   return index;
-               }
-               
-            });
-        }else{
-            $(e).addClass("select");
-            $('#single-selected-extra-title').append('<input id="deleteExtra" type="button" data-extra-id="' + $(e).attr("data-extra-id") + '" class="listelement" value="X ' + $(e)[0].innerText.replace(/\d+/g,'') + '" /> ');
-            selected_extras_id.push($(e).attr("data-extra-id"));
-        }
-
-
-
-        return selected_extras_id;
-    }
-
     $(document).ready(function () {
-    	
+        
         $('#edit-phone-component-modal').on('shown.bs.modal', function () {
             $( "input[name='phone']").focus();
         })  
@@ -480,7 +452,7 @@ echo $this->fetch('script');
         $('#change-quantity-component-modal').on('shown.bs.modal', function () {
             $( "input[name='quantity']").focus();
         })  
-           	
+            
 
         $(".search-clear").click(function () {
             $("#search-input").val('');
@@ -509,7 +481,7 @@ echo $this->fetch('script');
         //hide some buttons for online orders
         <?php 
            if(@$Order_detail['Order']['table_status']=='P'){
-           	 echo "$('#pay-btn,#delete-btn,#quantity-btn,#change-price-btn,#edit-phone-btn').hide();";
+             echo "$('#pay-btn,#delete-btn,#quantity-btn,#change-price-btn,#edit-phone-btn').hide();";
            }              
         ?>
         
@@ -520,7 +492,7 @@ echo $this->fetch('script');
         if ($(this).val()) {
             $(".discount_section").attr("disabled", "disabled");
             $(this).removeAttr("disabled");
-			      $(this).focus();
+                  $(this).focus();
         } else {
             $(".discount_section").removeAttr("disabled");
         }
@@ -570,13 +542,11 @@ echo $this->fetch('script');
             }
         })
     })
-
     $(document).on('click', ".add-discount", function () {
         if (!$(this).hasClass('disabled')) {
             $(".discount_view").toggle();
         }
     });
-
     $(document).on("click", '.dropdown-toggle', function () {
         if ($(this).attr("aria-expanded") == 'true') {
             $(".clearfix.cart-wrap").addClass("csspinner");
@@ -753,7 +723,7 @@ echo $this->fetch('script');
                 */
                 if (cousineExtraCategory.indexOf(taste.category_id) >= 0 || taste.category_id == "1") {
                     // build item with jquery
-                    var itemComponent = $('<li class="taste-item-component" onclick="getTasteExtra(this)" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
+                    var itemComponent = $('<li class="taste-item-component" data-extra-id="{0}" data-extra-category-id="{1}"><div class="taste-item-name">{2}</div><div class="taste-item-price">{3}</div></li>'.format(taste.id, taste.category_id, taste.name_zh, taste.price));
 
                     if (parseFloat(taste.price) == 0) {
                         itemComponent.find('.taste-item-price').hide();
@@ -926,8 +896,8 @@ echo $this->fetch('script');
         }
     })()
 
-	class CousineExtraCategory {
-    	constructor(cousine_id, category_ids) {
+    class CousineExtraCategory {
+        constructor(cousine_id, category_ids) {
             this.cousine_id = cousine_id;
             this.category_ids = category_ids;
         }
@@ -1011,27 +981,27 @@ echo $this->fetch('script');
 
     var loadCousineExtraCategories = function() {
         var cousine_categories = [];
-		var cousine_id;
+        var cousine_id;
         var category = [];
 
         <?php
             if (!empty($records)) {
                 foreach ($records as $rc1) {
-					foreach ($rc1['Cousine'] as $rc2) {
+                    foreach ($rc1['Cousine'] as $rc2) {
          ?>
-         			cousine_id = '<?php echo $rc2['id']; ?>';
+                    cousine_id = '<?php echo $rc2['id']; ?>';
                     category = [];
                     <?php if ($rc2['extrascategories']) { 
-						foreach ($rc2['extrascategories'] as $cid) { ?>
-							category.push('<?php echo $cid; ?>');
-					<?php	}
-						}
-					 ?>
+                        foreach ($rc2['extrascategories'] as $cid) { ?>
+                            category.push('<?php echo $cid; ?>');
+                    <?php   }
+                        }
+                     ?>
                      cousine_categories[cousine_id] = category;
          <?php
                 }
             }
-			}
+            }
           ?>
 
         return cousine_categories;
@@ -1065,7 +1035,7 @@ echo $this->fetch('script');
         // console.log(selected_extras_amount);
         
         if(selected_extras_id.length == 0){
-        	$.notify("No taste selected 没有选择口味",  { position: "top center", className:"warn"});
+            $.notify("No taste selected 没有选择口味",  { position: "top center", className:"warn"});
          return false;
         }
         
@@ -1085,19 +1055,11 @@ echo $this->fetch('script');
 
 
     $('body').on('click', '#add-taste-btn' ,function() {
-
-        if($('#order-component > li.selected').attr('data-order-item-id') != tempItem){
-            $('#single-selected-extra-title > input').remove();
-            selected_extras_id = [];
-        }else{
-            
-        }
-        tempItem = $('#order-component > li.selected').attr('data-order-item-id');
-    	
+        
         var selected_item_id_list = getSelectedItem();
         
         if (selected_item_id_list.length == 0) { 
-        	           
+                       
             // $.notify("No item selected 没有选择菜",{position:"top center",className:"warn"}); return false;
             
             //default select the first item
@@ -1127,52 +1089,21 @@ echo $this->fetch('script');
         
         var cousineExtraCategory = [];
         if (typeof cousineExtraCategories[cousine_id] !== 'undefined') {
-        	cousineExtraCategory = cousineExtraCategories[cousine_id];
+            cousineExtraCategory = cousineExtraCategories[cousine_id];
         }
         
         // remove existing modal
-        $('#single-extra-component-modal').modal('hide').hide();
+        $('#single-extra-component-modal').modal('hide').remove();
         var singleExtraComponent = SingleExtraComponent.init(extras, extraCategories, combo_id, selected_extras, SelectedExtraItemComponent, special, cousineExtraCategory);
         $('body').append(singleExtraComponent);
 
-    });
-
-    
-    $('body').on('click', '#deleteExtra', function() {
-
-        $(this).remove();
-
-        var selected_item_id = getSelectedItem()[0];
-        console.log(selected_item_id);
-        
-
-        $('#single-selected-extra li').each(function() {
-            selected_extras_id.push($(this).attr('data-extra-id'));
-        });
-
-        $('#single-selected-combo li').each(function() {
-            selected_extras_id.push($(this).attr('data-extra-id'));
-        });
-
-        if(selected_extras_id.length == 0) selected_extras_id="";
-        
-        $.ajax({
-            url: "<?php echo $this->Html->url(array('controller' => 'order', 'action' => 'deleteExtras')); ?>",
-            method: "post",
-            data: {selected_item_id: selected_item_id, selected_extras_id: selected_extras_id, table: "<?php echo $table ?>", type: "<?php echo $type ?>", special: $("#single-extra-component-special").val()},
-            success: function(html) {
-                //renderOrder();
-                //$('.modal-header .close').trigger('click');
-            }
-        })
     });
 
 
     $('body').on('click', '#single-extra-component-save', function() {
 
         var selected_item_id = getSelectedItem()[0];
-        
-
+        var selected_extras_id = [];
         $('#single-selected-extra li').each(function() {
             selected_extras_id.push($(this).attr('data-extra-id'));
         });
@@ -1192,10 +1123,10 @@ echo $this->fetch('script');
                 }
             }
             //  must match the combo_num then can save the page
-            // if ( $("#single-selected-combo li").length != combo_num ) {
-            //     $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
-            //     return false;
-            // }
+            if ( $("#single-selected-combo li").length != combo_num ) {
+                $(this).notify("Please selected {0} combo. 请选择{0}种拼盘".format(combo_num), {position: "top center"});
+                return false;
+            }
 
         }
 
@@ -1208,7 +1139,6 @@ echo $this->fetch('script');
             success: function(html) {
                 renderOrder();
                 $('.modal-header .close').trigger('click');
-                selected_extras_id = [];
             }
         })
     });
@@ -1343,12 +1273,12 @@ echo $this->fetch('script');
 
         var quantity = $('input[name="quantity"]').val();
         if(quantity == ''){
-        	alert("Please input quantity!");
-        	$('input[name="quantity"]').focus();
-        	return;
+            alert("Please input quantity!");
+            $('input[name="quantity"]').focus();
+            return;
         }
         quantity = Math.round(parseInt(quantity));
-    	  
+          
         var selected_item_id_list = getSelectedItem();
 
         $.ajax({
@@ -1410,8 +1340,8 @@ echo $this->fetch('script');
 
 
     $('body').on('click', '.selected-extra-item', function() {
-    	
-    	if($(this).has('button').length){
+        
+        if($(this).has('button').length){
         $(this).remove();
       }
        
