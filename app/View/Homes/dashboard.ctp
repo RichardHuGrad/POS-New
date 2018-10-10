@@ -656,6 +656,17 @@ echo $this->fetch('script');
 				} else if (json.reload) {
                 	//console.log('checkNewOrder reload ===============================');
 					$('#new_order').show();
+                    var net_order_voice = "<?php echo $net_order_voice; ?>";
+                    console.log(net_order_voice);
+                    if(net_order_voice == 1){
+                        var audio = new Audio('./../app/webroot/files/Wechat_New_Order_Prompt_ZH.wav');
+
+                        setInterval(function(){
+                            audio.play();
+                        }, 5000)
+                        
+                    };
+
 					$('#confirm').on('click', function(e) {        
 						 location.reload();
 					});

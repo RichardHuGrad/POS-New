@@ -149,10 +149,12 @@ class HomesController extends AppController {
         // get all table details
         $this->loadModel('Cashier');
         $tables = $this->Cashier->find("first", array(
-            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device'),
+            'fields' => array('Admin.table_size', 'Admin.table_order', 'Admin.takeout_table_size', 'Admin.waiting_table_size', 'Admin.no_of_tables', 'Admin.no_of_waiting_tables', 'Admin.no_of_takeout_tables', 'Admin.no_of_online_tables', 'Admin.id', 'Admin.kitchen_printer_device', 'Admin.service_printer_device','Admin.net_order_voice'),
             'conditions' => array('Cashier.id' => $this->Session->read('Front.id'))
                 )
         );
+
+        $net_order_voice = $tables['Admin']['net_order_voice'];
 
         //Modified by Yishou Liao @ Dec 12 2016
         $admin_passwd = $this->Cashier->query("SELECT admins.password FROM admins WHERE admins.is_super_admin='Y' ");
@@ -271,7 +273,7 @@ class HomesController extends AppController {
 	        $this->Admin->clear();
         }
         
-        $this->set(compact('tables','orders_cooked', 'dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd', 'orders_message'));
+        $this->set(compact('tables','orders_cooked', 'dinein_tables_status','takeway_tables_status', 'waiting_tables_status','online_tables_status','colors','orders_no','orders_phone','orders_time','orders_total','admin_passwd', 'orders_message', 'net_order_voice'));
     }
     
     public function checknew() {
