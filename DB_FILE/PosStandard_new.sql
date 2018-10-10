@@ -65,8 +65,14 @@ CREATE TABLE `admins` (
   `oc_store_id` int(11) DEFAULT NULL,
   `oc_api_url` varchar(255) DEFAULT NULL,
   `oc_api_key` varchar(1000) DEFAULT NULL,
-  `oc_last_push_order_time` datetime DEFAULT NULL
+  `oc_last_push_order_time` datetime DEFAULT NULL,
+ `net_new_order` tinyint(4) NOT NULL COMMENT 'flag for has new order from cloud server',
+ `net_order_voice` TINYINT NOT NULL COMMENT 'Net Order Play Sound. 0 not, 1 yes',
+ `touch_screen_sound` TINYINT NOT NULL,
+ `default_tip_after_tax` TINYINT NOT NULL,
+ `main_page_show_price` TINYINT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 --
 -- Dumping data for table `admins`
