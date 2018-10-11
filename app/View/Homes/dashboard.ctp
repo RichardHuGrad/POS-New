@@ -683,6 +683,10 @@ echo $this->fetch('script');
                         setInterval(function(){
                             audio.play();
                         }, 5000)
+                    }else if(net_order_voice == 0 && "<?php echo __('Languages'); ?>" == '语言'){
+                        $('#new_order').show();
+                    }else if(net_order_voice == 0 && "<?php echo __('Languages'); ?>" == 'Languages'){
+                        $('#new_order_eng').show();
                     }
 
 					$('#confirm').on('click', function(e) {
