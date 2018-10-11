@@ -547,6 +547,16 @@
 
     </div>
 </div>
+<div id="new_order_eng" style="display:none" class="popPassword">
+    <!-- <span>Please Enter Your Password</span> -->
+    <h4 style="color: white">You Hava a New Wechat Order</h4>
+    <div class="form-group">
+        <div class="col-sm-12 controls">
+            <input id="confirm_eng" class="btn btn-secondary btn-lg cancel" type="button" value="OK" />
+        </div>
+
+    </div>
+</div>
 <?php //echo $this->element('footer'); 
 ?>
 
@@ -655,21 +665,33 @@ echo $this->fetch('script');
 					// Some thing is doing on screen
 				} else if (json.reload) {
                 	//console.log('checkNewOrder reload ===============================');
-					$('#new_order').show();
+					
                     var net_order_voice = "<?php echo $net_order_voice; ?>";
-                    console.log(net_order_voice);
-                    if(net_order_voice == 1){
-                        var audio = new Audio('./../app/webroot/files/Wechat_New_Order_Prompt_ZH.wav');
 
+                    if(net_order_voice == 1 && "<?php echo __('Languages'); ?>" == '语言'){
+                        $('#new_order').show();
+                        var audio = new Audio('./../app/webroot/files/Wechat_New_Order_Prompt_ZH.wav');
+                        audio.play();
                         setInterval(function(){
                             audio.play();
                         }, 5000)
                         
-                    };
+                    }else if(net_order_voice == 1 && "<?php echo __('Languages'); ?>" == 'Languages'){
+                        $('#new_order_eng').show();
+                        var audio = new Audio('./../app/webroot/files/Wechat_New_Order_Prompt_EN.wav');
+                        audio.play();
+                        setInterval(function(){
+                            audio.play();
+                        }, 5000)
+                    }
 
-					$('#confirm').on('click', function(e) {        
+					$('#confirm').on('click', function(e) {
 						 location.reload();
 					});
+
+                    $('#confirm_eng').on('click', function(e) {
+                         location.reload();
+                    });
             		//location.reload();
             	}
             }
